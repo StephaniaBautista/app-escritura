@@ -1,0 +1,28 @@
+{
+  "name": "app-escritura",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma de escritura creativa con IA",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "dev:frontend": "pnpm --filter frontend run dev",
+    "dev:backend": "pnpm --filter backend run dev",
+    "build": "pnpm -r run build",
+    "build:frontend": "pnpm --filter frontend run build",
+    "build:backend": "pnpm --filter backend run build",
+    "lint": "pnpm -r run lint",
+    "lint:frontend": "pnpm --filter frontend run lint",
+    "lint:backend": "pnpm --filter backend run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "typecheck:frontend": "pnpm --filter frontend run typecheck",
+    "typecheck:backend": "pnpm --filter backend run typecheck",
+    "test": "pnpm -r run test",
+    "test:frontend": "pnpm --filter frontend run test",
+    "test:backend": "pnpm --filter backend run test",
+    "clean": "pnpm -r exec rm -rf node_modules dist .turbo"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
