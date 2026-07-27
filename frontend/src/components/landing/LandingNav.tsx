@@ -56,7 +56,7 @@ export function LandingNav() {
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className=" md:flex items-center gap-6">
           {navLinks.map((link) => (
             link.href.startsWith('/#') ? (
               <a
@@ -94,7 +94,7 @@ export function LandingNav() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className=" md:flex items-center gap-3">
           <LanguageSwitcher />
           <Link
             to="/login"

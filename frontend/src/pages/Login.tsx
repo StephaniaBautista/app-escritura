@@ -26,7 +26,7 @@ export function Login() {
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--color-background)' }}>
       {/* Left side - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-12 relative overflow-hidden" style={{ background: 'var(--color-paper)' }}>
+      <div className=" lg:flex lg:w-1/2 items-center justify-center p-12 relative overflow-hidden" style={{ background: 'var(--color-paper)' }}>
         <div className="notebook-lines absolute inset-0 opacity-30"></div>
         
         <div className="relative z-10 max-w-md">
