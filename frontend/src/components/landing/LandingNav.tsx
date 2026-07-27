@@ -106,7 +106,7 @@ export function LandingNav() {
           <Link
             to="/register"
             className="text-sm font-medium px-4 py-2 rounded text-white transition-all hover:opacity-90 hover:scale-105 shadow-sm"
-            style={{ background: 'var(--color-accent)' }}
+            style={{ background: 'var(--color-accent)', color: 'white' }}
           >
             {t('nav.signup')}
           </Link>
@@ -122,7 +122,7 @@ export function LandingNav() {
       </div>
 
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-60' : 'max-h-0'}`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-96' : 'max-h-0'}`}
         style={{ background: 'var(--color-paper)' }}
       >
         <div className="px-6 py-4 space-y-3 border-t" style={{ borderColor: 'var(--color-paper-lines)' }}>
@@ -169,7 +169,7 @@ export function LandingNav() {
             <Link
               to="/register"
               className="text-sm font-medium px-4 py-2 rounded text-center text-white"
-              style={{ background: 'var(--color-accent)' }}
+              style={{ background: 'var(--color-accent)', color: 'white' }}
             >
               {t('nav.signup')}
             </Link>

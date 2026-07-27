@@ -134,4 +134,52 @@ export async function authRoutes(app: FastifyInstance) {
       })
     }
   })
+
+  // Forgot password - send reset email
+  app.post('/auth/forgot-password', async (request, reply) => {
+    try {
+      const { email } = request.body as { email: string }
+
+      // TODO: Implement proper password reset email
+      // For now, just log the request and return success
+      console.log('Password reset requested for:', email)
+
+      // Always return success to prevent email enumeration
+      return reply.send({
+        message: 'Si el correo existe, recibirás un enlace para restablecer tu contraseña',
+      })
+    } catch (error: any) {
+      // Don't reveal if email exists or not
+      return reply.send({
+        message: 'Si el correo existe, recibirás un enlace para restablecer tu contraseña',
+      })
+    }
+  })
+
+  // Reset password with token
+  app.post('/auth/reset-password', async (request, reply) => {
+    try {
+      const { token, newPassword } = request.body as {
+        token: string
+        newPassword: string
+      }
+
+      await auth.api.resetPassword({
+        body: {
+          newPassword,
+          token,
+        },
+        headers: request.headers as Record<string, string>,
+      })
+
+      return reply.send({ message: 'Contraseña actualizada correctamente' })
+    } catch (error: any) {
+      return reply.status(400).send({
+        error: {
+          code: 'RESET_FAILED',
+          message: error.message || 'Error al restablecer contraseña',
+        },
+      })
+    }
+  })
 }

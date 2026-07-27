@@ -63,8 +63,8 @@ function Hero() {
             <div className="flex flex-wrap gap-3">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium text-white transition-all hover:opacity-90 hover:scale-105 hover:shadow-lg shadow-md card-click"
-                style={{ background: 'var(--color-accent)' }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium transition-all hover:opacity-90 hover:scale-105 hover:shadow-lg shadow-md card-click"
+                style={{ background: 'var(--color-accent)', color: 'white' }}
               >
                 {t('hero.cta')}
                 <ArrowRight className="w-4 h-4" />
@@ -712,8 +712,8 @@ function CTA() {
 
         <Link
           to="/register"
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded font-medium text-white transition-all hover:opacity-90 hover:scale-105 hover:shadow-lg shadow-md text-lg card-click scroll-reveal"
-          style={{ background: 'var(--color-accent)' }}
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded font-medium transition-all hover:opacity-90 hover:scale-105 hover:shadow-lg shadow-md text-lg card-click scroll-reveal"
+          style={{ background: 'var(--color-accent)', color: 'white' }}
         >
           {t('cta.button')}
           <ArrowRight className="w-5 h-5" />

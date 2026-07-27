@@ -144,6 +144,15 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
 }
 
+/* Cursor pointer for all interactive elements */
+a, button, select, input[type="submit"], input[type="checkbox"], input[type="radio"] {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
 .font-display {
   font-family: var(--font-display);
 }
