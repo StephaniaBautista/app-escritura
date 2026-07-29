@@ -1,0 +1,50 @@
+export interface DocumentNode {
+  id: string
+  title: string
+  type: 'document' | 'chapter' | 'subpage'
+  parentId: string | null
+  order: number
+  updatedAt: string
+}
+
+export interface Document extends DocumentNode {
+  content: Record<string, unknown>
+  projectId: string
+  folderId: string | null
+  userId: string
+  createdAt: string
+  children?: Document[]
+  parent?: { id: string; title: string; type: string } | null
+}
+
+export interface Project {
+  id: string
+  name: string
+  description: string | null
+  createdAt: string
+  updatedAt: string
+  _count?: { documents: number; folders: number }
+}
+
+export interface CreateProjectInput {
+  name: string
+  description?: string
+}
+
+export interface CreateDocumentInput {
+  title: string
+  content?: Record<string, unknown>
+  type?: 'document' | 'chapter' | 'subpage'
+  projectId: string
+  folderId?: string
+  parentId?: string
+  order?: number
+}
+
+export interface UpdateDocumentInput {
+  title?: string
+  content?: Record<string, unknown>
+  folderId?: string | null
+  parentId?: string | null
+  order?: number
+}

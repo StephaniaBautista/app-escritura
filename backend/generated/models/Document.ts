@@ -20,16 +20,29 @@ export type DocumentModel = runtime.Types.Result.DefaultSelection<Prisma.$Docume
 
 export type AggregateDocument = {
   _count: DocumentCountAggregateOutputType | null
+  _avg: DocumentAvgAggregateOutputType | null
+  _sum: DocumentSumAggregateOutputType | null
   _min: DocumentMinAggregateOutputType | null
   _max: DocumentMaxAggregateOutputType | null
+}
+
+export type DocumentAvgAggregateOutputType = {
+  order: number | null
+}
+
+export type DocumentSumAggregateOutputType = {
+  order: number | null
 }
 
 export type DocumentMinAggregateOutputType = {
   id: string | null
   title: string | null
+  type: string | null
+  order: number | null
   userId: string | null
   projectId: string | null
   folderId: string | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -37,9 +50,12 @@ export type DocumentMinAggregateOutputType = {
 export type DocumentMaxAggregateOutputType = {
   id: string | null
   title: string | null
+  type: string | null
+  order: number | null
   userId: string | null
   projectId: string | null
   folderId: string | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,21 +64,35 @@ export type DocumentCountAggregateOutputType = {
   id: number
   title: number
   content: number
+  type: number
+  order: number
   userId: number
   projectId: number
   folderId: number
+  parentId: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type DocumentAvgAggregateInputType = {
+  order?: true
+}
+
+export type DocumentSumAggregateInputType = {
+  order?: true
+}
+
 export type DocumentMinAggregateInputType = {
   id?: true
   title?: true
+  type?: true
+  order?: true
   userId?: true
   projectId?: true
   folderId?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,9 +100,12 @@ export type DocumentMinAggregateInputType = {
 export type DocumentMaxAggregateInputType = {
   id?: true
   title?: true
+  type?: true
+  order?: true
   userId?: true
   projectId?: true
   folderId?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -81,9 +114,12 @@ export type DocumentCountAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  type?: true
+  order?: true
   userId?: true
   projectId?: true
   folderId?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -127,6 +163,18 @@ export type DocumentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: DocumentAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: DocumentSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: DocumentMinAggregateInputType
@@ -157,6 +205,8 @@ export type DocumentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: DocumentCountAggregateInputType | true
+  _avg?: DocumentAvgAggregateInputType
+  _sum?: DocumentSumAggregateInputType
   _min?: DocumentMinAggregateInputType
   _max?: DocumentMaxAggregateInputType
 }
@@ -165,12 +215,17 @@ export type DocumentGroupByOutputType = {
   id: string
   title: string
   content: runtime.JsonValue
+  type: string
+  order: number
   userId: string
   projectId: string
   folderId: string | null
+  parentId: string | null
   createdAt: Date
   updatedAt: Date
   _count: DocumentCountAggregateOutputType | null
+  _avg: DocumentAvgAggregateOutputType | null
+  _sum: DocumentSumAggregateOutputType | null
   _min: DocumentMinAggregateOutputType | null
   _max: DocumentMaxAggregateOutputType | null
 }
@@ -197,28 +252,38 @@ export type DocumentWhereInput = {
   id?: Prisma.StringFilter<"Document"> | string
   title?: Prisma.StringFilter<"Document"> | string
   content?: Prisma.JsonFilter<"Document">
+  type?: Prisma.StringFilter<"Document"> | string
+  order?: Prisma.IntFilter<"Document"> | number
   userId?: Prisma.StringFilter<"Document"> | string
   projectId?: Prisma.StringFilter<"Document"> | string
   folderId?: Prisma.StringNullableFilter<"Document"> | string | null
+  parentId?: Prisma.StringNullableFilter<"Document"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
+  parent?: Prisma.XOR<Prisma.DocumentNullableScalarRelationFilter, Prisma.DocumentWhereInput> | null
+  children?: Prisma.DocumentListRelationFilter
 }
 
 export type DocumentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   folderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
   folder?: Prisma.FolderOrderByWithRelationInput
+  parent?: Prisma.DocumentOrderByWithRelationInput
+  children?: Prisma.DocumentOrderByRelationAggregateInput
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -228,28 +293,38 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DocumentWhereInput | Prisma.DocumentWhereInput[]
   title?: Prisma.StringFilter<"Document"> | string
   content?: Prisma.JsonFilter<"Document">
+  type?: Prisma.StringFilter<"Document"> | string
+  order?: Prisma.IntFilter<"Document"> | number
   userId?: Prisma.StringFilter<"Document"> | string
   projectId?: Prisma.StringFilter<"Document"> | string
   folderId?: Prisma.StringNullableFilter<"Document"> | string | null
+  parentId?: Prisma.StringNullableFilter<"Document"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
+  parent?: Prisma.XOR<Prisma.DocumentNullableScalarRelationFilter, Prisma.DocumentWhereInput> | null
+  children?: Prisma.DocumentListRelationFilter
 }, "id">
 
 export type DocumentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   folderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
+  _avg?: Prisma.DocumentAvgOrderByAggregateInput
   _max?: Prisma.DocumentMaxOrderByAggregateInput
   _min?: Prisma.DocumentMinOrderByAggregateInput
+  _sum?: Prisma.DocumentSumOrderByAggregateInput
 }
 
 export type DocumentScalarWhereWithAggregatesInput = {
@@ -259,9 +334,12 @@ export type DocumentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Document"> | string
   title?: Prisma.StringWithAggregatesFilter<"Document"> | string
   content?: Prisma.JsonWithAggregatesFilter<"Document">
+  type?: Prisma.StringWithAggregatesFilter<"Document"> | string
+  order?: Prisma.IntWithAggregatesFilter<"Document"> | number
   userId?: Prisma.StringWithAggregatesFilter<"Document"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"Document"> | string
   folderId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
 }
@@ -270,53 +348,72 @@ export type DocumentCreateInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
 }
 
 export type DocumentUncheckedCreateInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   projectId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type DocumentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentCreateManyInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   projectId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -325,6 +422,8 @@ export type DocumentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -333,9 +432,12 @@ export type DocumentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -350,23 +452,38 @@ export type DocumentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type DocumentNullableScalarRelationFilter = {
+  is?: Prisma.DocumentWhereInput | null
+  isNot?: Prisma.DocumentWhereInput | null
+}
+
 export type DocumentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   folderId?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DocumentAvgOrderByAggregateInput = {
+  order?: Prisma.SortOrder
 }
 
 export type DocumentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   folderId?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -374,11 +491,18 @@ export type DocumentMaxOrderByAggregateInput = {
 export type DocumentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   folderId?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DocumentSumOrderByAggregateInput = {
+  order?: Prisma.SortOrder
 }
 
 export type DocumentCreateNestedManyWithoutUserInput = {
@@ -507,24 +631,98 @@ export type DocumentUncheckedUpdateManyWithoutFolderNestedInput = {
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
+export type DocumentCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutChildrenInput, Prisma.DocumentUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput> | Prisma.DocumentCreateWithoutParentInput[] | Prisma.DocumentUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutParentInput | Prisma.DocumentCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.DocumentCreateManyParentInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type DocumentUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput> | Prisma.DocumentCreateWithoutParentInput[] | Prisma.DocumentUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutParentInput | Prisma.DocumentCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.DocumentCreateManyParentInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type DocumentUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutChildrenInput, Prisma.DocumentUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.DocumentUpsertWithoutChildrenInput
+  disconnect?: Prisma.DocumentWhereInput | boolean
+  delete?: Prisma.DocumentWhereInput | boolean
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutChildrenInput, Prisma.DocumentUpdateWithoutChildrenInput>, Prisma.DocumentUncheckedUpdateWithoutChildrenInput>
+}
+
+export type DocumentUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput> | Prisma.DocumentCreateWithoutParentInput[] | Prisma.DocumentUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutParentInput | Prisma.DocumentCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutParentInput | Prisma.DocumentUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.DocumentCreateManyParentInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutParentInput | Prisma.DocumentUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutParentInput | Prisma.DocumentUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
+export type DocumentUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput> | Prisma.DocumentCreateWithoutParentInput[] | Prisma.DocumentUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutParentInput | Prisma.DocumentCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutParentInput | Prisma.DocumentUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.DocumentCreateManyParentInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutParentInput | Prisma.DocumentUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutParentInput | Prisma.DocumentUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
 export type DocumentCreateWithoutUserInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
 }
 
 export type DocumentUncheckedCreateWithoutUserInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   projectId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type DocumentCreateOrConnectWithoutUserInput = {
@@ -560,9 +758,12 @@ export type DocumentScalarWhereInput = {
   id?: Prisma.StringFilter<"Document"> | string
   title?: Prisma.StringFilter<"Document"> | string
   content?: Prisma.JsonFilter<"Document">
+  type?: Prisma.StringFilter<"Document"> | string
+  order?: Prisma.IntFilter<"Document"> | number
   userId?: Prisma.StringFilter<"Document"> | string
   projectId?: Prisma.StringFilter<"Document"> | string
   folderId?: Prisma.StringNullableFilter<"Document"> | string | null
+  parentId?: Prisma.StringNullableFilter<"Document"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
 }
@@ -571,20 +772,28 @@ export type DocumentCreateWithoutProjectInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
 }
 
 export type DocumentUncheckedCreateWithoutProjectInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type DocumentCreateOrConnectWithoutProjectInput = {
@@ -617,20 +826,28 @@ export type DocumentCreateWithoutFolderInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
 }
 
 export type DocumentUncheckedCreateWithoutFolderInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   projectId: string
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type DocumentCreateOrConnectWithoutFolderInput = {
@@ -659,12 +876,141 @@ export type DocumentUpdateManyWithWhereWithoutFolderInput = {
   data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutFolderInput>
 }
 
+export type DocumentCreateWithoutChildrenInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+}
+
+export type DocumentUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutChildrenInput, Prisma.DocumentUncheckedCreateWithoutChildrenInput>
+}
+
+export type DocumentCreateWithoutParentInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
+}
+
+export type DocumentUncheckedCreateWithoutParentInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type DocumentCreateOrConnectWithoutParentInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput>
+}
+
+export type DocumentCreateManyParentInputEnvelope = {
+  data: Prisma.DocumentCreateManyParentInput | Prisma.DocumentCreateManyParentInput[]
+  skipDuplicates?: boolean
+}
+
+export type DocumentUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutChildrenInput, Prisma.DocumentUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutChildrenInput, Prisma.DocumentUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutChildrenInput, Prisma.DocumentUncheckedUpdateWithoutChildrenInput>
+}
+
+export type DocumentUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocumentUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutParentInput, Prisma.DocumentUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutParentInput, Prisma.DocumentUncheckedCreateWithoutParentInput>
+}
+
+export type DocumentUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutParentInput, Prisma.DocumentUncheckedUpdateWithoutParentInput>
+}
+
+export type DocumentUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.DocumentScalarWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutParentInput>
+}
+
 export type DocumentCreateManyUserInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   projectId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -673,28 +1019,39 @@ export type DocumentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -703,8 +1060,11 @@ export type DocumentCreateManyProjectInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   folderId?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -713,28 +1073,39 @@ export type DocumentUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -743,8 +1114,11 @@ export type DocumentCreateManyFolderInput = {
   id?: string
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
   userId: string
   projectId: string
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -753,102 +1127,218 @@ export type DocumentUpdateWithoutFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type DocumentCreateManyParentInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type DocumentUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type DocumentCountOutputType
+ */
+
+export type DocumentCountOutputType = {
+  children: number
+}
+
+export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | DocumentCountOutputTypeCountChildrenArgs
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentCountOutputType
+   */
+  select?: Prisma.DocumentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentWhereInput
+}
 
 
 export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   content?: boolean
+  type?: boolean
+  order?: boolean
   userId?: boolean
   projectId?: boolean
   folderId?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
+  children?: boolean | Prisma.Document$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   content?: boolean
+  type?: boolean
+  order?: boolean
   userId?: boolean
   projectId?: boolean
   folderId?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   content?: boolean
+  type?: boolean
+  order?: boolean
   userId?: boolean
   projectId?: boolean
   folderId?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectScalar = {
   id?: boolean
   title?: boolean
   content?: boolean
+  type?: boolean
+  order?: boolean
   userId?: boolean
   projectId?: boolean
   folderId?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "userId" | "projectId" | "folderId" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "type" | "order" | "userId" | "projectId" | "folderId" | "parentId" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
+  children?: boolean | Prisma.Document$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
 }
 export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
+  parent?: boolean | Prisma.Document$parentArgs<ExtArgs>
 }
 
 export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -857,14 +1347,19 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     user: Prisma.$UserPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs>
     folder: Prisma.$FolderPayload<ExtArgs> | null
+    parent: Prisma.$DocumentPayload<ExtArgs> | null
+    children: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     content: runtime.JsonValue
+    type: string
+    order: number
     userId: string
     projectId: string
     folderId: string | null
+    parentId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["document"]>
@@ -1264,6 +1759,8 @@ export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   folder<T extends Prisma.Document$folderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$folderArgs<ExtArgs>>): Prisma.Prisma__FolderClient<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  parent<T extends Prisma.Document$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$parentArgs<ExtArgs>>): Prisma.Prisma__DocumentClient<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.Document$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1296,9 +1793,12 @@ export interface DocumentFieldRefs {
   readonly id: Prisma.FieldRef<"Document", 'String'>
   readonly title: Prisma.FieldRef<"Document", 'String'>
   readonly content: Prisma.FieldRef<"Document", 'Json'>
+  readonly type: Prisma.FieldRef<"Document", 'String'>
+  readonly order: Prisma.FieldRef<"Document", 'Int'>
   readonly userId: Prisma.FieldRef<"Document", 'String'>
   readonly projectId: Prisma.FieldRef<"Document", 'String'>
   readonly folderId: Prisma.FieldRef<"Document", 'String'>
+  readonly parentId: Prisma.FieldRef<"Document", 'String'>
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>
 }
@@ -1718,6 +2218,49 @@ export type Document$folderArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.FolderInclude<ExtArgs> | null
   where?: Prisma.FolderWhereInput
+}
+
+/**
+ * Document.parent
+ */
+export type Document$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+}
+
+/**
+ * Document.children
+ */
+export type Document$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
 }
 
 /**

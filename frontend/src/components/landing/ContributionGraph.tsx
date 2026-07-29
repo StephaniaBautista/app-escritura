@@ -47,7 +47,7 @@ interface ContributionGraphProps {
 
 export function ContributionGraph({ totalWords = 12847 }: ContributionGraphProps) {
   const { t, i18n } = useTranslation()
-  const words = useCountUp(totalWords, 2000)
+  const { count, ref } = useCountUp(totalWords, 2000)
   const [graphData] = useState(generateContributionData)
 
   const months = i18n.language === 'en' ? MONTHS_EN : MONTHS_ES
@@ -57,7 +57,7 @@ export function ContributionGraph({ totalWords = 12847 }: ContributionGraphProps
     <div className="notebook-paper p-6 scroll-reveal-scale">
       <div className="flex items-center justify-between mb-4">
         <div className="font-display text-lg font-bold" style={{ color: 'var(--color-ink)' }}>
-          <span ref={words.ref}>{words.count.toLocaleString()}</span> {t('stats.yearWords')}
+          <span ref={ref}>{count.toLocaleString()}</span> {t('stats.yearWords')}
         </div>
       </div>
 

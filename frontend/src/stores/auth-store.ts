@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 interface User {
   id: string
@@ -9,144 +8,125 @@ interface User {
 
 interface AuthState {
   user: User | null
-  token: string | null
   isAuthenticated: boolean
   isLoading: boolean
+  isInitialized: boolean
   error: string | null
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   register: (email: string, password: string, name?: string) => Promise<void>
   logout: () => Promise<void>
   checkSession: () => Promise<void>
   clearError: () => void
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
+export const useAuthStore = create<AuthState>()((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  isInitialized: false,
+  error: null,
 
-      login: async (email: string, password: string) => {
-        set({ isLoading: true, error: null })
-        try {
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          })
+  login: async (email: string, password: string, rememberMe?: boolean) => {
+    set({ isLoading: true, error: null })
+    try {
+      const response = await fetch('/api/auth/sign-in/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, rememberMe }),
+      })
 
-          if (!response.ok) {
-            const error = await response.json()
-            throw new Error(error.error?.message || 'Error al iniciar sesión')
-          }
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || error.error?.message || 'Error al iniciar sesión')
+      }
 
-          const data = await response.json()
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
-          })
-        } catch (error: any) {
-          set({ error: error.message, isLoading: false })
-          throw error
-        }
-      },
-
-      register: async (email: string, password: string, name?: string) => {
-        set({ isLoading: true, error: null })
-        try {
-          const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name }),
-          })
-
-          if (!response.ok) {
-            const error = await response.json()
-            throw new Error(error.error?.message || 'Error al registrar usuario')
-          }
-
-          const data = await response.json()
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
-          })
-        } catch (error: any) {
-          set({ error: error.message, isLoading: false })
-          throw error
-        }
-      },
-
-      logout: async () => {
-        set({ isLoading: true, error: null })
-        try {
-          const token = get().token
-          if (token) {
-            await fetch('/api/auth/logout', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-              },
-            })
-          }
-        } catch (error) {
-          console.error('Error al cerrar sesión:', error)
-        } finally {
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            isLoading: false,
-          })
-        }
-      },
-
-      checkSession: async () => {
-        const token = get().token
-        if (!token) {
-          set({ isAuthenticated: false, user: null })
-          return
-        }
-
-        set({ isLoading: true })
-        try {
-          const response = await fetch('/api/auth/session', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          })
-
-          if (!response.ok) {
-            throw new Error('Sesión inválida')
-          }
-
-          const data = await response.json()
-          set({
-            user: data.user,
-            isAuthenticated: true,
-            isLoading: false,
-          })
-        } catch (error) {
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            isLoading: false,
-          })
-        }
-      },
-
-      clearError: () => set({ error: null }),
-    }),
-    {
-      name: 'auth-storage',
-      partialize: (state) => ({ token: state.token }),
+      const data = await response.json()
+      set({
+        user: data.user,
+        isAuthenticated: true,
+        isLoading: false,
+      })
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error al iniciar sesión'
+      set({ error: message, isLoading: false })
+      throw error
     }
-  )
-)
+  },
+
+  register: async (email: string, password: string, name?: string) => {
+    set({ isLoading: true, error: null })
+    try {
+      const response = await fetch('/api/auth/sign-up/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, name }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || error.error?.message || 'Error al registrar usuario')
+      }
+
+      const data = await response.json()
+      set({
+        user: data.user,
+        isAuthenticated: true,
+        isLoading: false,
+      })
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error al registrar usuario'
+      set({ error: message, isLoading: false })
+      throw error
+    }
+  },
+
+  logout: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      await fetch('/api/auth/sign-out', {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error)
+    } finally {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      })
+    }
+  },
+
+  checkSession: async () => {
+    set({ isLoading: true })
+    try {
+      const response = await fetch('/api/auth/get-session', {
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        throw new Error('Sesión inválida')
+      }
+
+      const data = await response.json()
+      set({
+        user: data.user,
+        isAuthenticated: true,
+        isLoading: false,
+        isInitialized: true,
+      })
+    } catch (error) {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        isInitialized: true,
+      })
+    }
+  },
+
+  clearError: () => set({ error: null }),
+}))

@@ -207,8 +207,8 @@
       "cta": "Start Premium",
       "f1": "Everything Pro",
       "f2": "AI chat companion",
-      "f3": "~100K tokens/mo (~200 msgs)",
-      "f4": "Pay-as-you-go: $2/50K tokens"
+      "f3": "~1.5M tokens/mo (~2,500 msgs)",
+      "f4": "Pay-as-you-go: $2/250K tokens"
     },
     "premiumFull": {
       "name": "Premium Full",
@@ -217,8 +217,8 @@
       "cta": "Start Full",
       "f1": "Everything Pro",
       "f2": "Chat + Character.AI + Suggestions",
-      "f3": "~400K tokens/mo (~800 msgs)",
-      "f4": "Pay-as-you-go: $2/50K tokens"
+      "f3": "~2.5M tokens/mo (~4,500 msgs)",
+      "f4": "Pay-as-you-go: $2/250K tokens"
     }
   },
   "cta": {

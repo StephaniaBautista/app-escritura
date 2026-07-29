@@ -6,6 +6,8 @@ import rateLimit from '@fastify/rate-limit'
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
 import { authRoutes } from './routes/auth.js'
+import { projectRoutes } from './routes/projects.js'
+import { documentRoutes } from './routes/documents.js'
 
 const app = Fastify({
   logger: true,
@@ -32,16 +34,18 @@ await app.register(swagger, {
     ],
     components: {
       securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+        cookieAuth: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'better-auth.session_token',
+          description: 'Session cookie set by Better Auth on login. Sent automatically by the browser.',
         },
       },
     },
     tags: [
       { name: 'Auth', description: 'Endpoints de autenticación' },
-      { name: 'Documents', description: 'Gestión de documentos' },
+      { name: 'Projects', description: 'Gestión de proyectos' },
+      { name: 'Documents', description: 'Gestión de documentos, capítulos y subpáginas' },
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
     ],
@@ -57,8 +61,12 @@ await app.register(swaggerUi, {
 })
 
 // Plugins
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+
 await app.register(cors, {
-  origin: ['http://localhost:5173'],
+  origin: allowedOrigins,
   credentials: true,
 })
 
@@ -90,6 +98,12 @@ app.get('/health', {
 
 // Auth routes
 await app.register(authRoutes, { prefix: '/api' })
+
+// Project routes
+await app.register(projectRoutes, { prefix: '/api' })
+
+// Document routes
+await app.register(documentRoutes, { prefix: '/api' })
 
 // API routes prefix
 app.register(async function apiRoutes(app) {

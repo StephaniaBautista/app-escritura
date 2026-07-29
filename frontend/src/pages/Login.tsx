@@ -8,6 +8,7 @@ export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
   const { login, isLoading, error, clearError } = useAuthStore()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -16,7 +17,7 @@ export function Login() {
     e.preventDefault()
     clearError()
     try {
-      await login(email, password)
+      await login(email, password, rememberMe)
       navigate('/app')
     } catch (error) {
       // Error is handled by the store
@@ -167,6 +168,9 @@ export function Login() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
+                    name="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-4 h-4 rounded border"
                     style={{ borderColor: 'var(--color-paper-lines)' }}
                   />

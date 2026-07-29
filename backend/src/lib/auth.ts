@@ -24,7 +24,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false,
+    requireEmailVerification: true,
     sendResetPassword: async ({ user, url, token }, request) => {
       await sendEmail({
         to: user.email,
@@ -49,8 +49,14 @@ export const auth = betterAuth({
   },
   ...(Object.keys(socialProviders).length > 0 && { socialProviders }),
   session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    expiresIn: 60 * 60 * 24 * 365, // 1 year (effectively indefinite)
     updateAge: 60 * 60 * 24, // 1 day
+  },
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === 'production',
+    crossSubDomainCookies: {
+      enabled: false,
+    },
   },
   trustedOrigins: [
     'http://localhost:5173',

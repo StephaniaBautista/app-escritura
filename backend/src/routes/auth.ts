@@ -1,4 +1,5 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import rateLimit from '@fastify/rate-limit'
 import { auth } from '../lib/auth.js'
 
 // Extend FastifyRequest to include session
@@ -41,143 +42,110 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
   }
 }
 
+// Helper to convert Fastify request to standard Request for auth.handler
+function toWebRequest(request: FastifyRequest): Request {
+  const url = new URL(request.url, `${request.protocol}://${request.hostname}`)
+  const headers = new Headers()
+  for (const [key, value] of Object.entries(request.headers)) {
+    if (value) {
+      headers.set(key, Array.isArray(value) ? value.join(', ') : value)
+    }
+  }
+
+  const method = request.method
+  const body = method !== 'GET' && method !== 'HEAD'
+    ? JSON.stringify(request.body)
+    : undefined
+
+  return new Request(url.toString(), {
+    method,
+    headers,
+    body,
+  })
+}
+
+// Helper to forward auth.handler Response to Fastify reply
+async function forwardWebResponse(webResponse: Response, reply: FastifyReply) {
+  // Forward Set-Cookie headers
+  webResponse.headers.forEach((value, key) => {
+    if (key.toLowerCase() === 'set-cookie') {
+      reply.header(key, value)
+    }
+  })
+
+  // Forward status and body
+  const contentType = webResponse.headers.get('content-type') || ''
+  if (contentType.includes('application/json')) {
+    const body = await webResponse.json()
+    reply.status(webResponse.status).send(body)
+  } else {
+    const text = await webResponse.text()
+    reply.status(webResponse.status).send(text)
+  }
+}
+
+// Swagger schema definitions
+const errorSchema = {
+  type: 'object',
+  properties: {
+    error: {
+      type: 'object',
+      properties: {
+        code: { type: 'string' },
+        message: { type: 'string' },
+      },
+    },
+  },
+}
+
+const sessionUserSchema = {
+  type: 'object',
+  properties: {
+    user: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        email: { type: 'string' },
+        name: { type: 'string' },
+      },
+    },
+    session: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        token: { type: 'string' },
+        expiresAt: { type: 'string', format: 'date-time' },
+      },
+    },
+  },
+}
+
+const messageSchema = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+  },
+}
+
 // Auth routes plugin
 export async function authRoutes(app: FastifyInstance) {
-  // Register
-  app.post('/auth/register', async (request, reply) => {
-    try {
-      const { email, password, name } = request.body as {
-        email: string
-        password: string
-        name?: string
-      }
-
-      const result = await auth.api.signUpEmail({
-        body: { email, password, name: name || '' },
-      })
-
-      return reply.status(201).send(result)
-    } catch (error: any) {
-      return reply.status(400).send({
-        error: {
-          code: 'REGISTRATION_FAILED',
-          message: error.message || 'Error al registrar usuario',
-        },
-      })
-    }
+  // Stricter rate limit for auth endpoints
+  await app.register(rateLimit, {
+    max: 20,
+    timeWindow: '15 minutes',
   })
 
-  // Login
-  app.post('/auth/login', async (request, reply) => {
+  // Catch-all for BetterAuth handler - handles all /auth/* paths
+  app.all('/auth/*', async (request, reply) => {
     try {
-      const { email, password } = request.body as {
-        email: string
-        password: string
-      }
-
-      const result = await auth.api.signInEmail({
-        body: { email, password },
-      })
-
-      return reply.send(result)
-    } catch (error: any) {
-      return reply.status(401).send({
+      const webRequest = toWebRequest(request)
+      const webResponse = await auth.handler(webRequest)
+      await forwardWebResponse(webResponse, reply)
+    } catch {
+      return reply.status(500).send({
         error: {
-          code: 'LOGIN_FAILED',
-          message: error.message || 'Credenciales inválidas',
-        },
-      })
-    }
-  })
-
-  // Logout
-  app.post('/auth/logout', async (request, reply) => {
-    try {
-      await auth.api.signOut({
-        headers: request.headers as Record<string, string>,
-      })
-
-      return reply.send({ message: 'Sesión cerrada' })
-    } catch (error: any) {
-      return reply.status(400).send({
-        error: {
-          code: 'LOGOUT_FAILED',
-          message: error.message || 'Error al cerrar sesión',
-        },
-      })
-    }
-  })
-
-  // Get current session
-  app.get('/auth/session', async (request, reply) => {
-    try {
-      const session = await auth.api.getSession({
-        headers: request.headers as Record<string, string>,
-      })
-
-      if (!session) {
-        return reply.status(401).send({
-          error: {
-            code: 'NO_SESSION',
-            message: 'No hay sesión activa',
-          },
-        })
-      }
-
-      return reply.send(session)
-    } catch (error: any) {
-      return reply.status(401).send({
-        error: {
-          code: 'SESSION_ERROR',
-          message: error.message || 'Error al obtener sesión',
-        },
-      })
-    }
-  })
-
-  // Forgot password - send reset email
-  app.post('/auth/forgot-password', async (request, reply) => {
-    try {
-      const { email } = request.body as { email: string }
-
-      // TODO: Implement proper password reset email
-      // For now, just log the request and return success
-      console.log('Password reset requested for:', email)
-
-      // Always return success to prevent email enumeration
-      return reply.send({
-        message: 'Si el correo existe, recibirás un enlace para restablecer tu contraseña',
-      })
-    } catch (error: any) {
-      // Don't reveal if email exists or not
-      return reply.send({
-        message: 'Si el correo existe, recibirás un enlace para restablecer tu contraseña',
-      })
-    }
-  })
-
-  // Reset password with token
-  app.post('/auth/reset-password', async (request, reply) => {
-    try {
-      const { token, newPassword } = request.body as {
-        token: string
-        newPassword: string
-      }
-
-      await auth.api.resetPassword({
-        body: {
-          newPassword,
-          token,
-        },
-        headers: request.headers as Record<string, string>,
-      })
-
-      return reply.send({ message: 'Contraseña actualizada correctamente' })
-    } catch (error: any) {
-      return reply.status(400).send({
-        error: {
-          code: 'RESET_FAILED',
-          message: error.message || 'Error al restablecer contraseña',
+          code: 'AUTH_ERROR',
+          message: 'Error de autenticación',
         },
       })
     }

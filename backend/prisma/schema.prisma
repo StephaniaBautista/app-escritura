@@ -114,14 +114,17 @@ model Folder {
   @@map("folders")
 }
 
-// Document model for storing written content
+// Document model for storing written content (also used for chapters/subpages)
 model Document {
   id        String   @id @default(cuid())
   title     String
   content   Json     @default("{}")
+  type      String   @default("document") // document | chapter | subpage
+  order     Int      @default(0)
   userId    String
   projectId String
   folderId  String?
+  parentId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -129,7 +132,12 @@ model Document {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   folder    Folder?  @relation(fields: [folderId], references: [id])
+  parent    Document?  @relation("DocumentTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Document[] @relation("DocumentTree")
 
+  @@index([projectId])
+  @@index([parentId])
+  @@index([userId])
   @@map("documents")
 }
 
