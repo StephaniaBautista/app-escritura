@@ -297,6 +297,61 @@
     "q6": "Does the Free plan have a time limit?",
     "a6": "No. The Free plan is forever. It only has limits on advanced features, not on usage time."
   },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "welcomeDefault": "Welcome, Writer",
+    "workspace": "Your creative workspace",
+    "letsWrite": "Let's write!",
+    "quickDoc": "Quick Document",
+    "quickDocDesc": "Create a document without a project",
+    "newProject": "New Project",
+    "newProjectDesc": "Create a project with characters and worlds",
+    "recentActivity": "Recent activity",
+    "noActivity": "No recent activity",
+    "startCreating": "Start creating your first story"
+  },
+  "projects": {
+    "title": "My projects",
+    "subtitle": "Organize your stories",
+    "newFolder": "New Folder",
+    "newDocument": "New Document",
+    "folderNamePlaceholder": "Folder name...",
+    "noFolders": "No folders",
+    "noFoldersDesc": "Create your first folder to organize your stories",
+    "createFolder": "Create Folder",
+    "startHere": "Start here!",
+    "documentsCount": "{{count}} documents"
+  },
+  "folder": {
+    "back": "← Back to documents",
+    "documents": "Documents",
+    "characters": "Characters",
+    "worlds": "Worlds",
+    "newDocument": "New Document",
+    "docTitlePlaceholder": "Document title...",
+    "noDocuments": "No documents yet",
+    "noDocumentsDesc": "Create your first document in this folder"
+  },
+  "editorApp": {
+    "selectProject": "Select a project",
+    "selectProjectDesc": "Choose a project from the sidebar or create a new one",
+    "newDoc": "New Document",
+    "selectDoc": "Select a document from the sidebar or create a new one",
+    "charactersCount": "{{count}} characters",
+    "wordsCount": "{{count}} words",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "saveError": "Save error"
+  },
+  "sidebar": {
+    "home": "Home",
+    "myProjects": "My projects",
+    "recent": "Recent",
+    "shared": "Shared with me",
+    "logout": "Log out",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  },
   "auth": {
     "login": {
       "title": "Welcome back",

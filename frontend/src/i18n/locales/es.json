@@ -296,6 +296,61 @@
     "q6": "¿El plan Gratis tiene límite de tiempo?",
     "a6": "No. El plan Gratis es para siempre. Solo tiene límites en funcionalidades avanzadas, no en tiempo de uso."
   },
+  "dashboard": {
+    "welcome": "Bienvenido, {{name}}",
+    "welcomeDefault": "Bienvenido, Escritor",
+    "workspace": "Tu espacio de trabajo creativo",
+    "letsWrite": "¡A escribir!",
+    "quickDoc": "Documento Rápido",
+    "quickDocDesc": "Crea un documento sin proyecto",
+    "newProject": "Nuevo Proyecto",
+    "newProjectDesc": "Crea un proyecto con personajes y mundos",
+    "recentActivity": "Actividad reciente",
+    "noActivity": "No hay actividad reciente",
+    "startCreating": "Empieza a crear tu primera historia"
+  },
+  "projects": {
+    "title": "Mis proyectos",
+    "subtitle": "Organiza tus historias",
+    "newFolder": "Nueva Carpeta",
+    "newDocument": "Nuevo Documento",
+    "folderNamePlaceholder": "Nombre de la carpeta...",
+    "noFolders": "No hay carpetas",
+    "noFoldersDesc": "Crea tu primera carpeta para organizar tus historias",
+    "createFolder": "Crear Carpeta",
+    "startHere": "¡Empieza aquí!",
+    "documentsCount": "{{count}} documentos"
+  },
+  "folder": {
+    "back": "← Volver a documentos",
+    "documents": "Documentos",
+    "characters": "Personajes",
+    "worlds": "Mundos",
+    "newDocument": "Nuevo Documento",
+    "docTitlePlaceholder": "Título del documento...",
+    "noDocuments": "No hay documentos aún",
+    "noDocumentsDesc": "Crea tu primer documento en esta carpeta"
+  },
+  "editorApp": {
+    "selectProject": "Selecciona un proyecto",
+    "selectProjectDesc": "Elige un proyecto de la barra lateral o crea uno nuevo",
+    "newDoc": "Nuevo Documento",
+    "selectDoc": "Selecciona un documento de la barra lateral o crea uno nuevo",
+    "charactersCount": "{{count}} caracteres",
+    "wordsCount": "{{count}} palabras",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "saveError": "Error al guardar"
+  },
+  "sidebar": {
+    "home": "Inicio",
+    "myProjects": "Mis proyectos",
+    "recent": "Recientes",
+    "shared": "Compartidos conmigo",
+    "logout": "Cerrar Sesión",
+    "collapse": "Colapsar",
+    "expand": "Expandir"
+  },
   "auth": {
     "login": {
       "title": "Bienvenido de vuelta",

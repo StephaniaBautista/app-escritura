@@ -1,10 +1,15 @@
 import { Link, useLocation } from 'react-router-dom'
 import {
-  Home, FileText, Clock, Users2, LogOut, Sparkles
+  Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  collapsed: boolean
+  onToggle: () => void
+}
+
+export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const { user, logout } = useAuthStore()
   const location = useLocation()
 
@@ -25,7 +30,7 @@ export function AppSidebar() {
 
   return (
     <aside
-      className="w-64 h-screen flex flex-col border-r flex-shrink-0"
+      className={`${collapsed ? 'w-16' : 'w-64'} h-screen flex flex-col border-r flex-shrink-0 transition-all duration-200`}
       style={{
         background: 'var(--color-paper)',
         borderColor: 'var(--color-paper-lines)',
@@ -33,7 +38,7 @@ export function AppSidebar() {
     >
       {/* Header */}
       <div
-        className="p-4 border-b flex items-center gap-2"
+        className={`${collapsed ? 'p-2 justify-center' : 'p-4'} border-b flex items-center gap-2`}
         style={{ borderColor: 'var(--color-paper-lines)' }}
       >
         <div
@@ -42,16 +47,18 @@ export function AppSidebar() {
         >
           <Sparkles className="w-4 h-4 text-white" />
         </div>
-        <span
-          className="font-display font-semibold text-lg"
-          style={{ color: 'var(--color-ink)' }}
-        >
-          Escritura
-        </span>
+        {!collapsed && (
+          <span
+            className="font-display font-semibold text-lg"
+            style={{ color: 'var(--color-ink)' }}
+          >
+            Escritura
+          </span>
+        )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+      <nav className={`flex-1 ${collapsed ? 'p-1' : 'p-2'} space-y-1 overflow-y-auto`}>
         {/* Main nav */}
         {mainNav.map((item) => {
           const Icon = item.icon
@@ -60,15 +67,16 @@ export function AppSidebar() {
             <Link
               key={item.path}
               to={item.path}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80"
+              className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80`}
               style={
                 active
                   ? { background: 'var(--color-accent)', color: 'white' }
                   : { color: 'var(--color-ink-light)' }
               }
+              title={collapsed ? item.label : undefined}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
-              <span>{item.label}</span>
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           )
         })}
@@ -84,60 +92,92 @@ export function AppSidebar() {
             <Link
               key={item.path}
               to={item.path}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80"
+              className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80`}
               style={
                 active
                   ? { background: 'var(--color-accent)', color: 'white' }
                   : { color: 'var(--color-ink-light)' }
               }
+              title={collapsed ? item.label : undefined}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
-              <span>{item.label}</span>
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           )
         })}
+
+        {/* Collapse toggle */}
+        <div className="h-px my-3" style={{ background: 'var(--color-paper-lines)' }} />
+        <button
+          onClick={onToggle}
+          className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80 w-full`}
+          style={{ color: 'var(--color-ink-light)' }}
+          title={collapsed ? 'Expandir' : 'Colapsar'}
+        >
+          {collapsed ? <PanelLeftOpen className="w-5 h-5 flex-shrink-0" /> : <PanelLeftClose className="w-5 h-5 flex-shrink-0" />}
+          {!collapsed && <span>Colapsar</span>}
+        </button>
       </nav>
 
       {/* User section */}
       <div
-        className="p-3 border-t"
+        className={`${collapsed ? 'p-2' : 'p-3'} border-t`}
         style={{ borderColor: 'var(--color-paper-lines)' }}
       >
-        <div className="flex items-center gap-3 mb-3">
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: 'var(--color-accent-light)' }}
-          >
-            <span
-              className="text-sm font-semibold"
-              style={{ color: 'var(--color-accent)' }}
+        {collapsed ? (
+          <div className="flex justify-center">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ background: 'var(--color-accent-light)' }}
+              title={user?.name || 'Usuario'}
             >
-              {user?.name?.charAt(0) || user?.email?.charAt(0) || '?'}
-            </span>
+              <span
+                className="text-sm font-semibold"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                {user?.name?.charAt(0) || user?.email?.charAt(0) || '?'}
+              </span>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p
-              className="text-sm font-medium truncate"
-              style={{ color: 'var(--color-ink)' }}
-            >
-              {user?.name || 'Usuario'}
-            </p>
-            <p
-              className="text-xs truncate"
+        ) : (
+          <>
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ background: 'var(--color-accent-light)' }}
+              >
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {user?.name?.charAt(0) || user?.email?.charAt(0) || '?'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className="text-sm font-medium truncate"
+                  style={{ color: 'var(--color-ink)' }}
+                >
+                  {user?.name || 'Usuario'}
+                </p>
+                <p
+                  className="text-xs truncate"
+                  style={{ color: 'var(--color-ink-light)' }}
+                >
+                  {user?.email}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={logout}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors hover:opacity-80"
               style={{ color: 'var(--color-ink-light)' }}
             >
-              {user?.email}
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={logout}
-          className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors hover:opacity-80"
-          style={{ color: 'var(--color-ink-light)' }}
-        >
-          <LogOut className="w-4 h-4 flex-shrink-0" />
-          <span>Cerrar Sesión</span>
-        </button>
+              <LogOut className="w-4 h-4 flex-shrink-0" />
+              <span>Cerrar Sesión</span>
+            </button>
+          </>
+        )}
       </div>
     </aside>
   )

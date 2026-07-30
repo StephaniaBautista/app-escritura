@@ -4,13 +4,14 @@ import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
+import { EditableTitle } from '@/components/ui/EditableTitle'
 import { FileText, Plus, Users, Globe } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') || 'documents'
-  const { currentProject, documentTree, selectProject, createDocument, error } = useDocumentStore()
+  const { currentProject, documentTree, selectProject, createDocument, updateProject, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
   const [isCreating, setIsCreating] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -56,9 +57,14 @@ export function FolderPage() {
           <Link to="/app/documents" className="text-sm hover:opacity-80" style={{ color: 'var(--color-ink-light)' }}>
             ← Volver a documentos
           </Link>
-          <h1 className="font-display text-4xl font-bold mt-2" style={{ color: 'var(--color-ink)' }}>
-            {currentProject?.name || 'Carpeta'}
-          </h1>
+          <EditableTitle
+            title={currentProject?.name || 'Carpeta'}
+            onSave={(newName) => {
+              if (folderId) updateProject(folderId, { name: newName })
+            }}
+            className="font-display text-4xl font-bold mt-2"
+            style={{ color: 'var(--color-ink)' }}
+          />
         </div>
 
         <div className="flex gap-1 border-b mb-6" style={{ borderColor: 'var(--color-paper-lines)' }}>

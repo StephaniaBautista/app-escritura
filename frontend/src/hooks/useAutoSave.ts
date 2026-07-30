@@ -1,5 +1,7 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { documentsApi } from '@/services/documents'
+
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 interface UseAutoSaveOptions {
   documentId: string | null
@@ -12,6 +14,7 @@ export function useAutoSave({ documentId, getContent, debounceMs = 500, enabled 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isSavingRef = useRef(false)
   const pendingContentRef = useRef<Record<string, unknown> | null>(null)
+  const [status, setStatus] = useState<SaveStatus>('idle')
 
   const triggerSave = useCallback(() => {
     if (!enabled || !documentId) return
@@ -30,16 +33,22 @@ export function useAutoSave({ documentId, getContent, debounceMs = 500, enabled 
       }
 
       isSavingRef.current = true
+      setStatus('saving')
       try {
         await documentsApi.update(documentId, { content })
+        setStatus('saved')
       } catch (error) {
         console.error('Auto-save failed:', error)
+        setStatus('error')
       } finally {
         isSavingRef.current = false
         if (pendingContentRef.current) {
           const next = pendingContentRef.current
           pendingContentRef.current = null
-          documentsApi.update(documentId, { content: next }).catch(console.error)
+          setStatus('saving')
+          documentsApi.update(documentId, { content: next })
+            .then(() => setStatus('saved'))
+            .catch(() => setStatus('error'))
         }
       }
     }, debounceMs)
@@ -53,5 +62,5 @@ export function useAutoSave({ documentId, getContent, debounceMs = 500, enabled 
     }
   }, [])
 
-  return { triggerSave }
+  return { triggerSave, status }
 }

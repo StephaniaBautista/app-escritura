@@ -5,6 +5,7 @@ import { useDocumentStore } from '@/stores/document-store'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
+import { EditableTitle } from '@/components/ui/EditableTitle'
 
 export function EditorPage() {
   const { projectId, documentId } = useParams<{ projectId: string; documentId?: string }>()
@@ -17,6 +18,7 @@ export function EditorPage() {
     selectProject,
     loadDocument,
     createDocument,
+    updateDocument,
     clearCurrentDocument,
   } = useDocumentStore()
 
@@ -120,9 +122,13 @@ export function EditorPage() {
       <div className="border-b px-8 py-3 flex items-center gap-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
         <BookOpen className="w-4 h-4" style={{ color: 'var(--color-ink-faint)' }} />
         <div className="flex-1">
-          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>
-            {currentDocument.title}
-          </h1>
+          <EditableTitle
+            title={currentDocument.title}
+            onSave={(newTitle) => updateDocument(currentDocument.id, { title: newTitle })}
+            className="text-lg font-semibold"
+            style={{ color: 'var(--color-ink)' }}
+            tag="h1"
+          />
           {currentDocument.parent && (
             <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
               en {currentDocument.parent.title}

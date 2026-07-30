@@ -2,9 +2,11 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAutoSave } from '@/hooks/useAutoSave'
+import type { SaveStatus } from '@/hooks/useAutoSave'
 import { Toolbar } from './Toolbar'
+import { Check, Loader2, AlertCircle } from 'lucide-react'
 
 interface DocumentEditorProps {
   documentId: string
@@ -12,8 +14,34 @@ interface DocumentEditorProps {
   onUpdate?: (content: Record<string, unknown>) => void
 }
 
+function getWordCount(text: string): number {
+  const trimmed = text.trim()
+  if (!trimmed) return 0
+  return trimmed.split(/\s+/).length
+}
+
+function StatusIndicator({ status }: { status: SaveStatus }) {
+  if (status === 'idle') return null
+
+  const config = {
+    saving: { icon: Loader2, text: 'Guardando...', color: 'var(--color-ink-faint)', spin: true },
+    saved: { icon: Check, text: 'Guardado', color: 'var(--color-accent-teal)', spin: false },
+    error: { icon: AlertCircle, text: 'Error al guardar', color: 'var(--color-accent)', spin: false },
+  } as const
+
+  const { icon: Icon, text, color, spin } = config[status]
+
+  return (
+    <span className="flex items-center gap-1.5" style={{ color }}>
+      <Icon className={`w-3 h-3 ${spin ? 'animate-spin' : ''}`} />
+      {text}
+    </span>
+  )
+}
+
 export function DocumentEditor({ documentId, initialContent, onUpdate }: DocumentEditorProps) {
   const contentRef = useRef<Record<string, unknown> | null>(null)
+  const [wordCount, setWordCount] = useState(0)
 
   const editor = useEditor({
     extensions: [
@@ -30,6 +58,9 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
       const json = editor.getJSON()
       contentRef.current = json
       onUpdate?.(json)
+
+      const text = editor.state.doc.textContent
+      setWordCount(getWordCount(text))
     },
     editorProps: {
       attributes: {
@@ -40,7 +71,7 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
 
   const getContent = useCallback(() => contentRef.current, [])
 
-  const { triggerSave } = useAutoSave({
+  const { triggerSave, status } = useAutoSave({
     documentId,
     getContent,
     debounceMs: 500,
@@ -64,6 +95,8 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId])
 
+  const charCount = editor?.storage.characterCount?.characters?.() ?? 0
+
   return (
     <div className="flex flex-col h-full">
       <Toolbar editor={editor} />
@@ -71,8 +104,14 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
         <EditorContent editor={editor} />
       </div>
       {editor && (
-        <div className="px-8 py-2 text-xs border-t" style={{ color: 'var(--color-ink-faint)', borderColor: 'var(--color-paper-lines)' }}>
-          {editor.storage.characterCount?.characters?.() ?? 0} caracteres
+        <div
+          className="px-8 py-2 text-xs border-t flex items-center justify-between"
+          style={{ color: 'var(--color-ink-faint)', borderColor: 'var(--color-paper-lines)' }}
+        >
+          <span>
+            {charCount} caracteres · {wordCount} palabras
+          </span>
+          <StatusIndicator status={status} />
         </div>
       )}
     </div>

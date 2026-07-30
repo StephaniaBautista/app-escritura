@@ -37,8 +37,14 @@ export const useAuthStore = create<AuthState>()((set) => ({
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || error.error?.message || 'Error al iniciar sesión')
+        const raw = await response.text()
+        console.error(`[auth] sign-in ${response.status}:`, raw)
+        let message = 'Error al iniciar sesión'
+        try {
+          const error = JSON.parse(raw)
+          message = error.message || error.error?.message || message
+        } catch { message = raw || message }
+        throw new Error(message)
       }
 
       const data = await response.json()
@@ -65,8 +71,14 @@ export const useAuthStore = create<AuthState>()((set) => ({
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || error.error?.message || 'Error al registrar usuario')
+        const raw = await response.text()
+        console.error(`[auth] sign-up ${response.status}:`, raw)
+        let message = 'Error al registrar usuario'
+        try {
+          const error = JSON.parse(raw)
+          message = error.message || error.error?.message || message
+        } catch { message = raw || message }
+        throw new Error(message)
       }
 
       const data = await response.json()

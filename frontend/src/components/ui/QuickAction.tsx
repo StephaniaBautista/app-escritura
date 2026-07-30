@@ -1,14 +1,25 @@
 import { Link } from 'react-router-dom'
 
-interface QuickActionProps {
+interface QuickActionBaseProps {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   title: string
   description: string
-  href: string
   color?: 'accent' | 'teal' | 'violet'
 }
 
-export function QuickAction({ icon: Icon, title, description, href, color = 'accent' }: QuickActionProps) {
+interface QuickActionLinkProps extends QuickActionBaseProps {
+  href: string
+  onClick?: never
+}
+
+interface QuickActionButtonProps extends QuickActionBaseProps {
+  href?: never
+  onClick: () => void
+}
+
+type QuickActionProps = QuickActionLinkProps | QuickActionButtonProps
+
+export function QuickAction({ icon: Icon, title, description, href, onClick, color = 'accent' }: QuickActionProps) {
   const colorMap = {
     accent: { bg: 'var(--color-accent-light)', icon: 'var(--color-accent)', border: 'var(--color-accent)' },
     teal: { bg: 'var(--color-accent-teal-light)', icon: 'var(--color-accent-teal)', border: 'var(--color-accent-teal)' },
@@ -16,11 +27,8 @@ export function QuickAction({ icon: Icon, title, description, href, color = 'acc
   }
   const colors = colorMap[color]
 
-  return (
-    <Link
-      to={href}
-      className="notebook-paper p-6 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
-    >
+  const content = (
+    <>
       <div className="notebook-lines absolute inset-0 opacity-10 rounded-xl"></div>
       <div className="relative z-10">
         <div
@@ -33,6 +41,26 @@ export function QuickAction({ icon: Icon, title, description, href, color = 'acc
         <p className="text-sm" style={{ color: 'var(--color-ink-light)' }}>{description}</p>
       </div>
       <div className="absolute bottom-4 left-6 right-6 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: colors.icon }}></div>
+    </>
+  )
+
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        className="notebook-paper p-6 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 text-left w-full"
+      >
+        {content}
+      </button>
+    )
+  }
+
+  return (
+    <Link
+      to={href}
+      className="notebook-paper p-6 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+    >
+      {content}
     </Link>
   )
 }

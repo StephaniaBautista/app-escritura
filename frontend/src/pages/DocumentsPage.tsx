@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
-import { Plus, FolderOpen } from 'lucide-react'
+import { Plus, FolderOpen, FileText, ChevronDown } from 'lucide-react'
 
 export function DocumentsPage() {
-  const { projects, loadProjects, createProject, error } = useDocumentStore()
+  const { projects, loadProjects, createProject, createDocument, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
+  const navigate = useNavigate()
   const [isCreating, setIsCreating] = useState(false)
+  const [showDocForm, setShowDocForm] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
 
   useEffect(() => {
     loadProjects()
   }, [loadProjects])
 
-  const handleCreate = async (name: string) => {
+  useEffect(() => {
+    if (projects.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projects[0].id)
+    }
+  }, [projects, selectedProjectId])
+
+  const handleCreateFolder = async (name: string) => {
     setLocalError(null)
     try {
       const project = await createProject(name)
@@ -32,6 +41,29 @@ export function DocumentsPage() {
     }
   }
 
+  const handleCreateDocument = async (title: string) => {
+    if (!selectedProjectId) return
+    setLocalError(null)
+    try {
+      const doc = await createDocument({
+        title,
+        type: 'document',
+        projectId: selectedProjectId,
+      })
+      addActivity({
+        type: 'document_created',
+        title,
+        folderId: selectedProjectId,
+        documentId: doc.id,
+      })
+      setShowDocForm(false)
+      navigate(`/app/editor/${selectedProjectId}/${doc.id}`)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al crear el documento'
+      setLocalError(message)
+    }
+  }
+
   return (
     <div className="p-6 md:p-8">
       <div className="max-w-5xl">
@@ -40,14 +72,24 @@ export function DocumentsPage() {
             <h1 className="font-display text-4xl font-bold" style={{ color: 'var(--color-ink)' }}>Mis proyectos</h1>
             <p className="text-lg" style={{ color: 'var(--color-ink-light)' }}>Organiza tus historias</p>
           </div>
-          <button
-            onClick={() => setIsCreating(true)}
-            className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02] shadow-md"
-            style={{ background: 'var(--color-accent)' }}
-          >
-            <Plus className="w-4 h-4" />
-            Nueva Carpeta
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setIsCreating(true); setShowDocForm(false) }}
+              className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02] shadow-md"
+              style={{ background: 'var(--color-accent)' }}
+            >
+              <Plus className="w-4 h-4" />
+              Nueva Carpeta
+            </button>
+            <button
+              onClick={() => { setShowDocForm(true); setIsCreating(false) }}
+              className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] shadow-md border-2"
+              style={{ background: 'var(--color-paper)', borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
+            >
+              <FileText className="w-4 h-4" />
+              Nuevo Documento
+            </button>
+          </div>
         </div>
 
         <ErrorMessage message={localError || error} />
@@ -55,9 +97,38 @@ export function DocumentsPage() {
         {isCreating && (
           <InlineCreateInput
             placeholder="Nombre de la carpeta..."
-            onSubmit={handleCreate}
+            onSubmit={handleCreateFolder}
             onCancel={() => setIsCreating(false)}
           />
+        )}
+
+        {showDocForm && (
+          <div className="notebook-paper p-4 mb-4">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <select
+                  value={selectedProjectId || ''}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg text-sm border appearance-none pr-8"
+                  style={{
+                    background: 'var(--color-background)',
+                    borderColor: 'var(--color-paper-lines)',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--color-ink-faint)' }} />
+              </div>
+              <InlineCreateInput
+                placeholder="Título del documento..."
+                onSubmit={handleCreateDocument}
+                onCancel={() => setShowDocForm(false)}
+              />
+            </div>
+          </div>
         )}
 
         {projects.length > 0 ? (

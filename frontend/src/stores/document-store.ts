@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Document, DocumentNode, Project } from '@/types/document'
+import type { Document, DocumentNode, Project, CreateProjectInput } from '@/types/document'
 import { projectsApi, documentsApi } from '@/services/documents'
 
 interface DocumentState {
@@ -13,6 +13,7 @@ interface DocumentState {
   loadProjects: () => Promise<void>
   selectProject: (projectId: string) => Promise<void>
   createProject: (name: string, description?: string) => Promise<Project>
+  updateProject: (id: string, data: Partial<CreateProjectInput>) => Promise<void>
   deleteProject: (id: string) => Promise<void>
 
   loadDocumentTree: (projectId: string) => Promise<void>
@@ -20,6 +21,8 @@ interface DocumentState {
   createDocument: (data: { title: string; type?: 'document' | 'chapter' | 'subpage'; projectId: string; parentId?: string }) => Promise<Document>
   updateDocument: (id: string, data: { title?: string; content?: Record<string, unknown> }) => Promise<void>
   deleteDocument: (id: string) => Promise<void>
+
+  quickCreateDocument: () => Promise<Document>
 
   clearCurrentDocument: () => void
 }
@@ -68,6 +71,18 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
     } catch (error: unknown) {
       set({ error: getErrorMessage(error), isLoading: false })
       throw error
+    }
+  },
+
+  updateProject: async (id: string, data) => {
+    try {
+      const updated = await projectsApi.update(id, data)
+      set((state) => ({
+        projects: state.projects.map((p) => (p.id === id ? { ...p, ...updated } : p)),
+        currentProject: state.currentProject?.id === id ? { ...state.currentProject, ...updated } : state.currentProject,
+      }))
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error) })
     }
   },
 
@@ -136,6 +151,36 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       }
     } catch (error: unknown) {
       set({ error: getErrorMessage(error) })
+    }
+  },
+
+  quickCreateDocument: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      let projects = get().projects
+      if (projects.length === 0) {
+        projects = await projectsApi.list()
+      }
+
+      let targetProject = projects.find((p) => p.name === 'Documentos rápidos')
+      if (!targetProject) {
+        targetProject = await projectsApi.create({ name: 'Documentos rápidos' })
+        set((state) => ({ projects: [targetProject!, ...state.projects] }))
+      }
+
+      const now = new Date()
+      const title = `Documento ${now.toLocaleDateString()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+      const doc = await documentsApi.create({
+        title,
+        type: 'document',
+        projectId: targetProject.id,
+      })
+
+      set({ isLoading: false })
+      return doc
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error), isLoading: false })
+      throw error
     }
   },
 

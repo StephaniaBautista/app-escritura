@@ -44,7 +44,8 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 
 // Helper to convert Fastify request to standard Request for auth.handler
 function toWebRequest(request: FastifyRequest): Request {
-  const url = new URL(request.url, `${request.protocol}://${request.hostname}`)
+  const host = request.headers.host || `${request.hostname}:${request.socket.localPort || '3001'}`
+  const url = new URL(request.url, `${request.protocol}://${host}`)
   const headers = new Headers()
   for (const [key, value] of Object.entries(request.headers)) {
     if (value) {
@@ -140,8 +141,16 @@ export async function authRoutes(app: FastifyInstance) {
     try {
       const webRequest = toWebRequest(request)
       const webResponse = await auth.handler(webRequest)
+
+      if (webResponse.status >= 400) {
+        const clone = webResponse.clone()
+        const body = await clone.text()
+        request.log.error({ status: webResponse.status, url: request.url, body }, 'BetterAuth error response')
+      }
+
       await forwardWebResponse(webResponse, reply)
-    } catch {
+    } catch (err) {
+      request.log.error({ err }, 'Auth handler threw')
       return reply.status(500).send({
         error: {
           code: 'AUTH_ERROR',

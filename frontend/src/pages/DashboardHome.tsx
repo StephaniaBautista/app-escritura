@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/auth-store'
+import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
 import { formatTime } from '@/lib/utils'
 import { getActivityIcon, getActivityLabel, getActivityLink } from '@/lib/activity-helpers'
@@ -10,10 +11,21 @@ import { FileText, BookOpen, Sparkles } from 'lucide-react'
 export function DashboardHome() {
   const { user } = useAuthStore()
   const { activities, loadActivities } = useActivityStore()
+  const { quickCreateDocument } = useDocumentStore()
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadActivities()
   }, [loadActivities])
+
+  const handleQuickDocument = async () => {
+    try {
+      const doc = await quickCreateDocument()
+      navigate(`/app/editor/${doc.projectId}/${doc.id}`)
+    } catch {
+      navigate('/app/documents')
+    }
+  }
 
   return (
     <div className="p-6 md:p-8">
@@ -38,7 +50,7 @@ export function DashboardHome() {
             icon={FileText}
             title="Documento Rápido"
             description="Crea un documento sin proyecto"
-            href="/app/documents"
+            onClick={handleQuickDocument}
             color="accent"
           />
           <QuickAction
