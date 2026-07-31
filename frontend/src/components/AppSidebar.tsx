@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react'
@@ -7,20 +8,22 @@ import { useAuthStore } from '@/stores/auth-store'
 interface AppSidebarProps {
   collapsed: boolean
   onToggle: () => void
+  onMobileClose?: () => void
 }
 
-export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
+export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarProps) {
   const { user, logout } = useAuthStore()
   const location = useLocation()
+  const { t } = useTranslation()
 
   const mainNav = [
-    { path: '/app', label: 'Inicio', icon: Home },
-    { path: '/app/documents', label: 'Mis proyectos', icon: FileText },
+    { path: '/app', label: t('sidebar.home'), icon: Home },
+    { path: '/app/documents', label: t('sidebar.myProjects'), icon: FileText },
   ]
 
   const secondaryNav = [
-    { path: '/app/recent', label: 'Recientes', icon: Clock },
-    { path: '/app/shared', label: 'Compartidos conmigo', icon: Users2 },
+    { path: '/app/recent', label: t('sidebar.recent'), icon: Clock },
+    { path: '/app/shared', label: t('sidebar.shared'), icon: Users2 },
   ]
 
   const isActive = (path: string) => {
@@ -49,12 +52,20 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         </div>
         {!collapsed && (
           <span
-            className="font-display font-semibold text-lg"
+            className="font-display font-semibold text-lg flex-1"
             style={{ color: 'var(--color-ink)' }}
           >
             Escritura
           </span>
         )}
+        <button
+          onClick={onToggle}
+          className="p-1.5 rounded-lg transition-all hover:opacity-80"
+          style={{ color: 'var(--color-ink-faint)' }}
+          title={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
+        >
+          {collapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+        </button>
       </div>
 
       {/* Navigation */}
@@ -67,6 +78,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             <Link
               key={item.path}
               to={item.path}
+              onClick={onMobileClose}
               className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80`}
               style={
                 active
@@ -92,6 +104,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             <Link
               key={item.path}
               to={item.path}
+              onClick={onMobileClose}
               className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80`}
               style={
                 active
@@ -105,18 +118,6 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             </Link>
           )
         })}
-
-        {/* Collapse toggle */}
-        <div className="h-px my-3" style={{ background: 'var(--color-paper-lines)' }} />
-        <button
-          onClick={onToggle}
-          className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} ${collapsed ? 'px-2' : 'px-3'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:opacity-80 w-full`}
-          style={{ color: 'var(--color-ink-light)' }}
-          title={collapsed ? 'Expandir' : 'Colapsar'}
-        >
-          {collapsed ? <PanelLeftOpen className="w-5 h-5 flex-shrink-0" /> : <PanelLeftClose className="w-5 h-5 flex-shrink-0" />}
-          {!collapsed && <span>Colapsar</span>}
-        </button>
       </nav>
 
       {/* User section */}
@@ -174,7 +175,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               style={{ color: 'var(--color-ink-light)' }}
             >
               <LogOut className="w-4 h-4 flex-shrink-0" />
-              <span>Cerrar Sesión</span>
+              <span>{t('sidebar.logout')}</span>
             </button>
           </>
         )}

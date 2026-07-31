@@ -21,9 +21,10 @@ Plataforma de escritura creativa con IA. Monorepo pnpm con frontend React y back
 | 0: Fundación | ✅ | Monorepo, Vite, Fastify, Prisma |
 | 1: Autenticación | ✅ | BetterAuth, login/register, session cookies |
 | 2: Core Editor | ✅ | TipTap, capítulos, subpáginas, auto-save |
-| 3-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
+| 3: Notas y Versionado | ⏳ | Plan y spec creados, pendiente implementación |
+| 4-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
 
-**Fase actual: 2 completada. Siguiente: Fase 3 (Notas y Versionado)**
+**Fase actual: 3 planificada. Pendiente implementación.**
 
 ---
 
@@ -41,13 +42,18 @@ frontend/src/
 │   │   ├── Button.tsx          ← CVA button
 │   │   ├── QuickAction.tsx     ← Card de acción rápida
 │   │   ├── ErrorMessage.tsx    ← Error display reutilizable
-│   │   └── InlineCreateInput.tsx ← Input inline reutilizable
+│   │   ├── InlineCreateInput.tsx ← Input inline reutilizable
+│   │   ├── ConfirmDialog.tsx   ← Modal de confirmación reutilizable
+│   │   ├── InputDialog.tsx     ← Modal con input de texto
+│   │   ├── KebabMenu.tsx       ← Menú de 3 puntos (acciones)
+│   │   ├── ToastContainer.tsx  ← Notificaciones toast
+│   │   └── EditableTitle.tsx   ← Título editable inline
 │   ├── editor/
 │   │   ├── DocumentEditor.tsx  ← TipTap wrapper
 │   │   ├── Toolbar.tsx         ← Formato de texto
 │   │   └── ChapterTree.tsx     ← Árbol de capítulos
 │   ├── sidebar/
-│   │   ├── Sidebar.tsx         ← Editor sidebar
+│   │   ├── Sidebar.tsx         ← Editor sidebar (colapsable)
 │   │   └── ProjectTree.tsx     ← Lista de proyectos
 │   └── landing/                ← Componentes landing page
 ├── pages/
@@ -63,7 +69,8 @@ frontend/src/
 ├── stores/
 │   ├── auth-store.ts           ← Auth state (Zustand)
 │   ├── document-store.ts       ← Documents state
-│   └── activity-store.ts       ← Activity feed (localStorage)
+│   ├── activity-store.ts       ← Activity feed (localStorage)
+│   └── toast-store.ts          ← Toast notifications
 ├── services/
 │   └── documents.ts            ← API client
 ├── lib/
@@ -117,7 +124,11 @@ backend/src/
 | ✅ | [nombre de la tarea] | [comentarios opcionales] |
 14. **Docs** Siempre, al terminar una actividad de backend, debes hacer la documentación correspondiente en la carpeta de docs y swagger.
 15. **Planes** Siempre, antes de ahcer una actividad, debes hacer un task con un .md donde especifiques que se va a hacer, como, y porque. Al terminar, explicas que se hizo, que cambios hubo al plan original o si no hubo, y porque. No puedes terminar una actividad sin hacer un plan antes y documentarlo. Todo a task y docs. Así como ir actualizando el todo con todas las cosas que se modifican. 
-
+16. **Test** Siempre debes hacer unit test, e2e test (playwright) y hacer pruebas de integración antes de decir que todo esta completo. Sin pruebas, no lo intentes. 
+17. **Seguridad** Debes siempre revisar tus skills de seguridad antes de completar un mensaje. La seguridad es primordial. 
+18. **Code Review** Antes de enviar un mensaje al usuario, debes hacer un code review de tu propio código. Asegurate de que todo este correcto y de que no hayas cometido errores. 
+19. **Code Quality** Debes siempre revisar tus skills de code quality antes de completar un mensaje. La calidad del código es primordial. 
+20. **Cambios** Siempre que hagas un cambio, crea un changelog.md en tasks/ y actualiza el archivo CHANGELOG.md. para saber que se cambio y no se repitan los errores. 
 ---
 
 ## Comandos Útiles
@@ -155,6 +166,22 @@ pnpm dev  # (desde raíz, corre frontend + backend)
 | 2026-07-29 | Limpieza Topbar dead code | Topbar.tsx (eliminado searchQuery, onMenuClick) |
 | 2026-07-29 | Type safety stores | auth-store.ts, document-store.ts (catch unknown) |
 | 2026-07-29 | AGENTS.md creado | AGENTS.md, tasks/todo.md actualizado |
+| 2026-07-30 | Fix eliminación documentos | schema.prisma (cascade), document-store.ts, DocumentsPage.tsx, FolderPage.tsx |
+| 2026-07-30 | Botones eliminar en páginas | DocumentsPage.tsx, FolderPage.tsx (KebabMenu) |
+| 2026-07-30 | Toast notifications | toast-store.ts, ToastContainer.tsx, DashboardLayout.tsx |
+| 2026-07-30 | ConfirmDialog modal | ConfirmDialog.tsx, reemplaza confirm() nativo |
+| 2026-07-30 | InputDialog modal | InputDialog.tsx, reemplaza prompt() nativo |
+| 2026-07-30 | KebabMenu reutilizable | KebabMenu.tsx (menú de 3 puntos) |
+| 2026-07-30 | Fix auth 403 | auth.ts (requireEmailVerification solo en prod), logging detallado |
+| 2026-07-30 | Fix DELETE 400 | documents.ts (fetchJson no envía Content-Type sin body) |
+| 2026-07-30 | Loader Quick Create | QuickAction.tsx (prop isLoading), DashboardHome.tsx |
+| 2026-07-30 | Responsive mobile | DashboardLayout.tsx (sidebar overlay), Topbar.tsx (hamburguesa), AppSidebar.tsx |
+| 2026-07-30 | Dark mode rediseñado | globals.css (colores zinc, mejor contraste) |
+| 2026-07-30 | Eliminado editor (temporal) | App.tsx (rutas), navegación restaurada |
+| 2026-07-30 | Editor restaurado | App.tsx, Editor.tsx (con Sidebar), navegación |
+| 2026-07-30 | Fix infinite loop | Editor.tsx (Sidebar no se desmonta), useEffect deps |
+| 2026-07-30 | Sidebar colapsable (editor) | Sidebar.tsx (PanelLeftClose/Open) |
+| 2026-07-30 | Fase 3 planificada | spec-phase3.md, plan-phase3.md, todo.md actualizado |
 
 ---
 
@@ -221,4 +248,4 @@ Los skills se cargan automáticamente según el contexto. Si necesitas que siga 
 
 ---
 
-*Última actualización: 2026-07-29*
+*Última actualización: 2026-07-30*

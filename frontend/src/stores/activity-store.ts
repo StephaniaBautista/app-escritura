@@ -13,6 +13,8 @@ interface ActivityState {
   activities: ActivityItem[]
   addActivity: (activity: Omit<ActivityItem, 'id' | 'timestamp'>) => void
   loadActivities: () => void
+  removeByDocument: (documentId: string) => void
+  removeByFolder: (folderId: string) => void
 }
 
 const STORAGE_KEY = 'escritura-activity'
@@ -44,5 +46,21 @@ export const useActivityStore = create<ActivityState>()((set) => ({
     } catch {
       // Ignore parse errors
     }
+  },
+
+  removeByDocument: (documentId) => {
+    set((state) => {
+      const updated = state.activities.filter((a) => a.documentId !== documentId)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      return { activities: updated }
+    })
+  },
+
+  removeByFolder: (folderId) => {
+    set((state) => {
+      const updated = state.activities.filter((a) => a.folderId !== folderId)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      return { activities: updated }
+    })
   },
 }))

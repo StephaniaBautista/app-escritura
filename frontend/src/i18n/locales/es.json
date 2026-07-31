@@ -1,4 +1,9 @@
 {
+  "common": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar"
+  },
   "nav": {
     "features": "Funciones",
     "pricing": "Precios",
@@ -319,7 +324,9 @@
     "noFoldersDesc": "Crea tu primera carpeta para organizar tus historias",
     "createFolder": "Crear Carpeta",
     "startHere": "¡Empieza aquí!",
-    "documentsCount": "{{count}} documentos"
+    "documentsCount": "{{count}} documentos",
+    "confirmDelete": "¿Eliminar este proyecto y todo su contenido?",
+    "deleteProject": "Eliminar proyecto"
   },
   "folder": {
     "back": "← Volver a documentos",
@@ -329,13 +336,17 @@
     "newDocument": "Nuevo Documento",
     "docTitlePlaceholder": "Título del documento...",
     "noDocuments": "No hay documentos aún",
-    "noDocumentsDesc": "Crea tu primer documento en esta carpeta"
+    "noDocumentsDesc": "Crea tu primer documento en esta carpeta",
+    "confirmDelete": "¿Eliminar este documento?",
+    "deleteDocument": "Eliminar documento"
   },
   "editorApp": {
     "selectProject": "Selecciona un proyecto",
     "selectProjectDesc": "Elige un proyecto de la barra lateral o crea uno nuevo",
     "newDoc": "Nuevo Documento",
     "selectDoc": "Selecciona un documento de la barra lateral o crea uno nuevo",
+    "newSubpage": "Nueva subpágina",
+    "subpageName": "Nombre de la subpágina...",
     "charactersCount": "{{count}} caracteres",
     "wordsCount": "{{count}} palabras",
     "saving": "Guardando...",

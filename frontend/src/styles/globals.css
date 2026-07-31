@@ -66,22 +66,22 @@
 }
 
 .dark {
-  --background: #1a1612;
-  --foreground: #e8e0d4;
-  --paper: #2a231a;
-  --paper-lines: #3d352a;
-  --paper-margin: #4a3535;
-  --ink: #e8e0d4;
-  --ink-light: #a89b85;
-  --ink-faint: #6b5d4a;
-  --accent: #b92f44;
-  --accent-hover: #bd4864;
-  --accent-light: #3a2218;
-  --accent-teal: #4a9a9a;
-  --accent-teal-light: #1a3a3a;
-  --accent-violet: #9a4a9a;
-  --accent-violet-light: #3a1a3a;
-  --shadow: #0d0b09;
+  --background: #111114;
+  --foreground: #e4e4e7;
+  --paper: #1c1c20;
+  --paper-lines: #2e2e33;
+  --paper-margin: #3a2e2e;
+  --ink: #e4e4e7;
+  --ink-light: #a1a1aa;
+  --ink-faint: #71717a;
+  --accent: #e03e4a;
+  --accent-hover: #f0606a;
+  --accent-light: #3a1520;
+  --accent-teal: #5eead4;
+  --accent-teal-light: #1a3a35;
+  --accent-violet: #c084fc;
+  --accent-violet-light: #2e1a3e;
+  --shadow: #09090b;
 
   /* Color-prefixed tokens */
   --color-background: var(--background);
@@ -102,21 +102,21 @@
   --color-shadow: var(--shadow);
 
   /* PostIt colors */
-  --color-postit-yellow: #4a4520;
-  --color-postit-yellow-border: #6b6530;
-  --color-postit-yellow-shadow: #2a2510;
-  --color-postit-blue: #1e3a5f;
-  --color-postit-blue-border: #2d5a8f;
-  --color-postit-blue-shadow: #0d1a2f;
-  --color-postit-pink: #4a1e3a;
-  --color-postit-pink-border: #6b2d5a;
-  --color-postit-pink-shadow: #2a0d1a;
+  --color-postit-yellow: #3a3520;
+  --color-postit-yellow-border: #4a4530;
+  --color-postit-yellow-shadow: #252010;
+  --color-postit-blue: #1a2a40;
+  --color-postit-blue-border: #2a3a5a;
+  --color-postit-blue-shadow: #0d1520;
+  --color-postit-pink: #3a1a2a;
+  --color-postit-pink-border: #4a2a3a;
+  --color-postit-pink-shadow: #200d15;
 
   /* Contribution graph colors */
   --color-graph-0: var(--paper-lines);
-  --color-graph-1: #3a2218;
-  --color-graph-2: #6b3a2d;
-  --color-graph-3: #9a4a3d;
+  --color-graph-1: #3a1520;
+  --color-graph-2: #6b2a30;
+  --color-graph-3: #a03040;
   --color-graph-4: var(--accent);
 }
 
@@ -194,7 +194,7 @@ a {
   border-radius: var(--radius);
   box-shadow:
     2px 2px 0 var(--shadow),
-    inset 0 0 0 1px rgba(255,255,255,0.5);
+    inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
 .notebook-spiral {
@@ -241,17 +241,17 @@ a {
 }
 
 .highlight-yellow {
-  background: linear-gradient(180deg, transparent 60%, #f5e6a3 60%);
+  background: linear-gradient(180deg, transparent 60%, var(--color-postit-yellow-border) 60%);
   padding: 0 2px;
 }
 
 .highlight-pink {
-  background: linear-gradient(180deg, transparent 60%, #f5d4d4 60%);
+  background: linear-gradient(180deg, transparent 60%, var(--color-postit-pink-border) 60%);
   padding: 0 2px;
 }
 
 .highlight-green {
-  background: linear-gradient(180deg, transparent 60%, #d4f5d4 60%);
+  background: linear-gradient(180deg, transparent 60%, var(--color-accent-teal-light) 60%);
   padding: 0 2px;
 }
 
@@ -267,29 +267,34 @@ a {
   transform: translateX(-50%) rotate(-2deg);
   width: 80px;
   height: 24px;
-  background: rgba(245, 230, 163, 0.7);
-  border: 1px solid rgba(212, 197, 169, 0.5);
+  background: rgba(245, 230, 163, 0.4);
+  border: 1px solid rgba(212, 197, 169, 0.3);
   z-index: 1;
 }
 
+.dark .tape::before {
+  background: rgba(245, 230, 163, 0.15);
+  border-color: rgba(212, 197, 169, 0.15);
+}
+
 .postit {
-  background: #fef9c3;
-  border: 1px solid #f5e6a3;
-  box-shadow: 2px 2px 0 #e5d58a;
+  background: var(--color-postit-yellow);
+  border: 1px solid var(--color-postit-yellow-border);
+  box-shadow: 2px 2px 0 var(--color-postit-yellow-shadow);
   transform: rotate(-1deg);
 }
 
 .postit-blue {
-  background: #dbeafe;
-  border: 1px solid #93c5fd;
-  box-shadow: 2px 2px 0 #60a5fa;
+  background: var(--color-postit-blue);
+  border: 1px solid var(--color-postit-blue-border);
+  box-shadow: 2px 2px 0 var(--color-postit-blue-shadow);
   transform: rotate(1deg);
 }
 
 .postit-pink {
-  background: #fce7f3;
-  border: 1px solid #f9a8d4;
-  box-shadow: 2px 2px 0 #f472b6;
+  background: var(--color-postit-pink);
+  border: 1px solid var(--color-postit-pink-border);
+  box-shadow: 2px 2px 0 var(--color-postit-pink-shadow);
   transform: rotate(-0.5deg);
 }
 

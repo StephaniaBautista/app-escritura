@@ -1,4 +1,9 @@
 {
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete"
+  },
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
@@ -320,7 +325,9 @@
     "noFoldersDesc": "Create your first folder to organize your stories",
     "createFolder": "Create Folder",
     "startHere": "Start here!",
-    "documentsCount": "{{count}} documents"
+    "documentsCount": "{{count}} documents",
+    "confirmDelete": "Delete this project and all its content?",
+    "deleteProject": "Delete project"
   },
   "folder": {
     "back": "← Back to documents",
@@ -330,13 +337,17 @@
     "newDocument": "New Document",
     "docTitlePlaceholder": "Document title...",
     "noDocuments": "No documents yet",
-    "noDocumentsDesc": "Create your first document in this folder"
+    "noDocumentsDesc": "Create your first document in this folder",
+    "confirmDelete": "Delete this document?",
+    "deleteDocument": "Delete document"
   },
   "editorApp": {
     "selectProject": "Select a project",
     "selectProjectDesc": "Choose a project from the sidebar or create a new one",
     "newDoc": "New Document",
     "selectDoc": "Select a document from the sidebar or create a new one",
+    "newSubpage": "New subpage",
+    "subpageName": "Subpage name...",
     "charactersCount": "{{count}} characters",
     "wordsCount": "{{count}} words",
     "saving": "Saving...",

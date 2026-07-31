@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Plus, FileText, BookOpen, Loader2, FolderOpen } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
+import { Sidebar } from '@/components/sidebar/Sidebar'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
@@ -19,26 +20,27 @@ export function EditorPage() {
     loadDocument,
     createDocument,
     updateDocument,
-    clearCurrentDocument,
   } = useDocumentStore()
 
   const [showNewDoc, setShowNewDoc] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
+  const loadedProjectRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && projectId !== loadedProjectRef.current) {
+      loadedProjectRef.current = projectId
       selectProject(projectId)
     }
-    return () => clearCurrentDocument()
-  }, [projectId, selectProject, clearCurrentDocument])
+    return () => { loadedProjectRef.current = null }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId])
 
   useEffect(() => {
     if (documentId) {
       loadDocument(documentId)
-    } else {
-      clearCurrentDocument()
     }
-  }, [documentId, loadDocument, clearCurrentDocument])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [documentId])
 
   const handleCreateDocument = async (title: string) => {
     if (!projectId) return
@@ -73,75 +75,86 @@ export function EditorPage() {
     )
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
-        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-accent)' }} />
-      </div>
-    )
-  }
-
-  if (!documentId || !currentDocument) {
-    return (
-      <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
-        <div className="text-center">
-          <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
-          <h2 className="text-lg font-medium mb-2" style={{ color: 'var(--color-ink)' }}>
-            {currentProject?.name || 'Proyecto'}
-          </h2>
-          <p className="text-sm mb-6" style={{ color: 'var(--color-ink-light)' }}>
-            Selecciona un documento de la barra lateral o crea uno nuevo
-          </p>
-          <button
-            onClick={() => setShowNewDoc(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
-            style={{ background: 'var(--color-accent)' }}
-          >
-            <Plus className="w-4 h-4" />
-            Nuevo Documento
-          </button>
-
-          <ErrorMessage message={localError || error} />
-
-          {showNewDoc && (
-            <div className="mt-4 max-w-sm mx-auto">
-              <InlineCreateInput
-                placeholder="Título del documento..."
-                onSubmit={handleCreateDocument}
-                onCancel={() => setShowNewDoc(false)}
-              />
-            </div>
-          )}
+  const renderContent = () => {
+    if (isLoading && !currentProject) {
+      return (
+        <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-accent)' }} />
         </div>
-      </div>
+      )
+    }
+
+    if (!documentId || !currentDocument) {
+      return (
+        <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+          <div className="text-center">
+            <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
+            <h2 className="text-lg font-medium mb-2" style={{ color: 'var(--color-ink)' }}>
+              {currentProject?.name || 'Proyecto'}
+            </h2>
+            <p className="text-sm mb-6" style={{ color: 'var(--color-ink-light)' }}>
+              Selecciona un documento de la barra lateral o crea uno nuevo
+            </p>
+            <button
+              onClick={() => setShowNewDoc(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
+              style={{ background: 'var(--color-accent)' }}
+            >
+              <Plus className="w-4 h-4" />
+              Nuevo Documento
+            </button>
+
+            <ErrorMessage message={localError || error} />
+
+            {showNewDoc && (
+              <div className="mt-4 max-w-sm mx-auto">
+                <InlineCreateInput
+                  placeholder="Título del documento..."
+                  onSubmit={handleCreateDocument}
+                  onCancel={() => setShowNewDoc(false)}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <>
+        <div className="border-b px-8 py-3 flex items-center gap-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
+          <BookOpen className="w-4 h-4" style={{ color: 'var(--color-ink-faint)' }} />
+          <div className="flex-1">
+            <EditableTitle
+              title={currentDocument.title}
+              onSave={(newTitle) => updateDocument(currentDocument.id, { title: newTitle })}
+              className="text-lg font-semibold"
+              style={{ color: 'var(--color-ink)' }}
+              tag="h1"
+            />
+            {currentDocument.parent && (
+              <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+                en {currentDocument.parent.title}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-hidden">
+          <DocumentEditor
+            documentId={currentDocument.id}
+            initialContent={currentDocument.content as Record<string, unknown>}
+          />
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden" style={{ background: 'var(--color-background)' }}>
-      <div className="border-b px-8 py-3 flex items-center gap-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
-        <BookOpen className="w-4 h-4" style={{ color: 'var(--color-ink-faint)' }} />
-        <div className="flex-1">
-          <EditableTitle
-            title={currentDocument.title}
-            onSave={(newTitle) => updateDocument(currentDocument.id, { title: newTitle })}
-            className="text-lg font-semibold"
-            style={{ color: 'var(--color-ink)' }}
-            tag="h1"
-          />
-          {currentDocument.parent && (
-            <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
-              en {currentDocument.parent.title}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-hidden">
-        <DocumentEditor
-          documentId={currentDocument.id}
-          initialContent={currentDocument.content as Record<string, unknown>}
-        />
+    <div className="flex h-full overflow-hidden" style={{ background: 'var(--color-background)' }}>
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {renderContent()}
       </div>
     </div>
   )

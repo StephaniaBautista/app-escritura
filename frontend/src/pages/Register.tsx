@@ -110,7 +110,7 @@ export function Register() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {(error || passwordError) && (
-                <div className="p-3 rounded-lg border text-sm" style={{ background: '#fef2f2', borderColor: '#fecaca', color: '#991b1b' }}>
+                <div className="p-3 rounded-lg border text-sm" style={{ background: 'var(--color-accent-light)', borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}>
                   {error || passwordError}
                 </div>
               )}

@@ -1,8 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Bell, Settings, Moon, Sun } from 'lucide-react'
+import { Bell, Settings, Moon, Sun, Menu } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-export function Topbar() {
+interface TopbarProps {
+  onMenuClick?: () => void
+}
+
+export function Topbar({ onMenuClick }: TopbarProps) {
   const location = useLocation()
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
 
@@ -34,12 +38,23 @@ export function Topbar() {
         borderColor: 'var(--color-paper-lines)',
       }}
     >
-      <h1
-        className="font-display font-semibold text-lg"
-        style={{ color: 'var(--color-ink)' }}
-      >
-        {getPageTitle()}
-      </h1>
+      <div className="flex items-center gap-3">
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="p-2 rounded-lg hover:opacity-80 transition-opacity md:hidden"
+            style={{ color: 'var(--color-ink-light)' }}
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        <h1
+          className="font-display font-semibold text-lg"
+          style={{ color: 'var(--color-ink)' }}
+        >
+          {getPageTitle()}
+        </h1>
+      </div>
 
       <div className="flex items-center gap-2">
         <button

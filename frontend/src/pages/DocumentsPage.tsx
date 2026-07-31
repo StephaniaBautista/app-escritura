@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { KebabMenu } from '@/components/ui/KebabMenu'
 import { Plus, FolderOpen, FileText, ChevronDown } from 'lucide-react'
 
 export function DocumentsPage() {
-  const { projects, loadProjects, createProject, createDocument, error } = useDocumentStore()
+  const { projects, loadProjects, createProject, createDocument, deleteProject, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [isCreating, setIsCreating] = useState(false)
   const [showDocForm, setShowDocForm] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
 
   useEffect(() => {
     loadProjects()
-  }, [loadProjects])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (projects.length > 0 && !selectedProjectId) {
@@ -69,17 +75,17 @@ export function DocumentsPage() {
       <div className="max-w-5xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-display text-4xl font-bold" style={{ color: 'var(--color-ink)' }}>Mis proyectos</h1>
-            <p className="text-lg" style={{ color: 'var(--color-ink-light)' }}>Organiza tus historias</p>
+            <h1 className="font-display text-2xl sm:text-4xl font-bold" style={{ color: 'var(--color-ink)' }}>{t('projects.title')}</h1>
+            <p className="text-base sm:text-lg" style={{ color: 'var(--color-ink-light)' }}>{t('projects.subtitle')}</p>
           </div>
           <div className="flex gap-2">
-            <button
+              <button
               onClick={() => { setIsCreating(true); setShowDocForm(false) }}
               className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02] shadow-md"
               style={{ background: 'var(--color-accent)' }}
             >
               <Plus className="w-4 h-4" />
-              Nueva Carpeta
+              {t('projects.newFolder')}
             </button>
             <button
               onClick={() => { setShowDocForm(true); setIsCreating(false) }}
@@ -87,7 +93,7 @@ export function DocumentsPage() {
               style={{ background: 'var(--color-paper)', borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
             >
               <FileText className="w-4 h-4" />
-              Nuevo Documento
+              {t('projects.newDocument')}
             </button>
           </div>
         </div>
@@ -134,24 +140,28 @@ export function DocumentsPage() {
         {projects.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {projects.map((project) => (
-              <Link
-                key={project.id}
-                to={`/app/documents/${project.id}`}
-                className="notebook-paper p-4 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
-              >
-                <div className="notebook-lines absolute inset-0 opacity-10 rounded-xl"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-3" style={{ background: 'var(--color-accent-light)' }}>
-                    <FolderOpen className="w-6 h-6" style={{ color: 'var(--color-accent)' }} />
+              <div key={project.id} className="relative group">
+                <Link
+                  to={`/app/documents/${project.id}`}
+                  className="notebook-paper p-4 block transition-all duration-200"
+                >
+                  <div className="notebook-lines absolute inset-0 opacity-10 rounded-xl"></div>
+                  <div className="relative z-10">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-3" style={{ background: 'var(--color-accent-light)' }}>
+                      <FolderOpen className="w-6 h-6" style={{ color: 'var(--color-accent)' }} />
+                    </div>
+                    <h3 className="font-display text-lg font-bold truncate" style={{ color: 'var(--color-ink)' }}>
+                      {project.name}
+                    </h3>
+                    <p className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>
+                      {t('projects.documentsCount', { count: project._count?.documents ?? 0 })}
+                    </p>
                   </div>
-                  <h3 className="font-display text-lg font-bold truncate" style={{ color: 'var(--color-ink)' }}>
-                    {project.name}
-                  </h3>
-                  <p className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>
-                    {project._count?.documents ?? 0} documentos
-                  </p>
+                </Link>
+                <div className="absolute top-2 right-2 z-20">
+                  <KebabMenu onDelete={() => setDeleteTarget(project.id)} />
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         ) : (
@@ -188,6 +198,18 @@ export function DocumentsPage() {
           )
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteTarget !== null}
+        title={t('projects.deleteProject')}
+        message={t('projects.confirmDelete')}
+        confirmLabel={t('common.delete')}
+        onConfirm={() => {
+          if (deleteTarget) deleteProject(deleteTarget)
+          setDeleteTarget(null)
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

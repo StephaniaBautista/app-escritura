@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import type { Document, DocumentNode, Project, CreateProjectInput } from '@/types/document'
 import { projectsApi, documentsApi } from '@/services/documents'
+import { useToastStore } from './toast-store'
+import { useActivityStore } from './activity-store'
 
 interface DocumentState {
   projects: Project[]
@@ -92,9 +94,15 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       set((state) => ({
         projects: state.projects.filter((p) => p.id !== id),
         currentProject: state.currentProject?.id === id ? null : state.currentProject,
+        documentTree: state.currentProject?.id === id ? [] : state.documentTree,
+        currentDocument: state.currentProject?.id === id ? null : state.currentDocument,
       }))
+      useToastStore.getState().success('Proyecto eliminado')
+      useActivityStore.getState().removeByFolder(id)
     } catch (error: unknown) {
-      set({ error: getErrorMessage(error) })
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
     }
   },
 
@@ -149,8 +157,12 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       if (get().currentDocument?.id === id) {
         set({ currentDocument: null })
       }
+      useToastStore.getState().success('Documento eliminado')
+      useActivityStore.getState().removeByDocument(id)
     } catch (error: unknown) {
-      set({ error: getErrorMessage(error) })
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
     }
   },
 

@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
 
 interface QuickActionBaseProps {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   title: string
   description: string
   color?: 'accent' | 'teal' | 'violet'
+  isLoading?: boolean
 }
 
 interface QuickActionLinkProps extends QuickActionBaseProps {
@@ -19,7 +21,7 @@ interface QuickActionButtonProps extends QuickActionBaseProps {
 
 type QuickActionProps = QuickActionLinkProps | QuickActionButtonProps
 
-export function QuickAction({ icon: Icon, title, description, href, onClick, color = 'accent' }: QuickActionProps) {
+export function QuickAction({ icon: Icon, title, description, href, onClick, color = 'accent', isLoading }: QuickActionProps) {
   const colorMap = {
     accent: { bg: 'var(--color-accent-light)', icon: 'var(--color-accent)', border: 'var(--color-accent)' },
     teal: { bg: 'var(--color-accent-teal-light)', icon: 'var(--color-accent-teal)', border: 'var(--color-accent-teal)' },
@@ -48,8 +50,14 @@ export function QuickAction({ icon: Icon, title, description, href, onClick, col
     return (
       <button
         onClick={onClick}
-        className="notebook-paper p-6 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 text-left w-full"
+        disabled={isLoading}
+        className="notebook-paper p-6 relative group transition-all duration-200 text-left w-full disabled:opacity-50 disabled:cursor-not-allowed"
       >
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center z-20 rounded-xl" style={{ background: 'var(--color-background)', opacity: 0.7 }}>
+            <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-accent)' }} />
+          </div>
+        )}
         {content}
       </button>
     )
@@ -58,7 +66,7 @@ export function QuickAction({ icon: Icon, title, description, href, onClick, col
   return (
     <Link
       to={href}
-      className="notebook-paper p-6 relative group hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+      className="notebook-paper p-6 relative group transition-all duration-200"
     >
       {content}
     </Link>

@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { KebabMenu } from '@/components/ui/KebabMenu'
 import { FileText, Plus, Users, Globe } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') || 'documents'
-  const { currentProject, documentTree, selectProject, createDocument, updateProject, error } = useDocumentStore()
+  const { currentProject, documentTree, selectProject, createDocument, updateProject, deleteDocument, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
+  const { t } = useTranslation()
   const [isCreating, setIsCreating] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
 
   useEffect(() => {
     if (folderId) {
       selectProject(folderId)
     }
-  }, [folderId, selectProject])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderId])
 
   const handleCreateDocument = async (title: string) => {
     if (!folderId) return
@@ -62,12 +68,12 @@ export function FolderPage() {
             onSave={(newName) => {
               if (folderId) updateProject(folderId, { name: newName })
             }}
-            className="font-display text-4xl font-bold mt-2"
+            className="font-display text-2xl sm:text-4xl font-bold mt-2"
             style={{ color: 'var(--color-ink)' }}
           />
         </div>
 
-        <div className="flex gap-1 border-b mb-6" style={{ borderColor: 'var(--color-paper-lines)' }}>
+        <div className="flex gap-1 border-b mb-6 overflow-x-auto" style={{ borderColor: 'var(--color-paper-lines)' }}>
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -93,7 +99,7 @@ export function FolderPage() {
         {activeTab === 'documents' && (
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>Documentos</h2>
+              <h2 className="font-display text-xl sm:text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>{t('folder.documents')}</h2>
               <button
                 onClick={() => setIsCreating(true)}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
@@ -115,19 +121,23 @@ export function FolderPage() {
             {documentTree.length > 0 ? (
               <div className="space-y-2">
                 {documentTree.filter(d => d.type === 'document').map((doc) => (
-                  <Link
-                    key={doc.id}
-                    to={`/app/editor/${folderId}/${doc.id}`}
-                    className="notebook-paper p-4 flex items-center gap-3 hover:shadow-md transition-all"
-                  >
-                    <FileText className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate" style={{ color: 'var(--color-ink)' }}>{doc.title}</h3>
-                      <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
-                        {new Date(doc.updatedAt).toLocaleDateString()}
-                      </p>
+                  <div key={doc.id} className="relative group">
+                    <Link
+                      to={`/app/editor/${folderId}/${doc.id}`}
+                      className="notebook-paper p-4 flex items-center gap-3 transition-all"
+                    >
+                      <FileText className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium truncate" style={{ color: 'var(--color-ink)' }}>{doc.title}</h3>
+                        <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+                          {new Date(doc.updatedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </Link>
+                    <div className="absolute top-2 right-2 z-20">
+                      <KebabMenu onDelete={() => setDeleteTarget(doc.id)} />
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             ) : (
@@ -162,6 +172,18 @@ export function FolderPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteTarget !== null}
+        title={t('folder.deleteDocument')}
+        message={t('folder.confirmDelete')}
+        confirmLabel={t('common.delete')}
+        onConfirm={() => {
+          if (deleteTarget) deleteDocument(deleteTarget)
+          setDeleteTarget(null)
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

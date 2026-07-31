@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { useDocumentStore } from '@/stores/document-store'
 import { useActivityStore } from '@/stores/activity-store'
@@ -11,8 +12,9 @@ import { FileText, BookOpen, Sparkles } from 'lucide-react'
 export function DashboardHome() {
   const { user } = useAuthStore()
   const { activities, loadActivities } = useActivityStore()
-  const { quickCreateDocument } = useDocumentStore()
+  const { quickCreateDocument, isLoading } = useDocumentStore()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
     loadActivities()
@@ -48,15 +50,16 @@ export function DashboardHome() {
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <QuickAction
             icon={FileText}
-            title="Documento Rápido"
-            description="Crea un documento sin proyecto"
+            title={t('dashboard.quickDoc')}
+            description={t('dashboard.quickDocDesc')}
             onClick={handleQuickDocument}
             color="accent"
+            isLoading={isLoading}
           />
           <QuickAction
             icon={BookOpen}
-            title="Nuevo Proyecto"
-            description="Crea un proyecto con personajes y mundos"
+            title={t('dashboard.newProject')}
+            description={t('dashboard.newProjectDesc')}
             href="/app/documents"
             color="teal"
           />

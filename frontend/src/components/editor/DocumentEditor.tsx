@@ -11,7 +11,6 @@ import { Check, Loader2, AlertCircle } from 'lucide-react'
 interface DocumentEditorProps {
   documentId: string
   initialContent?: Record<string, unknown>
-  onUpdate?: (content: Record<string, unknown>) => void
 }
 
 function getWordCount(text: string): number {
@@ -39,9 +38,10 @@ function StatusIndicator({ status }: { status: SaveStatus }) {
   )
 }
 
-export function DocumentEditor({ documentId, initialContent, onUpdate }: DocumentEditorProps) {
+export function DocumentEditor({ documentId, initialContent }: DocumentEditorProps) {
   const contentRef = useRef<Record<string, unknown> | null>(null)
   const [wordCount, setWordCount] = useState(0)
+  const skipNextUpdate = useRef(false)
 
   const editor = useEditor({
     extensions: [
@@ -55,12 +55,15 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
     ],
     content: initialContent || { type: 'doc', content: [{ type: 'paragraph' }] },
     onUpdate: ({ editor }) => {
+      if (skipNextUpdate.current) {
+        skipNextUpdate.current = false
+        return
+      }
       const json = editor.getJSON()
       contentRef.current = json
-      onUpdate?.(json)
-
       const text = editor.state.doc.textContent
       setWordCount(getWordCount(text))
+      triggerSaveRef.current?.()
     },
     editorProps: {
       attributes: {
@@ -74,22 +77,15 @@ export function DocumentEditor({ documentId, initialContent, onUpdate }: Documen
   const { triggerSave, status } = useAutoSave({
     documentId,
     getContent,
-    debounceMs: 500,
+    debounceMs: 800,
   })
 
-  useEffect(() => {
-    if (!editor) return
-
-    const handleUpdate = () => {
-      triggerSave()
-    }
-
-    editor.on('update', handleUpdate)
-    return () => { editor.off('update', handleUpdate) }
-  }, [editor, triggerSave])
+  const triggerSaveRef = useRef<(() => void) | null>(null)
+  triggerSaveRef.current = triggerSave
 
   useEffect(() => {
     if (editor && initialContent && JSON.stringify(editor.getJSON()) !== JSON.stringify(initialContent)) {
+      skipNextUpdate.current = true
       editor.commands.setContent(initialContent)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,10 +3,14 @@ import type { Project, Document, CreateProjectInput, CreateDocumentInput, Update
 const API = '/api'
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {}
+  if (options?.body) {
+    headers['Content-Type'] = 'application/json'
+  }
   const res = await fetch(url, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers: { ...headers, ...options?.headers as Record<string, string> },
   })
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: { message: 'Error de red' } }))
