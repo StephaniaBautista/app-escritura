@@ -169,47 +169,6 @@ pnpm dev  # (desde raíz, corre frontend + backend)
 
 ---
 
-## Registro de Cambios
-
-| Fecha | Cambio | Archivos afectados |
-|-------|--------|-------------------|
-| 2026-07-29 | Separación de App.tsx (656→66 líneas) | App.tsx, 9 archivos nuevos en pages/ y components/ |
-| 2026-07-29 | Separación de Landing.tsx (724→36 líneas) | Landing.tsx, 12 archivos en pages/landing-sections/ |
-| 2026-07-29 | Auditoría de seguridad backend | auth.ts, index.ts, prisma.ts, email.ts |
-| 2026-07-29 | Componentes reutilizables | ErrorMessage, InlineCreateInput, activity-helpers |
-| 2026-07-29 | Limpieza Topbar dead code | Topbar.tsx (eliminado searchQuery, onMenuClick) |
-| 2026-07-29 | Type safety stores | auth-store.ts, document-store.ts (catch unknown) |
-| 2026-07-29 | AGENTS.md creado | AGENTS.md, tasks/todo.md actualizado |
-| 2026-07-30 | Fix eliminación documentos | schema.prisma (cascade), document-store.ts, DocumentsPage.tsx, FolderPage.tsx |
-| 2026-07-30 | Botones eliminar en páginas | DocumentsPage.tsx, FolderPage.tsx (KebabMenu) |
-| 2026-07-30 | Toast notifications | toast-store.ts, ToastContainer.tsx, DashboardLayout.tsx |
-| 2026-07-30 | ConfirmDialog modal | ConfirmDialog.tsx, reemplaza confirm() nativo |
-| 2026-07-30 | InputDialog modal | InputDialog.tsx, reemplaza prompt() nativo |
-| 2026-07-30 | KebabMenu reutilizable | KebabMenu.tsx (menú de 3 puntos) |
-| 2026-07-30 | Fix auth 403 | auth.ts (requireEmailVerification solo en prod), logging detallado |
-| 2026-07-30 | Fix DELETE 400 | documents.ts (fetchJson no envía Content-Type sin body) |
-| 2026-07-30 | Loader Quick Create | QuickAction.tsx (prop isLoading), DashboardHome.tsx |
-| 2026-07-30 | Responsive mobile | DashboardLayout.tsx (sidebar overlay), Topbar.tsx (hamburguesa), AppSidebar.tsx |
-| 2026-07-30 | Dark mode rediseñado | globals.css (colores zinc, mejor contraste) |
-| 2026-07-30 | Eliminado editor (temporal) | App.tsx (rutas), navegación restaurada |
-| 2026-07-30 | Editor restaurado | App.tsx, Editor.tsx (con Sidebar), navegación |
-| 2026-07-30 | Fix infinite loop | Editor.tsx (Sidebar no se desmonta), useEffect deps |
-| 2026-07-30 | Sidebar colapsable (editor) | Sidebar.tsx (PanelLeftClose/Open) |
-| 2026-07-30 | Fase 3 planificada | tasks/fase-03-notas-versionado/ (spec.md, plan.md), todo.md actualizado |
-| 2026-07-31 | Fix carga carpetas + cookie cache | document-service.ts, projects.ts, auth.ts, document-store.ts, LoadingState.tsx, FolderPage.tsx |
-| 2026-07-31 | Editor polish: acordeones + toolbar | AccordionSection.tsx, Toolbar.tsx, toolbar/ (6), ParagraphSpacing.ts, DocumentEditor.tsx, Sidebar.tsx, ProjectTree.tsx, ChapterTree.tsx, i18n es/en |
-| 2026-07-31 | Botón Volver en editor | Topbar.tsx (ArrowLeft + i18n common.back), Topbar.test.tsx, es.json/en.json |
-| 2026-07-31 | Fase 3: Notas y Versionado | schema.prisma (Note, DocumentVersion), note-service.ts, version-service.ts, routes/notes.ts, routes/versions.ts, lib/session.ts, NoteCard/NotesList/VersionCard/VersionsList, FolderPage.tsx, document-store.ts, i18n |
-| 2026-07-31 | Notas y Versiones en el editor | NotesVersionsPanel.tsx, Editor.tsx (botón History), NotesVersionsPanel.test.tsx, i18n |
-| 2026-07-31 | Post-its en el editor (M15) | schema.prisma (Note: documentId nullable, projectId, isHidden), note-service.ts, routes/notes.ts, PostIt.tsx, PostItWall.tsx, VersionsPanel.tsx, NotesList.tsx, document-store.ts, i18n postit.* |
-| 2026-07-31 | Fix actividad reciente vacía (M16) | activity-store.ts (migración clave localStorage legacy), activity-store.test.ts |
-| 2026-07-31 | Loader crear documento (M17) | InlineCreateInput.tsx (submitting+spinner), Sidebar.tsx, ProjectTree.tsx, InlineCreateInput.test.tsx |
-| 2026-07-31 | Sidebar editor solo Contenido (M18) | Sidebar.tsx (sin ProjectTree), ProjectTree.tsx eliminado |
-| 2026-07-31 | Reestructuración tasks/ por fases | tasks/README.md, 16 carpetas fase-XX-* (spec/plan/todo/changelog), mantenimiento/ (M1-M13), índices globales en raíz, AGENTS.md |
-| 2026-07-31 | Rename app a "Archivum" (M14) | Frontend (sidebar/landing/auth/topbar/i18n/html), backend (swagger/emails), README, docs, package.json |
-
----
-
 ## Firma de Verificación
 
 **Código de verificación: `Buena suerte, Ivar.`**

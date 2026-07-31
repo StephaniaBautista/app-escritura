@@ -14,10 +14,21 @@ interface KebabMenuProps {
   items?: KebabMenuItem[]
 }
 
+const MENU_WIDTH = 150
+const ITEM_HEIGHT = 30
+
 export function KebabMenu({ onDelete, items }: KebabMenuProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
+
+  const menuItems: KebabMenuItem[] = items ?? (onDelete ? [{
+    label: t('common.delete'),
+    icon: Trash2,
+    onClick: onDelete,
+    danger: true,
+  }] : [])
 
   useEffect(() => {
     if (!open) return
@@ -30,12 +41,21 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [open])
 
-  const menuItems: KebabMenuItem[] = items ?? (onDelete ? [{
-    label: t('common.delete'),
-    icon: Trash2,
-    onClick: onDelete,
-    danger: true,
-  }] : [])
+  const handleToggle = () => {
+    const next = !open
+    if (next) {
+      const rect = ref.current?.getBoundingClientRect()
+      if (rect) {
+        const menuHeight = menuItems.length * ITEM_HEIGHT + 12
+        const spaceBelow = window.innerHeight - rect.bottom
+        const openUp = spaceBelow < menuHeight
+        const top = openUp ? Math.max(4, rect.top - menuHeight - 4) : rect.bottom + 4
+        const left = Math.max(4, rect.right - MENU_WIDTH)
+        setPos({ top, left })
+      }
+    }
+    setOpen(next)
+  }
 
   return (
     <div ref={ref} className="relative">
@@ -43,7 +63,7 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          setOpen(!open)
+          handleToggle()
         }}
         className="p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors opacity-70 hover:opacity-100"
         style={{ color: 'var(--color-ink-faint)' }}
@@ -53,10 +73,16 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
         <MoreVertical className="w-3.5 h-3.5" />
       </button>
 
-      {open && (
+      {open && pos && (
         <div
-          className="absolute right-0 top-full mt-1 py-1 rounded-lg shadow-lg z-30 min-w-[150px] overflow-hidden"
-          style={{ background: 'var(--color-paper)', border: '1px solid var(--color-paper-lines)' }}
+          className="fixed z-50 py-1 rounded-lg shadow-xl min-w-[150px] overflow-hidden"
+          style={{
+            top: pos.top,
+            left: pos.left,
+            width: MENU_WIDTH,
+            background: 'var(--color-paper)',
+            border: '1px solid var(--color-paper-lines)',
+          }}
         >
           {menuItems.map((item, idx) => {
             const Icon = item.icon
@@ -82,4 +108,3 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
     </div>
   )
 }
-

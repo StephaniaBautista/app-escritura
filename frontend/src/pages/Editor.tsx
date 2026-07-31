@@ -126,6 +126,14 @@ export function EditorPage() {
       )
     }
 
+    if (currentDocument.id !== documentId) {
+      return (
+        <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+          <LoadingState />
+        </div>
+      )
+    }
+
     return (
       <>
         <div className="border-b px-8 py-3 flex items-center gap-3" style={{ borderColor: 'var(--color-paper-lines)' }}>

@@ -4,6 +4,13 @@ Todos los cambios notables de este proyecto se documentan en este archivo. El de
 
 ## 2026-07-31
 
+### Fix: UX del editor — eliminación y subpestañas (M20)
+
+- Al eliminar el archivo actual en el editor → navega a su primera subpágina (o al padre, o al proyecto).
+- Las subpáginas ya no se borran en cascada: sobreviven al borrar su pestaña padre y pasan a ser pestañas raíz (migración `document_tree_setnull`).
+- Al crear una subpestaña navega al archivo nuevo, y su contenido queda **vacío** (se eliminó el frame que inicializaba el editor con el contenido del documento anterior).
+- Tests: 70/70 frontend, 23/23 backend, E2E verificado.
+
 ### Simplificación: Sidebar del editor solo con "Contenido" (M18)
 
 - La sidebar del editor queda con un único apartado: "Contenido" (árbol de capítulos/subpáginas).

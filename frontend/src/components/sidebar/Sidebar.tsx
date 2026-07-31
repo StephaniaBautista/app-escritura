@@ -92,9 +92,15 @@ export function Sidebar() {
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return
+    const isCurrent = currentDocument?.id === deleteTarget
+    const children = documentTree
+      .filter((d) => d.parentId === deleteTarget)
+      .sort((a, b) => a.order - b.order)
+    const parentId = currentDocument?.parent?.id
     deleteDocument(deleteTarget)
-    if (currentDocument?.id === deleteTarget && projectId) {
-      navigate(`/app/editor/${projectId}`)
+    if (isCurrent && projectId) {
+      const destination = children[0]?.id ?? parentId ?? null
+      navigate(destination ? `/app/editor/${projectId}/${destination}` : `/app/editor/${projectId}`)
     }
     setDeleteTarget(null)
   }

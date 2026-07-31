@@ -100,7 +100,7 @@ export function DocumentEditor({ documentId, initialContent }: DocumentEditorPro
       editor.commands.setContent(initialContent)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentId])
+  }, [documentId, initialContent])
 
   const charCount = editor?.storage.characterCount?.characters?.() ?? 0
 
