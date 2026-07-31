@@ -26,7 +26,7 @@ export async function projectRoutes(app: FastifyInstance) {
 
   app.get('/projects/:id', {
     schema: {
-      description: 'Get a project with its folders and root documents',
+      description: 'Get a project with its folders, root documents and document tree',
       tags: ['Projects'],
       security: [{ cookieAuth: [] }],
       params: {
@@ -34,16 +34,68 @@ export async function projectRoutes(app: FastifyInstance) {
         properties: { id: { type: 'string' } },
         required: ['id'],
       },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            description: { type: 'string', nullable: true },
+            createdAt: { type: 'string' },
+            updatedAt: { type: 'string' },
+            folders: { type: 'array', items: { type: 'object' } },
+            documents: { type: 'array', items: { type: 'object' } },
+            tree: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  title: { type: 'string' },
+                  type: { type: 'string' },
+                  parentId: { type: 'string', nullable: true },
+                  order: { type: 'number' },
+                  updatedAt: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        401: {
+          type: 'object',
+          properties: {
+            error: {
+              type: 'object',
+              properties: {
+                code: { type: 'string' },
+                message: { type: 'string' },
+              },
+            },
+          },
+        },
+        404: {
+          type: 'object',
+          properties: {
+            error: {
+              type: 'object',
+              properties: {
+                code: { type: 'string' },
+                message: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
     },
   }, async (request, reply) => {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
     const { id } = request.params as { id: string }
-    const project = await projectService.getById(id, user.id)
-    if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
+    const page = await projectService.getProjectPage(id, user.id)
+    if (!page) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
 
-    return project
+    return page
   })
 
   app.post('/projects', {

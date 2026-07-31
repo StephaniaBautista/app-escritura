@@ -1,8 +1,9 @@
 import { create } from 'zustand'
-import type { Document, DocumentNode, Project, CreateProjectInput } from '@/types/document'
-import { projectsApi, documentsApi } from '@/services/documents'
+import type { Document, DocumentNode, Project, CreateProjectInput, Note, DocumentVersion } from '@/types/document'
+import { projectsApi, documentsApi, notesApi, versionsApi } from '@/services/documents'
 import { useToastStore } from './toast-store'
 import { useActivityStore } from './activity-store'
+import i18n from '@/i18n'
 
 interface DocumentState {
   projects: Project[]
@@ -11,6 +12,12 @@ interface DocumentState {
   currentDocument: Document | null
   isLoading: boolean
   error: string | null
+
+  notes: Note[]
+  projectNotes: Note[]
+  notesLoading: boolean
+  versions: DocumentVersion[]
+  versionsLoading: boolean
 
   loadProjects: () => Promise<void>
   selectProject: (projectId: string) => Promise<void>
@@ -23,10 +30,23 @@ interface DocumentState {
   createDocument: (data: { title: string; type?: 'document' | 'chapter' | 'subpage'; projectId: string; parentId?: string }) => Promise<Document>
   updateDocument: (id: string, data: { title?: string; content?: Record<string, unknown> }) => Promise<void>
   deleteDocument: (id: string) => Promise<void>
+  duplicateDocument: (id: string) => Promise<Document>
 
   quickCreateDocument: () => Promise<Document>
 
   clearCurrentDocument: () => void
+
+  loadNotes: (documentId: string) => Promise<void>
+  loadProjectNotes: (projectId: string) => Promise<void>
+  createNote: (documentId: string, data: { title: string; content?: string }) => Promise<Note>
+  createProjectNote: (projectId: string, data: { title: string; content?: string }) => Promise<Note>
+  updateNote: (id: string, data: { title?: string; content?: string; isHidden?: boolean }) => Promise<void>
+  deleteNote: (id: string) => Promise<void>
+
+  loadVersions: (documentId: string) => Promise<void>
+  createVersion: (documentId: string) => Promise<void>
+  getVersion: (id: string) => Promise<DocumentVersion | null>
+  restoreVersion: (id: string) => Promise<void>
 }
 
 function getErrorMessage(error: unknown): string {
@@ -41,6 +61,12 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   isLoading: false,
   error: null,
 
+  notes: [],
+  projectNotes: [],
+  notesLoading: false,
+  versions: [],
+  versionsLoading: false,
+
   loadProjects: async () => {
     set({ isLoading: true, error: null })
     try {
@@ -53,12 +79,13 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
 
   selectProject: async (projectId: string) => {
     set({ isLoading: true, error: null })
+    const cached = get().projects.find((p) => p.id === projectId)
+    if (cached) {
+      set({ currentProject: cached, documentTree: [] })
+    }
     try {
-      const [project, tree] = await Promise.all([
-        projectsApi.getById(projectId),
-        documentsApi.getTree(projectId),
-      ])
-      set({ currentProject: project, documentTree: tree, isLoading: false })
+      const page = await projectsApi.getById(projectId)
+      set({ currentProject: page, documentTree: page.tree ?? [], isLoading: false })
     } catch (error: unknown) {
       set({ error: getErrorMessage(error), isLoading: false })
     }
@@ -142,8 +169,30 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       if (get().currentDocument?.id === id) {
         set({ currentDocument: { ...get().currentDocument!, ...updated } })
       }
+      if (data.title) {
+        set((state) => ({
+          documentTree: state.documentTree.map((d) => (d.id === id ? { ...d, title: data.title! } : d)),
+        }))
+      }
     } catch (error: unknown) {
       set({ error: getErrorMessage(error) })
+    }
+  },
+
+  duplicateDocument: async (id: string) => {
+    try {
+      const doc = await documentsApi.duplicate(id)
+      const projectId = get().currentProject?.id
+      if (projectId) {
+        await get().loadDocumentTree(projectId)
+      }
+      useToastStore.getState().success(i18n.t('editorApp.duplicated'))
+      return doc
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+      throw error
     }
   },
 
@@ -165,6 +214,7 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       useToastStore.getState().error(message)
     }
   },
+
 
   quickCreateDocument: async () => {
     set({ isLoading: true, error: null })
@@ -197,4 +247,119 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   },
 
   clearCurrentDocument: () => set({ currentDocument: null }),
+
+  loadNotes: async (documentId: string) => {
+    set({ notesLoading: true, error: null })
+    try {
+      const notes = await notesApi.list(documentId)
+      set({ notes, notesLoading: false })
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error), notesLoading: false })
+    }
+  },
+
+  loadProjectNotes: async (projectId: string) => {
+    set({ notesLoading: true, error: null })
+    try {
+      const projectNotes = await notesApi.listByProject(projectId)
+      set({ projectNotes, notesLoading: false })
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error), notesLoading: false })
+    }
+  },
+
+  createNote: async (documentId: string, data) => {
+    try {
+      const note = await notesApi.create(documentId, data)
+      set((state) => ({ notes: [note, ...state.notes] }))
+      return note
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+      throw error
+    }
+  },
+
+  createProjectNote: async (projectId: string, data) => {
+    try {
+      const note = await notesApi.createForProject(projectId, data)
+      set((state) => ({ projectNotes: [note, ...state.projectNotes] }))
+      return note
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+      throw error
+    }
+  },
+
+  updateNote: async (id: string, data) => {
+    try {
+      const updated = await notesApi.update(id, data)
+      set((state) => ({
+        notes: state.notes.map((n) => (n.id === id ? { ...n, ...updated } : n)),
+        projectNotes: state.projectNotes.map((n) => (n.id === id ? { ...n, ...updated } : n)),
+      }))
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error) })
+    }
+  },
+
+  deleteNote: async (id: string) => {
+    try {
+      await notesApi.delete(id)
+      set((state) => ({ notes: state.notes.filter((n) => n.id !== id) }))
+      useToastStore.getState().success(i18n.t('notes.deleted'))
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+    }
+  },
+
+  loadVersions: async (documentId: string) => {
+    set({ versionsLoading: true, error: null })
+    try {
+      const versions = await versionsApi.list(documentId)
+      set({ versions, versionsLoading: false })
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error), versionsLoading: false })
+    }
+  },
+
+  createVersion: async (documentId: string) => {
+    try {
+      await versionsApi.create(documentId)
+      await get().loadVersions(documentId)
+      useToastStore.getState().success(i18n.t('versions.created'))
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+    }
+  },
+
+  getVersion: async (id: string) => {
+    try {
+      return await versionsApi.get(id)
+    } catch (error: unknown) {
+      set({ error: getErrorMessage(error) })
+      return null
+    }
+  },
+
+  restoreVersion: async (id: string) => {
+    try {
+      const doc = await versionsApi.restore(id)
+      if (get().currentDocument?.id === doc.id) {
+        set({ currentDocument: { ...get().currentDocument!, ...doc } })
+      }
+      useToastStore.getState().success(i18n.t('versions.restored'))
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+    }
+  },
 }))

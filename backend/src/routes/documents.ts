@@ -157,4 +157,27 @@ export async function documentRoutes(app: FastifyInstance) {
 
     return { message: 'Documento eliminado' }
   })
+
+  app.post('/documents/:id/duplicate', {
+    schema: {
+      description: 'Duplicate a document tab and all its subpages',
+      tags: ['Documents'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { id } = request.params as { id: string }
+    const duplicated = await documentService.duplicate(id, user.id)
+    if (!duplicated) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Documento no encontrado' } })
+
+    return reply.status(201).send(duplicated)
+  })
 }
+

@@ -1,16 +1,21 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Plus, FileText, BookOpen, Loader2, FolderOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Plus, FileText, BookOpen, FolderOpen, History } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
 import { Sidebar } from '@/components/sidebar/Sidebar'
+import { PostItWall } from '@/components/editor/PostItWall'
+import { VersionsPanel } from '@/components/editor/VersionsPanel'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
+import { LoadingState } from '@/components/ui/LoadingState'
 
 export function EditorPage() {
   const { projectId, documentId } = useParams<{ projectId: string; documentId?: string }>()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const {
     currentProject,
     currentDocument,
@@ -23,6 +28,7 @@ export function EditorPage() {
   } = useDocumentStore()
 
   const [showNewDoc, setShowNewDoc] = useState(false)
+  const [showPanel, setShowPanel] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
   const loadedProjectRef = useRef<string | null>(null)
 
@@ -79,7 +85,7 @@ export function EditorPage() {
     if (isLoading && !currentProject) {
       return (
         <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-accent)' }} />
+          <LoadingState />
         </div>
       )
     }
@@ -138,14 +144,38 @@ export function EditorPage() {
               </p>
             )}
           </div>
+          <button
+            type="button"
+            onClick={() => setShowPanel(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-80 flex-shrink-0"
+            style={{ color: 'var(--color-ink-light)', border: '1px solid var(--color-paper-lines)' }}
+            title={t('versions.title')}
+            aria-label={t('versions.title')}
+          >
+            <History className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('versions.title')}</span>
+          </button>
         </div>
 
-        <div className="flex-1 overflow-hidden">
-          <DocumentEditor
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-hidden">
+            <DocumentEditor
+              documentId={currentDocument.id}
+              initialContent={currentDocument.content as Record<string, unknown>}
+            />
+          </div>
+          <PostItWall
             documentId={currentDocument.id}
-            initialContent={currentDocument.content as Record<string, unknown>}
+            projectId={projectId}
           />
         </div>
+
+        {showPanel && (
+          <VersionsPanel
+            documentId={currentDocument.id}
+            onClose={() => setShowPanel(false)}
+          />
+        )}
       </>
     )
   }

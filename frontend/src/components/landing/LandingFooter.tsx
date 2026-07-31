@@ -26,7 +26,7 @@ export function LandingFooter() {
                 <Feather className="w-4 h-4 text-white" />
               </div>
               <span className="font-display text-xl font-bold" style={{ color: 'var(--color-ink)' }}>
-                Escritura
+                Archivum
               </span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-light)' }}>

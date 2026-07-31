@@ -51,7 +51,7 @@ export function Register() {
               <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: 'var(--color-accent)' }}>
                 <Feather className="w-6 h-6 text-white" />
               </div>
-              <span className="font-display text-3xl font-bold" style={{ color: 'var(--color-ink)' }}>Escritura</span>
+              <span className="font-display text-3xl font-bold" style={{ color: 'var(--color-ink)' }}>Archivum</span>
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight mb-4" style={{ color: 'var(--color-ink)' }}>
               <Trans i18nKey="auth.register.heroTitle">
@@ -88,7 +88,7 @@ export function Register() {
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'var(--color-accent)' }}>
               <Feather className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>Escritura</span>
+            <span className="font-display text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>Archivum</span>
           </div>
 
           <div className="notebook-paper p-8">

@@ -28,7 +28,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url, token }, request) => {
       await sendEmail({
         to: user.email,
-        subject: 'Recupera tu contraseña - Escritura',
+        subject: 'Recupera tu contraseña - Archivum',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #b44a2d;">Recupera tu contraseña</h2>
@@ -41,7 +41,7 @@ export const auth = betterAuth({
             <p style="color: #666; font-size: 14px;">Si no solicitaste este cambio, puedes ignorar este correo.</p>
             <p style="color: #666; font-size: 14px;">Este enlace expira en 1 hora.</p>
             <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-            <p style="color: #999; font-size: 12px;">Escritura - Plataforma de escritura creativa</p>
+            <p style="color: #999; font-size: 12px;">Archivum - Plataforma de escritura creativa</p>
           </div>
         `,
       })
@@ -51,6 +51,10 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 365, // 1 year (effectively indefinite)
     updateAge: 60 * 60 * 24, // 1 day
+    cookieCache: {
+      enabled: true, // session signed in cookie: no DB validation per request
+      maxAge: 60 * 60 * 24, // 1 day
+    },
   },
   advanced: {
     useSecureCookies: process.env.NODE_ENV === 'production',

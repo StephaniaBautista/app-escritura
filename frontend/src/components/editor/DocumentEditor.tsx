@@ -2,10 +2,13 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
+import TextAlign from '@tiptap/extension-text-align'
+import { TextStyleKit } from '@tiptap/extension-text-style'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import type { SaveStatus } from '@/hooks/useAutoSave'
 import { Toolbar } from './Toolbar'
+import { ParagraphSpacing } from './extensions/ParagraphSpacing'
 import { Check, Loader2, AlertCircle } from 'lucide-react'
 
 interface DocumentEditorProps {
@@ -47,6 +50,14 @@ export function DocumentEditor({ documentId, initialContent }: DocumentEditorPro
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
+        paragraph: false,
+      }),
+      ParagraphSpacing,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TextStyleKit.configure({
+        color: false,
+        backgroundColor: false,
+        fontSize: false,
       }),
       Placeholder.configure({
         placeholder: 'Empieza a escribir tu historia...',

@@ -1,4 +1,4 @@
-import type { Project, Document, CreateProjectInput, CreateDocumentInput, UpdateDocumentInput, DocumentNode } from '@/types/document'
+import type { Project, Document, CreateProjectInput, CreateDocumentInput, UpdateDocumentInput, DocumentNode, Note, DocumentVersion } from '@/types/document'
 
 const API = '/api'
 
@@ -63,5 +63,60 @@ export const documentsApi = {
   delete: (id: string) =>
     fetchJson<{ message: string }>(`${API}/documents/${id}`, {
       method: 'DELETE',
+    }),
+
+  duplicate: (id: string) =>
+    fetchJson<Document>(`${API}/documents/${id}/duplicate`, {
+      method: 'POST',
+    }),
+}
+
+
+export const notesApi = {
+  list: (documentId: string) =>
+    fetchJson<Note[]>(`${API}/documents/${documentId}/notes`),
+
+  listByProject: (projectId: string) =>
+    fetchJson<Note[]>(`${API}/projects/${projectId}/notes`),
+
+  create: (documentId: string, data: { title: string; content?: string }) =>
+    fetchJson<Note>(`${API}/documents/${documentId}/notes`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  createForProject: (projectId: string, data: { title: string; content?: string }) =>
+    fetchJson<Note>(`${API}/projects/${projectId}/notes`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: string, data: { title?: string; content?: string; isHidden?: boolean }) =>
+    fetchJson<Note>(`${API}/notes/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: string) =>
+    fetchJson<{ message: string }>(`${API}/notes/${id}`, {
+      method: 'DELETE',
+    }),
+}
+
+export const versionsApi = {
+  list: (documentId: string) =>
+    fetchJson<DocumentVersion[]>(`${API}/documents/${documentId}/versions`),
+
+  create: (documentId: string) =>
+    fetchJson<DocumentVersion>(`${API}/documents/${documentId}/versions`, {
+      method: 'POST',
+    }),
+
+  get: (id: string) =>
+    fetchJson<DocumentVersion>(`${API}/versions/${id}`),
+
+  restore: (id: string) =>
+    fetchJson<Document>(`${API}/versions/${id}/restore`, {
+      method: 'POST',
     }),
 }

@@ -90,7 +90,7 @@ export function ResetPassword() {
           <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'var(--color-accent)' }}>
             <Feather className="w-5 h-5 text-white" />
           </div>
-          <span className="font-display text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>Escritura</span>
+          <span className="font-display text-2xl font-bold" style={{ color: 'var(--color-ink)' }}>Archivum</span>
         </div>
 
         <div className="notebook-paper p-8">

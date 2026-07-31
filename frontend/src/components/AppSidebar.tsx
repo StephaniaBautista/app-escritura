@@ -55,7 +55,7 @@ export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarPro
             className="font-display font-semibold text-lg flex-1"
             style={{ color: 'var(--color-ink)' }}
           >
-            Escritura
+            Archivum
           </span>
         )}
         <button

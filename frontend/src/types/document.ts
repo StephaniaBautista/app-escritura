@@ -24,6 +24,7 @@ export interface Project {
   createdAt: string
   updatedAt: string
   _count?: { documents: number; folders: number }
+  tree?: DocumentNode[]
 }
 
 export interface CreateProjectInput {
@@ -47,4 +48,26 @@ export interface UpdateDocumentInput {
   folderId?: string | null
   parentId?: string | null
   order?: number
+}
+
+export interface Note {
+  id: string
+  title: string
+  content: string
+  documentId: string | null
+  projectId: string | null
+  isHidden: boolean
+  userId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface DocumentVersion {
+  id: string
+  documentId: string
+  title: string
+  content: Record<string, unknown>
+  version: number
+  userId: string
+  createdAt: string
 }

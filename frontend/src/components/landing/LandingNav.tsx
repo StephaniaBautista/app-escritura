@@ -52,7 +52,7 @@ export function LandingNav() {
             <Feather className="w-4 h-4 text-white" />
           </div>
           <span className="font-display text-xl font-bold" style={{ color: 'var(--color-ink)' }}>
-            Escritura
+            Archivum
           </span>
         </Link>
 

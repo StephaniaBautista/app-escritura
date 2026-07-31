@@ -77,6 +77,16 @@ export type Folder = Prisma.FolderModel
  */
 export type Document = Prisma.DocumentModel
 /**
+ * Model Note
+ * 
+ */
+export type Note = Prisma.NoteModel
+/**
+ * Model DocumentVersion
+ * 
+ */
+export type DocumentVersion = Prisma.DocumentVersionModel
+/**
  * Model Character
  * 
  */

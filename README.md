@@ -1,10 +1,10 @@
-# Escritura
+# Archivum
 
 Plataforma de escritura creativa con IA para escritores de historias originales y fanfics.
 
 ## Que es
 
-Escritura es un editor profesional que combina un editor de texto enriquecido con herramientas de worldbuilding, gestion de personajes, versionado tipo Git, y asistencia de IA. Diseñado para escritores que necesitan organizar universos complejos y mantener coherencia narrativa.
+Archivum es un editor profesional que combina un editor de texto enriquecido con herramientas de worldbuilding, gestion de personajes, versionado tipo Git, y asistencia de IA. Diseñado para escritores que necesitan organizar universos complejos y mantener coherencia narrativa.
 
 ## Caracteristicas
 

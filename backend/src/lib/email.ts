@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export async function sendEmail({ to, subject, html }: EmailOptions) {
   try {
     const info = await transporter.sendMail({
-      from: `"Escritura" <${process.env.SMTP_USER}>`,
+      from: `"Archivum" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,

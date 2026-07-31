@@ -1,6 +1,7 @@
-import { Link, useLocation } from 'react-router-dom'
-import { Bell, Settings, Moon, Sun, Menu } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Bell, Settings, Moon, Sun, Menu, ArrowLeft } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface TopbarProps {
   onMenuClick?: () => void
@@ -8,6 +9,8 @@ interface TopbarProps {
 
 export function Topbar({ onMenuClick }: TopbarProps) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { t } = useTranslation()
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
 
   useEffect(() => {
@@ -19,6 +22,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     setIsDark(!isDark)
   }
 
+  const isEditor = location.pathname.startsWith('/app/editor')
+
+  const handleBack = () => {
+    const segments = location.pathname.split('/').filter(Boolean)
+    const projectId = segments[2]
+    navigate(projectId ? `/app/documents/${projectId}` : '/app')
+  }
+
   const getPageTitle = () => {
     const path = location.pathname
     if (path === '/app') return 'Inicio'
@@ -27,7 +38,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     if (path.startsWith('/app/documents/')) return 'Carpeta'
     if (path === '/app/recent') return 'Recientes'
     if (path === '/app/shared') return 'Compartidos'
-    return 'Escritura'
+    return 'Archivum'
   }
 
   return (
@@ -46,6 +57,18 @@ export function Topbar({ onMenuClick }: TopbarProps) {
             style={{ color: 'var(--color-ink-light)' }}
           >
             <Menu className="w-5 h-5" />
+          </button>
+        )}
+        {isEditor && (
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:opacity-80 transition-opacity"
+            style={{ color: 'var(--color-ink-light)' }}
+            title={t('common.back')}
+            aria-label={t('common.back')}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">{t('common.back')}</span>
           </button>
         )}
         <h1

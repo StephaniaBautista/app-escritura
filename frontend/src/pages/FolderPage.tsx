@@ -8,18 +8,22 @@ import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { KebabMenu } from '@/components/ui/KebabMenu'
-import { FileText, Plus, Users, Globe } from 'lucide-react'
+import { LoadingState } from '@/components/ui/LoadingState'
+import { NotesList } from '@/components/notes/NotesList'
+import { VersionsList } from '@/components/versions/VersionsList'
+import { FileText, Plus, Users, Globe, StickyNote, History } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get('tab') || 'documents'
-  const { currentProject, documentTree, selectProject, createDocument, updateProject, deleteDocument, error } = useDocumentStore()
+  const { currentProject, documentTree, isLoading, selectProject, createDocument, updateProject, deleteDocument, loadNotes, loadVersions, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
   const { t } = useTranslation()
   const [isCreating, setIsCreating] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
 
   useEffect(() => {
     if (folderId) {
@@ -27,6 +31,13 @@ export function FolderPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderId])
+
+  useEffect(() => {
+    if (!selectedDocId) return
+    if (activeTab === 'notes') loadNotes(selectedDocId)
+    if (activeTab === 'versions') loadVersions(selectedDocId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, selectedDocId])
 
   const handleCreateDocument = async (title: string) => {
     if (!folderId) return
@@ -54,7 +65,39 @@ export function FolderPage() {
     { id: 'documents', label: 'Documentos', icon: FileText },
     { id: 'characters', label: 'Personajes', icon: Users },
     { id: 'worlds', label: 'Mundos', icon: Globe },
+    { id: 'notes', label: t('notes.title'), icon: StickyNote },
+    { id: 'versions', label: t('versions.title'), icon: History },
   ]
+
+  const documents = documentTree.filter((d) => d.type === 'document')
+
+  const renderDocumentPicker = (emptyMessage: string) => (
+    <div className="notebook-paper p-6 mb-4">
+      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink)' }}>
+        {t('folder.selectDocument')}
+      </label>
+      <select
+        value={selectedDocId ?? ''}
+        onChange={(e) => setSelectedDocId(e.target.value || null)}
+        className="w-full px-3 py-2 text-sm rounded-lg border"
+        style={{
+          background: 'var(--color-background)',
+          borderColor: 'var(--color-paper-lines)',
+          color: 'var(--color-ink)',
+        }}
+      >
+        <option value="">{t('folder.selectDocumentPlaceholder')}</option>
+        {documents.map((doc) => (
+          <option key={doc.id} value={doc.id}>{doc.title}</option>
+        ))}
+      </select>
+      {!selectedDocId && (
+        <p className="text-sm mt-3" style={{ color: 'var(--color-ink-faint)' }}>
+          {emptyMessage}
+        </p>
+      )}
+    </div>
+  )
 
   return (
     <div className="p-6 md:p-8">
@@ -106,7 +149,7 @@ export function FolderPage() {
                 style={{ background: 'var(--color-accent)' }}
               >
                 <Plus className="w-4 h-4" />
-                Nuevo Documento
+                {t('folder.newDocument')}
               </button>
             </div>
 
@@ -118,7 +161,9 @@ export function FolderPage() {
               />
             )}
 
-            {documentTree.length > 0 ? (
+            {isLoading && documentTree.length === 0 && !isCreating ? (
+              <LoadingState label={t('common.loading')} className="notebook-paper" />
+            ) : documentTree.length > 0 ? (
               <div className="space-y-2">
                 {documentTree.filter(d => d.type === 'document').map((doc) => (
                   <div key={doc.id} className="relative group">
@@ -145,10 +190,10 @@ export function FolderPage() {
                 <div className="notebook-paper p-8 text-center">
                   <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
                   <p className="font-display text-lg" style={{ color: 'var(--color-ink-light)' }}>
-                    No hay documentos aún
+                    {t('folder.noDocuments')}
                   </p>
                   <p className="text-sm mt-1" style={{ color: 'var(--color-ink-faint)' }}>
-                    Crea tu primer documento en esta carpeta
+                    {t('folder.noDocumentsDesc')}
                   </p>
                 </div>
               )
@@ -169,6 +214,38 @@ export function FolderPage() {
             <Globe className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-violet)' }} />
             <h2 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--color-ink)' }}>Mundos</h2>
             <p style={{ color: 'var(--color-ink-light)' }}>Próximamente: gestión de mundos</p>
+          </div>
+        )}
+
+        {activeTab === 'notes' && (
+          <div>
+            {documents.length === 0 ? (
+              <div className="notebook-paper p-8 text-center">
+                <StickyNote className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
+                <p style={{ color: 'var(--color-ink-light)' }}>{t('notes.noDocuments')}</p>
+              </div>
+            ) : (
+              <>
+                {renderDocumentPicker(t('notes.selectHint'))}
+                {selectedDocId && folderId && <NotesList documentId={selectedDocId} projectId={folderId} />}
+              </>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'versions' && (
+          <div>
+            {documents.length === 0 ? (
+              <div className="notebook-paper p-8 text-center">
+                <History className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
+                <p style={{ color: 'var(--color-ink-light)' }}>{t('versions.noDocuments')}</p>
+              </div>
+            ) : (
+              <>
+                {renderDocumentPicker(t('versions.selectHint'))}
+                {selectedDocId && <VersionsList documentId={selectedDocId} />}
+              </>
+            )}
           </div>
         )}
       </div>

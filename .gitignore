@@ -9,6 +9,7 @@ build/
 .nuxt/
 .output/
 
+
 # Environment
 .env
 .env.local
@@ -47,3 +48,9 @@ graphify-out/
 # Skills and internal docs
 hallmark/
 tasks/
+
+# Tooling
+.opencode/
+.playwright/
+.playwright-mcp/
+

@@ -17,7 +17,8 @@ interface ActivityState {
   removeByFolder: (folderId: string) => void
 }
 
-const STORAGE_KEY = 'escritura-activity'
+const STORAGE_KEY = 'archivum-activity'
+const LEGACY_STORAGE_KEY = 'escritura-activity'
 const MAX_ACTIVITIES = 20
 
 export const useActivityStore = create<ActivityState>()((set) => ({
@@ -39,7 +40,14 @@ export const useActivityStore = create<ActivityState>()((set) => ({
 
   loadActivities: () => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
+      let stored = localStorage.getItem(STORAGE_KEY)
+      if (!stored) {
+        stored = localStorage.getItem(LEGACY_STORAGE_KEY)
+        if (stored) {
+          localStorage.setItem(STORAGE_KEY, stored)
+          localStorage.removeItem(LEGACY_STORAGE_KEY)
+        }
+      }
       if (stored) {
         set({ activities: JSON.parse(stored) })
       }

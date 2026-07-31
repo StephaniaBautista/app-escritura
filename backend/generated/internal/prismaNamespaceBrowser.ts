@@ -58,6 +58,8 @@ export const ModelName = {
   Project: 'Project',
   Folder: 'Folder',
   Document: 'Document',
+  Note: 'Note',
+  DocumentVersion: 'DocumentVersion',
   Character: 'Character',
   World: 'World',
   Diagram: 'Diagram'
@@ -177,6 +179,34 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const NoteScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  documentId: 'documentId',
+  projectId: 'projectId',
+  isHidden: 'isHidden',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const DocumentVersionScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  title: 'title',
+  content: 'content',
+  version: 'version',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentVersionScalarFieldEnum = (typeof DocumentVersionScalarFieldEnum)[keyof typeof DocumentVersionScalarFieldEnum]
 
 
 export const CharacterScalarFieldEnum = {

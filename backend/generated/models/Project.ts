@@ -196,6 +196,7 @@ export type ProjectWhereInput = {
   characters?: Prisma.CharacterListRelationFilter
   worlds?: Prisma.WorldListRelationFilter
   diagrams?: Prisma.DiagramListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -211,6 +212,7 @@ export type ProjectOrderByWithRelationInput = {
   characters?: Prisma.CharacterOrderByRelationAggregateInput
   worlds?: Prisma.WorldOrderByRelationAggregateInput
   diagrams?: Prisma.DiagramOrderByRelationAggregateInput
+  notes?: Prisma.NoteOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -229,6 +231,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   characters?: Prisma.CharacterListRelationFilter
   worlds?: Prisma.WorldListRelationFilter
   diagrams?: Prisma.DiagramListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -267,6 +270,7 @@ export type ProjectCreateInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -281,6 +285,7 @@ export type ProjectUncheckedCreateInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -295,6 +300,7 @@ export type ProjectUpdateInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -309,6 +315,7 @@ export type ProjectUncheckedUpdateInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -377,6 +384,11 @@ export type ProjectMinOrderByAggregateInput = {
 export type ProjectScalarRelationFilter = {
   is?: Prisma.ProjectWhereInput
   isNot?: Prisma.ProjectWhereInput
+}
+
+export type ProjectNullableScalarRelationFilter = {
+  is?: Prisma.ProjectWhereInput | null
+  isNot?: Prisma.ProjectWhereInput | null
 }
 
 export type ProjectCreateNestedManyWithoutUserInput = {
@@ -449,6 +461,22 @@ export type ProjectUpdateOneRequiredWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDocumentsInput, Prisma.ProjectUpdateWithoutDocumentsInput>, Prisma.ProjectUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type ProjectCreateNestedOneWithoutNotesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutNotesInput, Prisma.ProjectUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutNotesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneWithoutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutNotesInput, Prisma.ProjectUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutNotesInput
+  upsert?: Prisma.ProjectUpsertWithoutNotesInput
+  disconnect?: Prisma.ProjectWhereInput | boolean
+  delete?: Prisma.ProjectWhereInput | boolean
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutNotesInput, Prisma.ProjectUpdateWithoutNotesInput>, Prisma.ProjectUncheckedUpdateWithoutNotesInput>
+}
+
 export type ProjectCreateNestedOneWithoutCharactersInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutCharactersInput, Prisma.ProjectUncheckedCreateWithoutCharactersInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutCharactersInput
@@ -502,6 +530,7 @@ export type ProjectCreateWithoutUserInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -515,6 +544,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutUserInput = {
@@ -566,6 +596,7 @@ export type ProjectCreateWithoutFoldersInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFoldersInput = {
@@ -579,6 +610,7 @@ export type ProjectUncheckedCreateWithoutFoldersInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFoldersInput = {
@@ -608,6 +640,7 @@ export type ProjectUpdateWithoutFoldersInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFoldersInput = {
@@ -621,6 +654,7 @@ export type ProjectUncheckedUpdateWithoutFoldersInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDocumentsInput = {
@@ -634,6 +668,7 @@ export type ProjectCreateWithoutDocumentsInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -647,6 +682,7 @@ export type ProjectUncheckedCreateWithoutDocumentsInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -676,6 +712,7 @@ export type ProjectUpdateWithoutDocumentsInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -685,6 +722,79 @@ export type ProjectUncheckedUpdateWithoutDocumentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutNotesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutNotesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutNotesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutNotesInput, Prisma.ProjectUncheckedCreateWithoutNotesInput>
+}
+
+export type ProjectUpsertWithoutNotesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutNotesInput, Prisma.ProjectUncheckedUpdateWithoutNotesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutNotesInput, Prisma.ProjectUncheckedCreateWithoutNotesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutNotesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutNotesInput, Prisma.ProjectUncheckedUpdateWithoutNotesInput>
+}
+
+export type ProjectUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -702,6 +812,7 @@ export type ProjectCreateWithoutCharactersInput = {
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCharactersInput = {
@@ -715,6 +826,7 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCharactersInput = {
@@ -744,6 +856,7 @@ export type ProjectUpdateWithoutCharactersInput = {
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCharactersInput = {
@@ -757,6 +870,7 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldsInput = {
@@ -770,6 +884,7 @@ export type ProjectCreateWithoutWorldsInput = {
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldsInput = {
@@ -783,6 +898,7 @@ export type ProjectUncheckedCreateWithoutWorldsInput = {
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldsInput = {
@@ -812,6 +928,7 @@ export type ProjectUpdateWithoutWorldsInput = {
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldsInput = {
@@ -825,6 +942,7 @@ export type ProjectUncheckedUpdateWithoutWorldsInput = {
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDiagramsInput = {
@@ -838,6 +956,7 @@ export type ProjectCreateWithoutDiagramsInput = {
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDiagramsInput = {
@@ -851,6 +970,7 @@ export type ProjectUncheckedCreateWithoutDiagramsInput = {
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDiagramsInput = {
@@ -880,6 +1000,7 @@ export type ProjectUpdateWithoutDiagramsInput = {
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDiagramsInput = {
@@ -893,6 +1014,7 @@ export type ProjectUncheckedUpdateWithoutDiagramsInput = {
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyUserInput = {
@@ -914,6 +1036,7 @@ export type ProjectUpdateWithoutUserInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutUserInput = {
@@ -927,6 +1050,7 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -948,6 +1072,7 @@ export type ProjectCountOutputType = {
   characters: number
   worlds: number
   diagrams: number
+  notes: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -956,6 +1081,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   characters?: boolean | ProjectCountOutputTypeCountCharactersArgs
   worlds?: boolean | ProjectCountOutputTypeCountWorldsArgs
   diagrams?: boolean | ProjectCountOutputTypeCountDiagramsArgs
+  notes?: boolean | ProjectCountOutputTypeCountNotesArgs
 }
 
 /**
@@ -1003,6 +1129,13 @@ export type ProjectCountOutputTypeCountDiagramsArgs<ExtArgs extends runtime.Type
   where?: Prisma.DiagramWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1017,6 +1150,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   characters?: boolean | Prisma.Project$charactersArgs<ExtArgs>
   worlds?: boolean | Prisma.Project$worldsArgs<ExtArgs>
   diagrams?: boolean | Prisma.Project$diagramsArgs<ExtArgs>
+  notes?: boolean | Prisma.Project$notesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1057,6 +1191,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   characters?: boolean | Prisma.Project$charactersArgs<ExtArgs>
   worlds?: boolean | Prisma.Project$worldsArgs<ExtArgs>
   diagrams?: boolean | Prisma.Project$diagramsArgs<ExtArgs>
+  notes?: boolean | Prisma.Project$notesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1075,6 +1210,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     characters: Prisma.$CharacterPayload<ExtArgs>[]
     worlds: Prisma.$WorldPayload<ExtArgs>[]
     diagrams: Prisma.$DiagramPayload<ExtArgs>[]
+    notes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1483,6 +1619,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   characters<T extends Prisma.Project$charactersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$charactersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   worlds<T extends Prisma.Project$worldsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$worldsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   diagrams<T extends Prisma.Project$diagramsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.Project$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2036,6 +2173,30 @@ export type Project$diagramsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.DiagramScalarFieldEnum | Prisma.DiagramScalarFieldEnum[]
+}
+
+/**
+ * Project.notes
+ */
+export type Project$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

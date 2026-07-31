@@ -53,6 +53,15 @@ export const projectService = {
     })
   },
 
+  async getProjectPage(id: string, userId: string) {
+    const [project, tree] = await Promise.all([
+      this.getById(id, userId),
+      documentService.getTree(id, userId),
+    ])
+    if (!project) return null
+    return { ...project, tree }
+  },
+
   async create(userId: string, data: CreateProjectInput) {
     return prisma.project.create({
       data: {
@@ -161,4 +170,46 @@ export const documentService = {
       },
     })
   },
+
+  async duplicate(id: string, userId: string) {
+    const original = await prisma.document.findFirst({
+      where: { id, userId },
+      include: {
+        children: { orderBy: { order: 'asc' } },
+      },
+    })
+    if (!original) return null
+
+    const duplicateRecursive = async (doc: typeof original, newParentId: string | null) => {
+      const duplicated = await prisma.document.create({
+        data: {
+          title: newParentId === null ? `${doc.title} (Copia)` : doc.title,
+          content: doc.content ?? Prisma.JsonNull,
+          type: doc.type,
+          order: doc.order + 1,
+          userId,
+          projectId: doc.projectId,
+          folderId: doc.folderId,
+          parentId: newParentId,
+        },
+      })
+
+      if (doc.children && doc.children.length > 0) {
+        for (const child of doc.children) {
+          const childFull = await prisma.document.findFirst({
+            where: { id: child.id, userId },
+            include: { children: { orderBy: { order: 'asc' } } },
+          })
+          if (childFull) {
+            await duplicateRecursive(childFull, duplicated.id)
+          }
+        }
+      }
+
+      return duplicated
+    }
+
+    return duplicateRecursive(original, original.parentId)
+  },
 }
+

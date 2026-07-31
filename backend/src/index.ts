@@ -8,6 +8,8 @@ import swaggerUi from '@fastify/swagger-ui'
 import { authRoutes } from './routes/auth.js'
 import { projectRoutes } from './routes/projects.js'
 import { documentRoutes } from './routes/documents.js'
+import { noteRoutes } from './routes/notes.js'
+import { versionRoutes } from './routes/versions.js'
 
 const app = Fastify({
   logger: true,
@@ -18,12 +20,12 @@ await app.register(swagger, {
   openapi: {
     openapi: '3.0.0',
     info: {
-      title: 'Escritura API',
+      title: 'Archivum API',
       description: 'API de la plataforma de escritura creativa con IA',
       version: '0.1.0',
       contact: {
-        name: 'Escritura Team',
-        email: 'support@escritura.app',
+        name: 'Archivum Team',
+        email: 'support@archivum.app',
       },
     },
     servers: [
@@ -46,6 +48,8 @@ await app.register(swagger, {
       { name: 'Auth', description: 'Endpoints de autenticación' },
       { name: 'Projects', description: 'Gestión de proyectos' },
       { name: 'Documents', description: 'Gestión de documentos, capítulos y subpáginas' },
+      { name: 'Notes', description: 'Notas tipo post-it por documento' },
+      { name: 'Versions', description: 'Versionado lineal (snapshots) por documento' },
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
     ],
@@ -104,6 +108,12 @@ await app.register(projectRoutes, { prefix: '/api' })
 
 // Document routes
 await app.register(documentRoutes, { prefix: '/api' })
+
+// Note routes
+await app.register(noteRoutes, { prefix: '/api' })
+
+// Version routes
+await app.register(versionRoutes, { prefix: '/api' })
 
 // API routes prefix
 app.register(async function apiRoutes(app) {

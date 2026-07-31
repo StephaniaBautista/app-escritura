@@ -5,22 +5,24 @@ interface InputDialogProps {
   isOpen: boolean
   title: string
   placeholder?: string
+  initialValue?: string
   confirmLabel?: string
   onSubmit: (value: string) => void
   onCancel: () => void
 }
 
-export function InputDialog({ isOpen, title, placeholder, confirmLabel, onSubmit, onCancel }: InputDialogProps) {
+export function InputDialog({ isOpen, title, placeholder, initialValue, confirmLabel, onSubmit, onCancel }: InputDialogProps) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (isOpen) {
-      setValue('')
+      setValue(initialValue ?? '')
       setTimeout(() => inputRef.current?.focus(), 50)
     }
-  }, [isOpen])
+  }, [isOpen, initialValue])
+
 
   useEffect(() => {
     if (!isOpen) return

@@ -28,7 +28,8 @@ model User {
   // App relations
   projects      Project[]
   documents     Document[]
-
+  notes         Note[]
+  versions      DocumentVersion[]
   @@map("users")
 }
 
@@ -92,6 +93,7 @@ model Project {
   characters  Character[]
   worlds      World[]
   diagrams    Diagram[]
+  notes       Note[]
 
   @@map("projects")
 }
@@ -134,11 +136,56 @@ model Document {
   folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
   parent    Document?  @relation("DocumentTree", fields: [parentId], references: [id], onDelete: Cascade)
   children  Document[] @relation("DocumentTree")
+  notes     Note[]
+  versions  DocumentVersion[]
 
   @@index([projectId])
   @@index([parentId])
   @@index([userId])
   @@map("documents")
+}
+
+// Note model for sticky-note style notes (per document or per project/story)
+model Note {
+  id         String   @id @default(cuid())
+  title      String
+  content    String   @default("")
+  documentId String?
+  projectId  String?
+  isHidden   Boolean  @default(false)
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  document  Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  project   Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([projectId])
+  @@index([userId])
+  @@map("notes")
+}
+
+// DocumentVersion model for linear versioning (snapshots)
+model DocumentVersion {
+  id         String   @id @default(cuid())
+  documentId String
+  title      String
+  content    Json     @default("{}")
+  version    Int
+  userId     String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  document  Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, version])
+  @@index([documentId])
+  @@index([userId])
+  @@map("document_versions")
 }
 
 // Character model for story characters
