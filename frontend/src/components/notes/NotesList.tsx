@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StickyNote, Plus, BookText, FileText } from 'lucide-react'
+import { StickyNote, Plus } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import type { Note } from '@/types/document'
 import { PostIt } from './PostIt'
@@ -10,29 +10,21 @@ import { LoadingState } from '@/components/ui/LoadingState'
 
 interface NotesListProps {
   documentId: string
-  projectId: string
 }
 
-type Scope = 'document' | 'story'
-
-export function NotesList({ documentId, projectId }: NotesListProps) {
+export function NotesList({ documentId }: NotesListProps) {
   const { t } = useTranslation()
-  const { notes, projectNotes, notesLoading, loadNotes, loadProjectNotes, createNote, createProjectNote, updateNote, deleteNote } = useDocumentStore()
-  const [scope, setScope] = useState<Scope>('document')
+  const { notes, notesLoading, loadNotes, createNote, updateNote, deleteNote } = useDocumentStore()
   const [isCreating, setIsCreating] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
 
   useEffect(() => {
-    if (scope === 'document') loadNotes(documentId)
-    else loadProjectNotes(projectId)
+    loadNotes(documentId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scope, documentId, projectId])
-
-  const list = scope === 'document' ? notes : projectNotes
+  }, [documentId])
 
   const handleCreate = async (title: string) => {
-    if (scope === 'document') await createNote(documentId, { title })
-    else await createProjectNote(projectId, { title })
+    await createNote(documentId, { title })
     setIsCreating(false)
   }
 
@@ -52,37 +44,6 @@ export function NotesList({ documentId, projectId }: NotesListProps) {
         </button>
       </div>
 
-      <div className="flex gap-1 mb-4">
-        <button
-          type="button"
-          onClick={() => setScope('document')}
-          aria-pressed={scope === 'document'}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
-          style={{
-            background: scope === 'document' ? 'var(--color-accent-light)' : 'transparent',
-            color: scope === 'document' ? 'var(--color-accent)' : 'var(--color-ink-light)',
-            border: `1px solid ${scope === 'document' ? 'var(--color-accent)' : 'var(--color-paper-lines)'}`,
-          }}
-        >
-          <FileText className="w-3.5 h-3.5" />
-          {t('postit.scopeDocument')}
-        </button>
-        <button
-          type="button"
-          onClick={() => setScope('story')}
-          aria-pressed={scope === 'story'}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
-          style={{
-            background: scope === 'story' ? 'var(--color-accent-light)' : 'transparent',
-            color: scope === 'story' ? 'var(--color-accent)' : 'var(--color-ink-light)',
-            border: `1px solid ${scope === 'story' ? 'var(--color-accent)' : 'var(--color-paper-lines)'}`,
-          }}
-        >
-          <BookText className="w-3.5 h-3.5" />
-          {t('postit.scopeStory')}
-        </button>
-      </div>
-
       {isCreating && (
         <InlineCreateInput
           placeholder={t('postit.notePlaceholder')}
@@ -93,9 +54,9 @@ export function NotesList({ documentId, projectId }: NotesListProps) {
 
       {notesLoading ? (
         <LoadingState label={t('common.loading')} className="notebook-paper" />
-      ) : list.length > 0 ? (
+      ) : notes.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {list.map((note: Note, i: number) => (
+          {notes.map((note: Note, i: number) => (
             <PostIt
               key={note.id}
               note={note}

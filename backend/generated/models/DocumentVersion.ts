@@ -37,6 +37,7 @@ export type DocumentVersionSumAggregateOutputType = {
 export type DocumentVersionMinAggregateOutputType = {
   id: string | null
   documentId: string | null
+  branchId: string | null
   title: string | null
   version: number | null
   userId: string | null
@@ -46,6 +47,7 @@ export type DocumentVersionMinAggregateOutputType = {
 export type DocumentVersionMaxAggregateOutputType = {
   id: string | null
   documentId: string | null
+  branchId: string | null
   title: string | null
   version: number | null
   userId: string | null
@@ -55,6 +57,7 @@ export type DocumentVersionMaxAggregateOutputType = {
 export type DocumentVersionCountAggregateOutputType = {
   id: number
   documentId: number
+  branchId: number
   title: number
   content: number
   version: number
@@ -75,6 +78,7 @@ export type DocumentVersionSumAggregateInputType = {
 export type DocumentVersionMinAggregateInputType = {
   id?: true
   documentId?: true
+  branchId?: true
   title?: true
   version?: true
   userId?: true
@@ -84,6 +88,7 @@ export type DocumentVersionMinAggregateInputType = {
 export type DocumentVersionMaxAggregateInputType = {
   id?: true
   documentId?: true
+  branchId?: true
   title?: true
   version?: true
   userId?: true
@@ -93,6 +98,7 @@ export type DocumentVersionMaxAggregateInputType = {
 export type DocumentVersionCountAggregateInputType = {
   id?: true
   documentId?: true
+  branchId?: true
   title?: true
   content?: true
   version?: true
@@ -190,6 +196,7 @@ export type DocumentVersionGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type DocumentVersionGroupByOutputType = {
   id: string
   documentId: string
+  branchId: string | null
   title: string
   content: runtime.JsonValue
   version: number
@@ -223,46 +230,62 @@ export type DocumentVersionWhereInput = {
   NOT?: Prisma.DocumentVersionWhereInput | Prisma.DocumentVersionWhereInput[]
   id?: Prisma.StringFilter<"DocumentVersion"> | string
   documentId?: Prisma.StringFilter<"DocumentVersion"> | string
+  branchId?: Prisma.StringNullableFilter<"DocumentVersion"> | string | null
   title?: Prisma.StringFilter<"DocumentVersion"> | string
   content?: Prisma.JsonFilter<"DocumentVersion">
   version?: Prisma.IntFilter<"DocumentVersion"> | number
   userId?: Prisma.StringFilter<"DocumentVersion"> | string
   createdAt?: Prisma.DateTimeFilter<"DocumentVersion"> | Date | string
   document?: Prisma.XOR<Prisma.DocumentScalarRelationFilter, Prisma.DocumentWhereInput>
+  branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  parents?: Prisma.VersionParentListRelationFilter
+  children?: Prisma.VersionParentListRelationFilter
+  sourceBranches?: Prisma.BranchListRelationFilter
 }
 
 export type DocumentVersionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  branchId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   version?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   document?: Prisma.DocumentOrderByWithRelationInput
+  branch?: Prisma.BranchOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  parents?: Prisma.VersionParentOrderByRelationAggregateInput
+  children?: Prisma.VersionParentOrderByRelationAggregateInput
+  sourceBranches?: Prisma.BranchOrderByRelationAggregateInput
 }
 
 export type DocumentVersionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  documentId_version?: Prisma.DocumentVersionDocumentIdVersionCompoundUniqueInput
+  branchId_version?: Prisma.DocumentVersionBranchIdVersionCompoundUniqueInput
   AND?: Prisma.DocumentVersionWhereInput | Prisma.DocumentVersionWhereInput[]
   OR?: Prisma.DocumentVersionWhereInput[]
   NOT?: Prisma.DocumentVersionWhereInput | Prisma.DocumentVersionWhereInput[]
   documentId?: Prisma.StringFilter<"DocumentVersion"> | string
+  branchId?: Prisma.StringNullableFilter<"DocumentVersion"> | string | null
   title?: Prisma.StringFilter<"DocumentVersion"> | string
   content?: Prisma.JsonFilter<"DocumentVersion">
   version?: Prisma.IntFilter<"DocumentVersion"> | number
   userId?: Prisma.StringFilter<"DocumentVersion"> | string
   createdAt?: Prisma.DateTimeFilter<"DocumentVersion"> | Date | string
   document?: Prisma.XOR<Prisma.DocumentScalarRelationFilter, Prisma.DocumentWhereInput>
+  branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "documentId_version">
+  parents?: Prisma.VersionParentListRelationFilter
+  children?: Prisma.VersionParentListRelationFilter
+  sourceBranches?: Prisma.BranchListRelationFilter
+}, "id" | "branchId_version">
 
 export type DocumentVersionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  branchId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   version?: Prisma.SortOrder
@@ -281,6 +304,7 @@ export type DocumentVersionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DocumentVersionScalarWhereWithAggregatesInput | Prisma.DocumentVersionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DocumentVersion"> | string
   documentId?: Prisma.StringWithAggregatesFilter<"DocumentVersion"> | string
+  branchId?: Prisma.StringNullableWithAggregatesFilter<"DocumentVersion"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"DocumentVersion"> | string
   content?: Prisma.JsonWithAggregatesFilter<"DocumentVersion">
   version?: Prisma.IntWithAggregatesFilter<"DocumentVersion"> | number
@@ -295,17 +319,25 @@ export type DocumentVersionCreateInput = {
   version: number
   createdAt?: Date | string
   document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
   user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionUncheckedCreateInput = {
   id?: string
   documentId: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
   userId: string
   createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionUpdateInput = {
@@ -315,22 +347,31 @@ export type DocumentVersionUpdateInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionCreateManyInput = {
   id?: string
   documentId: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
@@ -349,6 +390,7 @@ export type DocumentVersionUpdateManyMutationInput = {
 export type DocumentVersionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
@@ -366,14 +408,15 @@ export type DocumentVersionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type DocumentVersionDocumentIdVersionCompoundUniqueInput = {
-  documentId: string
+export type DocumentVersionBranchIdVersionCompoundUniqueInput = {
+  branchId: string
   version: number
 }
 
 export type DocumentVersionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  branchId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   version?: Prisma.SortOrder
@@ -388,6 +431,7 @@ export type DocumentVersionAvgOrderByAggregateInput = {
 export type DocumentVersionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  branchId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   version?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -397,6 +441,7 @@ export type DocumentVersionMaxOrderByAggregateInput = {
 export type DocumentVersionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  branchId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   version?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -405,6 +450,16 @@ export type DocumentVersionMinOrderByAggregateInput = {
 
 export type DocumentVersionSumOrderByAggregateInput = {
   version?: Prisma.SortOrder
+}
+
+export type DocumentVersionNullableScalarRelationFilter = {
+  is?: Prisma.DocumentVersionWhereInput | null
+  isNot?: Prisma.DocumentVersionWhereInput | null
+}
+
+export type DocumentVersionScalarRelationFilter = {
+  is?: Prisma.DocumentVersionWhereInput
+  isNot?: Prisma.DocumentVersionWhereInput
 }
 
 export type DocumentVersionCreateNestedManyWithoutUserInput = {
@@ -491,6 +546,92 @@ export type DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput = {
   deleteMany?: Prisma.DocumentVersionScalarWhereInput | Prisma.DocumentVersionScalarWhereInput[]
 }
 
+export type DocumentVersionCreateNestedOneWithoutSourceBranchesInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedCreateWithoutSourceBranchesInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutSourceBranchesInput
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+}
+
+export type DocumentVersionCreateNestedManyWithoutBranchInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput> | Prisma.DocumentVersionCreateWithoutBranchInput[] | Prisma.DocumentVersionUncheckedCreateWithoutBranchInput[]
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutBranchInput | Prisma.DocumentVersionCreateOrConnectWithoutBranchInput[]
+  createMany?: Prisma.DocumentVersionCreateManyBranchInputEnvelope
+  connect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+}
+
+export type DocumentVersionUncheckedCreateNestedManyWithoutBranchInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput> | Prisma.DocumentVersionCreateWithoutBranchInput[] | Prisma.DocumentVersionUncheckedCreateWithoutBranchInput[]
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutBranchInput | Prisma.DocumentVersionCreateOrConnectWithoutBranchInput[]
+  createMany?: Prisma.DocumentVersionCreateManyBranchInputEnvelope
+  connect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+}
+
+export type DocumentVersionUpdateOneWithoutSourceBranchesNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedCreateWithoutSourceBranchesInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutSourceBranchesInput
+  upsert?: Prisma.DocumentVersionUpsertWithoutSourceBranchesInput
+  disconnect?: Prisma.DocumentVersionWhereInput | boolean
+  delete?: Prisma.DocumentVersionWhereInput | boolean
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentVersionUpdateToOneWithWhereWithoutSourceBranchesInput, Prisma.DocumentVersionUpdateWithoutSourceBranchesInput>, Prisma.DocumentVersionUncheckedUpdateWithoutSourceBranchesInput>
+}
+
+export type DocumentVersionUpdateManyWithoutBranchNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput> | Prisma.DocumentVersionCreateWithoutBranchInput[] | Prisma.DocumentVersionUncheckedCreateWithoutBranchInput[]
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutBranchInput | Prisma.DocumentVersionCreateOrConnectWithoutBranchInput[]
+  upsert?: Prisma.DocumentVersionUpsertWithWhereUniqueWithoutBranchInput | Prisma.DocumentVersionUpsertWithWhereUniqueWithoutBranchInput[]
+  createMany?: Prisma.DocumentVersionCreateManyBranchInputEnvelope
+  set?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  disconnect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  delete?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  connect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  update?: Prisma.DocumentVersionUpdateWithWhereUniqueWithoutBranchInput | Prisma.DocumentVersionUpdateWithWhereUniqueWithoutBranchInput[]
+  updateMany?: Prisma.DocumentVersionUpdateManyWithWhereWithoutBranchInput | Prisma.DocumentVersionUpdateManyWithWhereWithoutBranchInput[]
+  deleteMany?: Prisma.DocumentVersionScalarWhereInput | Prisma.DocumentVersionScalarWhereInput[]
+}
+
+export type DocumentVersionUncheckedUpdateManyWithoutBranchNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput> | Prisma.DocumentVersionCreateWithoutBranchInput[] | Prisma.DocumentVersionUncheckedCreateWithoutBranchInput[]
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutBranchInput | Prisma.DocumentVersionCreateOrConnectWithoutBranchInput[]
+  upsert?: Prisma.DocumentVersionUpsertWithWhereUniqueWithoutBranchInput | Prisma.DocumentVersionUpsertWithWhereUniqueWithoutBranchInput[]
+  createMany?: Prisma.DocumentVersionCreateManyBranchInputEnvelope
+  set?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  disconnect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  delete?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  connect?: Prisma.DocumentVersionWhereUniqueInput | Prisma.DocumentVersionWhereUniqueInput[]
+  update?: Prisma.DocumentVersionUpdateWithWhereUniqueWithoutBranchInput | Prisma.DocumentVersionUpdateWithWhereUniqueWithoutBranchInput[]
+  updateMany?: Prisma.DocumentVersionUpdateManyWithWhereWithoutBranchInput | Prisma.DocumentVersionUpdateManyWithWhereWithoutBranchInput[]
+  deleteMany?: Prisma.DocumentVersionScalarWhereInput | Prisma.DocumentVersionScalarWhereInput[]
+}
+
+export type DocumentVersionCreateNestedOneWithoutParentsInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutParentsInput, Prisma.DocumentVersionUncheckedCreateWithoutParentsInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutParentsInput
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+}
+
+export type DocumentVersionCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutChildrenInput, Prisma.DocumentVersionUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+}
+
+export type DocumentVersionUpdateOneRequiredWithoutParentsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutParentsInput, Prisma.DocumentVersionUncheckedCreateWithoutParentsInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutParentsInput
+  upsert?: Prisma.DocumentVersionUpsertWithoutParentsInput
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentVersionUpdateToOneWithWhereWithoutParentsInput, Prisma.DocumentVersionUpdateWithoutParentsInput>, Prisma.DocumentVersionUncheckedUpdateWithoutParentsInput>
+}
+
+export type DocumentVersionUpdateOneRequiredWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentVersionCreateWithoutChildrenInput, Prisma.DocumentVersionUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.DocumentVersionCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.DocumentVersionUpsertWithoutChildrenInput
+  connect?: Prisma.DocumentVersionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentVersionUpdateToOneWithWhereWithoutChildrenInput, Prisma.DocumentVersionUpdateWithoutChildrenInput>, Prisma.DocumentVersionUncheckedUpdateWithoutChildrenInput>
+}
+
 export type DocumentVersionCreateWithoutUserInput = {
   id?: string
   title: string
@@ -498,15 +639,23 @@ export type DocumentVersionCreateWithoutUserInput = {
   version: number
   createdAt?: Date | string
   document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionUncheckedCreateWithoutUserInput = {
   id?: string
   documentId: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
   createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionCreateOrConnectWithoutUserInput = {
@@ -541,6 +690,7 @@ export type DocumentVersionScalarWhereInput = {
   NOT?: Prisma.DocumentVersionScalarWhereInput | Prisma.DocumentVersionScalarWhereInput[]
   id?: Prisma.StringFilter<"DocumentVersion"> | string
   documentId?: Prisma.StringFilter<"DocumentVersion"> | string
+  branchId?: Prisma.StringNullableFilter<"DocumentVersion"> | string | null
   title?: Prisma.StringFilter<"DocumentVersion"> | string
   content?: Prisma.JsonFilter<"DocumentVersion">
   version?: Prisma.IntFilter<"DocumentVersion"> | number
@@ -554,16 +704,24 @@ export type DocumentVersionCreateWithoutDocumentInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
   createdAt?: Date | string
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
   user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionUncheckedCreateWithoutDocumentInput = {
   id?: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
   userId: string
   createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
 }
 
 export type DocumentVersionCreateOrConnectWithoutDocumentInput = {
@@ -592,9 +750,266 @@ export type DocumentVersionUpdateManyWithWhereWithoutDocumentInput = {
   data: Prisma.XOR<Prisma.DocumentVersionUpdateManyMutationInput, Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentInput>
 }
 
+export type DocumentVersionCreateWithoutSourceBranchesInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  createdAt?: Date | string
+  document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
+  user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+}
+
+export type DocumentVersionUncheckedCreateWithoutSourceBranchesInput = {
+  id?: string
+  documentId: string
+  branchId?: string | null
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  userId: string
+  createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type DocumentVersionCreateOrConnectWithoutSourceBranchesInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedCreateWithoutSourceBranchesInput>
+}
+
+export type DocumentVersionCreateWithoutBranchInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  createdAt?: Date | string
+  document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionUncheckedCreateWithoutBranchInput = {
+  id?: string
+  documentId: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  userId: string
+  createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionCreateOrConnectWithoutBranchInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput>
+}
+
+export type DocumentVersionCreateManyBranchInputEnvelope = {
+  data: Prisma.DocumentVersionCreateManyBranchInput | Prisma.DocumentVersionCreateManyBranchInput[]
+  skipDuplicates?: boolean
+}
+
+export type DocumentVersionUpsertWithoutSourceBranchesInput = {
+  update: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedUpdateWithoutSourceBranchesInput>
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedCreateWithoutSourceBranchesInput>
+  where?: Prisma.DocumentVersionWhereInput
+}
+
+export type DocumentVersionUpdateToOneWithWhereWithoutSourceBranchesInput = {
+  where?: Prisma.DocumentVersionWhereInput
+  data: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutSourceBranchesInput, Prisma.DocumentVersionUncheckedUpdateWithoutSourceBranchesInput>
+}
+
+export type DocumentVersionUpdateWithoutSourceBranchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+}
+
+export type DocumentVersionUncheckedUpdateWithoutSourceBranchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type DocumentVersionUpsertWithWhereUniqueWithoutBranchInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  update: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutBranchInput, Prisma.DocumentVersionUncheckedUpdateWithoutBranchInput>
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutBranchInput, Prisma.DocumentVersionUncheckedCreateWithoutBranchInput>
+}
+
+export type DocumentVersionUpdateWithWhereUniqueWithoutBranchInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  data: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutBranchInput, Prisma.DocumentVersionUncheckedUpdateWithoutBranchInput>
+}
+
+export type DocumentVersionUpdateManyWithWhereWithoutBranchInput = {
+  where: Prisma.DocumentVersionScalarWhereInput
+  data: Prisma.XOR<Prisma.DocumentVersionUpdateManyMutationInput, Prisma.DocumentVersionUncheckedUpdateManyWithoutBranchInput>
+}
+
+export type DocumentVersionCreateWithoutParentsInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  createdAt?: Date | string
+  document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
+  user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  children?: Prisma.VersionParentCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionUncheckedCreateWithoutParentsInput = {
+  id?: string
+  documentId: string
+  branchId?: string | null
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  userId: string
+  createdAt?: Date | string
+  children?: Prisma.VersionParentUncheckedCreateNestedManyWithoutParentInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionCreateOrConnectWithoutParentsInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutParentsInput, Prisma.DocumentVersionUncheckedCreateWithoutParentsInput>
+}
+
+export type DocumentVersionCreateWithoutChildrenInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  createdAt?: Date | string
+  document: Prisma.DocumentCreateNestedOneWithoutVersionsInput
+  branch?: Prisma.BranchCreateNestedOneWithoutVersionsInput
+  user: Prisma.UserCreateNestedOneWithoutVersionsInput
+  parents?: Prisma.VersionParentCreateNestedManyWithoutVersionInput
+  sourceBranches?: Prisma.BranchCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  documentId: string
+  branchId?: string | null
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  userId: string
+  createdAt?: Date | string
+  parents?: Prisma.VersionParentUncheckedCreateNestedManyWithoutVersionInput
+  sourceBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutSourceVersionInput
+}
+
+export type DocumentVersionCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.DocumentVersionWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutChildrenInput, Prisma.DocumentVersionUncheckedCreateWithoutChildrenInput>
+}
+
+export type DocumentVersionUpsertWithoutParentsInput = {
+  update: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutParentsInput, Prisma.DocumentVersionUncheckedUpdateWithoutParentsInput>
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutParentsInput, Prisma.DocumentVersionUncheckedCreateWithoutParentsInput>
+  where?: Prisma.DocumentVersionWhereInput
+}
+
+export type DocumentVersionUpdateToOneWithWhereWithoutParentsInput = {
+  where?: Prisma.DocumentVersionWhereInput
+  data: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutParentsInput, Prisma.DocumentVersionUncheckedUpdateWithoutParentsInput>
+}
+
+export type DocumentVersionUpdateWithoutParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
+}
+
+export type DocumentVersionUncheckedUpdateWithoutParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
+}
+
+export type DocumentVersionUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutChildrenInput, Prisma.DocumentVersionUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.DocumentVersionCreateWithoutChildrenInput, Prisma.DocumentVersionUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.DocumentVersionWhereInput
+}
+
+export type DocumentVersionUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.DocumentVersionWhereInput
+  data: Prisma.XOR<Prisma.DocumentVersionUpdateWithoutChildrenInput, Prisma.DocumentVersionUncheckedUpdateWithoutChildrenInput>
+}
+
+export type DocumentVersionUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
+}
+
+export type DocumentVersionUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
+}
+
 export type DocumentVersionCreateManyUserInput = {
   id?: string
   documentId: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
@@ -608,20 +1023,29 @@ export type DocumentVersionUpdateWithoutUserInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
@@ -630,6 +1054,7 @@ export type DocumentVersionUncheckedUpdateManyWithoutUserInput = {
 
 export type DocumentVersionCreateManyDocumentInput = {
   id?: string
+  branchId?: string | null
   title: string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version: number
@@ -643,20 +1068,29 @@ export type DocumentVersionUpdateWithoutDocumentInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branch?: Prisma.BranchUpdateOneWithoutVersionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionUncheckedUpdateWithoutDocumentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
 }
 
 export type DocumentVersionUncheckedUpdateManyWithoutDocumentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   version?: Prisma.IntFieldUpdateOperationsInput | number
@@ -664,47 +1098,151 @@ export type DocumentVersionUncheckedUpdateManyWithoutDocumentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type DocumentVersionCreateManyBranchInput = {
+  id?: string
+  documentId: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version: number
+  userId: string
+  createdAt?: Date | string
+}
+
+export type DocumentVersionUpdateWithoutBranchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  document?: Prisma.DocumentUpdateOneRequiredWithoutVersionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutVersionsNestedInput
+  parents?: Prisma.VersionParentUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUpdateManyWithoutSourceVersionNestedInput
+}
+
+export type DocumentVersionUncheckedUpdateWithoutBranchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parents?: Prisma.VersionParentUncheckedUpdateManyWithoutVersionNestedInput
+  children?: Prisma.VersionParentUncheckedUpdateManyWithoutParentNestedInput
+  sourceBranches?: Prisma.BranchUncheckedUpdateManyWithoutSourceVersionNestedInput
+}
+
+export type DocumentVersionUncheckedUpdateManyWithoutBranchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type DocumentVersionCountOutputType
+ */
+
+export type DocumentVersionCountOutputType = {
+  parents: number
+  children: number
+  sourceBranches: number
+}
+
+export type DocumentVersionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parents?: boolean | DocumentVersionCountOutputTypeCountParentsArgs
+  children?: boolean | DocumentVersionCountOutputTypeCountChildrenArgs
+  sourceBranches?: boolean | DocumentVersionCountOutputTypeCountSourceBranchesArgs
+}
+
+/**
+ * DocumentVersionCountOutputType without action
+ */
+export type DocumentVersionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentVersionCountOutputType
+   */
+  select?: Prisma.DocumentVersionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocumentVersionCountOutputType without action
+ */
+export type DocumentVersionCountOutputTypeCountParentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VersionParentWhereInput
+}
+
+/**
+ * DocumentVersionCountOutputType without action
+ */
+export type DocumentVersionCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VersionParentWhereInput
+}
+
+/**
+ * DocumentVersionCountOutputType without action
+ */
+export type DocumentVersionCountOutputTypeCountSourceBranchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BranchWhereInput
+}
 
 
 export type DocumentVersionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentId?: boolean
+  branchId?: boolean
   title?: boolean
   content?: boolean
   version?: boolean
   userId?: boolean
   createdAt?: boolean
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parents?: boolean | Prisma.DocumentVersion$parentsArgs<ExtArgs>
+  children?: boolean | Prisma.DocumentVersion$childrenArgs<ExtArgs>
+  sourceBranches?: boolean | Prisma.DocumentVersion$sourceBranchesArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentVersionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentVersion"]>
 
 export type DocumentVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentId?: boolean
+  branchId?: boolean
   title?: boolean
   content?: boolean
   version?: boolean
   userId?: boolean
   createdAt?: boolean
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentVersion"]>
 
 export type DocumentVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentId?: boolean
+  branchId?: boolean
   title?: boolean
   content?: boolean
   version?: boolean
   userId?: boolean
   createdAt?: boolean
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentVersion"]>
 
 export type DocumentVersionSelectScalar = {
   id?: boolean
   documentId?: boolean
+  branchId?: boolean
   title?: boolean
   content?: boolean
   version?: boolean
@@ -712,17 +1250,24 @@ export type DocumentVersionSelectScalar = {
   createdAt?: boolean
 }
 
-export type DocumentVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentId" | "title" | "content" | "version" | "userId" | "createdAt", ExtArgs["result"]["documentVersion"]>
+export type DocumentVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentId" | "branchId" | "title" | "content" | "version" | "userId" | "createdAt", ExtArgs["result"]["documentVersion"]>
 export type DocumentVersionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parents?: boolean | Prisma.DocumentVersion$parentsArgs<ExtArgs>
+  children?: boolean | Prisma.DocumentVersion$childrenArgs<ExtArgs>
+  sourceBranches?: boolean | Prisma.DocumentVersion$sourceBranchesArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentVersionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentVersionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DocumentVersionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  branch?: boolean | Prisma.DocumentVersion$branchArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -730,11 +1275,16 @@ export type $DocumentVersionPayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "DocumentVersion"
   objects: {
     document: Prisma.$DocumentPayload<ExtArgs>
+    branch: Prisma.$BranchPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
+    parents: Prisma.$VersionParentPayload<ExtArgs>[]
+    children: Prisma.$VersionParentPayload<ExtArgs>[]
+    sourceBranches: Prisma.$BranchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     documentId: string
+    branchId: string | null
     title: string
     content: runtime.JsonValue
     version: number
@@ -1135,7 +1685,11 @@ readonly fields: DocumentVersionFieldRefs;
 export interface Prisma__DocumentVersionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   document<T extends Prisma.DocumentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentDefaultArgs<ExtArgs>>): Prisma.Prisma__DocumentClient<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  branch<T extends Prisma.DocumentVersion$branchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentVersion$branchArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parents<T extends Prisma.DocumentVersion$parentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentVersion$parentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VersionParentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  children<T extends Prisma.DocumentVersion$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentVersion$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VersionParentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sourceBranches<T extends Prisma.DocumentVersion$sourceBranchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentVersion$sourceBranchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1167,6 +1721,7 @@ export interface Prisma__DocumentVersionClient<T, Null = never, ExtArgs extends 
 export interface DocumentVersionFieldRefs {
   readonly id: Prisma.FieldRef<"DocumentVersion", 'String'>
   readonly documentId: Prisma.FieldRef<"DocumentVersion", 'String'>
+  readonly branchId: Prisma.FieldRef<"DocumentVersion", 'String'>
   readonly title: Prisma.FieldRef<"DocumentVersion", 'String'>
   readonly content: Prisma.FieldRef<"DocumentVersion", 'Json'>
   readonly version: Prisma.FieldRef<"DocumentVersion", 'Int'>
@@ -1570,6 +2125,97 @@ export type DocumentVersionDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many DocumentVersions to delete.
    */
   limit?: number
+}
+
+/**
+ * DocumentVersion.branch
+ */
+export type DocumentVersion$branchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Branch
+   */
+  select?: Prisma.BranchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Branch
+   */
+  omit?: Prisma.BranchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BranchInclude<ExtArgs> | null
+  where?: Prisma.BranchWhereInput
+}
+
+/**
+ * DocumentVersion.parents
+ */
+export type DocumentVersion$parentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VersionParent
+   */
+  select?: Prisma.VersionParentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VersionParent
+   */
+  omit?: Prisma.VersionParentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VersionParentInclude<ExtArgs> | null
+  where?: Prisma.VersionParentWhereInput
+  orderBy?: Prisma.VersionParentOrderByWithRelationInput | Prisma.VersionParentOrderByWithRelationInput[]
+  cursor?: Prisma.VersionParentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VersionParentScalarFieldEnum | Prisma.VersionParentScalarFieldEnum[]
+}
+
+/**
+ * DocumentVersion.children
+ */
+export type DocumentVersion$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VersionParent
+   */
+  select?: Prisma.VersionParentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VersionParent
+   */
+  omit?: Prisma.VersionParentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VersionParentInclude<ExtArgs> | null
+  where?: Prisma.VersionParentWhereInput
+  orderBy?: Prisma.VersionParentOrderByWithRelationInput | Prisma.VersionParentOrderByWithRelationInput[]
+  cursor?: Prisma.VersionParentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VersionParentScalarFieldEnum | Prisma.VersionParentScalarFieldEnum[]
+}
+
+/**
+ * DocumentVersion.sourceBranches
+ */
+export type DocumentVersion$sourceBranchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Branch
+   */
+  select?: Prisma.BranchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Branch
+   */
+  omit?: Prisma.BranchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BranchInclude<ExtArgs> | null
+  where?: Prisma.BranchWhereInput
+  orderBy?: Prisma.BranchOrderByWithRelationInput | Prisma.BranchOrderByWithRelationInput[]
+  cursor?: Prisma.BranchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BranchScalarFieldEnum | Prisma.BranchScalarFieldEnum[]
 }
 
 /**

@@ -36,7 +36,7 @@ interface DocumentState {
 
   clearCurrentDocument: () => void
 
-  loadNotes: (documentId: string) => Promise<void>
+  loadNotes: (rootDocumentId: string, currentDocumentId?: string) => Promise<void>
   loadProjectNotes: (projectId: string) => Promise<void>
   createNote: (documentId: string, data: { title: string; content?: string }) => Promise<Note>
   createProjectNote: (projectId: string, data: { title: string; content?: string }) => Promise<Note>
@@ -155,6 +155,14 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   createDocument: async (data) => {
     try {
       const doc = await documentsApi.create(data)
+      if (data.type === 'document' || !data.type) {
+        await documentsApi.create({
+          title: i18n.t('editorApp.defaultTabName'),
+          type: 'chapter',
+          projectId: data.projectId,
+          parentId: doc.id,
+        })
+      }
       await get().loadDocumentTree(data.projectId)
       return doc
     } catch (error: unknown) {
@@ -238,6 +246,13 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
         projectId: targetProject.id,
       })
 
+      await documentsApi.create({
+        title: i18n.t('editorApp.defaultTabName'),
+        type: 'chapter',
+        projectId: targetProject.id,
+        parentId: doc.id,
+      })
+
       set({ isLoading: false })
       return doc
     } catch (error: unknown) {
@@ -248,11 +263,17 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
 
   clearCurrentDocument: () => set({ currentDocument: null }),
 
-  loadNotes: async (documentId: string) => {
-    set({ notesLoading: true, error: null })
+  loadNotes: async (rootDocumentId: string, currentDocumentId?: string) => {
     try {
-      const notes = await notesApi.list(documentId)
-      set({ notes, notesLoading: false })
+      const needsSubtab = currentDocumentId && currentDocumentId !== rootDocumentId
+      const [rootNotes, subtabNotes] = await Promise.all([
+        notesApi.list(rootDocumentId),
+        needsSubtab ? notesApi.list(currentDocumentId) : Promise.resolve([]),
+      ])
+      const merged = needsSubtab
+        ? [...rootNotes, ...subtabNotes.filter((n) => n.documentId !== rootDocumentId)]
+        : rootNotes
+      set({ notes: merged, notesLoading: false })
     } catch (error: unknown) {
       set({ error: getErrorMessage(error), notesLoading: false })
     }

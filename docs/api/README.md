@@ -71,8 +71,34 @@ Las notas son texto plano (título + contenido). Ambitos (M15): las notas de doc
 
 Reglas:
 - `version` es auto-incremental por documento (`@@unique([documentId, version])`).
-- Máximo **50 versiones** por documento; al exceder, las más antiguas se eliminan (FIFO).
+- Límite por tier según `TIER_LIMITS` (FREE: 20, MEDIUM: 50, PRO+: sin límite); al exceder, las más antiguas se eliminan (FIFO).
 - `GET /documents/:documentId/versions` no incluye `content` (lista ligera); el contenido completo se obtiene con `GET /versions/:id`.
+
+### Versions + Branches (2026-08-01, M23)
+- `GET /api/branches/:branchId/versions` - Listar versiones de una rama, más reciente primero
+- `POST /api/branches/:branchId/versions` - Crear versión (snapshot) dentro de una rama concreta
+- `GET /api/documents/:documentId/versions?branchId=...` - Filtrar versiones por rama
+
+Reglas:
+- `version` es auto-incremental **por rama** (`@@unique([branchId, version])`).
+- El límite de versiones (FIFO) se aplica por rama según tier.
+
+### Branches (2026-08-01, M23)
+- `GET /api/documents/:documentId/branches` - Listar ramas (main primero por orden alfabético)
+- `POST /api/documents/:documentId/branches` - Crear rama `{ name, sourceVersionId? }`
+- `GET /api/branches/:branchId` - Obtener rama
+- `PATCH /api/branches/:branchId` - Renombrar rama `{ name }` (main no se renombra)
+- `DELETE /api/branches/:branchId` - Eliminar rama (main no se elimina)
+- `GET /api/documents/:documentId/branches/graph` - Datos del grafo: `{ nodes, edges, branches }` con colores por rama
+- `POST /api/branches/:branchId/merge` - Fusionar rama origen en otra
+
+Reglas:
+- **main siempre existe**: se crea automáticamente con cada documento (incluye duplicados).
+- El merge crea un **merge commit** (versión con dos padres vía `version_parents`) en la rama destino.
+- Sin conflictos → `201 { merged: true, version }`.
+- Con conflictos → `409 { merged: false, conflicts, mergedContent }`; se debe reenviar con `resolution: { content }` para completar.
+- Detección de conflictos: diff por índice de nodos TipTap JSON contra el punto de bifurcación (`sourceVersionId` de la rama origen; fallback: primera versión del documento).
+- Mismas ramas → `400 MERGE_FAILED`.
 
 ## Autenticacion
 

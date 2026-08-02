@@ -1,22 +1,38 @@
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
-
-export const MAX_VERSIONS_PER_DOCUMENT = 50
+import { getMaxVersions, type Tier, Tier as TierEnum } from '../config/tiers.js'
+import { branchService } from './branch-service.js'
 
 export const versionService = {
-  async list(documentId: string, userId: string) {
+  async list(documentId: string, userId: string, branchId?: string) {
+    const where: { documentId: string; userId: string; branchId?: string } = { documentId, userId }
+    if (branchId) where.branchId = branchId
+
     return prisma.documentVersion.findMany({
-      where: { documentId, userId },
+      where,
       orderBy: { version: 'desc' },
     })
   },
 
-  async create(documentId: string, userId: string) {
+  async create(documentId: string, userId: string, tier: Tier = TierEnum.FREE, branchId?: string) {
     const doc = await prisma.document.findFirst({ where: { id: documentId, userId } })
     if (!doc) return null
 
+    const branch = branchId
+      ? await branchService.get(branchId, userId)
+      : await branchService.ensureMainBranch(documentId, userId)
+    if (!branch) return null
+
+    const maxVersions = getMaxVersions(tier)
+    if (maxVersions !== null) {
+      const count = await prisma.documentVersion.count({ where: { branchId: branch.id } })
+      if (count >= maxVersions) {
+        return null
+      }
+    }
+
     const last = await prisma.documentVersion.findFirst({
-      where: { documentId },
+      where: { branchId: branch.id },
       orderBy: { version: 'desc' },
     })
     const version = (last?.version ?? 0) + 1
@@ -24,6 +40,7 @@ export const versionService = {
     const created = await prisma.documentVersion.create({
       data: {
         documentId,
+        branchId: branch.id,
         userId,
         title: doc.title,
         content: doc.content as Prisma.InputJsonValue,
@@ -31,7 +48,9 @@ export const versionService = {
       },
     })
 
-    await this.enforceLimit(documentId)
+    if (maxVersions !== null) {
+      await this.enforceLimit(branch.id, maxVersions)
+    }
     return created
   },
 
@@ -55,19 +74,19 @@ export const versionService = {
     })
   },
 
-  async enforceLimit(documentId: string) {
-    const count = await prisma.documentVersion.count({ where: { documentId } })
-    if (count <= MAX_VERSIONS_PER_DOCUMENT) return
+  async enforceLimit(branchId: string, limit: number) {
+    const count = await prisma.documentVersion.count({ where: { branchId } })
+    if (count <= limit) return
 
     const toKeep = await prisma.documentVersion.findMany({
-      where: { documentId },
+      where: { branchId },
       orderBy: { version: 'desc' },
-      take: MAX_VERSIONS_PER_DOCUMENT,
+      take: limit,
       select: { id: true },
     })
 
     await prisma.documentVersion.deleteMany({
-      where: { documentId, id: { notIn: toKeep.map((v) => v.id) } },
+      where: { branchId, id: { notIn: toKeep.map((v) => v.id) } },
     })
   },
 }

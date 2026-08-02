@@ -212,6 +212,8 @@ export type UserWhereInput = {
   documents?: Prisma.DocumentListRelationFilter
   notes?: Prisma.NoteListRelationFilter
   versions?: Prisma.DocumentVersionListRelationFilter
+  branches?: Prisma.BranchListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -229,6 +231,8 @@ export type UserOrderByWithRelationInput = {
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   notes?: Prisma.NoteOrderByRelationAggregateInput
   versions?: Prisma.DocumentVersionOrderByRelationAggregateInput
+  branches?: Prisma.BranchOrderByRelationAggregateInput
+  settings?: Prisma.UserSettingsOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -249,6 +253,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   documents?: Prisma.DocumentListRelationFilter
   notes?: Prisma.NoteListRelationFilter
   versions?: Prisma.DocumentVersionListRelationFilter
+  branches?: Prisma.BranchListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -294,6 +300,8 @@ export type UserCreateInput = {
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -311,6 +319,8 @@ export type UserUncheckedCreateInput = {
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -328,6 +338,8 @@ export type UserUpdateInput = {
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -345,6 +357,8 @@ export type UserUncheckedUpdateInput = {
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -518,6 +532,34 @@ export type UserUpdateOneRequiredWithoutVersionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVersionsInput, Prisma.UserUpdateWithoutVersionsInput>, Prisma.UserUncheckedUpdateWithoutVersionsInput>
 }
 
+export type UserCreateNestedOneWithoutBranchesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBranchesInput, Prisma.UserUncheckedCreateWithoutBranchesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBranchesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBranchesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBranchesInput, Prisma.UserUncheckedCreateWithoutBranchesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBranchesInput
+  upsert?: Prisma.UserUpsertWithoutBranchesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBranchesInput, Prisma.UserUpdateWithoutBranchesInput>, Prisma.UserUncheckedUpdateWithoutBranchesInput>
+}
+
+export type UserCreateNestedOneWithoutSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  upsert?: Prisma.UserUpsertWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSettingsInput, Prisma.UserUpdateWithoutSettingsInput>, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -532,6 +574,8 @@ export type UserCreateWithoutSessionsInput = {
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -548,6 +592,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -580,6 +626,8 @@ export type UserUpdateWithoutSessionsInput = {
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -596,6 +644,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -612,6 +662,8 @@ export type UserCreateWithoutAccountsInput = {
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -628,6 +680,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -660,6 +714,8 @@ export type UserUpdateWithoutAccountsInput = {
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -676,6 +732,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -692,6 +750,8 @@ export type UserCreateWithoutProjectsInput = {
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -708,6 +768,8 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -740,6 +802,8 @@ export type UserUpdateWithoutProjectsInput = {
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -756,6 +820,8 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentsInput = {
@@ -772,6 +838,8 @@ export type UserCreateWithoutDocumentsInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -788,6 +856,8 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -820,6 +890,8 @@ export type UserUpdateWithoutDocumentsInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -836,6 +908,8 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotesInput = {
@@ -852,6 +926,8 @@ export type UserCreateWithoutNotesInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotesInput = {
@@ -868,6 +944,8 @@ export type UserUncheckedCreateWithoutNotesInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotesInput = {
@@ -900,6 +978,8 @@ export type UserUpdateWithoutNotesInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotesInput = {
@@ -916,6 +996,8 @@ export type UserUncheckedUpdateWithoutNotesInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVersionsInput = {
@@ -932,6 +1014,8 @@ export type UserCreateWithoutVersionsInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVersionsInput = {
@@ -948,6 +1032,8 @@ export type UserUncheckedCreateWithoutVersionsInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVersionsInput = {
@@ -980,6 +1066,8 @@ export type UserUpdateWithoutVersionsInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVersionsInput = {
@@ -996,6 +1084,184 @@ export type UserUncheckedUpdateWithoutVersionsInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBranchesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBranchesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBranchesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBranchesInput, Prisma.UserUncheckedCreateWithoutBranchesInput>
+}
+
+export type UserUpsertWithoutBranchesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBranchesInput, Prisma.UserUncheckedUpdateWithoutBranchesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBranchesInput, Prisma.UserUncheckedCreateWithoutBranchesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBranchesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBranchesInput, Prisma.UserUncheckedUpdateWithoutBranchesInput>
+}
+
+export type UserUpdateWithoutBranchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBranchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSettingsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSettingsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+}
+
+export type UserUpsertWithoutSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1010,6 +1276,7 @@ export type UserCountOutputType = {
   documents: number
   notes: number
   versions: number
+  branches: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1019,6 +1286,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   documents?: boolean | UserCountOutputTypeCountDocumentsArgs
   notes?: boolean | UserCountOutputTypeCountNotesArgs
   versions?: boolean | UserCountOutputTypeCountVersionsArgs
+  branches?: boolean | UserCountOutputTypeCountBranchesArgs
 }
 
 /**
@@ -1073,6 +1341,13 @@ export type UserCountOutputTypeCountVersionsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.DocumentVersionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBranchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BranchWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1089,6 +1364,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
   notes?: boolean | Prisma.User$notesArgs<ExtArgs>
   versions?: boolean | Prisma.User$versionsArgs<ExtArgs>
+  branches?: boolean | Prisma.User$branchesArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1133,6 +1410,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
   notes?: boolean | Prisma.User$notesArgs<ExtArgs>
   versions?: boolean | Prisma.User$versionsArgs<ExtArgs>
+  branches?: boolean | Prisma.User$branchesArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1147,6 +1426,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     documents: Prisma.$DocumentPayload<ExtArgs>[]
     notes: Prisma.$NotePayload<ExtArgs>[]
     versions: Prisma.$DocumentVersionPayload<ExtArgs>[]
+    branches: Prisma.$BranchPayload<ExtArgs>[]
+    settings: Prisma.$UserSettingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1557,6 +1838,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   documents<T extends Prisma.User$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.User$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   versions<T extends Prisma.User$versionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  branches<T extends Prisma.User$branchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2128,6 +2411,49 @@ export type User$versionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.DocumentVersionScalarFieldEnum | Prisma.DocumentVersionScalarFieldEnum[]
+}
+
+/**
+ * User.branches
+ */
+export type User$branchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Branch
+   */
+  select?: Prisma.BranchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Branch
+   */
+  omit?: Prisma.BranchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BranchInclude<ExtArgs> | null
+  where?: Prisma.BranchWhereInput
+  orderBy?: Prisma.BranchOrderByWithRelationInput | Prisma.BranchOrderByWithRelationInput[]
+  cursor?: Prisma.BranchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BranchScalarFieldEnum | Prisma.BranchScalarFieldEnum[]
+}
+
+/**
+ * User.settings
+ */
+export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserSettings
+   */
+  select?: Prisma.UserSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserSettings
+   */
+  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserSettingsWhereInput
 }
 
 /**

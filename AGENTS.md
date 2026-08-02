@@ -139,7 +139,9 @@ backend/src/
 19. **Code Quality** Debes siempre revisar tus skills de code quality antes de completar un mensaje. La calidad del código es primordial. 
 20. **Cambios** Siempre que hagas un cambio, actualiza el `changelog.md` de la carpeta correspondiente (fase o mantenimiento) y el índice global `tasks/CHANGELOG.md`, para saber que se cambio y no se repitan los errores. 
 21. **Estructura de tasks/** Los documentos de planificación viven por carpeta: `tasks/fase-XX-*/` (spec.md, plan.md, todo.md, changelog.md) y `tasks/mantenimiento/mXX-*/` (plan.md, changelog.md). Los archivos raíz de `tasks/` son solo índices globales. Ver `tasks/README.md`.
-22. **Localstorage** Jamás uses localstorage. Usa Zustand con persistencia de datos en el backend. Para nada, en ningún concepto, debe usarse localstorage
+22. **Localstorage** Jamás uses localstorage. Usa Zustand con persistencia de datos en el backend. Para nada, en ningún concepto, debe usarse localstorage.
+23. **Ambiguedad** Prefiero que me preguntes y uses la skill de entrevista, todas tus dudas, antes de que empieces a sobrepensar. Ahorrar tokens debe ser vital. Cualquier duda que tengas, debes preguntarme a mi.
+24. **Orden** Las paginas se deben agrupar en carpetas por sus funciones y que se relacione con su nombre. Por ejemplo: Si es una pagina de login, debe estar en una carpeta que se llame login. Si es una pagina de registro, debe estar en una carpeta que se llame register.
 
 ---
 

@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
+import { branchService } from './branch-service.js'
 
 export interface CreateProjectInput {
   name: string
@@ -118,7 +119,7 @@ export const documentService = {
   },
 
   async create(userId: string, data: CreateDocumentInput) {
-    return prisma.document.create({
+    const document = await prisma.document.create({
       data: {
         title: data.title,
         content: data.content ?? Prisma.JsonNull,
@@ -130,6 +131,10 @@ export const documentService = {
         parentId: data.parentId,
       },
     })
+
+    await branchService.ensureMainBranch(document.id, userId)
+
+    return document
   },
 
   async update(id: string, userId: string, data: UpdateDocumentInput) {
@@ -193,6 +198,8 @@ export const documentService = {
           parentId: newParentId,
         },
       })
+
+      await branchService.ensureMainBranch(duplicated.id, userId)
 
       if (doc.children && doc.children.length > 0) {
         for (const child of doc.children) {

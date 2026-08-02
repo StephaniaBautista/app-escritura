@@ -30,6 +30,8 @@ model User {
   documents     Document[]
   notes         Note[]
   versions      DocumentVersion[]
+  branches      Branch[]
+  settings      UserSettings?
   @@map("users")
 }
 
@@ -130,6 +132,8 @@ model Document {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  autoVersionState Json @default("{}")
+
   // Relations
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -138,6 +142,7 @@ model Document {
   children  Document[] @relation("DocumentTree")
   notes     Note[]
   versions  DocumentVersion[]
+  branches  Branch[]
 
   @@index([projectId])
   @@index([parentId])
@@ -172,6 +177,7 @@ model Note {
 model DocumentVersion {
   id         String   @id @default(cuid())
   documentId String
+  branchId   String?
   title      String
   content    Json     @default("{}")
   version    Int
@@ -180,12 +186,60 @@ model DocumentVersion {
 
   // Relations
   document  Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  branch    Branch?  @relation("BranchVersions", fields: [branchId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parents   VersionParent[] @relation("ChildVersion")
+  children  VersionParent[] @relation("ParentVersion")
+  sourceBranches Branch[]     @relation("BranchSource")
 
-  @@unique([documentId, version])
+  @@unique([branchId, version])
   @@index([documentId])
+  @@index([branchId])
   @@index([userId])
   @@map("document_versions")
+}
+
+// Branch model for versioning branches (Git-like)
+model Branch {
+  id              String    @id @default(cuid())
+  documentId      String
+  name            String
+  sourceVersionId String?
+  userId          String
+  createdAt       DateTime  @default(now())
+
+  document      Document         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceVersion DocumentVersion? @relation("BranchSource", fields: [sourceVersionId], references: [id], onDelete: SetNull)
+  versions      DocumentVersion[] @relation("BranchVersions")
+
+  @@unique([documentId, name])
+  @@index([documentId])
+  @@map("branches")
+}
+
+// VersionParent model for merge commits (many-to-many parent relationship)
+model VersionParent {
+  versionId String
+  parentId  String
+
+  version DocumentVersion @relation("ChildVersion", fields: [versionId], references: [id], onDelete: Cascade)
+  parent  DocumentVersion @relation("ParentVersion", fields: [parentId], references: [id], onDelete: Cascade)
+
+  @@id([versionId, parentId])
+  @@map("version_parents")
+}
+
+model UserSettings {
+  id         String @id @default(cuid())
+  userId     String @unique
+  theme      String @default("system")
+  language   String @default("es")
+  autoVersion Json  @default("{}")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
 }
 
 // Character model for story characters

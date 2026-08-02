@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BookOpen, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { ChapterTree } from '@/components/editor/ChapterTree'
+import { getDocumentRootId, getDocumentTabs, getNextTabTitle } from '@/lib/document-tabs'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { InputDialog } from '@/components/ui/InputDialog'
 import { AccordionSection } from '@/components/ui/AccordionSection'
@@ -20,9 +21,7 @@ export function Sidebar() {
     duplicateDocument,
     deleteDocument,
   } = useDocumentStore()
-  const [showNewChapter, setShowNewChapter] = useState(false)
   const [creatingChapter, setCreatingChapter] = useState(false)
-  const [newChapterName, setNewChapterName] = useState('')
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [subpageParent, setSubpageParent] = useState<string | null>(null)
   const [renameTarget, setRenameTarget] = useState<{ id: string; title: string } | null>(null)
@@ -35,21 +34,17 @@ export function Sidebar() {
   }
 
   const handleCreateChapter = async () => {
-    if (!projectId) return
-    setShowNewChapter(true)
-  }
-
-  const handleConfirmChapter = async () => {
-    if (!newChapterName.trim() || !projectId || creatingChapter) return
+    if (!projectId || !currentDocument || creatingChapter) return
     setCreatingChapter(true)
     try {
+      const parentId = getDocumentRootId(documentTree, currentDocument.id) ?? currentDocument.id
+      const title = getNextTabTitle(documentTree, parentId, t('editorApp.defaultTabName'))
       const doc = await createDocument({
-        title: newChapterName.trim(),
+        title,
         type: 'chapter',
         projectId,
+        parentId,
       })
-      setNewChapterName('')
-      setShowNewChapter(false)
       navigate(`/app/editor/${projectId}/${doc.id}`)
     } finally {
       setCreatingChapter(false)
@@ -146,19 +141,21 @@ export function Sidebar() {
           <AccordionSection
             title={t('editorApp.documentTabs')}
             actions={
-              <button
-                type="button"
-                onClick={handleCreateChapter}
-                className="p-1 rounded hover:opacity-80"
-                title={t('editorApp.newTab')}
-                aria-label={t('editorApp.newTab')}
-              >
-                <Plus className="w-3.5 h-3.5" style={{ color: 'var(--color-ink-light)' }} />
-              </button>
+              currentDocument ? (
+                <button
+                  type="button"
+                  onClick={handleCreateChapter}
+                  className="p-1 rounded hover:opacity-80"
+                  title={t('editorApp.newTab')}
+                  aria-label={t('editorApp.newTab')}
+                >
+                  <Plus className="w-3.5 h-3.5" style={{ color: 'var(--color-ink-light)' }} />
+                </button>
+              ) : undefined
             }
           >
             <ChapterTree
-              documents={documentTree}
+              documents={getDocumentTabs(documentTree, currentDocument?.id ?? null)}
               activeDocId={currentDocument?.id ?? null}
               onSelect={handleSelectDoc}
               onCreateSubpage={handleCreateSubpage}
@@ -167,30 +164,6 @@ export function Sidebar() {
               onDelete={(id) => setDeleteTarget(id)}
             />
           </AccordionSection>
-        )}
-
-        {showNewChapter && (
-          <div className="px-3 py-2">
-            <input
-              autoFocus
-              value={newChapterName}
-              onChange={(e) => setNewChapterName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !creatingChapter) handleConfirmChapter()
-                if (e.key === 'Escape' && !creatingChapter) { setShowNewChapter(false); setNewChapterName('') }
-              }}
-              placeholder={t('editorApp.newTab')}
-              disabled={creatingChapter}
-              aria-busy={creatingChapter}
-              className="w-full px-2 py-1.5 text-sm rounded border disabled:opacity-60"
-              style={{
-                background: 'var(--color-background)',
-                borderColor: 'var(--color-paper-lines)',
-                color: 'var(--color-ink)',
-              }}
-              onBlur={() => { if (!creatingChapter && !newChapterName.trim()) setShowNewChapter(false) }}
-            />
-          </div>
         )}
       </div>
 

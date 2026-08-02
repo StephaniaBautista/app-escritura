@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, PanelRightClose, PanelRightOpen, StickyNote, BookText, FileText, EyeOff } from 'lucide-react'
+import { Plus, PanelRightClose, PanelRightOpen, StickyNote, FileText, EyeOff } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { PostIt, type PostItVariant } from '@/components/notes/PostIt'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
@@ -8,30 +8,33 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 interface PostItWallProps {
   documentId: string
+  rootDocumentId: string
   projectId: string
 }
 
-type Filter = 'all' | 'story' | 'document' | 'hidden'
-type Scope = 'story' | 'document'
+type Filter = 'all' | 'document' | 'subtab' | 'hidden'
+type Scope = 'document' | 'subtab'
 
 const VARIANTS: PostItVariant[] = ['yellow', 'blue', 'pink']
 
-export function PostItWall({ documentId, projectId }: PostItWallProps) {
+export function PostItWall({ documentId, rootDocumentId, projectId }: PostItWallProps) {
   const { t } = useTranslation()
-  const { notes, projectNotes, loadNotes, loadProjectNotes, createNote, createProjectNote, updateNote, deleteNote } = useDocumentStore()
+  const { notes, projectNotes, loadNotes, loadProjectNotes, createNote, updateNote, deleteNote } = useDocumentStore()
   const [collapsed, setCollapsed] = useState(false)
   const [filter, setFilter] = useState<Filter>('all')
   const [menuOpen, setMenuOpen] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
-  const [createScope, setCreateScope] = useState<Scope>('story')
+  const [createScope, setCreateScope] = useState<Scope>('document')
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
+  const isSubtab = documentId !== rootDocumentId
+
   useEffect(() => {
-    loadNotes(documentId)
+    loadNotes(rootDocumentId, documentId)
     loadProjectNotes(projectId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentId, projectId])
+  }, [documentId, rootDocumentId, projectId])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -45,21 +48,22 @@ export function PostItWall({ documentId, projectId }: PostItWallProps) {
   }, [menuOpen])
 
   const visibleStory = projectNotes.filter((n) => !n.isHidden)
-  const visibleDoc = notes.filter((n) => !n.isHidden)
+  const visibleDoc = notes.filter((n) => !n.isHidden && n.documentId === rootDocumentId)
+  const visibleSubtab = notes.filter((n) => !n.isHidden && n.documentId !== rootDocumentId)
   const hidden = [...projectNotes, ...notes].filter((n) => n.isHidden)
 
-  const list: typeof notes = filter === 'all' ? [...visibleStory, ...visibleDoc] : filter === 'story' ? visibleStory : filter === 'document' ? visibleDoc : hidden
+  const list: typeof notes = filter === 'all' ? [...visibleStory, ...visibleDoc, ...visibleSubtab] : filter === 'document' ? visibleDoc : filter === 'subtab' ? visibleSubtab : hidden
 
   const handleCreate = async (title: string) => {
-    if (createScope === 'story') await createProjectNote(projectId, { title })
+    if (createScope === 'document') await createNote(rootDocumentId, { title })
     else await createNote(documentId, { title })
     setIsCreating(false)
   }
 
   const filters: { id: Filter; label: string; icon: typeof StickyNote; badge?: number }[] = [
     { id: 'all', label: t('postit.filterAll'), icon: StickyNote },
-    { id: 'story', label: t('postit.filterStory'), icon: BookText },
     { id: 'document', label: t('postit.filterDocument'), icon: FileText },
+    ...(isSubtab ? [{ id: 'subtab' as Filter, label: t('postit.filterSubtab'), icon: FileText }] : []),
     { id: 'hidden', label: t('postit.filterHidden'), icon: EyeOff, badge: hidden.length },
   ]
 
@@ -114,15 +118,6 @@ export function PostItWall({ documentId, projectId }: PostItWallProps) {
               >
                 <button
                   type="button"
-                  onClick={() => { setCreateScope('story'); setMenuOpen(false); setIsCreating(true) }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:opacity-80 transition-opacity"
-                  style={{ color: 'var(--color-ink)' }}
-                >
-                  <BookText className="w-4 h-4" />
-                  {t('postit.scopeStory')}
-                </button>
-                <button
-                  type="button"
                   onClick={() => { setCreateScope('document'); setMenuOpen(false); setIsCreating(true) }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:opacity-80 transition-opacity"
                   style={{ color: 'var(--color-ink)' }}
@@ -130,6 +125,17 @@ export function PostItWall({ documentId, projectId }: PostItWallProps) {
                   <FileText className="w-4 h-4" />
                   {t('postit.scopeDocument')}
                 </button>
+                {isSubtab && (
+                  <button
+                    type="button"
+                    onClick={() => { setCreateScope('subtab'); setMenuOpen(false); setIsCreating(true) }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:opacity-80 transition-opacity"
+                    style={{ color: 'var(--color-ink)' }}
+                  >
+                    <FileText className="w-4 h-4" />
+                    {t('postit.scopeSubtab')}
+                  </button>
+                )}
               </div>
             )}
           </div>

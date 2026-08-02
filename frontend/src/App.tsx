@@ -1,20 +1,21 @@
 import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useAuthStore } from '@/stores/auth-store'
-import { Login } from '@/pages/Login'
-import { Register } from '@/pages/Register'
-import { ForgotPassword } from '@/pages/ForgotPassword'
-import { ResetPassword } from '@/pages/ResetPassword'
-import { Landing } from '@/pages/Landing'
-import { PricingPage } from '@/pages/PricingPage'
-import { EditorPage } from '@/pages/Editor'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { DashboardLayout } from '@/components/DashboardLayout'
-import { DashboardHome } from '@/pages/DashboardHome'
-import { DocumentsPage } from '@/pages/DocumentsPage'
-import { FolderPage } from '@/pages/FolderPage'
-import { RecentPage } from '@/pages/RecentPage'
-import { SharedPage } from '@/pages/SharedPage'
+import { Login } from '@/pages/auth/Login'
+import { Register } from '@/pages/auth/Register'
+import { ForgotPassword } from '@/pages/auth/ForgotPassword'
+import { ResetPassword } from '@/pages/auth/ResetPassword'
+import { Landing } from '@/pages/landing/Landing'
+import { PricingPage } from '@/pages/landing/PricingPage'
+import { EditorPage } from '@/pages/editor/Editor'
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import { DashboardHome } from '@/pages/dashboard/DashboardHome'
+import { DocumentsPage } from '@/pages/dashboard/DocumentsPage'
+import { FolderPage } from '@/pages/dashboard/FolderPage'
+import { RecentPage } from '@/pages/dashboard/RecentPage'
+import { SharedPage } from '@/pages/dashboard/SharedPage'
+import { SettingsPage } from '@/pages/settings/SettingsPage'
 
 function App() {
   const { checkSession, isInitialized } = useAuthStore()
@@ -46,6 +47,7 @@ function App() {
         <Route path="documents/:folderId" element={<FolderPage />} />
         <Route path="recent" element={<RecentPage />} />
         <Route path="shared" element={<SharedPage />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route
         path="/app/editor"

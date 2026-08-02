@@ -63,6 +63,21 @@ export type Note = Prisma.NoteModel
  */
 export type DocumentVersion = Prisma.DocumentVersionModel
 /**
+ * Model Branch
+ * 
+ */
+export type Branch = Prisma.BranchModel
+/**
+ * Model VersionParent
+ * 
+ */
+export type VersionParent = Prisma.VersionParentModel
+/**
+ * Model UserSettings
+ * 
+ */
+export type UserSettings = Prisma.UserSettingsModel
+/**
  * Model Character
  * 
  */

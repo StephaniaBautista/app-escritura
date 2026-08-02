@@ -27,7 +27,8 @@ export function ChapterTree({
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const { t } = useTranslation()
 
-  const rootDocs = documents.filter((d) => !d.parentId)
+  const docIds = new Set(documents.map((d) => d.id))
+  const rootDocs = documents.filter((d) => !d.parentId || !docIds.has(d.parentId))
   const childrenMap = new Map<string, DocumentNode[]>()
   documents.forEach((d) => {
     if (d.parentId) {
@@ -76,12 +77,16 @@ export function ChapterTree({
       })
     }
 
-    menuItems.push({
-      label: t('editorApp.delete'),
-      icon: Trash2,
-      onClick: () => onDelete(node.id),
-      danger: true,
-    })
+    const isRoot = !node.parentId || !docIds.has(node.parentId)
+    const canDelete = isRoot ? rootDocs.length > 1 : true
+    if (canDelete) {
+      menuItems.push({
+        label: t('editorApp.delete'),
+        icon: Trash2,
+        onClick: () => onDelete(node.id),
+        danger: true,
+      })
+    }
 
     return (
       <div key={node.id} className="w-full">

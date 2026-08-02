@@ -14,6 +14,7 @@ import { Check, Loader2, AlertCircle } from 'lucide-react'
 interface DocumentEditorProps {
   documentId: string
   initialContent?: Record<string, unknown>
+  onKeystroke?: () => void
 }
 
 function getWordCount(text: string): number {
@@ -41,7 +42,7 @@ function StatusIndicator({ status }: { status: SaveStatus }) {
   )
 }
 
-export function DocumentEditor({ documentId, initialContent }: DocumentEditorProps) {
+export function DocumentEditor({ documentId, initialContent, onKeystroke }: DocumentEditorProps) {
   const contentRef = useRef<Record<string, unknown> | null>(null)
   const [wordCount, setWordCount] = useState(0)
   const skipNextUpdate = useRef(false)
@@ -75,6 +76,7 @@ export function DocumentEditor({ documentId, initialContent }: DocumentEditorPro
       const text = editor.state.doc.textContent
       setWordCount(getWordCount(text))
       triggerSaveRef.current?.()
+      onKeystroke?.()
     },
     editorProps: {
       attributes: {

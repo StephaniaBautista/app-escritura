@@ -65,6 +65,7 @@ export interface Note {
 export interface DocumentVersion {
   id: string
   documentId: string
+  branchId: string | null
   title: string
   content: Record<string, unknown>
   version: number

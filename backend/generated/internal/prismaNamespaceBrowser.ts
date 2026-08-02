@@ -60,6 +60,9 @@ export const ModelName = {
   Document: 'Document',
   Note: 'Note',
   DocumentVersion: 'DocumentVersion',
+  Branch: 'Branch',
+  VersionParent: 'VersionParent',
+  UserSettings: 'UserSettings',
   Character: 'Character',
   World: 'World',
   Diagram: 'Diagram'
@@ -175,7 +178,8 @@ export const DocumentScalarFieldEnum = {
   folderId: 'folderId',
   parentId: 'parentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  autoVersionState: 'autoVersionState'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -199,6 +203,7 @@ export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof Note
 export const DocumentVersionScalarFieldEnum = {
   id: 'id',
   documentId: 'documentId',
+  branchId: 'branchId',
   title: 'title',
   content: 'content',
   version: 'version',
@@ -207,6 +212,37 @@ export const DocumentVersionScalarFieldEnum = {
 } as const
 
 export type DocumentVersionScalarFieldEnum = (typeof DocumentVersionScalarFieldEnum)[keyof typeof DocumentVersionScalarFieldEnum]
+
+
+export const BranchScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  name: 'name',
+  sourceVersionId: 'sourceVersionId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
+
+
+export const VersionParentScalarFieldEnum = {
+  versionId: 'versionId',
+  parentId: 'parentId'
+} as const
+
+export type VersionParentScalarFieldEnum = (typeof VersionParentScalarFieldEnum)[keyof typeof VersionParentScalarFieldEnum]
+
+
+export const UserSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  theme: 'theme',
+  language: 'language',
+  autoVersion: 'autoVersion'
+} as const
+
+export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
 
 
 export const CharacterScalarFieldEnum = {

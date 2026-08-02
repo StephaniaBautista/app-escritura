@@ -10,6 +10,9 @@ import { projectRoutes } from './routes/projects.js'
 import { documentRoutes } from './routes/documents.js'
 import { noteRoutes } from './routes/notes.js'
 import { versionRoutes } from './routes/versions.js'
+import { settingsRoutes } from './routes/settings.js'
+import { autoVersionRoutes } from './routes/auto-version.js'
+import { branchRoutes } from './routes/branches.js'
 
 const app = Fastify({
   logger: true,
@@ -50,6 +53,9 @@ await app.register(swagger, {
       { name: 'Documents', description: 'Gestión de documentos, capítulos y subpáginas' },
       { name: 'Notes', description: 'Notas tipo post-it por documento' },
       { name: 'Versions', description: 'Versionado lineal (snapshots) por documento' },
+      { name: 'AutoVersion', description: 'Versionado automático por triggers' },
+      { name: 'Branches', description: 'Ramas de versionado (Git-like)' },
+      { name: 'Settings', description: 'Configuración de usuario' },
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
     ],
@@ -114,6 +120,15 @@ await app.register(noteRoutes, { prefix: '/api' })
 
 // Version routes
 await app.register(versionRoutes, { prefix: '/api' })
+
+// Settings routes
+await app.register(settingsRoutes, { prefix: '/api' })
+
+// Auto-version routes
+await app.register(autoVersionRoutes, { prefix: '/api' })
+
+// Branch routes
+await app.register(branchRoutes, { prefix: '/api' })
 
 // API routes prefix
 app.register(async function apiRoutes(app) {

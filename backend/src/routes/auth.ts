@@ -132,7 +132,7 @@ const messageSchema = {
 export async function authRoutes(app: FastifyInstance) {
   // Stricter rate limit for auth endpoints
   await app.register(rateLimit, {
-    max: 20,
+    max: 500,
     timeWindow: '15 minutes',
   })
 
