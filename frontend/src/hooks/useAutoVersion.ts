@@ -2,7 +2,13 @@ import { useEffect, useRef, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { autoVersionApi } from '@/services/settings'
 import { useSettingsStore } from '@/stores/settings-store'
+import { useBranchStore } from '@/stores/branch-store'
 import type { AutoVersionTrigger } from '@/types/settings'
+
+function getActiveBranchIdForDocument(documentId: string): string | undefined {
+  const active = useBranchStore.getState().activeBranch
+  return active?.documentId === documentId ? active.id : undefined
+}
 
 interface UseAutoVersionOptions {
   documentId: string | null
@@ -40,7 +46,7 @@ export function useAutoVersion({ documentId, hasUnsavedChanges, onVersionCreated
     if (trigger !== 'exit' && !hasUnsavedChanges()) return
 
     try {
-      const result = await autoVersionApi.check(docId, trigger, new Date().toISOString())
+      const result = await autoVersionApi.check(docId, trigger, new Date().toISOString(), getActiveBranchIdForDocument(docId))
       if (result.created) {
         onVersionCreated?.(trigger)
       }
@@ -91,7 +97,11 @@ export function useAutoVersion({ documentId, hasUnsavedChanges, onVersionCreated
         if (!docId) return
         const config = useSettingsStore.getState().getAutoVersionConfig()
         if (config.exit.enabled) {
-          const body = JSON.stringify({ trigger: 'exit', lastActivityAt: new Date().toISOString() })
+          const body = JSON.stringify({
+            trigger: 'exit',
+            lastActivityAt: new Date().toISOString(),
+            branchId: getActiveBranchIdForDocument(docId),
+          })
           const blob = new Blob([body], { type: 'application/json' })
           navigator.sendBeacon(`/api/auto-version/check/${docId}`, blob)
         }
@@ -118,7 +128,11 @@ export function useAutoVersion({ documentId, hasUnsavedChanges, onVersionCreated
           fetch(`/api/auto-version/check/${docId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ trigger: 'exit', lastActivityAt: new Date().toISOString() }),
+            body: JSON.stringify({
+              trigger: 'exit',
+              lastActivityAt: new Date().toISOString(),
+              branchId: getActiveBranchIdForDocument(docId),
+            }),
             keepalive: true,
           }).catch(() => {})
         }

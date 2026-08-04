@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useDocumentStore } from '../document-store'
 
-const { projectsApiMock, documentsApiMock } = vi.hoisted(() => ({
+const { projectsApiMock, documentsApiMock, versionsApiMock, branchStoreMock } = vi.hoisted(() => ({
   projectsApiMock: {
     list: vi.fn(),
     getById: vi.fn(),
@@ -16,11 +16,23 @@ const { projectsApiMock, documentsApiMock } = vi.hoisted(() => ({
     update: vi.fn(),
     delete: vi.fn(),
   },
+  versionsApiMock: {
+    list: vi.fn(),
+    create: vi.fn(),
+    get: vi.fn(),
+    restore: vi.fn(),
+  },
+  branchStoreMock: { getState: vi.fn() },
 }))
 
 vi.mock('@/services/documents', () => ({
   projectsApi: projectsApiMock,
   documentsApi: documentsApiMock,
+  versionsApi: versionsApiMock,
+}))
+
+vi.mock('@/stores/branch-store', () => ({
+  useBranchStore: branchStoreMock,
 }))
 
 const initialState = {
@@ -108,5 +120,54 @@ describe('document-store: selectProject', () => {
     const state = useDocumentStore.getState()
     expect(state.error).toBe('No autenticado')
     expect(state.isLoading).toBe(false)
+  })
+})
+
+describe('document-store: versiones con rama activa', () => {
+  const activeBranch = {
+    id: 'b-main',
+    documentId: 'doc-1',
+    name: 'main',
+    sourceVersionId: null,
+    userId: 'user-1',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    isMain: true,
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useDocumentStore.setState(initialState)
+    branchStoreMock.getState.mockReturnValue({ activeBranch: null })
+    versionsApiMock.list.mockResolvedValue([])
+  })
+
+  afterEach(() => {
+    useDocumentStore.setState(initialState)
+  })
+
+  it('loadVersions pasa branchId cuando la rama activa pertenece al documento', async () => {
+    branchStoreMock.getState.mockReturnValue({ activeBranch })
+
+    await useDocumentStore.getState().loadVersions('doc-1')
+
+    expect(versionsApiMock.list).toHaveBeenCalledWith('doc-1', 'b-main')
+  })
+
+  it('loadVersions no pasa branchId si la rama activa es de otro documento', async () => {
+    branchStoreMock.getState.mockReturnValue({ activeBranch: { ...activeBranch, id: 'b-other', documentId: 'doc-2' } })
+
+    await useDocumentStore.getState().loadVersions('doc-1')
+
+    expect(versionsApiMock.list).toHaveBeenCalledWith('doc-1', undefined)
+  })
+
+  it('createVersion crea en la rama activa y recarga las versiones', async () => {
+    branchStoreMock.getState.mockReturnValue({ activeBranch })
+    versionsApiMock.create.mockResolvedValue({ id: 'ver-1' })
+
+    await useDocumentStore.getState().createVersion('doc-1')
+
+    expect(versionsApiMock.create).toHaveBeenCalledWith('doc-1', 'b-main')
+    expect(versionsApiMock.list).toHaveBeenCalled()
   })
 })

@@ -33,6 +33,12 @@ export async function versionRoutes(app: FastifyInstance) {
         properties: { documentId: { type: 'string' } },
         required: ['documentId'],
       },
+      body: {
+        type: 'object',
+        properties: {
+          branchId: { type: 'string', description: 'Rama donde crear la versión (por defecto: main)' },
+        },
+      },
     },
   }, async (request, reply) => {
     const user = await getSessionUser(request)

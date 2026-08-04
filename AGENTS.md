@@ -124,7 +124,7 @@ backend/src/
 8. **BetterAuth** para auth. No auth custom.
 9. **i18n** para textos de UI. No strings hardcodeados en componentes en ningún lado. Siempre debe haber una versión en español y su equivalente en inglés.
 10. **CSS variables** para theming. No hardcodear colores.
-11. **Graphify** Debes usar graphify y actualizarle para entender los gráfos y flujos de la aplicación de una manera más rápida y sencilla.
+11. **Graphify** Debes usar graphify y actualizarle para entender los gráfos y flujos de la aplicación de una manera más rápida y sencilla. Siempre que vayas a buscar algo para "entender como funciona el flujo de..." ve a consultar graphify antes que hacerlo por tu cuenta.
 12. **Hallmark** Siempre que vayas a crear un nuevo diseño, debes usar la skill de Hallmark para guiarte correctamente.
 13. **Task** Cuando termines una actividad, actualiza el `todo.md` de la carpeta correspondiente (`tasks/fase-XX-*/todo.md` o `tasks/mantenimiento/mXX-*/`) con el siguiente formato:
 
@@ -140,7 +140,7 @@ backend/src/
 20. **Cambios** Siempre que hagas un cambio, actualiza el `changelog.md` de la carpeta correspondiente (fase o mantenimiento) y el índice global `tasks/CHANGELOG.md`, para saber que se cambio y no se repitan los errores. 
 21. **Estructura de tasks/** Los documentos de planificación viven por carpeta: `tasks/fase-XX-*/` (spec.md, plan.md, todo.md, changelog.md) y `tasks/mantenimiento/mXX-*/` (plan.md, changelog.md). Los archivos raíz de `tasks/` son solo índices globales. Ver `tasks/README.md`.
 22. **Localstorage** Jamás uses localstorage. Usa Zustand con persistencia de datos en el backend. Para nada, en ningún concepto, debe usarse localstorage.
-23. **Ambiguedad** Prefiero que me preguntes y uses la skill de entrevista, todas tus dudas, antes de que empieces a sobrepensar. Ahorrar tokens debe ser vital. Cualquier duda que tengas, debes preguntarme a mi.
+23. **Ambiguedad** Prefiero que me preguntes y uses la skill de entrevista, todas tus dudas, antes de que empieces a sobrepensar. Ahorrar tokens debe ser vital. Cualquier duda que tengas, debes preguntarme a mi. 
 24. **Orden** Las paginas se deben agrupar en carpetas por sus funciones y que se relacione con su nombre. Por ejemplo: Si es una pagina de login, debe estar en una carpeta que se llame login. Si es una pagina de registro, debe estar en una carpeta que se llame register.
 
 ---

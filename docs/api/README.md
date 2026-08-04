@@ -78,10 +78,20 @@ Reglas:
 - `GET /api/branches/:branchId/versions` - Listar versiones de una rama, más reciente primero
 - `POST /api/branches/:branchId/versions` - Crear versión (snapshot) dentro de una rama concreta
 - `GET /api/documents/:documentId/versions?branchId=...` - Filtrar versiones por rama
+- `POST /api/documents/:documentId/versions` - Crear versión; acepta `{ branchId }` en el body (por defecto: main)
 
 Reglas:
 - `version` es auto-incremental **por rama** (`@@unique([branchId, version])`).
 - El límite de versiones (FIFO) se aplica por rama según tier.
+- Si no se envía `branchId`, la versión se crea en la rama `main` (fallback).
+
+### Auto-Version (2026-08-01, M22 — actualizado 2026-08-04, M24)
+- `POST /api/auto-version/check/:documentId` - Comprobar y crear snapshot automático según trigger. Body: `{ trigger, lastActivityAt?, branchId? }` (triggers: `inactivity | exit | hourly | daily | weekly | monthly`)
+- `PATCH /api/documents/:documentId/activity` - Actualizar `lastActivityAt` (heartbeat del editor)
+
+Reglas:
+- Solo crea snapshot si el trigger está habilitado en los settings del usuario y hay cambios desde la última versión.
+- `branchId` opcional: si viene, el snapshot se crea en esa rama (la rama activa del editor); si no, en `main`.
 
 ### Branches (2026-08-01, M23)
 - `GET /api/documents/:documentId/branches` - Listar ramas (main primero por orden alfabético)

@@ -21,6 +21,7 @@ export interface Project {
   id: string
   name: string
   description: string | null
+  storyMeta: Record<string, unknown>
   createdAt: string
   updatedAt: string
   _count?: { documents: number; folders: number }
@@ -30,6 +31,7 @@ export interface Project {
 export interface CreateProjectInput {
   name: string
   description?: string
+  storyMeta?: Record<string, unknown>
 }
 
 export interface CreateDocumentInput {

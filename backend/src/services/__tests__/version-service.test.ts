@@ -95,6 +95,16 @@ describe('versionService', () => {
     expect(prismaMock.documentVersion.create).not.toHaveBeenCalled()
   })
 
+  it('create: devuelve null si la rama pertenece a otro documento', async () => {
+    prismaMock.document.findFirst.mockResolvedValue(docRow)
+    prismaMock.branch.findFirst.mockResolvedValue({ ...branchRow, documentId: 'doc-2' })
+
+    const created = await versionService.create('doc-1', 'user-1', Tier.PRO, 'branch-main')
+
+    expect(created).toBeNull()
+    expect(prismaMock.documentVersion.create).not.toHaveBeenCalled()
+  })
+
   it('create: devuelve null si se alcanza el límite de versiones para tier FREE', async () => {
     prismaMock.document.findFirst.mockResolvedValue(docRow)
     prismaMock.branch.findFirst.mockResolvedValue(branchRow)

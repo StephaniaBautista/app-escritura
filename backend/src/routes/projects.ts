@@ -1,4 +1,5 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import { Prisma } from '@generated/client'
 import { auth } from '../lib/auth.js'
 import { projectService } from '../services/document-service.js'
 
@@ -41,6 +42,7 @@ export async function projectRoutes(app: FastifyInstance) {
             id: { type: 'string' },
             name: { type: 'string' },
             description: { type: 'string', nullable: true },
+            storyMeta: { description: 'Metadata del wizard de creación' },
             createdAt: { type: 'string' },
             updatedAt: { type: 'string' },
             folders: { type: 'array', items: { type: 'object' } },
@@ -109,6 +111,7 @@ export async function projectRoutes(app: FastifyInstance) {
         properties: {
           name: { type: 'string', minLength: 1, maxLength: 255 },
           description: { type: 'string' },
+          storyMeta: { description: 'Metadata del wizard de creación (datos extra del proyecto)' },
         },
       },
     },
@@ -116,8 +119,12 @@ export async function projectRoutes(app: FastifyInstance) {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
-    const { name, description } = request.body as { name: string; description?: string }
-    const project = await projectService.create(user.id, { name, description })
+    const { name, description, storyMeta } = request.body as { name: string; description?: string; storyMeta?: Record<string, unknown> }
+    const project = await projectService.create(user.id, {
+      name,
+      description,
+      storyMeta: storyMeta as Prisma.InputJsonValue | undefined,
+    })
     return reply.status(201).send(project)
   })
 
@@ -136,6 +143,7 @@ export async function projectRoutes(app: FastifyInstance) {
         properties: {
           name: { type: 'string', minLength: 1, maxLength: 255 },
           description: { type: 'string' },
+          storyMeta: { description: 'Metadata del wizard de creación (datos extra del proyecto)' },
         },
       },
     },
@@ -144,8 +152,39 @@ export async function projectRoutes(app: FastifyInstance) {
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
     const { id } = request.params as { id: string }
-    const body = request.body as { name?: string; description?: string }
-    const project = await projectService.update(id, user.id, body)
+    const body = request.body as { name?: string; description?: string; storyMeta?: Record<string, unknown> }
+    const project = await projectService.update(id, user.id, {
+      name: body.name,
+      description: body.description,
+      storyMeta: body.storyMeta as Prisma.InputJsonValue | undefined,
+    })
+    if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
+
+    return project
+  })
+
+  app.patch('/projects/:id/story-meta', {
+    schema: {
+      description: 'Save the story wizard metadata (extra project data). Never creates a document.',
+      tags: ['Projects'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+      },
+      body: {
+        type: 'object',
+        description: 'Metadata del wizard (rating, tipo, fanfic, ships, estructura, etc.)',
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { id } = request.params as { id: string }
+    const body = request.body as Record<string, unknown>
+    const project = await projectService.updateStoryMeta(id, user.id, body as Prisma.InputJsonValue)
     if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
 
     return project

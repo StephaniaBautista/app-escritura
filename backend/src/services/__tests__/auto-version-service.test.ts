@@ -80,7 +80,19 @@ describe('autoVersionService', () => {
     const result = await autoVersionService.checkAndCreate('doc-1', 'user-1', 'hourly')
 
     expect(result.created).toBe(true)
-    expect(versionServiceMock.create).toHaveBeenCalledWith('doc-1', 'user-1')
+    expect(versionServiceMock.create).toHaveBeenCalledWith('doc-1', 'user-1', undefined, undefined)
+  })
+
+  it('checkAndCreate: propaga branchId a versionService.create', async () => {
+    const oldDate = new Date(Date.now() - 2 * 60 * 60 * 1000)
+    prismaMock.document.findFirst.mockResolvedValue({ ...docRow, updatedAt: new Date() })
+    prismaMock.documentVersion.findFirst.mockResolvedValue({ createdAt: oldDate })
+    versionServiceMock.create.mockResolvedValue({ id: 'ver-1' })
+
+    const result = await autoVersionService.checkAndCreate('doc-1', 'user-1', 'hourly', undefined, 'branch-1')
+
+    expect(result.created).toBe(true)
+    expect(versionServiceMock.create).toHaveBeenCalledWith('doc-1', 'user-1', undefined, 'branch-1')
   })
 
   it('checkAndCreate: crea versión si no hay versiones previas', async () => {

@@ -428,6 +428,8 @@
     "main": "main",
     "tabVersions": "Versiones",
     "tabGraph": "Grafo",
+    "graphAria": "Grafo de ramas y versiones",
+    "head": "Última",
     "newBranch": "Nueva rama",
     "branchName": "Nombre de la rama",
     "branchPlaceholder": "ej: feature-nuevo-final",

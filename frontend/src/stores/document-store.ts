@@ -3,6 +3,7 @@ import type { Document, DocumentNode, Project, CreateProjectInput, Note, Documen
 import { projectsApi, documentsApi, notesApi, versionsApi } from '@/services/documents'
 import { useToastStore } from './toast-store'
 import { useActivityStore } from './activity-store'
+import { useBranchStore } from './branch-store'
 import i18n from '@/i18n'
 
 interface DocumentState {
@@ -23,6 +24,7 @@ interface DocumentState {
   selectProject: (projectId: string) => Promise<void>
   createProject: (name: string, description?: string) => Promise<Project>
   updateProject: (id: string, data: Partial<CreateProjectInput>) => Promise<void>
+  updateStoryMeta: (id: string, storyMeta: Record<string, unknown>) => Promise<void>
   deleteProject: (id: string) => Promise<void>
 
   loadDocumentTree: (projectId: string) => Promise<void>
@@ -51,6 +53,11 @@ interface DocumentState {
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Error desconocido'
+}
+
+function getActiveBranchIdForDocument(documentId: string): string | undefined {
+  const active = useBranchStore.getState().activeBranch
+  return active?.documentId === documentId ? active.id : undefined
 }
 
 export const useDocumentStore = create<DocumentState>()((set, get) => ({
@@ -112,6 +119,22 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       }))
     } catch (error: unknown) {
       set({ error: getErrorMessage(error) })
+    }
+  },
+
+  updateStoryMeta: async (id: string, storyMeta: Record<string, unknown>) => {
+    try {
+      const updated = await projectsApi.updateStoryMeta(id, storyMeta)
+      set((state) => ({
+        projects: state.projects.map((p) => (p.id === id ? { ...p, ...updated } : p)),
+        currentProject: state.currentProject?.id === id ? { ...state.currentProject, ...updated } : state.currentProject,
+      }))
+      useToastStore.getState().success(i18n.t('storySetup.saved'))
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+      throw error
     }
   },
 
@@ -342,7 +365,8 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   loadVersions: async (documentId: string) => {
     set({ versionsLoading: true, error: null })
     try {
-      const versions = await versionsApi.list(documentId)
+      const branchId = getActiveBranchIdForDocument(documentId)
+      const versions = await versionsApi.list(documentId, branchId)
       set({ versions, versionsLoading: false })
     } catch (error: unknown) {
       set({ error: getErrorMessage(error), versionsLoading: false })
@@ -351,7 +375,8 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
 
   createVersion: async (documentId: string) => {
     try {
-      await versionsApi.create(documentId)
+      const branchId = getActiveBranchIdForDocument(documentId)
+      await versionsApi.create(documentId, branchId)
       await get().loadVersions(documentId)
       useToastStore.getState().success(i18n.t('versions.created'))
     } catch (error: unknown) {

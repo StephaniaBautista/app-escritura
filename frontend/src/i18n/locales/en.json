@@ -429,6 +429,8 @@
     "main": "main",
     "tabVersions": "Versions",
     "tabGraph": "Graph",
+    "graphAria": "Branch and version graph",
+    "head": "Latest",
     "newBranch": "New branch",
     "branchName": "Branch name",
     "branchPlaceholder": "e.g. feature-new-ending",

@@ -5,11 +5,13 @@ import { branchService } from './branch-service.js'
 export interface CreateProjectInput {
   name: string
   description?: string
+  storyMeta?: Prisma.InputJsonValue
 }
 
 export interface UpdateProjectInput {
   name?: string
   description?: string
+  storyMeta?: Prisma.InputJsonValue
 }
 
 export interface CreateDocumentInput {
@@ -68,6 +70,7 @@ export const projectService = {
       data: {
         name: data.name,
         description: data.description,
+        storyMeta: data.storyMeta ?? ({} as Prisma.InputJsonValue),
         userId,
       },
     })
@@ -79,7 +82,21 @@ export const projectService = {
 
     return prisma.project.update({
       where: { id },
-      data,
+      data: {
+        name: data.name,
+        description: data.description,
+        storyMeta: data.storyMeta,
+      },
+    })
+  },
+
+  async updateStoryMeta(id: string, userId: string, storyMeta: Prisma.InputJsonValue) {
+    const project = await prisma.project.findFirst({ where: { id, userId } })
+    if (!project) return null
+
+    return prisma.project.update({
+      where: { id },
+      data: { storyMeta },
     })
   },
 

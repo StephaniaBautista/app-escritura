@@ -21,7 +21,7 @@ export const versionService = {
     const branch = branchId
       ? await branchService.get(branchId, userId)
       : await branchService.ensureMainBranch(documentId, userId)
-    if (!branch) return null
+    if (!branch || branch.documentId !== documentId) return null
 
     const maxVersions = getMaxVersions(tier)
     if (maxVersions !== null) {

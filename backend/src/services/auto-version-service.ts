@@ -46,6 +46,7 @@ export const autoVersionService = {
     userId: string,
     trigger: AutoVersionTrigger,
     lastActivityAt?: string,
+    branchId?: string,
   ): Promise<{ created: boolean; version?: unknown }> {
     const config = await settingsService.getAutoVersionConfig(userId)
     const triggerConfig = config[TRIGGER_TO_CONFIG_KEY[trigger]]
@@ -79,7 +80,7 @@ export const autoVersionService = {
       return { created: false }
     }
 
-    const version = await versionService.create(documentId, userId)
+    const version = await versionService.create(documentId, userId, undefined, branchId)
     if (!version) return { created: false }
 
     const newState: AutoVersionState = {

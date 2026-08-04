@@ -36,6 +36,12 @@ export const projectsApi = {
       body: JSON.stringify(data),
     }),
 
+  updateStoryMeta: (id: string, storyMeta: Record<string, unknown>) =>
+    fetchJson<Project>(`${API}/projects/${id}/story-meta`, {
+      method: 'PATCH',
+      body: JSON.stringify(storyMeta),
+    }),
+
   delete: (id: string) =>
     fetchJson<{ message: string }>(`${API}/projects/${id}`, {
       method: 'DELETE',
@@ -104,12 +110,15 @@ export const notesApi = {
 }
 
 export const versionsApi = {
-  list: (documentId: string) =>
-    fetchJson<DocumentVersion[]>(`${API}/documents/${documentId}/versions`),
+  list: (documentId: string, branchId?: string) => {
+    const query = branchId ? `?branchId=${encodeURIComponent(branchId)}` : ''
+    return fetchJson<DocumentVersion[]>(`${API}/documents/${documentId}/versions${query}`)
+  },
 
-  create: (documentId: string) =>
+  create: (documentId: string, branchId?: string) =>
     fetchJson<DocumentVersion>(`${API}/documents/${documentId}/versions`, {
       method: 'POST',
+      body: JSON.stringify({ branchId }),
     }),
 
   get: (id: string) =>

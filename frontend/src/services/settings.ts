@@ -30,10 +30,10 @@ export const settingsApi = {
 }
 
 export const autoVersionApi = {
-  check: (documentId: string, trigger: string, lastActivityAt?: string) =>
+  check: (documentId: string, trigger: string, lastActivityAt?: string, branchId?: string) =>
     fetchJson<AutoVersionCheckResult>(`${API}/auto-version/check/${documentId}`, {
       method: 'POST',
-      body: JSON.stringify({ trigger, lastActivityAt }),
+      body: JSON.stringify({ trigger, lastActivityAt, branchId }),
     }),
 
   updateActivity: (documentId: string, lastActivityAt: string) =>

@@ -82,3 +82,69 @@ describe('projectService.getProjectPage', () => {
     expect(page).toBeNull()
   })
 })
+
+describe('projectService.storyMeta', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('create: guarda la metadata del wizard en storyMeta', async () => {
+    const storyMeta = { rating: 'mature', isFanfic: true, fandom: 'HP' }
+    prismaMock.project.create.mockResolvedValue({ ...projectRow, storyMeta })
+
+    await projectService.create('user-1', { name: 'Mi novela', storyMeta: storyMeta as never })
+
+    expect(prismaMock.project.create).toHaveBeenCalledWith({
+      data: {
+        name: 'Mi novela',
+        description: undefined,
+        storyMeta,
+        userId: 'user-1',
+      },
+    })
+  })
+
+  it('create: usa {} como storyMeta por defecto', async () => {
+    prismaMock.project.create.mockResolvedValue({ ...projectRow, storyMeta: {} })
+
+    await projectService.create('user-1', { name: 'Mi novela' })
+
+    const call = prismaMock.project.create.mock.calls[0][0]
+    expect(call.data.storyMeta).toEqual({})
+  })
+
+  it('update: propaga storyMeta al actualizar', async () => {
+    prismaMock.project.findFirst.mockResolvedValue(projectRow)
+    prismaMock.project.update.mockResolvedValue({ ...projectRow, storyMeta: { rating: 'teen' } })
+
+    await projectService.update('folder-1', 'user-1', { storyMeta: { rating: 'teen' } as never })
+
+    expect(prismaMock.project.update).toHaveBeenCalledWith({
+      where: { id: 'folder-1' },
+      data: { name: undefined, description: undefined, storyMeta: { rating: 'teen' } },
+    })
+  })
+
+  it('updateStoryMeta: guarda la metadata solo si el proyecto pertenece al usuario', async () => {
+    prismaMock.project.findFirst.mockResolvedValue(projectRow)
+    prismaMock.project.update.mockResolvedValue({ ...projectRow, storyMeta: { tags: ['slow burn'] } })
+
+    const updated = await projectService.updateStoryMeta('folder-1', 'user-1', { tags: ['slow burn'] } as never)
+
+    expect(prismaMock.project.findFirst).toHaveBeenCalledWith({ where: { id: 'folder-1', userId: 'user-1' } })
+    expect(prismaMock.project.update).toHaveBeenCalledWith({
+      where: { id: 'folder-1' },
+      data: { storyMeta: { tags: ['slow burn'] } },
+    })
+    expect(updated).toBeTruthy()
+  })
+
+  it('updateStoryMeta: devuelve null si no pertenece al usuario', async () => {
+    prismaMock.project.findFirst.mockResolvedValue(null)
+
+    const updated = await projectService.updateStoryMeta('folder-1', 'user-1', { rating: 'general' } as never)
+
+    expect(updated).toBeNull()
+    expect(prismaMock.project.update).not.toHaveBeenCalled()
+  })
+})

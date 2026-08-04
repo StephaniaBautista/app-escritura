@@ -529,3 +529,9 @@ a {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+.graph-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}

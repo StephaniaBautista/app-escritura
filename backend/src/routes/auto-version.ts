@@ -5,12 +5,32 @@ import { autoVersionService, type AutoVersionTrigger } from '../services/auto-ve
 const VALID_TRIGGERS: AutoVersionTrigger[] = ['inactivity', 'exit', 'hourly', 'daily', 'weekly', 'monthly']
 
 export async function autoVersionRoutes(app: FastifyInstance) {
-  app.post('/auto-version/check/:documentId', async (request, reply) => {
+  app.post('/auto-version/check/:documentId', {
+    schema: {
+      description: 'Check and create an auto-version snapshot for a document. Optionally targets a branch via branchId.',
+      tags: ['Auto-Version'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { documentId: { type: 'string' } },
+        required: ['documentId'],
+      },
+      body: {
+        type: 'object',
+        properties: {
+          trigger: { type: 'string', enum: ['inactivity', 'exit', 'hourly', 'daily', 'weekly', 'monthly'] },
+          lastActivityAt: { type: 'string' },
+          branchId: { type: 'string', description: 'Rama donde crear el snapshot (por defecto: main)' },
+        },
+        required: ['trigger'],
+      },
+    },
+  }, async (request, reply) => {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
     const { documentId } = request.params as { documentId: string }
-    const body = request.body as { trigger?: string; lastActivityAt?: string }
+    const body = request.body as { trigger?: string; lastActivityAt?: string; branchId?: string }
 
     if (!body.trigger || !VALID_TRIGGERS.includes(body.trigger as AutoVersionTrigger)) {
       return reply.status(400).send({
@@ -23,6 +43,7 @@ export async function autoVersionRoutes(app: FastifyInstance) {
       user.id,
       body.trigger as AutoVersionTrigger,
       body.lastActivityAt,
+      body.branchId,
     )
 
     return result
