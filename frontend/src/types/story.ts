@@ -29,11 +29,14 @@ export interface StoryMeta {
   characters?: StoryCharacter[]
   tags?: string[]
   narrator?: string
+  guidedMode?: boolean
   structure?: StoryStructure
   duration?: StoryDuration
   ending?: string
+  protagonistLife?: string
   protagonistEvolution?: string
   initialState?: string
+  initialPhysicalState?: string
   problems?: string[]
   extra?: Record<string, unknown>
 }

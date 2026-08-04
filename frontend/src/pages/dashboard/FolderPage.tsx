@@ -72,11 +72,11 @@ export function FolderPage() {
 
   const tabs = [
     { id: 'documents', label: 'Documentos', icon: FileText },
+    { id: 'structure', label: t('storySetup.structureTab'), icon: Layers },
     { id: 'characters', label: 'Personajes', icon: Users },
     { id: 'worlds', label: 'Mundos', icon: Globe },
     { id: 'notes', label: t('notes.title'), icon: StickyNote },
     { id: 'versions', label: t('versions.title'), icon: History },
-    { id: 'structure', label: t('storySetup.structureTab'), icon: Layers },
   ]
 
   const documents = documentTree.filter((d) => d.type === 'document')

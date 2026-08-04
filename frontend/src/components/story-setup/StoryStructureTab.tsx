@@ -35,7 +35,7 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
   const structure = storyMeta.structure
   const duration = storyMeta.duration
   const hasStructure = structure?.inicio || structure?.desarrollo || structure?.climax || structure?.final
-  const hasDetails = storyMeta.ending || duration?.chapters || duration?.words || storyMeta.protagonistEvolution || storyMeta.initialState || (storyMeta.problems?.length ?? 0) > 0
+  const hasDetails = storyMeta.ending || duration?.chapters || duration?.words || storyMeta.protagonistEvolution || storyMeta.initialState || storyMeta.initialPhysicalState || (storyMeta.problems?.length ?? 0) > 0
   const hasContent = Boolean(hasStructure || hasDetails)
 
   return (
@@ -125,12 +125,14 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
             </Section>
           )}
 
-          {(storyMeta.protagonistEvolution || storyMeta.initialState || (storyMeta.problems?.length ?? 0) > 0) && (
+          {(storyMeta.protagonistEvolution || storyMeta.initialState || storyMeta.initialPhysicalState || storyMeta.protagonistLife || (storyMeta.problems?.length ?? 0) > 0) && (
             <Section title={t('storySetup.structureCharacter')}>
               <dl>
-                {storyMeta.protagonistEvolution && <Row label={t('storySetup.protagonistEvolution')} value={storyMeta.protagonistEvolution} />}
-                {storyMeta.initialState && <Row label={t('storySetup.initialState')} value={storyMeta.initialState} />}
-                {storyMeta.problems?.length && <Row label={t('storySetup.problems')} value={storyMeta.problems.join(', ')} />}
+                {storyMeta.protagonistLife && <Row label={t('storySetup.guidedProtagonistLife')} value={storyMeta.protagonistLife} />}
+                {storyMeta.protagonistEvolution && <Row label={t('storySetup.guidedEvolution')} value={storyMeta.protagonistEvolution} />}
+                {storyMeta.initialState && <Row label={t('storySetup.guidedMentalState')} value={storyMeta.initialState} />}
+                {storyMeta.initialPhysicalState && <Row label={t('storySetup.guidedPhysicalState')} value={storyMeta.initialPhysicalState} />}
+                {storyMeta.problems?.length && <Row label={t('storySetup.guidedProblems')} value={storyMeta.problems.join(', ')} />}
               </dl>
             </Section>
           )}
