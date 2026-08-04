@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BookOpen, X, ChevronLeft, ChevronRight, Check } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { DirectMode } from './DirectMode'
+import { StoryBasics } from './StoryBasics'
+import { StoryPeople } from './StoryPeople'
+import { StoryCharacters } from './StoryCharacters'
+import { StoryTags } from './StoryTags'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryWizardProps {
@@ -19,9 +23,28 @@ interface WizardStep {
   titleKey: string
 }
 
-const STEPS: WizardStep[] = [
-  { id: 'description', titleKey: 'storySetup.stepDescription' },
-]
+function isRomanceOrFanfic(meta: StoryMeta): boolean {
+  if (meta.isFanfic) return true
+  return (meta.type ?? []).some((t) => t.toLowerCase() === 'romance')
+}
+
+function buildSteps(meta: StoryMeta): WizardStep[] {
+  const steps: WizardStep[] = [
+    { id: 'description', titleKey: 'storySetup.stepDescription' },
+    { id: 'basics', titleKey: 'storySetup.stepBasics' },
+  ]
+
+  if (isRomanceOrFanfic(meta)) {
+    steps.push({ id: 'couples', titleKey: 'storySetup.stepCouples' })
+  }
+
+  steps.push(
+    { id: 'characters', titleKey: 'storySetup.stepCharacters' },
+    { id: 'tags', titleKey: 'storySetup.stepTags' },
+  )
+
+  return steps
+}
 
 export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta, onClose, onSaved }: StoryWizardProps) {
   const { t } = useTranslation()
@@ -31,6 +54,8 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
   const [meta, setMeta] = useState<StoryMeta>({})
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const steps = buildSteps(meta)
 
   useEffect(() => {
     if (isOpen) {
@@ -50,19 +75,34 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
+  const update = useCallback((patch: Partial<StoryMeta>) => {
+    setMeta((m) => {
+      const next = { ...m, ...patch }
+      const prev = buildSteps(m)
+      const curr = buildSteps(next)
+      const currentStepId = prev[current]?.id
+      const newIndex = curr.findIndex((s) => s.id === currentStepId)
+      if (newIndex >= 0 && newIndex !== current) {
+        setCurrent(newIndex)
+      }
+      return next
+    })
+  }, [current])
+
   if (!isOpen) return null
 
-  const step = STEPS[current]
-  const isLast = current === STEPS.length - 1
+  const step = steps[current]
+  const isLast = current === steps.length - 1
 
   const handleFinish = async () => {
     setSaving(true)
     setError(null)
     try {
-      if (description.trim()) {
-        await updateProject(projectId, { description: description.trim() })
+      await updateProject(projectId, { description: description.trim() })
+      const metaChanged = JSON.stringify(meta) !== JSON.stringify(initialMeta ?? {})
+      if (metaChanged) {
+        await updateStoryMeta(projectId, meta as Record<string, unknown>)
       }
-      await updateStoryMeta(projectId, meta as Record<string, unknown>)
       onSaved()
     } catch (err) {
       setError(err instanceof Error ? err.message : t('storySetup.saveError'))
@@ -91,14 +131,18 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
           </button>
         </div>
 
-        <div className="flex items-center gap-2 px-5 py-3 border-b overflow-x-auto" style={{ borderColor: 'var(--color-paper-lines)' }}>
-          {STEPS.map((s, i) => (
-            <span
+        <div className="flex items-center gap-1 px-5 py-3 border-b overflow-x-auto" style={{ borderColor: 'var(--color-paper-lines)' }}>
+          {steps.map((s, i) => (
+            <button
               key={s.id}
-              className="flex items-center gap-1.5 text-xs font-medium whitespace-nowrap"
+              type="button"
+              onClick={() => setCurrent(i)}
+              className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors hover:opacity-80"
               style={{
                 color: i === current ? 'var(--color-accent)' : i < current ? 'var(--color-ink-light)' : 'var(--color-ink-faint)',
+                background: i === current ? 'var(--color-accent-light)' : 'transparent',
               }}
+              aria-current={i === current ? 'step' : undefined}
             >
               <span
                 className="w-4 h-4 rounded-full inline-flex items-center justify-center text-[10px] flex-shrink-0"
@@ -111,12 +155,16 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
                 {i < current ? <Check className="w-3 h-3" /> : i + 1}
               </span>
               {t(s.titleKey)}
-            </span>
+            </button>
           ))}
         </div>
 
-        <div className="p-5">
+        <div className="p-5 max-h-[60vh] overflow-y-auto">
           {step.id === 'description' && <DirectMode value={description} onChange={setDescription} />}
+          {step.id === 'basics' && <StoryBasics meta={meta} update={update} />}
+          {step.id === 'couples' && <StoryPeople meta={meta} update={update} />}
+          {step.id === 'characters' && <StoryCharacters meta={meta} update={update} />}
+          {step.id === 'tags' && <StoryTags meta={meta} update={update} />}
         </div>
 
         {error && (

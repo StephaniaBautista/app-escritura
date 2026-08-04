@@ -49,6 +49,7 @@ export type ProjectCountAggregateOutputType = {
   userId: number
   createdAt: number
   updatedAt: number
+  storyMeta: number
   _all: number
 }
 
@@ -78,6 +79,7 @@ export type ProjectCountAggregateInputType = {
   userId?: true
   createdAt?: true
   updatedAt?: true
+  storyMeta?: true
   _all?: true
 }
 
@@ -160,6 +162,7 @@ export type ProjectGroupByOutputType = {
   userId: string
   createdAt: Date
   updatedAt: Date
+  storyMeta: runtime.JsonValue
   _count: ProjectCountAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
   _max: ProjectMaxAggregateOutputType | null
@@ -190,6 +193,7 @@ export type ProjectWhereInput = {
   userId?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  storyMeta?: Prisma.JsonFilter<"Project">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   documents?: Prisma.DocumentListRelationFilter
   folders?: Prisma.FolderListRelationFilter
@@ -206,6 +210,7 @@ export type ProjectOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  storyMeta?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   folders?: Prisma.FolderOrderByRelationAggregateInput
@@ -225,6 +230,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  storyMeta?: Prisma.JsonFilter<"Project">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   documents?: Prisma.DocumentListRelationFilter
   folders?: Prisma.FolderListRelationFilter
@@ -241,6 +247,7 @@ export type ProjectOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  storyMeta?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
   _min?: Prisma.ProjectMinOrderByAggregateInput
@@ -256,6 +263,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"Project"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
+  storyMeta?: Prisma.JsonWithAggregatesFilter<"Project">
 }
 
 export type ProjectCreateInput = {
@@ -264,6 +272,7 @@ export type ProjectCreateInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -280,6 +289,7 @@ export type ProjectUncheckedCreateInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -294,6 +304,7 @@ export type ProjectUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -310,6 +321,7 @@ export type ProjectUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -325,6 +337,7 @@ export type ProjectCreateManyInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectUpdateManyMutationInput = {
@@ -333,6 +346,7 @@ export type ProjectUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectUncheckedUpdateManyInput = {
@@ -342,6 +356,7 @@ export type ProjectUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectListRelationFilter = {
@@ -361,6 +376,7 @@ export type ProjectCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  storyMeta?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
@@ -525,6 +541,7 @@ export type ProjectCreateWithoutUserInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -539,6 +556,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -583,6 +601,7 @@ export type ProjectScalarWhereInput = {
   userId?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  storyMeta?: Prisma.JsonFilter<"Project">
 }
 
 export type ProjectCreateWithoutFoldersInput = {
@@ -591,6 +610,7 @@ export type ProjectCreateWithoutFoldersInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -606,6 +626,7 @@ export type ProjectUncheckedCreateWithoutFoldersInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -635,6 +656,7 @@ export type ProjectUpdateWithoutFoldersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -650,6 +672,7 @@ export type ProjectUncheckedUpdateWithoutFoldersInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -663,6 +686,7 @@ export type ProjectCreateWithoutDocumentsInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -678,6 +702,7 @@ export type ProjectUncheckedCreateWithoutDocumentsInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -707,6 +732,7 @@ export type ProjectUpdateWithoutDocumentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -722,6 +748,7 @@ export type ProjectUncheckedUpdateWithoutDocumentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -735,6 +762,7 @@ export type ProjectCreateWithoutNotesInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -750,6 +778,7 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -779,6 +808,7 @@ export type ProjectUpdateWithoutNotesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -794,6 +824,7 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -807,6 +838,7 @@ export type ProjectCreateWithoutCharactersInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -822,6 +854,7 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -851,6 +884,7 @@ export type ProjectUpdateWithoutCharactersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -866,6 +900,7 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -879,6 +914,7 @@ export type ProjectCreateWithoutWorldsInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -894,6 +930,7 @@ export type ProjectUncheckedCreateWithoutWorldsInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -923,6 +960,7 @@ export type ProjectUpdateWithoutWorldsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -938,6 +976,7 @@ export type ProjectUncheckedUpdateWithoutWorldsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -951,6 +990,7 @@ export type ProjectCreateWithoutDiagramsInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -966,6 +1006,7 @@ export type ProjectUncheckedCreateWithoutDiagramsInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -995,6 +1036,7 @@ export type ProjectUpdateWithoutDiagramsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1010,6 +1052,7 @@ export type ProjectUncheckedUpdateWithoutDiagramsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1023,6 +1066,7 @@ export type ProjectCreateManyUserInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectUpdateWithoutUserInput = {
@@ -1031,6 +1075,7 @@ export type ProjectUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -1045,6 +1090,7 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1059,6 +1105,7 @@ export type ProjectUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -1144,6 +1191,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  storyMeta?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
   folders?: boolean | Prisma.Project$foldersArgs<ExtArgs>
@@ -1161,6 +1209,7 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  storyMeta?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1171,6 +1220,7 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  storyMeta?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1181,9 +1231,10 @@ export type ProjectSelectScalar = {
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  storyMeta?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt" | "storyMeta", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
@@ -1219,6 +1270,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: string
     createdAt: Date
     updatedAt: Date
+    storyMeta: runtime.JsonValue
   }, ExtArgs["result"]["project"]>
   composites: {}
 }
@@ -1655,6 +1707,7 @@ export interface ProjectFieldRefs {
   readonly userId: Prisma.FieldRef<"Project", 'String'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly storyMeta: Prisma.FieldRef<"Project", 'Json'>
 }
     
 

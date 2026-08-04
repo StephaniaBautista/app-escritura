@@ -7,6 +7,7 @@ const { projectsApiMock, documentsApiMock, versionsApiMock, branchStoreMock } = 
     getById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
+    updateStoryMeta: vi.fn(),
     delete: vi.fn(),
   },
   documentsApiMock: {
@@ -48,6 +49,7 @@ const pageResponse = {
   id: 'folder-1',
   name: 'Mi novela',
   description: null,
+  storyMeta: {},
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   tree: [
@@ -169,5 +171,42 @@ describe('document-store: versiones con rama activa', () => {
 
     expect(versionsApiMock.create).toHaveBeenCalledWith('doc-1', 'b-main')
     expect(versionsApiMock.list).toHaveBeenCalled()
+  })
+})
+
+describe('document-store: storyMeta del proyecto', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useDocumentStore.setState(initialState)
+  })
+
+  afterEach(() => {
+    useDocumentStore.setState(initialState)
+  })
+
+  it('updateStoryMeta guarda la metadata del wizard en el proyecto', async () => {
+    const meta = { rating: 'mature', isFanfic: true, fandom: 'HP' }
+    useDocumentStore.setState({
+      projects: [{ id: 'folder-1', name: 'Mi novela', description: null, storyMeta: {}, createdAt: 'x', updatedAt: 'x' }],
+    })
+    projectsApiMock.updateStoryMeta.mockResolvedValue({ id: 'folder-1', name: 'Mi novela', description: null, storyMeta: meta, createdAt: 'x', updatedAt: 'x' })
+
+    await useDocumentStore.getState().updateStoryMeta('folder-1', meta)
+
+    expect(projectsApiMock.updateStoryMeta).toHaveBeenCalledWith('folder-1', meta)
+    expect(useDocumentStore.getState().projects[0].storyMeta).toEqual(meta)
+  })
+
+  it('updateStoryMeta actualiza currentProject si es el proyecto abierto', async () => {
+    const meta = { tags: ['slow burn'] }
+    useDocumentStore.setState({
+      projects: [{ id: 'folder-1', name: 'Mi novela', description: null, storyMeta: {}, createdAt: 'x', updatedAt: 'x' }],
+      currentProject: { id: 'folder-1', name: 'Mi novela', description: null, storyMeta: {}, createdAt: 'x', updatedAt: 'x' },
+    })
+    projectsApiMock.updateStoryMeta.mockResolvedValue({ id: 'folder-1', name: 'Mi novela', description: null, storyMeta: meta, createdAt: 'x', updatedAt: 'x' })
+
+    await useDocumentStore.getState().updateStoryMeta('folder-1', meta)
+
+    expect(useDocumentStore.getState().currentProject?.storyMeta).toEqual(meta)
   })
 })

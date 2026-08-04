@@ -13,6 +13,8 @@ import { versionRoutes } from './routes/versions.js'
 import { settingsRoutes } from './routes/settings.js'
 import { autoVersionRoutes } from './routes/auto-version.js'
 import { branchRoutes } from './routes/branches.js'
+import { optionsRoutes } from './routes/options.js'
+import { optionsService } from './services/options-service.js'
 
 const app = Fastify({
   logger: true,
@@ -58,6 +60,7 @@ await app.register(swagger, {
       { name: 'Settings', description: 'Configuración de usuario' },
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
+      { name: 'Story Options', description: 'Opciones reutilizables del wizard de creación' },
     ],
   },
 })
@@ -130,6 +133,9 @@ await app.register(autoVersionRoutes, { prefix: '/api' })
 // Branch routes
 await app.register(branchRoutes, { prefix: '/api' })
 
+// Story options routes
+await app.register(optionsRoutes, { prefix: '/api' })
+
 // API routes prefix
 app.register(async function apiRoutes(app) {
   app.get('/api/test', {
@@ -157,6 +163,9 @@ const start = async () => {
     await app.listen({ port, host: '0.0.0.0' })
     console.log(`Server running on http://localhost:${port}`)
     console.log(`Swagger docs available at http://localhost:${port}/docs`)
+
+    const seeded = await optionsService.seedDefaults()
+    if (seeded > 0) console.log(`Seeded ${seeded} default story options`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

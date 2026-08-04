@@ -12,7 +12,11 @@ import { KebabMenu } from '@/components/ui/KebabMenu'
 import { LoadingState } from '@/components/ui/LoadingState'
 import { NotesList } from '@/components/notes/NotesList'
 import { VersionsList } from '@/components/versions/VersionsList'
-import { FileText, Plus, Users, Globe, StickyNote, History } from 'lucide-react'
+import { StoryDescriptionSection } from '@/components/story-setup/StoryDescriptionSection'
+import { StoryStructureTab } from '@/components/story-setup/StoryStructureTab'
+import { StoryWizard } from '@/components/story-setup/StoryWizard'
+import type { StoryMeta } from '@/types/story'
+import { FileText, Plus, Users, Globe, StickyNote, History, Layers } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
@@ -25,6 +29,7 @@ export function FolderPage() {
   const [localError, setLocalError] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
+  const [showWizard, setShowWizard] = useState(false)
 
   useEffect(() => {
     if (folderId) {
@@ -71,6 +76,7 @@ export function FolderPage() {
     { id: 'worlds', label: 'Mundos', icon: Globe },
     { id: 'notes', label: t('notes.title'), icon: StickyNote },
     { id: 'versions', label: t('versions.title'), icon: History },
+    { id: 'structure', label: t('storySetup.structureTab'), icon: Layers },
   ]
 
   const documents = documentTree.filter((d) => d.type === 'document')
@@ -119,6 +125,14 @@ export function FolderPage() {
             style={{ color: 'var(--color-ink)' }}
           />
         </div>
+
+        {currentProject && (
+          <StoryDescriptionSection
+            description={currentProject.description}
+            storyMeta={(currentProject.storyMeta ?? {}) as StoryMeta}
+            onEdit={() => setShowWizard(true)}
+          />
+        )}
 
         <div className="flex gap-1 border-b mb-6 overflow-x-auto" style={{ borderColor: 'var(--color-paper-lines)' }}>
           {tabs.map((tab) => {
@@ -205,6 +219,13 @@ export function FolderPage() {
           </div>
         )}
 
+        {activeTab === 'structure' && currentProject && (
+          <StoryStructureTab
+            projectId={folderId ?? ''}
+            storyMeta={(currentProject.storyMeta ?? {}) as StoryMeta}
+          />
+        )}
+
         {activeTab === 'characters' && (
           <div className="notebook-paper p-8 text-center">
             <Users className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-teal)' }} />
@@ -264,6 +285,15 @@ export function FolderPage() {
           setDeleteTarget(null)
         }}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      <StoryWizard
+        projectId={folderId ?? ''}
+        isOpen={showWizard}
+        initialDescription={currentProject?.description ?? ''}
+        initialMeta={currentProject?.storyMeta as StoryMeta | undefined}
+        onClose={() => setShowWizard(false)}
+        onSaved={() => setShowWizard(false)}
       />
     </div>
   )

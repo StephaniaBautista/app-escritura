@@ -10,10 +10,11 @@ export function DirectMode({ value, onChange }: DirectModeProps) {
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
+      <label htmlFor="story-description" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
         {t('storySetup.descriptionLabel')}
       </label>
       <textarea
+        id="story-description"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={t('storySetup.descriptionPlaceholder')}

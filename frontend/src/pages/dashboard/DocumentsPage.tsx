@@ -7,7 +7,10 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { KebabMenu } from '@/components/ui/KebabMenu'
+import { FolderCreationDialog } from '@/components/story-setup/FolderCreationDialog'
+import { StoryWizard } from '@/components/story-setup/StoryWizard'
 import { Plus, FolderOpen, FileText, ChevronDown } from 'lucide-react'
+import type { Project } from '@/types/document'
 
 export function DocumentsPage() {
   const { projects, loadProjects, createProject, createDocument, deleteProject, error } = useDocumentStore()
@@ -19,6 +22,8 @@ export function DocumentsPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  const [createdProject, setCreatedProject] = useState<Project | null>(null)
+  const [showWizard, setShowWizard] = useState(false)
 
   useEffect(() => {
     loadProjects()
@@ -41,10 +46,30 @@ export function DocumentsPage() {
         folderId: project.id,
       })
       setIsCreating(false)
+      setCreatedProject(project)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al crear la carpeta'
       setLocalError(message)
     }
+  }
+
+  const handleSkipWizard = () => {
+    if (!createdProject) return
+    const id = createdProject.id
+    setCreatedProject(null)
+    navigate(`/app/documents/${id}`)
+  }
+
+  const handleCompleteWizard = () => {
+    setShowWizard(true)
+  }
+
+  const handleWizardSaved = () => {
+    if (!createdProject) return
+    const id = createdProject.id
+    setCreatedProject(null)
+    setShowWizard(false)
+    navigate(`/app/documents/${id}?tab=structure`)
   }
 
   const handleCreateDocument = async (title: string) => {
@@ -209,6 +234,21 @@ export function DocumentsPage() {
           setDeleteTarget(null)
         }}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      <FolderCreationDialog
+        projectName={createdProject?.name ?? ''}
+        isOpen={createdProject !== null && !showWizard}
+        onSkip={handleSkipWizard}
+        onComplete={handleCompleteWizard}
+        onClose={() => setCreatedProject(null)}
+      />
+
+      <StoryWizard
+        projectId={createdProject?.id ?? ''}
+        isOpen={showWizard && createdProject !== null}
+        onClose={() => setShowWizard(false)}
+        onSaved={handleWizardSaved}
       />
     </div>
   )

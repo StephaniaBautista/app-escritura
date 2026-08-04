@@ -19,7 +19,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 const baseStore = {
-  currentProject: { id: 'folder-1', name: 'Mi novela', description: null, createdAt: '', updatedAt: '' },
+  currentProject: { id: 'folder-1', name: 'Mi novela', description: null, storyMeta: {}, createdAt: '', updatedAt: '' },
   documentTree: [],
   isLoading: false,
   error: null,

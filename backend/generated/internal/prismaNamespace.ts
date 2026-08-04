@@ -411,7 +411,8 @@ export const ModelName = {
   UserSettings: 'UserSettings',
   Character: 'Character',
   World: 'World',
-  Diagram: 'Diagram'
+  Diagram: 'Diagram',
+  StoryOption: 'StoryOption'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "diagram"
+    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "diagram" | "storyOption"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1541,6 +1542,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StoryOption: {
+      payload: Prisma.$StoryOptionPayload<ExtArgs>
+      fields: Prisma.StoryOptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StoryOptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StoryOptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        findFirst: {
+          args: Prisma.StoryOptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StoryOptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        findMany: {
+          args: Prisma.StoryOptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>[]
+        }
+        create: {
+          args: Prisma.StoryOptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        createMany: {
+          args: Prisma.StoryOptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StoryOptionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>[]
+        }
+        delete: {
+          args: Prisma.StoryOptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        update: {
+          args: Prisma.StoryOptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.StoryOptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StoryOptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StoryOptionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>[]
+        }
+        upsert: {
+          args: Prisma.StoryOptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryOptionPayload>
+        }
+        aggregate: {
+          args: Prisma.StoryOptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStoryOption>
+        }
+        groupBy: {
+          args: Prisma.StoryOptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryOptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StoryOptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryOptionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1645,7 +1720,8 @@ export const ProjectScalarFieldEnum = {
   description: 'description',
   userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  storyMeta: 'storyMeta'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -1777,6 +1853,19 @@ export const DiagramScalarFieldEnum = {
 } as const
 
 export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeof DiagramScalarFieldEnum]
+
+
+export const StoryOptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  value: 'value',
+  label: 'label',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryOptionScalarFieldEnum = (typeof StoryOptionScalarFieldEnum)[keyof typeof StoryOptionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2067,6 +2156,7 @@ export type GlobalOmitConfig = {
   character?: Prisma.CharacterOmit
   world?: Prisma.WorldOmit
   diagram?: Prisma.DiagramOmit
+  storyOption?: Prisma.StoryOptionOmit
 }
 
 /* Types for Logging */

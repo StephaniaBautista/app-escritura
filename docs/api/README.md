@@ -110,6 +110,17 @@ Reglas:
 - Detección de conflictos: diff por índice de nodos TipTap JSON contra el punto de bifurcación (`sourceVersionId` de la rama origen; fallback: primera versión del documento).
 - Mismas ramas → `400 MERGE_FAILED`.
 
+### Story Options (2026-08-04, Fase 4)
+- `GET /api/story-options?type=rating|storyType|category|narrator|ending|fandom|tag|problem` - Listar opciones (defaults del sistema + custom del usuario)
+- `GET /api/story-options/all` - Listar todas las opciones agrupadas por tipo
+- `POST /api/story-options` - Crear opción custom `{ type, value, label }`
+- `DELETE /api/story-options/:id` - Eliminar opción custom del usuario (los defaults no se pueden eliminar)
+
+Reglas:
+- **Defaults**: `userId=null, isDefault=true`. Seedeados al arrancar el servidor. Compartidos entre todos los usuarios.
+- **Custom por usuario**: `userId=X, isDefault=false`. Creadas por el usuario, reutilizables entre proyectos.
+- `@@unique([userId, type, value])` evita duplicados por usuario+tipo.
+
 ## Autenticacion
 
 Todos los endpoints (excepto auth) requieren sesion. La autenticacion es por cookie (`better-auth.session_token`), no JWT en header.

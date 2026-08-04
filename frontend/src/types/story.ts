@@ -1,5 +1,7 @@
 export type StoryRating = 'general' | 'teen' | 'mature' | 'explicit'
 
+export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem'
+
 export interface StoryCharacter {
   name: string
   isOC: boolean
@@ -21,7 +23,7 @@ export interface StoryMeta {
   rating?: StoryRating
   type?: string[]
   isFanfic?: boolean
-  fandom?: string
+  fandoms?: string[]
   categories?: string[]
   ships?: string[]
   characters?: StoryCharacter[]
@@ -30,8 +32,7 @@ export interface StoryMeta {
   structure?: StoryStructure
   duration?: StoryDuration
   ending?: string
-  protagonistLife?: string
-  characterEvolution?: string
+  protagonistEvolution?: string
   initialState?: string
   problems?: string[]
   extra?: Record<string, unknown>

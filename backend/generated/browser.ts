@@ -92,3 +92,8 @@ export type World = Prisma.WorldModel
  * 
  */
 export type Diagram = Prisma.DiagramModel
+/**
+ * Model StoryOption
+ * 
+ */
+export type StoryOption = Prisma.StoryOptionModel

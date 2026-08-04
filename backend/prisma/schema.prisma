@@ -32,6 +32,7 @@ model User {
   versions      DocumentVersion[]
   branches      Branch[]
   settings      UserSettings?
+  storyOptions  StoryOption[]
   @@map("users")
 }
 
@@ -291,4 +292,23 @@ model Diagram {
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@map("diagrams")
+}
+
+// StoryOption model for reusable wizard options per user (Fase 4)
+// userId = null → system defaults (seeded). userId = X → user-created custom options.
+model StoryOption {
+  id        String   @id @default(cuid())
+  userId    String?
+  type      String   // rating | storyType | category | narrator | ending | fandom | tag | problem
+  value     String
+  label     String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type, value])
+  @@index([type])
+  @@index([userId])
+  @@map("story_options")
 }
