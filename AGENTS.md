@@ -22,9 +22,12 @@ Plataforma de escritura creativa con IA. Monorepo pnpm con frontend React y back
 | 1: Autenticación | ✅ | BetterAuth, login/register, session cookies |
 | 2: Core Editor | ✅ | TipTap, capítulos, subpáginas, auto-save |
 | 3: Notas y Versionado | ✅ | CRUD notas, versiones con restore, máx 50 |
-| 4-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
+| 4: Modo de Creación | ⏳ (Slices 1-3 ✅) | Wizard directo + guiado (5 pasos AO3 + estructura); metadata en `Project.storyMeta` (nunca como documento); IA = scaffolding (Fase 9) |
+| 5-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
 
-**Fase actual: 3 completada. Siguiente: 4 (Modo de Creación).**
+**Fase actual: 4 (Modo de Creación) en curso — Slices 1-3 completos (wizard guiado funcional). Siguiente: Slice 4 (T25, scaffolding IA).**
+
+> ⚠️ **Prisma**: tras cambiar `schema.prisma` hay que correr `prisma db push` **y** `prisma generate` (el push no regenera el cliente; el backend en ejecución no lo recoge hasta reiniciar).
 
 ---
 
@@ -106,7 +109,7 @@ backend/src/
 │   ├── email.ts                ← Nodemailer SMTP
 │   └── session.ts              ← getSessionUser compartido (Fase 3)
 └── prisma/
-    └── schema.prisma           ← 11 modelos (User, Session, Account, Verification, Project, Folder, Document, Note, DocumentVersion, Character, World, Diagram)
+    └── schema.prisma           ← 12 modelos (User, Session, Account, Verification, Project, Folder, Document, Note, DocumentVersion, Character, World, Diagram, StoryOption)
 ```
 
 ---
