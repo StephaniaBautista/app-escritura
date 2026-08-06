@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma.js'
 
-export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem'
+export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem' | 'ship' | 'character'
 
 export interface StoryOptionRow {
   id: string

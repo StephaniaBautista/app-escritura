@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { getSessionUser } from '../lib/session.js'
 import { optionsService, type OptionType } from '../services/options-service.js'
 
-const VALID_TYPES: OptionType[] = ['rating', 'storyType', 'category', 'narrator', 'ending', 'fandom', 'tag', 'problem']
+const VALID_TYPES: OptionType[] = ['rating', 'storyType', 'category', 'narrator', 'ending', 'fandom', 'tag', 'problem', 'ship', 'character']
 
 export async function optionsRoutes(app: FastifyInstance) {
   app.get('/story-options', {

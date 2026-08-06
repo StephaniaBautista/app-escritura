@@ -3,7 +3,7 @@ import { Users } from 'lucide-react'
 export function SharedPage() {
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div>
         <h1 className="font-display text-4xl font-bold mb-6" style={{ color: 'var(--color-ink)' }}>Compartidos conmigo</h1>
         <div className="notebook-paper p-8 text-center">
           <Users className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-teal)' }} />

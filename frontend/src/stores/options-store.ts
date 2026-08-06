@@ -32,12 +32,16 @@ export const useOptionsStore = create<OptionsState>()((set, get) => ({
 
   addOption: async (type: OptionType, value: string, label: string) => {
     const option = await storyOptionsApi.create(type, value, label)
-    set((s) => ({
-      options: {
-        ...s.options,
-        [type]: [...(s.options[type] ?? []), option],
-      },
-    }))
+    set((s) => {
+      const current = s.options[type] ?? []
+      if (current.some((o) => o.value === option.value)) return {}
+      return {
+        options: {
+          ...s.options,
+          [type]: [...current, option],
+        },
+      }
+    })
     return option
   },
 

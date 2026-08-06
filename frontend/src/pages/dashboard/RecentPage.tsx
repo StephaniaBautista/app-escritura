@@ -13,7 +13,7 @@ export function RecentPage() {
 
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div>
         <h1 className="font-display text-4xl font-bold mb-6" style={{ color: 'var(--color-ink)' }}>Recientes</h1>
         {activities.length > 0 ? (
           <div className="space-y-2">

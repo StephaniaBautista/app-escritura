@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X, Plus } from 'lucide-react'
+import { X } from 'lucide-react'
+import { MultiSelect } from './MultiSelect'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryCharactersProps {
@@ -11,27 +11,36 @@ interface StoryCharactersProps {
 export function StoryCharacters({ meta, update }: StoryCharactersProps) {
   const { t } = useTranslation()
   const characters = meta.characters ?? []
-  const [draft, setDraft] = useState('')
-
-  const add = () => {
-    const name = draft.trim()
-    if (!name) return
-    update({ characters: [...characters, { name, isOC: false }] })
-    setDraft('')
-  }
 
   const toggleOC = (index: number) =>
     update({ characters: characters.map((c, i) => (i === index ? { ...c, isOC: !c.isOC } : c)) })
 
-  const remove = (index: number) => update({ characters: characters.filter((_, i) => i !== index) })
+  const remove = (index: number) =>
+    update({ characters: characters.filter((_, i) => i !== index) })
+
+  const handleChange = (names: string[]) => {
+    const next = names.map((name) => {
+      const existing = characters.find((c) => c.name === name)
+      return existing ? { ...existing } : { name, isOC: false }
+    })
+    update({ characters: next })
+  }
 
   return (
     <div>
-      <p className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
+      <label htmlFor="story-characters" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
         {t('storySetup.characters')}
-      </p>
+      </label>
+      <MultiSelect
+        id="story-characters"
+        optionType="character"
+        value={characters.map((c) => c.name)}
+        onChange={handleChange}
+        placeholder={t('storySetup.charactersPlaceholder')}
+        hideChips
+      />
       {characters.length > 0 && (
-        <div className="space-y-1.5 mb-2">
+        <div className="space-y-1.5 mt-2">
           {characters.map((character, index) => (
             <div
               key={`${character.name}-${index}`}
@@ -61,30 +70,6 @@ export function StoryCharacters({ meta, update }: StoryCharactersProps) {
           ))}
         </div>
       )}
-      <div className="flex gap-2">
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault()
-              add()
-            }
-          }}
-          placeholder={t('storySetup.charactersPlaceholder')}
-          className="flex-1 rounded-lg border px-3 py-2 text-sm"
-          style={{ background: 'var(--color-background)', borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
-        />
-        <button
-          type="button"
-          onClick={add}
-          aria-label={t('common.add')}
-          className="px-3 py-2 rounded-lg text-sm font-medium text-white hover:opacity-90 flex-shrink-0"
-          style={{ background: 'var(--color-accent)' }}
-        >
-          <Plus className="w-4 h-4" />
-        </button>
-      </div>
     </div>
   )
 }

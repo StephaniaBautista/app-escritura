@@ -31,7 +31,7 @@ export function DashboardHome() {
 
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div>
         <div className="notebook-paper p-6 mb-8 relative">
           <div className="notebook-lines absolute inset-0 opacity-20 rounded-xl"></div>
           <div className="relative z-10">

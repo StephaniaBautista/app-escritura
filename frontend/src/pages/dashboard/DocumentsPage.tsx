@@ -99,7 +99,7 @@ export function DocumentsPage() {
 
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-2xl sm:text-4xl font-bold" style={{ color: 'var(--color-ink)' }}>{t('projects.title')}</h1>

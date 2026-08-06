@@ -11,6 +11,7 @@ interface MultiSelectProps {
   id?: string
   placeholder?: string
   optionType?: OptionType
+  hideChips?: boolean
 }
 
 export function MultiSelect({
@@ -20,6 +21,7 @@ export function MultiSelect({
   id,
   placeholder,
   optionType,
+  hideChips = false,
 }: MultiSelectProps) {
   const { t } = useTranslation()
   const storeOptions = useOptionsStore((s) => (optionType ? s.options[optionType] : undefined))
@@ -40,8 +42,6 @@ export function MultiSelect({
     ? [...staticOptions, ...dbOptions.filter((d) => !staticOptions.some((s) => s.value === d.value))]
     : dbOptions
 
-  const available = allOptions.filter((o) => !value.includes(o.value))
-
   const addFromSelect = (val: string) => {
     if (val && !value.includes(val)) {
       onChange([...value, val])
@@ -54,14 +54,16 @@ export function MultiSelect({
   const addCustom = async () => {
     const label = draft.trim()
     if (!label) return
-    const exists = allOptions.some((o) => o.label.toLowerCase() === label.toLowerCase())
-    if (!exists) {
-      if (optionType) {
-        const option = await addStoreOption(optionType, label, label)
-        onChange([...value, option.value])
-      } else {
-        onChange([...value, label])
+    const existing = allOptions.find((o) => o.label.toLowerCase() === label.toLowerCase())
+    if (existing) {
+      if (!value.includes(existing.value)) {
+        onChange([...value, existing.value])
       }
+    } else if (optionType) {
+      const option = await addStoreOption(optionType, label, label)
+      onChange([...value, option.value])
+    } else {
+      onChange([...value, label])
     }
     setDraft('')
     setShowInput(false)
@@ -71,7 +73,7 @@ export function MultiSelect({
 
   return (
     <div>
-      {value.length > 0 && (
+      {!hideChips && value.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-2">
           {value.map((item) => {
             const opt = allOptions.find((o) => o.value === item)
@@ -105,11 +107,14 @@ export function MultiSelect({
           <option value="" disabled hidden>
             {placeholder ?? t('common.select')}
           </option>
-          {available.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+          {allOptions.map((opt) => {
+            const isSelected = value.includes(opt.value)
+            return (
+              <option key={opt.value} value={opt.value} disabled={isSelected}>
+                {isSelected ? `✓ ${opt.label}` : opt.label}
+              </option>
+            )
+          })}
         </select>
         {allowCustom && (
           <button

@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { ChipInput } from './ChipInput'
 import { MultiSelect } from './MultiSelect'
 import type { StoryMeta } from '@/types/story'
 
@@ -27,10 +26,12 @@ export function StoryPeople({ meta, update }: StoryPeopleProps) {
       </div>
 
       <div>
-        <p className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
+        <label htmlFor="story-ships" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
           {t('storySetup.ships')}
-        </p>
-        <ChipInput
+        </label>
+        <MultiSelect
+          id="story-ships"
+          optionType="ship"
           value={meta.ships ?? []}
           onChange={(ships) => update({ ships })}
           placeholder={t('storySetup.shipsPlaceholder')}

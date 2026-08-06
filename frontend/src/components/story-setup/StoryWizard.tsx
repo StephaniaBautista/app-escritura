@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BookOpen, X, ChevronLeft, ChevronRight, Check } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
@@ -54,16 +54,18 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
   const [meta, setMeta] = useState<StoryMeta>({})
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const wasOpenRef = useRef(false)
 
   const steps = buildSteps(meta)
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !wasOpenRef.current) {
       setCurrent(0)
       setDescription(initialDescription ?? '')
       setMeta(initialMeta ?? {})
       setError(null)
     }
+    wasOpenRef.current = isOpen
   }, [isOpen, initialDescription, initialMeta])
 
   useEffect(() => {

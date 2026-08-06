@@ -42,14 +42,14 @@ export function SingleSelect({
   const addCustom = async () => {
     const label = draft.trim()
     if (!label) return
-    const exists = allOptions.some((o) => o.label.toLowerCase() === label.toLowerCase())
-    if (!exists) {
-      if (optionType) {
-        const option = await addStoreOption(optionType, label, label)
-        onChange(option.value)
-      } else {
-        onChange(label)
-      }
+    const existing = allOptions.find((o) => o.label.toLowerCase() === label.toLowerCase())
+    if (existing) {
+      onChange(existing.value)
+    } else if (optionType) {
+      const option = await addStoreOption(optionType, label, label)
+      onChange(option.value)
+    } else {
+      onChange(label)
     }
     setDraft('')
     setShowInput(false)

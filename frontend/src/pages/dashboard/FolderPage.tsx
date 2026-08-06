@@ -111,7 +111,7 @@ export function FolderPage() {
 
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div>
         <div className="mb-6">
           <Link to="/app/documents" className="text-sm hover:opacity-80" style={{ color: 'var(--color-ink-light)' }}>
             ← Volver a documentos

@@ -1,6 +1,6 @@
 export type StoryRating = 'general' | 'teen' | 'mature' | 'explicit'
 
-export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem'
+export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem' | 'ship' | 'character'
 
 export interface StoryCharacter {
   name: string

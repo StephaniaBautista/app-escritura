@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ChipInput } from './ChipInput'
+import { MultiSelect } from './MultiSelect'
 import { SingleSelect } from './SingleSelect'
 import type { StoryMeta } from '@/types/story'
 
@@ -14,10 +14,12 @@ export function StoryTags({ meta, update }: StoryTagsProps) {
   return (
     <div className="space-y-5">
       <div>
-        <p className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
+        <label htmlFor="story-tags" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
           {t('storySetup.tags')}
-        </p>
-        <ChipInput
+        </label>
+        <MultiSelect
+          id="story-tags"
+          optionType="tag"
           value={meta.tags ?? []}
           onChange={(tags) => update({ tags })}
           placeholder={t('storySetup.tagsPlaceholder')}
