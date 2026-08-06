@@ -177,4 +177,19 @@ test.describe('Branches API (ramas + merge)', () => {
     const mainDelete = await ctx.request.delete(`${API}/branches/${ctx.mainBranchId}`)
     expect(mainDelete.status()).toBe(400)
   })
+
+  test('DELETE /versions/:id elimina la versión', async () => {
+    await ctx.request.patch(`${API}/documents/${ctx.documentId}`, {
+      data: { content: doc([p('para borrar')]) },
+    })
+    const createRes = await ctx.request.post(`${API}/documents/${ctx.documentId}/versions`, { data: {} })
+    expect(createRes.status()).toBe(201)
+    const version = await createRes.json()
+
+    const deleteRes = await ctx.request.delete(`${API}/versions/${version.id}`)
+    expect(deleteRes.ok()).toBeTruthy()
+
+    const getAfter = await ctx.request.get(`${API}/versions/${version.id}`)
+    expect(getAfter.status()).toBe(404)
+  })
 })

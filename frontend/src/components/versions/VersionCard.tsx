@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, History, RotateCcw } from 'lucide-react'
+import { ChevronDown, History, RotateCcw, Trash2 } from 'lucide-react'
 import type { DocumentVersion } from '@/types/document'
 import { cn } from '@/lib/utils'
 import { extractTextFromTiptap } from '@/lib/tiptap-text'
@@ -8,10 +8,11 @@ import { extractTextFromTiptap } from '@/lib/tiptap-text'
 interface VersionCardProps {
   version: DocumentVersion
   onRestore: (id: string) => void
+  onDelete: (id: string) => void
   getContent: (id: string) => Promise<DocumentVersion | null>
 }
 
-export function VersionCard({ version, onRestore, getContent }: VersionCardProps) {
+export function VersionCard({ version, onRestore, onDelete, getContent }: VersionCardProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [content, setContent] = useState<DocumentVersion | null>(null)
@@ -66,6 +67,16 @@ export function VersionCard({ version, onRestore, getContent }: VersionCardProps
         >
           <RotateCcw className="w-3.5 h-3.5" />
           {t('versions.restore')}
+        </button>
+        <button
+          type="button"
+          onClick={() => onDelete(version.id)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-90 flex-shrink-0"
+          style={{ color: 'var(--color-ink-light)', border: '1px solid var(--color-paper-lines)' }}
+          title={t('versions.delete')}
+          aria-label={t('versions.delete')}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
 

@@ -49,6 +49,7 @@ interface DocumentState {
   createVersion: (documentId: string) => Promise<void>
   getVersion: (id: string) => Promise<DocumentVersion | null>
   restoreVersion: (id: string) => Promise<void>
+  deleteVersion: (id: string) => Promise<void>
 }
 
 function getErrorMessage(error: unknown): string {
@@ -402,6 +403,18 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
         set({ currentDocument: { ...get().currentDocument!, ...doc } })
       }
       useToastStore.getState().success(i18n.t('versions.restored'))
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
+      set({ error: message })
+      useToastStore.getState().error(message)
+    }
+  },
+
+  deleteVersion: async (id: string) => {
+    try {
+      await versionsApi.delete(id)
+      set((state) => ({ versions: state.versions.filter((v) => v.id !== id) }))
+      useToastStore.getState().success(i18n.t('versions.deleted'))
     } catch (error: unknown) {
       const message = getErrorMessage(error)
       set({ error: message })

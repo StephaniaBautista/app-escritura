@@ -68,11 +68,13 @@ Las notas son texto plano (título + contenido). Ambitos (M15): las notas de doc
 - `POST /api/documents/:documentId/versions` - Crear versión (snapshot del título + contenido actual)
 - `GET /api/versions/:id` - Obtener versión completa (incluye `content` TipTap JSON)
 - `POST /api/versions/:id/restore` - Restaurar versión: reescribe el título y contenido del documento
+- `DELETE /api/versions/:id` - Eliminar una versión (snapshot). Si la versión es fuente de una rama (`Branch.sourceVersionId`), el enlace se pone a `null` (`onDelete: SetNull`).
 
 Reglas:
 - `version` es auto-incremental por documento (`@@unique([documentId, version])`).
 - Límite por tier según `TIER_LIMITS` (FREE: 20, MEDIUM: 50, PRO+: sin límite); al exceder, las más antiguas se eliminan (FIFO).
 - `GET /documents/:documentId/versions` no incluye `content` (lista ligera); el contenido completo se obtiene con `GET /versions/:id`.
+- `DELETE /versions/:id` requiere ownership: devuelve `404` si la versión no pertenece a la sesión.
 
 ### Versions + Branches (2026-08-01, M23)
 - `GET /api/branches/:branchId/versions` - Listar versiones de una rama, más reciente primero

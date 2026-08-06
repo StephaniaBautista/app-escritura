@@ -51,3 +51,8 @@ export function getNextTabTitle(tree: DocumentNode[], rootId: string, prefix: st
   const siblings = tree.filter((d) => d.parentId === rootId)
   return `${prefix} ${siblings.length + 1}`
 }
+
+export function getFirstTabId(tree: DocumentNode[], docId: string): string | null {
+  const tabs = getDocumentTabs(tree, docId)
+  return tabs[0]?.id ?? null
+}

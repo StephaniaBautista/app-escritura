@@ -18,8 +18,13 @@ export function EmDashButton({ editor }: EmDashButtonProps) {
       onClick={insertEmDash}
       title={t('editorApp.emDash')}
       aria-label={t('editorApp.emDash')}
-      className="px-2 h-7 rounded transition-colors hover:opacity-80 font-medium text-sm leading-none"
-      style={{ color: 'var(--color-ink-light)', background: 'transparent' }}
+      className="h-7 px-1.5 rounded transition-colors hover:opacity-80 text-sm leading-none flex items-center"
+      style={{
+        color: 'var(--color-ink-light)',
+        background: 'var(--color-background)',
+        border: '1px dashed var(--color-paper-lines)',
+        letterSpacing: '0.05em',
+      }}
     >
       —
     </button>

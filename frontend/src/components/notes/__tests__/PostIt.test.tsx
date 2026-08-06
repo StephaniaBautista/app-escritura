@@ -92,4 +92,33 @@ describe('PostIt', () => {
 
     expect(onDelete).toHaveBeenCalledWith('note-1')
   })
+
+  it('edita el título desde el KebabMenu', () => {
+    const onUpdate = vi.fn().mockResolvedValue(undefined)
+    render(<PostIt note={note} onUpdate={onUpdate} onDelete={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'common.moreOptions' }))
+    fireEvent.click(screen.getByRole('button', { name: 'common.edit' }))
+
+    const input = screen.getByRole('textbox', { name: 'common.edit' })
+    fireEvent.change(input, { target: { value: 'Nuevo título' } })
+    fireEvent.keyDown(input, { key: 'Enter' })
+
+    expect(onUpdate).toHaveBeenCalledWith('note-1', { title: 'Nuevo título' })
+  })
+
+  it('cancela la edición del título con Escape', () => {
+    const onUpdate = vi.fn().mockResolvedValue(undefined)
+    render(<PostIt note={note} onUpdate={onUpdate} onDelete={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'common.moreOptions' }))
+    fireEvent.click(screen.getByRole('button', { name: 'common.edit' }))
+
+    const input = screen.getByRole('textbox', { name: 'common.edit' })
+    fireEvent.change(input, { target: { value: 'Título descartado' } })
+    fireEvent.keyDown(input, { key: 'Escape' })
+
+    expect(onUpdate).not.toHaveBeenCalled()
+    expect(screen.getByText('Idea para el final')).toBeInTheDocument()
+  })
 })

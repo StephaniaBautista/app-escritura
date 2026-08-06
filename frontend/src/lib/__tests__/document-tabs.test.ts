@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getDocumentTabs, getDocumentRootId, getNextTabTitle } from '../document-tabs'
+import { getDocumentTabs, getDocumentRootId, getNextTabTitle, getFirstTabId } from '../document-tabs'
 import type { DocumentNode } from '@/types/document'
 
 const makeDoc = (id: string, parentId: string | null, order = 0): DocumentNode => ({
@@ -116,5 +116,35 @@ describe('getNextTabTitle', () => {
 
   it('respeta el prefijo i18n', () => {
     expect(getNextTabTitle(tree, 'B', 'Tab')).toBe('Tab 1')
+  })
+})
+
+describe('getFirstTabId', () => {
+  const tree: DocumentNode[] = [
+    makeDoc('A', null, 0),
+    makeDoc('A.1', 'A', 0),
+    makeDoc('A.2', 'A', 1),
+    makeDoc('A.2.1', 'A.2', 0),
+    makeDoc('B', null, 1),
+  ]
+
+  it('devuelve la primera pestaña (primer descendiente en orden) del documento', () => {
+    expect(getFirstTabId(tree, 'A')).toBe('A.1')
+  })
+
+  it('devuelve null si el documento no tiene pestañas', () => {
+    expect(getFirstTabId(tree, 'B')).toBeNull()
+  })
+
+  it('devuelve null si el documento no existe', () => {
+    expect(getFirstTabId(tree, 'no-existe')).toBeNull()
+  })
+
+  it('subpágina activa → primera pestaña de su documento raíz', () => {
+    expect(getFirstTabId(tree, 'A.2.1')).toBe('A.1')
+  })
+
+  it('maneja árbol vacío', () => {
+    expect(getFirstTabId([], 'A')).toBeNull()
   })
 })

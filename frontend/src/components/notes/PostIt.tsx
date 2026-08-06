@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, Eye, EyeOff, RotateCcw } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff, Pencil, RotateCcw, Trash2 } from 'lucide-react'
 import type { Note } from '@/types/document'
 import { cn } from '@/lib/utils'
-import { KebabMenu } from '@/components/ui/KebabMenu'
+import { KebabMenu, type KebabMenuItem } from '@/components/ui/KebabMenu'
 
 export type PostItVariant = 'yellow' | 'blue' | 'pink'
 
@@ -39,10 +39,24 @@ const AUTOSAVE_DELAY = 600
 export function PostIt({ note, variant = 'yellow', tilt = 0, onUpdate, onDelete, compact = false }: PostItProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [title, setTitle] = useState(note.title)
   const [content, setContent] = useState(note.content)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   const styles = VARIANT_STYLES[variant]
+
+  useEffect(() => {
+    setTitle(note.title)
+  }, [note.title])
+
+  useEffect(() => {
+    if (editingTitle && titleInputRef.current) {
+      titleInputRef.current.focus()
+      titleInputRef.current.select()
+    }
+  }, [editingTitle])
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
@@ -57,6 +71,36 @@ export function PostIt({ note, variant = 'yellow', tilt = 0, onUpdate, onDelete,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content])
 
+  const handleTitleSubmit = () => {
+    const trimmed = title.trim()
+    if (trimmed && trimmed !== note.title) {
+      onUpdate(note.id, { title: trimmed })
+    } else {
+      setTitle(note.title)
+    }
+    setEditingTitle(false)
+  }
+
+  const menuItems: KebabMenuItem[] = [
+    {
+      label: t('common.edit'),
+      icon: Pencil,
+      onClick: () => setEditingTitle(true),
+    },
+    {
+      label: t('common.delete'),
+      icon: Trash2,
+      onClick: () => onDelete(note.id),
+      danger: true,
+    },
+  ]
+
+  const titlePreview = !compact && (
+    <p className="mt-0.5 leading-snug line-clamp-3 break-words opacity-80">
+      {note.content || t('notes.emptyContent')}
+    </p>
+  )
+
   return (
     <div
       className="p-3 text-xs rounded-sm"
@@ -69,27 +113,45 @@ export function PostIt({ note, variant = 'yellow', tilt = 0, onUpdate, onDelete,
       }}
     >
       <div className="flex items-start gap-1.5">
-        <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-expanded={open}
-          className="flex items-start gap-1 flex-1 min-w-0 text-left rounded transition-opacity hover:opacity-80"
-        >
-          <ChevronDown
-            className={cn(
-              'w-3.5 h-3.5 mt-0.5 flex-shrink-0 transition-transform duration-200',
-              !open && '-rotate-90'
-            )}
-          />
+        {editingTitle ? (
           <div className="flex-1 min-w-0">
-            <p className="font-semibold leading-snug break-words">{note.title}</p>
-            {!compact && (
-              <p className="mt-0.5 leading-snug line-clamp-3 break-words opacity-80">
-                {note.content || t('notes.emptyContent')}
-              </p>
-            )}
+            <input
+              ref={titleInputRef}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={handleTitleSubmit}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleTitleSubmit()
+                if (e.key === 'Escape') {
+                  setTitle(note.title)
+                  setEditingTitle(false)
+                }
+              }}
+              aria-label={t('common.edit')}
+              className="w-full bg-transparent border-b-2 font-semibold leading-snug outline-none"
+              style={{ borderColor: 'var(--color-accent)', color: 'var(--color-ink)' }}
+            />
+            {titlePreview}
           </div>
-        </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-expanded={open}
+            className="flex items-start gap-1 flex-1 min-w-0 text-left rounded transition-opacity hover:opacity-80"
+          >
+            <ChevronDown
+              className={cn(
+                'w-3.5 h-3.5 mt-0.5 flex-shrink-0 transition-transform duration-200',
+                !open && '-rotate-90'
+              )}
+            />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold leading-snug break-words">{note.title}</p>
+              {titlePreview}
+            </div>
+          </button>
+        )}
 
         <div className="flex items-center gap-0.5 flex-shrink-0">
           {compact ? (
@@ -114,7 +176,7 @@ export function PostIt({ note, variant = 'yellow', tilt = 0, onUpdate, onDelete,
             </button>
           )}
           <div className="-mr-1.5">
-            <KebabMenu onDelete={() => onDelete(note.id)} />
+            <KebabMenu items={menuItems} />
           </div>
         </div>
       </div>

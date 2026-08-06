@@ -128,4 +128,9 @@ export const versionsApi = {
     fetchJson<Document>(`${API}/versions/${id}/restore`, {
       method: 'POST',
     }),
+
+  delete: (id: string) =>
+    fetchJson<{ message: string }>(`${API}/versions/${id}`, {
+      method: 'DELETE',
+    }),
 }

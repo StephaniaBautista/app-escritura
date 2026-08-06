@@ -18,6 +18,7 @@ const baseStore = {
   createVersion: vi.fn().mockResolvedValue(undefined),
   getVersion: vi.fn().mockResolvedValue(null),
   restoreVersion: vi.fn().mockResolvedValue(undefined),
+  deleteVersion: vi.fn().mockResolvedValue(undefined),
 }
 
 const versionRow = {
@@ -73,4 +74,19 @@ describe('VersionsList', () => {
     await waitFor(() => {
       expect(baseStore.restoreVersion).toHaveBeenCalledWith('ver-1')
     })
-  })})
+  })
+
+  it('elimina una versión tras confirmar', async () => {
+    useDocumentStoreMock.mockReturnValue({ ...baseStore, versions: [versionRow] })
+
+    render(<VersionsList documentId="doc-1" />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'versions.delete' }))
+    const deleteButtons = screen.getAllByRole('button', { name: 'versions.delete' })
+    fireEvent.click(deleteButtons[deleteButtons.length - 1])
+
+    await waitFor(() => {
+      expect(baseStore.deleteVersion).toHaveBeenCalledWith('ver-1')
+    })
+  })
+})

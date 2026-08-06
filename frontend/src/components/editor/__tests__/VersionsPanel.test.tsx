@@ -19,6 +19,7 @@ const baseStore = {
   createVersion: vi.fn().mockResolvedValue(undefined),
   getVersion: vi.fn().mockResolvedValue(null),
   restoreVersion: vi.fn().mockResolvedValue(undefined),
+  deleteVersion: vi.fn().mockResolvedValue(undefined),
 }
 
 describe('VersionsPanel', () => {

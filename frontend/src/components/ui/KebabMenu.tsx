@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { MoreVertical, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -22,6 +23,7 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
   const [open, setOpen] = useState(false)
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const menuItems: KebabMenuItem[] = items ?? (onDelete ? [{
     label: t('common.delete'),
@@ -33,7 +35,10 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
   useEffect(() => {
     if (!open) return
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as Node
+      const insideTrigger = ref.current?.contains(target)
+      const insideMenu = menuRef.current?.contains(target)
+      if (!insideTrigger && !insideMenu) {
         setOpen(false)
       }
     }
@@ -73,8 +78,9 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
         <MoreVertical className="w-3.5 h-3.5" />
       </button>
 
-      {open && pos && (
+      {open && pos && createPortal(
         <div
+          ref={menuRef}
           className="fixed z-50 py-1 rounded-lg shadow-xl min-w-[150px] overflow-hidden"
           style={{
             top: pos.top,
@@ -103,7 +109,8 @@ export function KebabMenu({ onDelete, items }: KebabMenuProps) {
               </button>
             )
           })}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

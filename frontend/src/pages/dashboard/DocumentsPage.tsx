@@ -11,6 +11,7 @@ import { FolderCreationDialog } from '@/components/story-setup/FolderCreationDia
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
 import { Plus, FolderOpen, FileText, ChevronDown } from 'lucide-react'
 import type { Project } from '@/types/document'
+import { getFirstTabId } from '@/lib/document-tabs'
 
 export function DocumentsPage() {
   const { projects, loadProjects, createProject, createDocument, deleteProject, error } = useDocumentStore()
@@ -88,7 +89,8 @@ export function DocumentsPage() {
         documentId: doc.id,
       })
       setShowDocForm(false)
-      navigate(`/app/editor/${selectedProjectId}/${doc.id}`)
+      const firstTabId = getFirstTabId(useDocumentStore.getState().documentTree, doc.id)
+      navigate(`/app/editor/${selectedProjectId}/${firstTabId ?? doc.id}`)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al crear el documento'
       setLocalError(message)

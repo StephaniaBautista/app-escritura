@@ -1,14 +1,13 @@
 import { useEditorState, type Editor } from '@tiptap/react'
 import {
   Bold, Italic, Strikethrough, Heading1, Heading2, Heading3,
-  List, ListOrdered, Quote, Code, Undo2, Redo2, Minus
+  List, ListOrdered, Quote, Code, Undo2, Redo2, SeparatorHorizontal
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { FontSelect } from './toolbar/FontSelect'
 import { AlignGroup } from './toolbar/AlignGroup'
-import { LineHeightSelect } from './toolbar/LineHeightSelect'
-import { ParagraphSpacingControls } from './toolbar/ParagraphSpacingControls'
+import { ParagraphFormatMenu } from './toolbar/ParagraphFormatMenu'
 import { EmDashButton } from './toolbar/EmDashButton'
 
 interface ToolbarProps {
@@ -103,7 +102,7 @@ export function Toolbar({ editor }: ToolbarProps) {
       tooltip: t('editorApp.codeBlock'),
     },
     {
-      icon: Minus,
+      icon: SeparatorHorizontal,
       action: () => editor.chain().focus().setHorizontalRule().run(),
       active: false,
       tooltip: t('editorApp.horizontalRule'),
@@ -160,8 +159,7 @@ export function Toolbar({ editor }: ToolbarProps) {
       <AlignGroup editor={editor} />
       <div className="w-px h-6 mx-1" style={{ background: 'var(--color-paper-lines)' }} />
       <FontSelect editor={editor} />
-      <LineHeightSelect editor={editor} />
-      <ParagraphSpacingControls editor={editor} />
+      <ParagraphFormatMenu editor={editor} />
       <EmDashButton editor={editor} />
       <div className="w-px h-6 mx-1" style={{ background: 'var(--color-paper-lines)' }} />
       {items.slice(6, 11).map((item, i) => renderButton(item, i + 6))}

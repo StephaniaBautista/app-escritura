@@ -74,6 +74,13 @@ export const versionService = {
     })
   },
 
+  async delete(id: string, userId: string) {
+    const version = await prisma.documentVersion.findFirst({ where: { id, userId } })
+    if (!version) return null
+
+    return prisma.documentVersion.delete({ where: { id } })
+  },
+
   async enforceLimit(branchId: string, limit: number) {
     const count = await prisma.documentVersion.count({ where: { branchId } })
     if (count <= limit) return

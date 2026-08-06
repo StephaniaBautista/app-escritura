@@ -9,6 +9,7 @@ const { prismaMock } = vi.hoisted(() => ({
       findFirst: vi.fn(),
       create: vi.fn(),
       count: vi.fn(),
+      delete: vi.fn(),
       deleteMany: vi.fn(),
     },
   },
@@ -159,5 +160,24 @@ describe('versionService', () => {
 
     expect(prismaMock.documentVersion.findFirst).toHaveBeenCalledWith({ where: { id: 'ver-1', userId: 'user-1' } })
     expect(version).toEqual(versionRow(1))
+  })
+
+  it('delete: elimina la versión propia', async () => {
+    prismaMock.documentVersion.findFirst.mockResolvedValue(versionRow(2))
+    prismaMock.documentVersion.delete.mockResolvedValue(versionRow(2))
+
+    const deleted = await versionService.delete('ver-2', 'user-1')
+
+    expect(prismaMock.documentVersion.delete).toHaveBeenCalledWith({ where: { id: 'ver-2' } })
+    expect(deleted).toEqual(versionRow(2))
+  })
+
+  it('delete: devuelve null si la versión no pertenece al usuario', async () => {
+    prismaMock.documentVersion.findFirst.mockResolvedValue(null)
+
+    const deleted = await versionService.delete('ver-2', 'user-1')
+
+    expect(deleted).toBeNull()
+    expect(prismaMock.documentVersion.delete).not.toHaveBeenCalled()
   })
 })

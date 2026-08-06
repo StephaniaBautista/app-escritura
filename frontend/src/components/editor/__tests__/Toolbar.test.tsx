@@ -55,11 +55,12 @@ describe('Toolbar', () => {
     expect(editor.getAttributes('textStyle').fontFamily).toBeNull()
   })
 
-  it('aplica interlineado con LineHeightSelect', () => {
+  it('aplica interlineado con ParagraphFormatMenu', () => {
     const editor = createEditor()
     render(<Toolbar editor={editor} />)
 
-    fireEvent.change(screen.getByLabelText('editorApp.lineHeight'), { target: { value: '1.5' } })
+    fireEvent.click(screen.getByLabelText('editorApp.paragraphFormat'))
+    fireEvent.click(screen.getByRole('menuitemradio', { name: '1.5' }))
 
     expect(editor.getAttributes('textStyle').lineHeight).toBe('1.5')
   })
@@ -82,14 +83,15 @@ describe('Toolbar', () => {
     expect(editor.getText()).toContain('—')
   })
 
-  it('aplica espacio antes/después con ParagraphSpacingControls', () => {
+  it('aplica espacio antes/después con ParagraphFormatMenu', () => {
     const editor = createEditor()
     render(<Toolbar editor={editor} />)
 
-    fireEvent.click(screen.getByLabelText('editorApp.spacingBefore'))
+    fireEvent.click(screen.getByLabelText('editorApp.paragraphFormat'))
+    fireEvent.click(screen.getByRole('menuitemcheckbox', { name: /editorApp.spacingBefore/ }))
     expect(editor.getAttributes('paragraph').spacingBefore).toBe('md')
 
-    fireEvent.click(screen.getByLabelText('editorApp.spacingAfter'))
+    fireEvent.click(screen.getByRole('menuitemcheckbox', { name: /editorApp.spacingAfter/ }))
     expect(editor.getAttributes('paragraph').spacingAfter).toBe('md')
   })
 

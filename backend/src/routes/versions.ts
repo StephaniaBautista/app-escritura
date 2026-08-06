@@ -142,4 +142,26 @@ export async function versionRoutes(app: FastifyInstance) {
 
     return doc
   })
+
+  app.delete('/versions/:id', {
+    schema: {
+      description: 'Delete a version (snapshot)',
+      tags: ['Versions'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { id } = request.params as { id: string }
+    const deleted = await versionService.delete(id, user.id)
+    if (!deleted) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Versión no encontrada' } })
+
+    return { message: 'Versión eliminada' }
+  })
 }

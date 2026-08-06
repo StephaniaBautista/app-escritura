@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Plus, FileText, BookOpen, FolderOpen, History } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
-import { getDocumentRootId } from '@/lib/document-tabs'
+import { getDocumentRootId, getDocumentTabs, getFirstTabId } from '@/lib/document-tabs'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
 import { Sidebar } from '@/components/sidebar/Sidebar'
 import { PostItWall } from '@/components/editor/PostItWall'
@@ -64,6 +64,15 @@ export function EditorPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId])
 
+  useEffect(() => {
+    if (!projectId || !currentDocument || currentDocument.type !== 'document') return
+    const firstTabId = getFirstTabId(documentTree, currentDocument.id)
+    if (firstTabId) {
+      navigate(`/app/editor/${projectId}/${firstTabId}`, { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, currentDocument, documentTree])
+
   const handleCreateDocument = async (title: string) => {
     if (!projectId) return
     setLocalError(null)
@@ -74,7 +83,8 @@ export function EditorPage() {
         projectId,
       })
       setShowNewDoc(false)
-      navigate(`/app/editor/${projectId}/${doc.id}`)
+      const firstTabId = getFirstTabId(useDocumentStore.getState().documentTree, doc.id)
+      navigate(`/app/editor/${projectId}/${firstTabId ?? doc.id}`)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al crear el documento'
       setLocalError(message)
@@ -137,6 +147,38 @@ export function EditorPage() {
                 />
               </div>
             )}
+          </div>
+        </div>
+      )
+    }
+
+    if (currentDocument.type === 'document') {
+      const hasTabs = getDocumentTabs(documentTree, currentDocument.id).length > 0
+      if (hasTabs) {
+        return (
+          <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+            <LoadingState />
+          </div>
+        )
+      }
+      return (
+        <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-background)' }}>
+          <div className="text-center">
+            <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-ink-faint)' }} />
+            <h2 className="text-lg font-medium mb-2" style={{ color: 'var(--color-ink)' }}>
+              {currentProject?.name || 'Proyecto'}
+            </h2>
+            <p className="text-sm mb-6" style={{ color: 'var(--color-ink-light)' }}>
+              Selecciona un documento de la barra lateral o crea uno nuevo
+            </p>
+            <button
+              onClick={() => setShowNewDoc(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
+              style={{ background: 'var(--color-accent)' }}
+            >
+              <Plus className="w-4 h-4" />
+              Nuevo Documento
+            </button>
           </div>
         </div>
       )

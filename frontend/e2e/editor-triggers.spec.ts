@@ -26,7 +26,12 @@ test.describe('Editor - Auto-Version Triggers', () => {
     })
     const doc = await docRes.json()
 
-    ctx = { request, projectId: project.id, documentId: doc.id }
+    const tabRes = await request.post(`${API}/documents`, {
+      data: { title: 'Pestaña 1', type: 'chapter', projectId: project.id, parentId: doc.id },
+    })
+    const tab = await tabRes.json()
+
+    ctx = { request, projectId: project.id, documentId: tab.id }
   })
 
   test.afterAll(async () => {

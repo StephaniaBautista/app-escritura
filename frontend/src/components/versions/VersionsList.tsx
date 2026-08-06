@@ -13,8 +13,9 @@ interface VersionsListProps {
 
 export function VersionsList({ documentId }: VersionsListProps) {
   const { t } = useTranslation()
-  const { versions, versionsLoading, createVersion, getVersion, restoreVersion } = useDocumentStore()
+  const { versions, versionsLoading, createVersion, getVersion, restoreVersion, deleteVersion } = useDocumentStore()
   const [restoreTarget, setRestoreTarget] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
 
   return (
     <div>
@@ -41,6 +42,7 @@ export function VersionsList({ documentId }: VersionsListProps) {
               key={version.id}
               version={version}
               onRestore={(id) => setRestoreTarget(id)}
+              onDelete={(id) => setDeleteTarget(id)}
               getContent={getVersion}
             />
           ))}
@@ -67,6 +69,18 @@ export function VersionsList({ documentId }: VersionsListProps) {
           setRestoreTarget(null)
         }}
         onCancel={() => setRestoreTarget(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteTarget !== null}
+        title={t('versions.deleteTitle')}
+        message={t('versions.confirmDelete')}
+        confirmLabel={t('versions.delete')}
+        onConfirm={() => {
+          if (deleteTarget) deleteVersion(deleteTarget)
+          setDeleteTarget(null)
+        }}
+        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   )
