@@ -18,6 +18,7 @@ model User {
   password      String?
   emailVerified Boolean   @default(false)
   image         String?
+  role          String    @default("user") // user | superadmin
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -32,7 +33,7 @@ model User {
   versions      DocumentVersion[]
   branches      Branch[]
   settings      UserSettings?
-  storyOptions  StoryOption[]
+  activities    Activity[]
   @@map("users")
 }
 
@@ -298,17 +299,30 @@ model Diagram {
 // userId = null → system defaults (seeded). userId = X → user-created custom options.
 model StoryOption {
   id        String   @id @default(cuid())
-  userId    String?
-  type      String   // rating | storyType | category | narrator | ending | fandom | tag | problem
+  type      String   // rating | storyType | category | narrator | ending | fandom | tag | problem | ship | character
   value     String
   label     String
   isDefault Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, type, value])
+  @@unique([type, value])
   @@index([type])
-  @@index([userId])
   @@map("story_options")
+}
+
+// Activity feed (M29): actividad reciente del usuario, antes en localStorage.
+// Un único modelo por usuario, sin datos de otro tenant.
+model Activity {
+  id         String   @id @default(cuid())
+  type       String   // folder_created | document_created | document_edited
+  title      String
+  folderId   String?
+  documentId String?
+  userId     String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("activity")
 }

@@ -1,6 +1,9 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
 import rateLimit from '@fastify/rate-limit'
 import { auth } from '../lib/auth.js'
+import { getTrustedHost } from '../lib/trusted-host.js'
+import { normalizeAuthError } from '../lib/auth-error-normalizer.js'
+import { logSecurityEvent } from '../lib/security-log.js'
 
 // Extend FastifyRequest to include session
 declare module 'fastify' {
@@ -44,7 +47,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 
 // Helper to convert Fastify request to standard Request for auth.handler
 function toWebRequest(request: FastifyRequest): Request {
-  const host = request.headers.host || `${request.hostname}:${request.socket.localPort || '3001'}`
+  const host = getTrustedHost(request.headers.host)
   const url = new URL(request.url, `${request.protocol}://${host}`)
   const headers = new Headers()
   for (const [key, value] of Object.entries(request.headers)) {
@@ -66,7 +69,7 @@ function toWebRequest(request: FastifyRequest): Request {
 }
 
 // Helper to forward auth.handler Response to Fastify reply
-async function forwardWebResponse(webResponse: Response, reply: FastifyReply) {
+async function forwardWebResponse(webResponse: Response, reply: FastifyReply, url: string) {
   // Forward Set-Cookie headers
   webResponse.headers.forEach((value, key) => {
     if (key.toLowerCase() === 'set-cookie') {
@@ -78,7 +81,8 @@ async function forwardWebResponse(webResponse: Response, reply: FastifyReply) {
   const contentType = webResponse.headers.get('content-type') || ''
   if (contentType.includes('application/json')) {
     const body = await webResponse.json()
-    reply.status(webResponse.status).send(body)
+    const normalized = normalizeAuthError(url, webResponse.status, body)
+    reply.status(normalized.status).send(normalized.body)
   } else {
     const text = await webResponse.text()
     reply.status(webResponse.status).send(text)
@@ -130,7 +134,9 @@ const messageSchema = {
 
 // Auth routes plugin
 export async function authRoutes(app: FastifyInstance) {
-  // Stricter rate limit for auth endpoints
+  // Rate limit for auth endpoints (intentionally loose: the E2E suite and
+  // rapid local logins must not be blocked; brute-force protection is the
+  // global 100/min limit plus the platform proxy)
   await app.register(rateLimit, {
     max: 500,
     timeWindow: '15 minutes',
@@ -142,13 +148,26 @@ export async function authRoutes(app: FastifyInstance) {
       const webRequest = toWebRequest(request)
       const webResponse = await auth.handler(webRequest)
 
-      if (webResponse.status >= 400) {
-        const clone = webResponse.clone()
-        const body = await clone.text()
-        request.log.error({ status: webResponse.status, url: request.url, body }, 'BetterAuth error response')
+      const body = request.body as Record<string, unknown> | null
+      const email = typeof body?.email === 'string' ? body.email : undefined
+
+      if (request.url.includes('/auth/sign-in/email') && webResponse.status >= 400) {
+        logSecurityEvent(request, { event: 'auth.sign_in.failed', email })
+      }
+      if (request.url.includes('/auth/sign-up/email') && webResponse.status >= 400) {
+        logSecurityEvent(request, { event: 'auth.sign_up.failed', email })
+      }
+      if (request.url.includes('/auth/sign-out')) {
+        logSecurityEvent(request, { event: 'auth.sign_out', email })
+      }
+      if (request.url.includes('/auth/forgot-password')) {
+        logSecurityEvent(request, { event: 'auth.forgot_password.requested', email })
+      }
+      if (request.url.includes('/auth/reset-password') && webResponse.status >= 400) {
+        logSecurityEvent(request, { event: 'auth.reset_password.failed', email })
       }
 
-      await forwardWebResponse(webResponse, reply)
+      await forwardWebResponse(webResponse, reply, request.url)
     } catch (err) {
       request.log.error({ err }, 'Auth handler threw')
       return reply.status(500).send({

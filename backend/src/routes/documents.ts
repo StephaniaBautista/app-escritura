@@ -3,6 +3,14 @@ import { auth } from '../lib/auth.js'
 import { documentService } from '../services/document-service.js'
 import { Prisma } from '@generated/client'
 
+// Upper bound for the serialized TipTap JSON content of a document.
+const MAX_CONTENT_BYTES = 1_000_000
+
+function contentTooLarge(content: Record<string, unknown> | undefined): boolean {
+  if (!content) return false
+  return JSON.stringify(content).length > MAX_CONTENT_BYTES
+}
+
 async function getSessionUser(request: FastifyRequest) {
   const session = await auth.api.getSession({
     headers: request.headers as Record<string, string>,
@@ -86,10 +94,16 @@ export async function documentRoutes(app: FastifyInstance) {
       order?: number
     }
 
+    if (contentTooLarge(body.content)) {
+      return reply.status(413).send({ error: { code: 'CONTENT_TOO_LARGE', message: 'Contenido demasiado grande' } })
+    }
+
     const doc = await documentService.create(user.id, {
       ...body,
       content: body.content as Prisma.InputJsonValue | undefined,
     })
+    if (!doc) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto, carpeta o documento padre no encontrado' } })
+
     return reply.status(201).send(doc)
   })
 
@@ -125,6 +139,10 @@ export async function documentRoutes(app: FastifyInstance) {
       folderId?: string | null
       parentId?: string | null
       order?: number
+    }
+
+    if (contentTooLarge(body.content)) {
+      return reply.status(413).send({ error: { code: 'CONTENT_TOO_LARGE', message: 'Contenido demasiado grande' } })
     }
 
     const doc = await documentService.update(id, user.id, {

@@ -17,7 +17,7 @@ vi.mock('@/hooks/useAutoVersion', () => ({
   useAutoVersion: useAutoVersionMock,
 }))
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useParams: () => paramsMock,
   useNavigate: () => navigateMock,
 }))

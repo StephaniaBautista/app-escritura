@@ -775,5 +775,23 @@
       "registrationFailed": "Error al registrar usuario",
       "networkError": "Error de conexión. Intenta de nuevo."
     }
+  },
+  "admin": {
+    "title": "Moderación",
+    "subtitle": "Revisa las opciones creadas por la comunidad: detecta duplicados, elige cuál se queda y elimina el resto.",
+    "keep": "Conservar",
+    "keepThis": "Conservar esta",
+    "delete": "Eliminar",
+    "deleteOthers": "Eliminar las demás",
+    "deleted": "Opción eliminada",
+    "merged": "Duplicados fusionados",
+    "groupedBy": "agrupadas por similitud",
+    "noOptions": "No hay opciones de este tipo",
+    "types": {
+      "fandom": "Fandoms",
+      "ship": "Parejas",
+      "character": "Personajes",
+      "tag": "Etiquetas"
+    }
   }
 }

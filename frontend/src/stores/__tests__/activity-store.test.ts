@@ -1,79 +1,119 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useActivityStore } from '../activity-store'
+import type { ActivityRow } from '@/services/activity'
 
-const STORAGE_KEY = 'archivum-activity'
-const LEGACY_STORAGE_KEY = 'escritura-activity'
+const { activityApiMock } = vi.hoisted(() => ({
+  activityApiMock: {
+    list: vi.fn(),
+    create: vi.fn(),
+    removeByDocument: vi.fn(),
+    removeByFolder: vi.fn(),
+  },
+}))
 
-const sampleActivity = {
+vi.mock('@/services/activity', () => ({
+  activityApi: activityApiMock,
+  toActivityItem: (row: ActivityRow) => ({
+    id: row.id,
+    type: row.type,
+    title: row.title,
+    folderId: row.folderId ?? undefined,
+    documentId: row.documentId ?? undefined,
+    timestamp: new Date(row.createdAt).getTime(),
+  }),
+}))
+
+const samplePayload = {
   type: 'document_created' as const,
   title: 'Capítulo 1',
   folderId: 'proj-1',
   documentId: 'doc-1',
 }
 
-describe('activity-store', () => {
+function row(overrides: Partial<ActivityRow> = {}): ActivityRow {
+  return {
+    id: 'a1',
+    type: 'document_created',
+    title: 'Capítulo 1',
+    folderId: 'proj-1',
+    documentId: 'doc-1',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    ...overrides,
+  }
+}
+
+describe('activity-store (backend)', () => {
   beforeEach(() => {
-    localStorage.clear()
-    useActivityStore.setState({ activities: [] })
+    vi.clearAllMocks()
+    useActivityStore.setState({ activities: [], isLoading: false })
   })
 
-  it('addActivity guarda en la clave actual y prepende', () => {
-    useActivityStore.getState().addActivity(sampleActivity)
+  it('loadActivities carga desde el API y mapea createdAt a timestamp', async () => {
+    activityApiMock.list.mockResolvedValue([row()])
 
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-    expect(stored).toHaveLength(1)
-    expect(stored[0].title).toBe('Capítulo 1')
+    await useActivityStore.getState().loadActivities()
+
+    expect(useActivityStore.getState().activities).toHaveLength(1)
+    expect(useActivityStore.getState().activities[0].title).toBe('Capítulo 1')
+    expect(useActivityStore.getState().activities[0].timestamp).toBe(
+      new Date('2026-01-01T00:00:00.000Z').getTime(),
+    )
+  })
+
+  it('loadActivities ante un fallo de red deja la lista vacía sin romper', async () => {
+    activityApiMock.list.mockRejectedValue(new Error('red'))
+
+    await useActivityStore.getState().loadActivities()
+
+    expect(useActivityStore.getState().activities).toHaveLength(0)
+    expect(useActivityStore.getState().isLoading).toBe(false)
+  })
+
+  it('addActivity crea en el API y prepende en el store', async () => {
+    activityApiMock.create.mockResolvedValue(row())
+
+    await useActivityStore.getState().addActivity(samplePayload)
+
+    expect(activityApiMock.create).toHaveBeenCalledWith(samplePayload)
     expect(useActivityStore.getState().activities[0].title).toBe('Capítulo 1')
   })
 
-  it('loadActivities carga desde la clave actual', () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([{ ...sampleActivity, id: 'a1', timestamp: 1 }]))
+  it('addActivity no rompe el flujo si el API falla', async () => {
+    activityApiMock.create.mockRejectedValue(new Error('red'))
 
-    useActivityStore.getState().loadActivities()
-
-    expect(useActivityStore.getState().activities).toHaveLength(1)
-  })
-
-  it('loadActivities migra datos desde la clave legacy (rename Archivum)', () => {
-    localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify([{ ...sampleActivity, id: 'a1', timestamp: 1 }]))
-
-    useActivityStore.getState().loadActivities()
-
-    expect(useActivityStore.getState().activities).toHaveLength(1)
-    expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull()
-    expect(localStorage.getItem(LEGACY_STORAGE_KEY)).toBeNull()
-  })
-
-  it('loadActivities ignora JSON corrupto', () => {
-    localStorage.setItem(STORAGE_KEY, '{not-json')
-
-    useActivityStore.getState().loadActivities()
+    await useActivityStore.getState().addActivity(samplePayload)
 
     expect(useActivityStore.getState().activities).toHaveLength(0)
   })
 
-  it('removeByDocument filtra y persiste', () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([
-      { ...sampleActivity, id: 'a1', timestamp: 1 },
-      { type: 'document_created', title: 'Otro', folderId: 'p', documentId: 'doc-2', id: 'a2', timestamp: 2 },
-    ]))
+  it('removeByDocument borra en el API y filtra localmente', async () => {
+    useActivityStore.setState({
+      activities: [
+        { ...samplePayload, id: 'a1', timestamp: 1 },
+        { ...samplePayload, id: 'a2', documentId: 'doc-2', timestamp: 2 },
+      ],
+    })
+    activityApiMock.removeByDocument.mockResolvedValue({ ok: true })
 
-    useActivityStore.getState().loadActivities()
-    useActivityStore.getState().removeByDocument('doc-1')
+    await useActivityStore.getState().removeByDocument('doc-1')
 
+    expect(activityApiMock.removeByDocument).toHaveBeenCalledWith('doc-1')
     expect(useActivityStore.getState().activities).toHaveLength(1)
     expect(useActivityStore.getState().activities[0].documentId).toBe('doc-2')
   })
 
-  it('removeByFolder filtra y persiste', () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([
-      { ...sampleActivity, id: 'a1', timestamp: 1 },
-      { type: 'folder_created', title: 'Proyecto B', folderId: 'proj-2', id: 'a2', timestamp: 2 },
-    ]))
+  it('removeByFolder borra en el API y filtra localmente', async () => {
+    useActivityStore.setState({
+      activities: [
+        { ...samplePayload, id: 'a1', timestamp: 1 },
+        { ...samplePayload, id: 'a2', folderId: 'proj-2', timestamp: 2 },
+      ],
+    })
+    activityApiMock.removeByFolder.mockResolvedValue({ ok: true })
 
-    useActivityStore.getState().loadActivities()
-    useActivityStore.getState().removeByFolder('proj-1')
+    await useActivityStore.getState().removeByFolder('proj-1')
 
+    expect(activityApiMock.removeByFolder).toHaveBeenCalledWith('proj-1')
     expect(useActivityStore.getState().activities).toHaveLength(1)
     expect(useActivityStore.getState().activities[0].folderId).toBe('proj-2')
   })

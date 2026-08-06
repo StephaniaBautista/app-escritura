@@ -162,11 +162,16 @@ export const branchService = {
       branchColorMap.set(b.id, BRANCH_COLORS[i % BRANCH_COLORS.length])
     })
 
+    const branchNameMap = new Map<string, string>()
+    for (const b of branches) {
+      branchNameMap.set(b.id, b.name)
+    }
+
     const nodes: GraphNode[] = versions.map((v) => ({
       id: v.id,
       version: v.version,
       branchId: v.branchId!,
-      branchName: branches.find((b) => b.id === v.branchId)?.name ?? 'unknown',
+      branchName: branchNameMap.get(v.branchId!) ?? 'unknown',
       title: v.title,
       createdAt: v.createdAt,
       parentIds: v.parents.map((p) => p.parentId),

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { getSessionUser } from '../lib/session.js'
+import { getSessionUser, requireSuperadmin } from '../lib/session.js'
 import { optionsService, type OptionType } from '../services/options-service.js'
 
 const VALID_TYPES: OptionType[] = ['rating', 'storyType', 'category', 'narrator', 'ending', 'fandom', 'tag', 'problem', 'ship', 'character']
@@ -7,7 +7,7 @@ const VALID_TYPES: OptionType[] = ['rating', 'storyType', 'category', 'narrator'
 export async function optionsRoutes(app: FastifyInstance) {
   app.get('/story-options', {
     schema: {
-      description: 'List story options (defaults + user custom) for a given type',
+      description: 'List global story options for a given type',
       tags: ['Story Options'],
       security: [{ cookieAuth: [] }],
       querystring: {
@@ -27,12 +27,12 @@ export async function optionsRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: { code: 'INVALID_TYPE', message: `Tipo inválido. Válidos: ${VALID_TYPES.join(', ')}` } })
     }
 
-    return optionsService.list(type as OptionType, user.id)
+    return optionsService.list(type as OptionType)
   })
 
   app.get('/story-options/all', {
     schema: {
-      description: 'List all story options (defaults + user custom) grouped by type',
+      description: 'List all global story options grouped by type',
       tags: ['Story Options'],
       security: [{ cookieAuth: [] }],
     },
@@ -40,12 +40,12 @@ export async function optionsRoutes(app: FastifyInstance) {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
-    return optionsService.listAll(user.id)
+    return optionsService.listAll()
   })
 
   app.post('/story-options', {
     schema: {
-      description: 'Create a user-custom story option',
+      description: 'Create a global story option',
       tags: ['Story Options'],
       security: [{ cookieAuth: [] }],
       body: {
@@ -67,15 +67,14 @@ export async function optionsRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: { code: 'INVALID_TYPE', message: 'Tipo inválido' } })
     }
 
-    const option = await optionsService.create(user.id, type as OptionType, value.trim(), label.trim())
-    if (!option) return reply.status(500).send({ error: { code: 'CREATE_FAILED', message: 'No se pudo crear la opción' } })
+    const option = await optionsService.create(type as OptionType, value.trim(), label.trim())
 
     return reply.status(201).send(option)
   })
 
   app.delete('/story-options/:id', {
     schema: {
-      description: 'Delete a user-custom story option (defaults cannot be deleted)',
+      description: 'Delete a global story option (superadmin only)',
       tags: ['Story Options'],
       security: [{ cookieAuth: [] }],
       params: {
@@ -85,11 +84,11 @@ export async function optionsRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const user = await getSessionUser(request)
-    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+    const user = await requireSuperadmin(request, reply)
+    if (!user) return
 
     const { id } = request.params as { id: string }
-    const deleted = await optionsService.delete(id, user.id)
+    const deleted = await optionsService.delete(id)
     if (!deleted) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Opción no encontrada o es un default' } })
 
     return { ok: true }

@@ -1,6 +1,6 @@
 import { Feather, Shield, Zap, Heart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 
 export function LandingFooter() {
   const { t } = useTranslation()

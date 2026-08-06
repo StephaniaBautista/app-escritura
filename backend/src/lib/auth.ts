@@ -47,6 +47,16 @@ export const auth = betterAuth({
       })
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        required: false,
+        defaultValue: 'user',
+        input: false,
+      },
+    },
+  },
   ...(Object.keys(socialProviders).length > 0 && { socialProviders }),
   session: {
     expiresIn: 60 * 60 * 24 * 365, // 1 year (effectively indefinite)

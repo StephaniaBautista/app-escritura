@@ -136,6 +136,28 @@ export const documentService = {
   },
 
   async create(userId: string, data: CreateDocumentInput) {
+    const project = await prisma.project.findFirst({
+      where: { id: data.projectId, userId },
+      select: { id: true },
+    })
+    if (!project) return null
+
+    if (data.folderId) {
+      const folder = await prisma.folder.findFirst({
+        where: { id: data.folderId, projectId: project.id },
+        select: { id: true },
+      })
+      if (!folder) return null
+    }
+
+    if (data.parentId) {
+      const parent = await prisma.document.findFirst({
+        where: { id: data.parentId, projectId: project.id, userId },
+        select: { id: true },
+      })
+      if (!parent) return null
+    }
+
     const document = await prisma.document.create({
       data: {
         title: data.title,
@@ -157,6 +179,22 @@ export const documentService = {
   async update(id: string, userId: string, data: UpdateDocumentInput) {
     const doc = await prisma.document.findFirst({ where: { id, userId } })
     if (!doc) return null
+
+    if (data.folderId) {
+      const folder = await prisma.folder.findFirst({
+        where: { id: data.folderId, projectId: doc.projectId },
+        select: { id: true },
+      })
+      if (!folder) return null
+    }
+
+    if (data.parentId) {
+      const parent = await prisma.document.findFirst({
+        where: { id: data.parentId, projectId: doc.projectId, userId },
+        select: { id: true },
+      })
+      if (!parent) return null
+    }
 
     return prisma.document.update({
       where: { id },
@@ -196,44 +234,88 @@ export const documentService = {
   async duplicate(id: string, userId: string) {
     const original = await prisma.document.findFirst({
       where: { id, userId },
-      include: {
-        children: { orderBy: { order: 'asc' } },
+      select: {
+        id: true,
+        projectId: true,
+        parentId: true,
+        title: true,
+        content: true,
+        type: true,
+        order: true,
+        folderId: true,
       },
     })
     if (!original) return null
 
-    const duplicateRecursive = async (doc: typeof original, newParentId: string | null) => {
-      const duplicated = await prisma.document.create({
+    const projectDocs = await prisma.document.findMany({
+      where: { projectId: original.projectId, userId },
+      select: {
+        id: true,
+        projectId: true,
+        parentId: true,
+        title: true,
+        content: true,
+        type: true,
+        order: true,
+        folderId: true,
+      },
+    })
+
+    const docById = new Map(projectDocs.map((d) => [d.id, d]))
+    const childrenMap = new Map<string, typeof projectDocs>()
+    for (const d of projectDocs) {
+      if (!d.parentId) continue
+      const arr = childrenMap.get(d.parentId) ?? []
+      arr.push(d)
+      childrenMap.set(d.parentId, arr)
+    }
+    for (const arr of childrenMap.values()) {
+      arr.sort((a, b) => a.order - b.order)
+    }
+
+    const subtree: typeof projectDocs = []
+    const queue: string[] = [original.id]
+    const visited = new Set<string>()
+    while (queue.length > 0) {
+      const currentId = queue.shift()!
+      if (visited.has(currentId)) continue
+      visited.add(currentId)
+      const node = currentId === original.id ? original : docById.get(currentId)
+      if (!node) continue
+      subtree.push(node)
+      for (const child of childrenMap.get(currentId) ?? []) {
+        queue.push(child.id)
+      }
+    }
+
+    const idMap = new Map<string, string>()
+    let duplicatedRoot: { id: string } | null = null
+
+    for (const node of subtree) {
+      const newParentId = node.parentId ? (idMap.get(node.parentId) ?? null) : original.parentId
+      const created = await prisma.document.create({
         data: {
-          title: newParentId === null ? `${doc.title} (Copia)` : doc.title,
-          content: doc.content ?? Prisma.JsonNull,
-          type: doc.type,
-          order: doc.order + 1,
+          title: newParentId === null ? `${node.title} (Copia)` : node.title,
+          content: node.content ?? Prisma.JsonNull,
+          type: node.type,
+          order: node.order + 1,
           userId,
-          projectId: doc.projectId,
-          folderId: doc.folderId,
+          projectId: node.projectId,
+          folderId: node.folderId,
           parentId: newParentId,
         },
       })
-
-      await branchService.ensureMainBranch(duplicated.id, userId)
-
-      if (doc.children && doc.children.length > 0) {
-        for (const child of doc.children) {
-          const childFull = await prisma.document.findFirst({
-            where: { id: child.id, userId },
-            include: { children: { orderBy: { order: 'asc' } } },
-          })
-          if (childFull) {
-            await duplicateRecursive(childFull, duplicated.id)
-          }
-        }
-      }
-
-      return duplicated
+      idMap.set(node.id, created.id)
+      if (node.id === original.id) duplicatedRoot = created
     }
 
-    return duplicateRecursive(original, original.parentId)
+    if (idMap.size > 0) {
+      await prisma.branch.createMany({
+        data: [...idMap.values()].map((newDocId) => ({ documentId: newDocId, name: 'main', userId })),
+      })
+    }
+
+    return duplicatedRoot
   },
 }
 

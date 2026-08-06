@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { MultiSelect } from './MultiSelect'
+import { Autocomplete } from './Autocomplete'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryPeopleProps {
@@ -29,7 +30,7 @@ export function StoryPeople({ meta, update }: StoryPeopleProps) {
         <label htmlFor="story-ships" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
           {t('storySetup.ships')}
         </label>
-        <MultiSelect
+        <Autocomplete
           id="story-ships"
           optionType="ship"
           value={meta.ships ?? []}

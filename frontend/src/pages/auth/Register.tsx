@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router'
 import { useTranslation, Trans } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { Feather, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, User } from 'lucide-react'

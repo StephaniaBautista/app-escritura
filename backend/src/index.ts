@@ -14,10 +14,15 @@ import { settingsRoutes } from './routes/settings.js'
 import { autoVersionRoutes } from './routes/auto-version.js'
 import { branchRoutes } from './routes/branches.js'
 import { optionsRoutes } from './routes/options.js'
+import { adminOptionsRoutes } from './routes/admin-options.js'
+import { activityRoutes } from './routes/activity.js'
 import { optionsService } from './services/options-service.js'
 
 const app = Fastify({
   logger: true,
+  // Trust X-Forwarded-* only when explicitly enabled (production behind a proxy).
+  // Keeps the rate-limit keyed on the real client IP; do NOT enable in dev.
+  trustProxy: process.env.TRUST_PROXY === 'true',
 })
 
 // Swagger/OpenAPI configuration
@@ -65,13 +70,17 @@ await app.register(swagger, {
   },
 })
 
-await app.register(swaggerUi, {
-  routePrefix: '/docs',
-  uiConfig: {
-    docExpansion: 'list',
-    deepLinking: true,
-  },
-})
+// Swagger UI only in development — exposing the full API schema in production
+// would let an attacker enumerate every endpoint.
+if (process.env.NODE_ENV !== 'production') {
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true,
+    },
+  })
+}
 
 // Plugins
 const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
@@ -136,25 +145,33 @@ await app.register(branchRoutes, { prefix: '/api' })
 // Story options routes
 await app.register(optionsRoutes, { prefix: '/api' })
 
-// API routes prefix
-app.register(async function apiRoutes(app) {
-  app.get('/api/test', {
-    schema: {
-      description: 'Test endpoint',
-      tags: ['System'],
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
+// Admin moderation routes (Fase 04c)
+await app.register(adminOptionsRoutes, { prefix: '/api' })
+
+// Activity feed routes (M29)
+await app.register(activityRoutes, { prefix: '/api' })
+
+// Test endpoint (development only)
+if (process.env.NODE_ENV !== 'production') {
+  app.register(async function apiRoutes(app) {
+    app.get('/api/test', {
+      schema: {
+        description: 'Test endpoint',
+        tags: ['System'],
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
           },
         },
       },
-    },
-  }, async () => {
-    return { message: 'API funcionando' }
-  })
-}, { prefix: '/api' })
+    }, async () => {
+      return { message: 'API funcionando' }
+    })
+  }, { prefix: '/api' })
+}
 
 // Start server
 const start = async () => {

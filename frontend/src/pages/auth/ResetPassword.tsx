@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Feather, Lock, Eye, EyeOff, ArrowRight, Loader2, CheckCircle } from 'lucide-react'
 

@@ -121,3 +121,8 @@ export type Diagram = Prisma.DiagramModel
  * 
  */
 export type StoryOption = Prisma.StoryOptionModel
+/**
+ * Model Activity
+ * 
+ */
+export type Activity = Prisma.ActivityModel

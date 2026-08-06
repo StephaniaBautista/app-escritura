@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
-import { MultiSelect } from './MultiSelect'
+import { Autocomplete } from './Autocomplete'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryCharactersProps {
@@ -31,7 +31,7 @@ export function StoryCharacters({ meta, update }: StoryCharactersProps) {
       <label htmlFor="story-characters" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
         {t('storySetup.characters')}
       </label>
-      <MultiSelect
+      <Autocomplete
         id="story-characters"
         optionType="character"
         value={characters.map((c) => c.name)}

@@ -11,7 +11,7 @@ vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
 }))
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useParams: () => ({ projectId: 'project-1' }),
   useNavigate: () => useNavigateMock,
 }))

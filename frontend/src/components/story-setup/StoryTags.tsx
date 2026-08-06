@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { MultiSelect } from './MultiSelect'
+import { Autocomplete } from './Autocomplete'
 import { SingleSelect } from './SingleSelect'
 import type { StoryMeta } from '@/types/story'
 
@@ -17,7 +17,7 @@ export function StoryTags({ meta, update }: StoryTagsProps) {
         <label htmlFor="story-tags" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
           {t('storySetup.tags')}
         </label>
-        <MultiSelect
+        <Autocomplete
           id="story-tags"
           optionType="tag"
           value={meta.tags ?? []}

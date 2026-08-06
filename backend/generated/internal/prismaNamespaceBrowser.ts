@@ -66,7 +66,8 @@ export const ModelName = {
   Character: 'Character',
   World: 'World',
   Diagram: 'Diagram',
-  StoryOption: 'StoryOption'
+  StoryOption: 'StoryOption',
+  Activity: 'Activity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,6 +93,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   emailVerified: 'emailVerified',
   image: 'image',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -287,7 +289,6 @@ export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeo
 
 export const StoryOptionScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
   type: 'type',
   value: 'value',
   label: 'label',
@@ -296,6 +297,19 @@ export const StoryOptionScalarFieldEnum = {
 } as const
 
 export type StoryOptionScalarFieldEnum = (typeof StoryOptionScalarFieldEnum)[keyof typeof StoryOptionScalarFieldEnum]
+
+
+export const ActivityScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  folderId: 'folderId',
+  documentId: 'documentId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
 export const SortOrder = {

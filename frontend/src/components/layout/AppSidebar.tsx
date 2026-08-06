@@ -1,7 +1,7 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen
+  Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen, ShieldCheck
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 
@@ -24,6 +24,9 @@ export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarPro
   const secondaryNav = [
     { path: '/app/recent', label: t('sidebar.recent'), icon: Clock },
     { path: '/app/shared', label: t('sidebar.shared'), icon: Users2 },
+    ...(user?.role === 'superadmin'
+      ? [{ path: '/app/admin', label: t('admin.title'), icon: ShieldCheck }]
+      : []),
   ]
 
   const isActive = (path: string) => {

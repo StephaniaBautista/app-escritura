@@ -1,74 +1,63 @@
 import { create } from 'zustand'
+import { activityApi, toActivityItem, type ActivityItem, type ActivityPayload } from '@/services/activity'
 
-export interface ActivityItem {
-  id: string
-  type: 'folder_created' | 'document_created' | 'document_edited'
-  title: string
-  folderId?: string
-  documentId?: string
-  timestamp: number
-}
+const MAX_ACTIVITIES = 20
 
 interface ActivityState {
   activities: ActivityItem[]
-  addActivity: (activity: Omit<ActivityItem, 'id' | 'timestamp'>) => void
-  loadActivities: () => void
-  removeByDocument: (documentId: string) => void
-  removeByFolder: (folderId: string) => void
+  isLoading: boolean
+  addActivity: (activity: ActivityPayload) => Promise<void>
+  loadActivities: () => Promise<void>
+  removeByDocument: (documentId: string) => Promise<void>
+  removeByFolder: (folderId: string) => Promise<void>
 }
-
-const STORAGE_KEY = 'archivum-activity'
-const LEGACY_STORAGE_KEY = 'escritura-activity'
-const MAX_ACTIVITIES = 20
 
 export const useActivityStore = create<ActivityState>()((set) => ({
   activities: [],
+  isLoading: false,
 
-  addActivity: (activity) => {
-    const newActivity: ActivityItem = {
-      ...activity,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      timestamp: Date.now(),
-    }
-
-    set((state) => {
-      const updated = [newActivity, ...state.activities].slice(0, MAX_ACTIVITIES)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      return { activities: updated }
-    })
-  },
-
-  loadActivities: () => {
+  loadActivities: async () => {
+    set({ isLoading: true })
     try {
-      let stored = localStorage.getItem(STORAGE_KEY)
-      if (!stored) {
-        stored = localStorage.getItem(LEGACY_STORAGE_KEY)
-        if (stored) {
-          localStorage.setItem(STORAGE_KEY, stored)
-          localStorage.removeItem(LEGACY_STORAGE_KEY)
-        }
-      }
-      if (stored) {
-        set({ activities: JSON.parse(stored) })
-      }
+      const rows = await activityApi.list()
+      set({ activities: rows.map(toActivityItem) })
     } catch {
-      // Ignore parse errors
+      set({ activities: [] })
+    } finally {
+      set({ isLoading: false })
     }
   },
 
-  removeByDocument: (documentId) => {
-    set((state) => {
-      const updated = state.activities.filter((a) => a.documentId !== documentId)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      return { activities: updated }
-    })
+  addActivity: async (activity) => {
+    try {
+      const created = await activityApi.create(activity)
+      set((state) => ({
+        activities: [toActivityItem(created), ...state.activities].slice(0, MAX_ACTIVITIES),
+      }))
+    } catch {
+      // Actividad no crítica: no romper el flujo si el registro falla
+    }
   },
 
-  removeByFolder: (folderId) => {
-    set((state) => {
-      const updated = state.activities.filter((a) => a.folderId !== folderId)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      return { activities: updated }
-    })
+  removeByDocument: async (documentId) => {
+    try {
+      await activityApi.removeByDocument(documentId)
+      set((state) => ({
+        activities: state.activities.filter((a) => a.documentId !== documentId),
+      }))
+    } catch {
+      // Sin cambios locales si el borrado remoto falla
+    }
+  },
+
+  removeByFolder: async (folderId) => {
+    try {
+      await activityApi.removeByFolder(folderId)
+      set((state) => ({
+        activities: state.activities.filter((a) => a.folderId !== folderId),
+      }))
+    } catch {
+      // Sin cambios locales si el borrado remoto falla
+    }
   },
 }))

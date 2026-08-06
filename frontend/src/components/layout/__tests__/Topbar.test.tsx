@@ -4,7 +4,7 @@ import { Topbar } from '../Topbar'
 
 const navigateMock = vi.fn()
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
   useLocation: () => ({ pathname: currentPath }),
   useNavigate: () => navigateMock,

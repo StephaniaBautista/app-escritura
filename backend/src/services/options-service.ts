@@ -4,7 +4,6 @@ export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'end
 
 export interface StoryOptionRow {
   id: string
-  userId: string | null
   type: string
   value: string
   label: string
@@ -12,45 +11,96 @@ export interface StoryOptionRow {
   createdAt: Date
 }
 
+export const SIMILARITY_THRESHOLD = 0.8
+
+export function normalizeOptionValue(value: string): string {
+  return value.toLowerCase().trim().replace(/\s+/g, ' ')
+}
+
+export function levenshteinDistance(a: string, b: string): number {
+  const m = a.length
+  const n = b.length
+  if (m === 0) return n
+  if (n === 0) return m
+  let prev = Array.from({ length: n + 1 }, (_, i) => i)
+  for (let i = 1; i <= m; i++) {
+    const curr = [i]
+    for (let j = 1; j <= n; j++) {
+      curr[j] = Math.min(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      )
+    }
+    prev = curr
+  }
+  return prev[n]
+}
+
+export function optionSimilarity(a: string, b: string): number {
+  const na = normalizeOptionValue(a)
+  const nb = normalizeOptionValue(b)
+  if (na === nb) return 1
+  const maxLen = Math.max(na.length, nb.length)
+  if (maxLen === 0) return 1
+  return 1 - levenshteinDistance(na, nb) / maxLen
+}
+
 export const optionsService = {
-  async list(type: OptionType, userId: string): Promise<StoryOptionRow[]> {
+  async list(type: OptionType): Promise<StoryOptionRow[]> {
     return prisma.storyOption.findMany({
-      where: {
-        type,
-        OR: [{ userId: null }, { userId }],
-      },
+      where: { type },
       orderBy: [{ isDefault: 'desc' }, { label: 'asc' }],
     })
   },
 
-  async listAll(userId: string): Promise<StoryOptionRow[]> {
+  async listAll(): Promise<StoryOptionRow[]> {
     return prisma.storyOption.findMany({
-      where: {
-        OR: [{ userId: null }, { userId }],
-      },
       orderBy: [{ type: 'asc' }, { isDefault: 'desc' }, { label: 'asc' }],
     })
   },
 
-  async create(userId: string, type: OptionType, value: string, label: string): Promise<StoryOptionRow | null> {
+  async create(type: OptionType, value: string, label: string): Promise<StoryOptionRow> {
     const existing = await prisma.storyOption.findFirst({
-      where: { userId, type, value },
+      where: { type, value: { equals: value, mode: 'insensitive' } },
     })
     if (existing) return existing
 
     return prisma.storyOption.create({
-      data: { userId, type, value, label, isDefault: false },
+      data: { type, value, label, isDefault: false },
     })
   },
 
-  async delete(id: string, userId: string): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const option = await prisma.storyOption.findFirst({
-      where: { id, userId, isDefault: false },
+      where: { id, isDefault: false },
     })
     if (!option) return false
 
     await prisma.storyOption.delete({ where: { id } })
     return true
+  },
+
+  async groups(type: OptionType): Promise<StoryOptionRow[][]> {
+    const options = await this.list(type)
+    const groups: StoryOptionRow[][] = []
+    const used = new Set<string>()
+
+    for (const opt of options) {
+      if (used.has(opt.id)) continue
+      const group = [opt]
+      used.add(opt.id)
+      for (const other of options) {
+        if (used.has(other.id)) continue
+        if (optionSimilarity(opt.value, other.value) >= SIMILARITY_THRESHOLD) {
+          group.push(other)
+          used.add(other.id)
+        }
+      }
+      groups.push(group)
+    }
+
+    return groups
   },
 
   async seedDefaults(): Promise<number> {
@@ -89,11 +139,11 @@ export const optionsService = {
     let created = 0
     for (const opt of defaults) {
       const exists = await prisma.storyOption.findFirst({
-        where: { userId: null, type: opt.type, value: opt.value },
+        where: { type: opt.type, value: opt.value },
       })
       if (!exists) {
         await prisma.storyOption.create({
-          data: { ...opt, userId: null, isDefault: true },
+          data: { ...opt, isDefault: true },
         })
         created++
       }

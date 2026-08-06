@@ -2,7 +2,6 @@ import type { OptionType } from '@/types/story'
 
 export interface StoryOption {
   id: string
-  userId: string | null
   type: string
   value: string
   label: string

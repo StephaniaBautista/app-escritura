@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Plus, FileText, BookOpen, FolderOpen, History } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'

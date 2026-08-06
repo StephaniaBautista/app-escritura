@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useActivityStore } from '@/stores/activity-store'
 import { getActivityIcon, getActivityLabel, getActivityLink } from '@/lib/activity-helpers'
 import { Clock } from 'lucide-react'

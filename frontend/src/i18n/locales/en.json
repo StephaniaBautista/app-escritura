@@ -776,5 +776,23 @@
       "registrationFailed": "Error registering user",
       "networkError": "Connection error. Please try again."
     }
+  },
+  "admin": {
+    "title": "Moderation",
+    "subtitle": "Review the options created by the community: spot duplicates, choose which one stays, and delete the rest.",
+    "keep": "Keep",
+    "keepThis": "Keep this one",
+    "delete": "Delete",
+    "deleteOthers": "Delete the others",
+    "deleted": "Option deleted",
+    "merged": "Duplicates merged",
+    "groupedBy": "grouped by similarity",
+    "noOptions": "No options of this type",
+    "types": {
+      "fandom": "Fandoms",
+      "ship": "Ships",
+      "character": "Characters",
+      "tag": "Tags"
+    }
   }
 }

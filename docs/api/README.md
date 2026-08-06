@@ -112,16 +112,33 @@ Reglas:
 - Detección de conflictos: diff por índice de nodos TipTap JSON contra el punto de bifurcación (`sourceVersionId` de la rama origen; fallback: primera versión del documento).
 - Mismas ramas → `400 MERGE_FAILED`.
 
-### Story Options (2026-08-04, Fase 4; M28: + ship, character)
-- `GET /api/story-options?type=rating|storyType|category|narrator|ending|fandom|tag|problem|ship|character` - Listar opciones (defaults del sistema + custom del usuario)
-- `GET /api/story-options/all` - Listar todas las opciones agrupadas por tipo
-- `POST /api/story-options` - Crear opción custom `{ type, value, label }`
-- `DELETE /api/story-options/:id` - Eliminar opción custom del usuario (los defaults no se pueden eliminar)
+### Story Options (2026-08-04, Fase 4; M28: + ship, character; Fase 04b: globales)
+- `GET /api/story-options?type=rating|storyType|category|narrator|ending|fandom|tag|problem|ship|character` - Listar opciones **globales** de un tipo (mismas para todos los usuarios)
+- `GET /api/story-options/all` - Listar todas las opciones globales agrupadas por tipo
+- `POST /api/story-options` - Crear opción global `{ type, value, label }` (cualquier usuario autenticado; dedupe case-insensitive)
+- `DELETE /api/story-options/:id` - Eliminar opción global (**solo superadmin**; los defaults no se pueden eliminar)
 
 Reglas:
-- **Defaults**: `userId=null, isDefault=true`. Seedeados al arrancar el servidor. Compartidos entre todos los usuarios.
-- **Custom por usuario**: `userId=X, isDefault=false`. Creadas por el usuario, reutilizables entre proyectos.
-- `@@unique([userId, type, value])` evita duplicados por usuario+tipo.
+- **Global**: todas las opciones son compartidas por todos los usuarios (modelo AO3). `fandom`, `ship`, `character`, `tag` se consumen con autocompletado en el wizard; los demás con select.
+- **Defaults**: `isDefault=true`, seedeados al arrancar el servidor.
+- `@@unique([type, value])` evita duplicados; el servicio además deduplica case-insensitive.
+- La creación requiere sesión; el listado devuelve el pool completo.
+
+### Admin: Moderación (2026-08-06, Fase 04c)
+- `GET /api/admin/story-options/groups?type=...` (**superadmin**) - Listar opciones del tipo agrupadas por **similitud de texto** (normalización + Levenshtein ≥ 0.8)
+- `DELETE /api/admin/story-options/:id` (**superadmin**) - Eliminar una opción global (sin tocar defaults)
+- **Rol**: campo `User.role` (`'user' | 'superadmin'`), asignado manualmente en BD. `session.user.role` expuesto por BetterAuth (`additionalFields`).
+- Guard: `requireSuperadmin` → 401 sin sesión, 403 si el rol no es superadmin.
+
+### Activity (2026-08-06, M29)
+- `GET /api/activity` - Listar la actividad reciente del usuario (más reciente primero, máx. 20)
+- `POST /api/activity` - Crear entrada `{ type, title, folderId?, documentId? }` (`type`: `folder_created | document_created | document_edited`)
+- `DELETE /api/activity/document/:documentId` - Eliminar las entradas de actividad de un documento
+- `DELETE /api/activity/folder/:folderId` - Eliminar las entradas de actividad de un proyecto/carpeta
+
+Reglas:
+- El feed de actividad reciente migró de `localStorage` al backend (M29): cada usuario solo ve su propia actividad (ownership por `userId` en todas las operaciones).
+- Las entradas se crean desde el frontend al crear/editar documentos y carpetas; se limpian al eliminar el recurso.
 
 ## Autenticacion
 
@@ -131,7 +148,7 @@ La sesion se valida contra la DB solo al refrescar (`updateAge`, 1 dia); entre m
 
 ## Swagger UI
 
-La documentacion interactiva esta disponible en:
+La documentacion interactiva esta disponible en **desarrollo** (no se registra en produccion, M29):
 
 ```
 http://localhost:3001/docs

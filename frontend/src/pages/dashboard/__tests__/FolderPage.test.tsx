@@ -8,7 +8,7 @@ vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
 }))
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
   useParams: () => ({ folderId: 'folder-1' }),
   useSearchParams: () => [new URLSearchParams('tab=documents'), vi.fn()],

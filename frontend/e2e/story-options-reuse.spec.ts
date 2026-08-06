@@ -1,60 +1,60 @@
 import { test, expect, type APIRequestContext } from '@playwright/test'
 
 const API = 'http://127.0.0.1:3001/api'
+const PASSWORD = 'Test1234!'
+const EMAIL_A = 'test@archivum.app'
+const EMAIL_B = `global-options-${Date.now()}@archivum.app`
 
-let ctx: { request: APIRequestContext; projectId: string; shipId: string; characterId: string; tagId: string; fandomId: string | null }
+let ctx: { requestA: APIRequestContext; requestB: APIRequestContext; projectA: string; createdOptionIds: string[] }
 
-test.describe('Story options reuse per account', () => {
+test.describe('Story options global + autocomplete', () => {
   test.beforeAll(async ({ playwright }) => {
-    const request = await playwright.request.newContext({
-      extraHTTPHeaders: { 'Content-Type': 'application/json' },
+    const requestA = await playwright.request.newContext({
+      extraHTTPHeaders: { 'Content-Type': 'application/json', Origin: 'http://localhost:5173' },
     })
-
-    const loginRes = await request.post(`${API}/auth/sign-in/email`, {
-      data: { email: 'test@archivum.app', password: 'Test1234!' },
+    const loginA = await requestA.post(`${API}/auth/sign-in/email`, {
+      data: { email: EMAIL_A, password: PASSWORD },
       maxRedirects: 5,
     })
-    expect(loginRes.status()).toBeLessThan(400)
+    expect(loginA.status()).toBeLessThan(400)
 
-    const projectRes = await request.post(`${API}/projects`, {
-      data: { name: 'Test Story Options Reuse' },
+    const requestB = await playwright.request.newContext({
+      extraHTTPHeaders: { 'Content-Type': 'application/json', Origin: 'http://localhost:5173' },
     })
-    const project = await projectRes.json()
+    const signUpB = await requestB.post(`${API}/auth/sign-up/email`, {
+      data: { email: EMAIL_B, password: PASSWORD, name: 'Global Options B' },
+      maxRedirects: 5,
+    })
+    expect(signUpB.status()).toBeLessThan(400)
 
-    const ship = await (await request.post(`${API}/story-options`, {
-      data: { type: 'ship', value: 'Test Ship E2E', label: 'Test Ship E2E' },
-    })).json()
-    const character = await (await request.post(`${API}/story-options`, {
-      data: { type: 'character', value: 'Test Character E2E', label: 'Test Character E2E' },
-    })).json()
-    const tag = await (await request.post(`${API}/story-options`, {
-      data: { type: 'tag', value: 'Test Tag E2E', label: 'Test Tag E2E' },
+    const projectA = await (await requestA.post(`${API}/projects`, {
+      data: { name: 'Test Global Options A' },
     })).json()
 
-    ctx = { request, projectId: project.id, shipId: ship.id, characterId: character.id, tagId: tag.id, fandomId: null }
+    ctx = { requestA, requestB, projectA: projectA.id, createdOptionIds: [] }
   })
 
   test.afterAll(async () => {
-    if (ctx?.request) {
-      if (ctx.fandomId) await ctx.request.delete(`${API}/story-options/${ctx.fandomId}`).catch(() => {})
-      if (ctx.tagId) await ctx.request.delete(`${API}/story-options/${ctx.tagId}`).catch(() => {})
-      if (ctx.characterId) await ctx.request.delete(`${API}/story-options/${ctx.characterId}`).catch(() => {})
-      if (ctx.shipId) await ctx.request.delete(`${API}/story-options/${ctx.shipId}`).catch(() => {})
-      if (ctx.projectId) await ctx.request.delete(`${API}/projects/${ctx.projectId}`).catch(() => {})
-      await ctx.request.dispose()
+    if (ctx?.requestA) {
+      for (const id of ctx.createdOptionIds) {
+        await ctx.requestA.delete(`${API}/story-options/${id}`).catch(() => {})
+      }
+      await ctx.requestA.delete(`${API}/projects/${ctx.projectA}`).catch(() => {})
+      await ctx.requestA.dispose()
+      await ctx.requestB.dispose()
     }
   })
 
-  async function login(page: import('@playwright/test').Page) {
+  async function login(page: import('@playwright/test').Page, email: string) {
     await page.goto('/login')
-    await page.fill('input[name="email"]', 'test@archivum.app')
-    await page.fill('input[name="password"]', 'Test1234!')
+    await page.fill('input[name="email"]', email)
+    await page.fill('input[name="password"]', PASSWORD)
     await page.click('button[type="submit"]')
     await page.waitForURL('/app')
   }
 
-  async function openWizardBasicsFanfic(page: import('@playwright/test').Page) {
-    await page.goto(`/app/documents/${ctx.projectId}`)
+  async function openWizardBasicsFanfic(page: import('@playwright/test').Page, projectId: string) {
+    await page.goto(`/app/documents/${projectId}`)
     await page.getByRole('button', { name: 'Complete story' }).click()
     const dialog = page.getByRole('dialog')
     await dialog.getByRole('button', { name: /Basics/ }).click()
@@ -65,56 +65,42 @@ test.describe('Story options reuse per account', () => {
     )
     await dialog.getByLabel('Fanfic?').selectOption('yes')
     await fandomLoaded
-    await expect(dialog.locator('select').filter({ hasText: 'e.g. Harry Potter' })).toBeVisible()
+    await expect(dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')).toBeVisible()
   }
 
-  test('agrega un fandom custom: aparece chip y el dropdown muestra la opción marcada (no vacío)', async ({ page }) => {
-    await login(page)
-    await openWizardBasicsFanfic(page)
+  test('cuenta A crea fandoms y ships globales desde el autocompletado del wizard', async ({ page }) => {
+    await login(page, EMAIL_A)
+    await openWizardBasicsFanfic(page, ctx.projectA)
 
     const dialog = page.getByRole('dialog')
-    const fandomSelect = dialog.locator('select').filter({ hasText: 'e.g. Harry Potter' })
-
-    await dialog.getByRole('button', { name: 'Add custom option' }).last().click()
-    const input = dialog.getByPlaceholder('Type the option...')
-    await expect(input).toBeVisible()
-    await input.fill('Test Fandom E2E')
-    await input.press('Enter')
-
-    await expect(dialog.getByText('Test Fandom E2E', { exact: true })).toBeVisible()
-
-    const fandomIdRes = await ctx.request.get(`${API}/story-options?type=fandom`)
-    const fandoms = await fandomIdRes.json()
-    const created = fandoms.find((o: { value: string }) => o.value === 'Test Fandom E2E')
-    ctx.fandomId = created?.id ?? null
-
-    const checked = fandomSelect.locator('option', { hasText: '✓ Test Fandom E2E' })
-    await expect(checked.first()).toBeAttached()
-    await expect(checked.first()).toBeDisabled()
-  })
-
-  test('el fandom guardado aparece en el dropdown tras recargar (reutilizable)', async ({ page }) => {
-    await login(page)
-    await openWizardBasicsFanfic(page)
-
-    const dialog = page.getByRole('dialog')
-    const fandomSelect = dialog.locator('select').filter({ hasText: 'e.g. Harry Potter' })
-    await expect(fandomSelect.locator('option', { hasText: 'Test Fandom E2E' }).first()).toBeAttached({ timeout: 15000 })
-  })
-
-  test('ships, personajes y etiquetas guardadas por cuenta aparecen en el wizard', async ({ page }) => {
-    await login(page)
-    await openWizardBasicsFanfic(page)
-
-    const dialog = page.getByRole('dialog')
+    const fandomInput = dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')
+    await fandomInput.fill('E2E Global Fandom')
+    await fandomInput.press('Enter')
+    await expect(dialog.getByText('E2E Global Fandom', { exact: true })).toBeVisible()
 
     await dialog.getByRole('button', { name: /Couples/ }).click()
-    await expect(dialog.locator('select#story-ships option', { hasText: 'Test Ship E2E' }).first()).toBeAttached()
+    const shipsInput = dialog.locator('#story-ships')
+    await expect(shipsInput).toBeVisible()
+    await shipsInput.fill('E2E Global Ship')
+    await shipsInput.press('Enter')
+    await expect(dialog.getByText('E2E Global Ship', { exact: true })).toBeVisible()
 
-    await dialog.getByRole('button', { name: /Characters/ }).click()
-    await expect(dialog.locator('select#story-characters option', { hasText: 'Test Character E2E' }).first()).toBeAttached()
+    const fandoms = await (await ctx.requestA.get(`${API}/story-options?type=fandom`)).json()
+    const fandom = fandoms.find((o: { value: string }) => o.value === 'E2E Global Fandom')
+    expect(fandom).toBeTruthy()
+    ctx.createdOptionIds.push(fandom.id)
 
-    await dialog.getByRole('button', { name: /Tags & narrator/ }).click()
-    await expect(dialog.locator('select#story-tags option', { hasText: 'Test Tag E2E' }).first()).toBeAttached()
+    const ships = await (await ctx.requestA.get(`${API}/story-options?type=ship`)).json()
+    const ship = ships.find((o: { value: string }) => o.value === 'E2E Global Ship')
+    expect(ship).toBeTruthy()
+    ctx.createdOptionIds.push(ship.id)
+  })
+
+  test('la cuenta B ve el pool global (opciones creadas por A) a través de su propia sesión', async () => {
+    const fandoms = await (await ctx.requestB.get(`${API}/story-options?type=fandom`)).json()
+    expect(fandoms.some((o: { value: string }) => o.value === 'E2E Global Fandom')).toBe(true)
+
+    const ships = await (await ctx.requestB.get(`${API}/story-options?type=ship`)).json()
+    expect(ships.some((o: { value: string }) => o.value === 'E2E Global Ship')).toBe(true)
   })
 })

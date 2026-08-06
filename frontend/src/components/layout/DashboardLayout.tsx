@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { Topbar } from '@/components/layout/Topbar'
 import { ToastContainer } from '@/components/ui/ToastContainer'

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { SingleSelect } from './SingleSelect'
 import { MultiSelect } from './MultiSelect'
+import { Autocomplete } from './Autocomplete'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryBasicsProps {
@@ -68,7 +69,7 @@ export function StoryBasics({ meta, update }: StoryBasicsProps) {
             <p className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
               {t('storySetup.fandoms')}
             </p>
-            <MultiSelect
+            <Autocomplete
               optionType="fandom"
               value={meta.fandoms ?? []}
               onChange={(fandoms) => update({ fandoms })}

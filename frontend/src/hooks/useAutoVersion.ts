@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { autoVersionApi } from '@/services/settings'
 import { useSettingsStore } from '@/stores/settings-store'
 import { useBranchStore } from '@/stores/branch-store'
