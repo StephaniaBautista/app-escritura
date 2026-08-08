@@ -50,7 +50,8 @@ frontend/src/
 │   │   ├── InputDialog.tsx     ← Modal con input de texto
 │   │   ├── KebabMenu.tsx       ← Menú de 3 puntos (acciones)
 │   │   ├── ToastContainer.tsx  ← Notificaciones toast
-│   │   └── EditableTitle.tsx   ← Título editable inline
+│   │   ├── EditableTitle.tsx   ← Título editable inline
+│   │   └── I18nBoundary.tsx    ← Suspense por ruta: declara namespaces lazy (M31)
 │   ├── editor/
 │   │   ├── DocumentEditor.tsx  ← TipTap wrapper
 │   │   ├── Toolbar.tsx         ← Formato de texto
@@ -100,24 +101,33 @@ frontend/src/
     └── language.ts             ← applySavedLanguage (sin localStorage, regla 22)
 
 backend/src/
-├── index.ts                    ← Fastify server, CORS, Helmet, rate-limit
+├── index.ts                    ← Fastify server, CORS, Helmet, rate-limit, swagger
 ├── routes/
 │   ├── auth.ts                 ← BetterAuth catch-all + rate limit auth
 │   ├── projects.ts             ← CRUD proyectos
 │   ├── documents.ts            ← CRUD documentos
 │   ├── notes.ts                ← CRUD notas (Fase 3)
-│   └── versions.ts             ← Versionado: listar/crear/obtener/restaurar (Fase 3)
+│   ├── versions.ts             ← Versionado: listar/crear/obtener/restaurar (Fase 3)
+│   ├── settings.ts             ← UserSettings (M22)
+│   ├── activity.ts             ← Activity feed (M29)
+│   ├── i18n.ts                 ← GET /api/i18n/:lng/:ns (M31)
+│   └── options.ts, admin-*.ts, etc. ← Story options + admin (Fase 04)
 ├── services/
 │   ├── document-service.ts     ← Prisma queries (proyectos + documentos)
 │   ├── note-service.ts         ← CRUD notas con ownership, ámbito documento/proyecto, isHidden (Fase 3 + M15)
-│   └── version-service.ts      ← Snapshots, límite 50 FIFO, restore (Fase 3)
+│   ├── version-service.ts      ← Snapshots, límite 50 FIFO, restore (Fase 3)
+│   ├── options-service.ts      ← Story options globales + cache en memoria (M31 T7)
+│   ├── i18n-service.ts         ← Namespaces de traducción + cache mtime-aware (M31)
+│   └── activity-service.ts     ← Activity feed (M29)
 ├── lib/
 │   ├── auth.ts                 ← BetterAuth config
 │   ├── prisma.ts               ← Prisma client (valida DATABASE_URL)
 │   ├── email.ts                ← Nodemailer SMTP
-│   └── session.ts              ← getSessionUser compartido (Fase 3)
+│   ├── session.ts              ← getSessionUser compartido (Fase 3)
+│   ├── cache.ts                ← MemoryCache<T> genérico con TTL (M31 T7)
+│   └── trusted-host.ts, security-log.ts, auth-error-normalizer.ts (M29)
 └── prisma/
-    └── schema.prisma           ← 12 modelos (User, Session, Account, Verification, Project, Folder, Document, Note, DocumentVersion, Character, World, Diagram, StoryOption)
+    └── schema.prisma           ← Modelos (User, Session, ..., Project, Folder, Document, Note, DocumentVersion, Character, World, Diagram, StoryOption, Role, Activity, UserSettings)
 ```
 
 ---
@@ -153,6 +163,14 @@ backend/src/
 22. **Localstorage** Jamás uses localstorage. Usa Zustand con persistencia de datos en el backend. Para nada, en ningún concepto, debe usarse localstorage.
 23. **Ambiguedad** Prefiero que me preguntes y uses la skill de entrevista, todas tus dudas, antes de que empieces a sobrepensar. Ahorrar tokens debe ser vital. Cualquier duda que tengas, debes preguntarme a mi. 
 24. **Orden** Las paginas se deben agrupar en carpetas por sus funciones y que se relacione con su nombre. Por ejemplo: Si es una pagina de login, debe estar en una carpeta que se llame login. Si es una pagina de registro, debe estar en una carpeta que se llame register.
+25. **i18n con namespaces + lazy loading híbrido (M31)** — las traducciones viven en la raíz del repo en `locales/{es,en}/{namespace}.json` (un archivo por namespace, es y en siempre en paridad) + `locales/manifest.json` (lista de namespaces y el set `core`). La fuente única es `locales/`; el backend la sirve por `GET /api/i18n/:lng/:ns` y el frontend la consume así:
+    - **Core (24 namespaces)** se empaqueta estático (primer paint sin red): los importa `frontend/src/i18n/core-resources.ts` desde `locales/`.
+    - **Lazy (7 namespaces)**: `storySetup`, `notes`, `postit`, `versions`, `branches`, `editorApp`, `admin` — se cargan por HTTP bajo demanda. **Al añadir un namespace nuevo, si es de una pantalla app-interna debe ir a lazy; solo se añade a core si es necesario en el primer paint (landing/auth/shell).**
+    - `nsSeparator: '.'` en `i18n/index.ts` → las claves se escriben como `t('editorApp.addSubtab')` (la sección es el namespace, el resto la key). **No cambiar el formato de las claves** (rompería la resolución).
+    - Cada ruta declara sus namespaces con `<I18nBoundary namespaces={[...]}>` en `App.tsx` (Suspense). Si una página usa un namespace lazy y no está en su boundary, aparecerán claves sin traducir en pantalla.
+    - **Editar traducciones siempre en UTF-8 sin BOM.** Nunca editar JSON con PowerShell (corrompe la codificación, error real sufrido en M31). Reutilizar `scripts/split-locales.mjs` para regenerar/validar paridad.
+    - **Regla 22 aplica**: el detector de idioma NO usa localStorage; el idioma se persiste en `UserSettings.language` vía `/api/settings` (`i18n/language.ts` + `LanguageSwitcher`).
+26. **Cache de datos globales (M31 T7)** — los datos idénticos para todos los usuarios (story-options, traducciones) se cachean en memoria con `backend/src/lib/cache.ts` (`MemoryCache<T>`, TTL + maxEntries). No cachear datos por-usuario. El cache de `i18n-service` es **mtime-aware** (se invalida al editar el archivo, no espera el TTL). Al escalar a varias instancias, sustituir por Redis/Upstash manteniendo la API get/set/delete/clear.
 
 ---
 
@@ -167,6 +185,9 @@ cd frontend && npx vite build
 
 # Dev
 pnpm dev  # (desde raíz, corre frontend + backend)
+
+# i18n: validar/regenerar paridad es/en desde locales/ (M31)
+node scripts/split-locales.mjs
 ```
 
 ---
@@ -245,4 +266,4 @@ Los skills se cargan automáticamente según el contexto. Si necesitas que siga 
 
 ---
 
-*Última actualización: 2026-07-31*
+*Última actualización: 2026-08-08*
