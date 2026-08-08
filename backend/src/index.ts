@@ -15,8 +15,13 @@ import { autoVersionRoutes } from './routes/auto-version.js'
 import { branchRoutes } from './routes/branches.js'
 import { optionsRoutes } from './routes/options.js'
 import { adminOptionsRoutes } from './routes/admin-options.js'
+import { adminRolesRoutes } from './routes/admin-roles.js'
+import { adminUsersRoutes } from './routes/admin-users.js'
+import { meRoutes } from './routes/me.js'
 import { activityRoutes } from './routes/activity.js'
+import { i18nRoutes } from './routes/i18n.js'
 import { optionsService } from './services/options-service.js'
+import { roleService } from './services/role-service.js'
 
 const app = Fastify({
   logger: true,
@@ -66,6 +71,7 @@ await app.register(swagger, {
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
       { name: 'Story Options', description: 'Opciones reutilizables del wizard de creación' },
+      { name: 'i18n', description: 'Traducciones por namespace (público, cacheado)' },
     ],
   },
 })
@@ -148,8 +154,18 @@ await app.register(optionsRoutes, { prefix: '/api' })
 // Admin moderation routes (Fase 04c)
 await app.register(adminOptionsRoutes, { prefix: '/api' })
 
+// Admin roles + users routes (Fase 04c)
+await app.register(adminRolesRoutes, { prefix: '/api' })
+await app.register(adminUsersRoutes, { prefix: '/api' })
+
+// Current user (role + permissions)
+await app.register(meRoutes, { prefix: '/api' })
+
 // Activity feed routes (M29)
 await app.register(activityRoutes, { prefix: '/api' })
+
+// i18n translation namespaces (M31)
+await app.register(i18nRoutes, { prefix: '/api' })
 
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {
@@ -183,6 +199,9 @@ const start = async () => {
 
     const seeded = await optionsService.seedDefaults()
     if (seeded > 0) console.log(`Seeded ${seeded} default story options`)
+
+    const seededRoles = await roleService.seedDefaults()
+    if (seededRoles > 0) console.log(`Seeded ${seededRoles} default roles`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

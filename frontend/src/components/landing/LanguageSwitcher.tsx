@@ -1,12 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import { Globe } from 'lucide-react'
+import { settingsApi } from '@/services/settings'
+import { useAuthStore } from '@/stores/auth-store'
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const newLang = i18n.language === 'es' ? 'en' : 'es'
     i18n.changeLanguage(newLang)
+    if (isAuthenticated) {
+      try {
+        await settingsApi.update({ language: newLang })
+      } catch {
+        // La preferencia de idioma no persiste si el guardado falla, pero el cambio aplica
+      }
+    }
   }
 
   return (

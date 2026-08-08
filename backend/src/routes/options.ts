@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { getSessionUser, requireSuperadmin } from '../lib/session.js'
+import { getSessionUser, requirePermission } from '../lib/session.js'
 import { optionsService, type OptionType } from '../services/options-service.js'
 
 const VALID_TYPES: OptionType[] = ['rating', 'storyType', 'category', 'narrator', 'ending', 'fandom', 'tag', 'problem', 'ship', 'character']
@@ -14,6 +14,7 @@ export async function optionsRoutes(app: FastifyInstance) {
         type: 'object',
         properties: {
           type: { type: 'string', enum: VALID_TYPES },
+          fandoms: { type: 'string', description: 'Fandoms (separados por coma) para filtrar ships/characters' },
         },
         required: ['type'],
       },
@@ -22,12 +23,15 @@ export async function optionsRoutes(app: FastifyInstance) {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
-    const { type } = request.query as { type: string }
+    const { type, fandoms } = request.query as { type: string; fandoms?: string }
     if (!VALID_TYPES.includes(type as OptionType)) {
       return reply.status(400).send({ error: { code: 'INVALID_TYPE', message: `Tipo inválido. Válidos: ${VALID_TYPES.join(', ')}` } })
     }
 
-    return optionsService.list(type as OptionType)
+    const opts = fandoms === undefined
+      ? undefined
+      : { fandoms: fandoms.split(',').map((f) => f.trim()).filter(Boolean) }
+    return optionsService.list(type as OptionType, opts)
   })
 
   app.get('/story-options/all', {
@@ -54,6 +58,7 @@ export async function optionsRoutes(app: FastifyInstance) {
           type: { type: 'string', enum: VALID_TYPES },
           value: { type: 'string', minLength: 1, maxLength: 200 },
           label: { type: 'string', minLength: 1, maxLength: 200 },
+          fandoms: { type: 'array', items: { type: 'string', maxLength: 200 }, maxItems: 20 },
         },
         required: ['type', 'value', 'label'],
       },
@@ -62,12 +67,12 @@ export async function optionsRoutes(app: FastifyInstance) {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
-    const { type, value, label } = request.body as { type: string; value: string; label: string }
+    const { type, value, label, fandoms } = request.body as { type: string; value: string; label: string; fandoms?: string[] }
     if (!VALID_TYPES.includes(type as OptionType)) {
       return reply.status(400).send({ error: { code: 'INVALID_TYPE', message: 'Tipo inválido' } })
     }
 
-    const option = await optionsService.create(type as OptionType, value.trim(), label.trim())
+    const option = await optionsService.create(type as OptionType, value.trim(), label.trim(), fandoms)
 
     return reply.status(201).send(option)
   })
@@ -84,7 +89,7 @@ export async function optionsRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const user = await requireSuperadmin(request, reply)
+    const user = await requirePermission(request, reply, 'moderate')
     if (!user) return
 
     const { id } = request.params as { id: string }

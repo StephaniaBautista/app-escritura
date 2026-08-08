@@ -1,0 +1,15 @@
+{
+  "tag": "Organize",
+  "title": "Trello-style board",
+  "description": "Customizable columns. Drag chapters, characters, documents.",
+  "start": "Start",
+  "startCard1": "Introduction",
+  "startCard2": "Current state",
+  "development": "Development",
+  "devCard1": "Incident",
+  "devCard2": "Key scenes",
+  "climax": "Climax",
+  "climaxCard": "Plot twist",
+  "conclusion": "Conclusion",
+  "addCard": "+ Add card"
+}

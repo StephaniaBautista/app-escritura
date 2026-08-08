@@ -2,12 +2,17 @@ import { create } from 'zustand'
 import { storyOptionsApi, type StoryOption } from '@/services/options'
 import type { OptionType } from '@/types/story'
 
+export function optionCacheKey(type: OptionType, fandoms?: string[]): string {
+  if (fandoms === undefined) return type
+  return `${type}::${fandoms.length > 0 ? fandoms.join('|') : 'general'}`
+}
+
 interface OptionsState {
   options: Record<string, StoryOption[]>
   loading: Record<string, boolean>
 
-  loadOptions: (type: OptionType) => Promise<void>
-  addOption: (type: OptionType, value: string, label: string) => Promise<StoryOption>
+  loadOptions: (type: OptionType, fandoms?: string[]) => Promise<void>
+  addOption: (type: OptionType, value: string, label: string, fandoms?: string[]) => Promise<StoryOption>
   removeOption: (type: OptionType, id: string) => Promise<void>
   getOptions: (type: OptionType) => StoryOption[]
 }
@@ -16,29 +21,31 @@ export const useOptionsStore = create<OptionsState>()((set, get) => ({
   options: {},
   loading: {},
 
-  loadOptions: async (type: OptionType) => {
-    if (get().loading[type]) return
-    set((s) => ({ loading: { ...s.loading, [type]: true } }))
+  loadOptions: async (type: OptionType, fandoms?: string[]) => {
+    const key = optionCacheKey(type, fandoms)
+    if (get().loading[key] || get().options[key]) return
+    set((s) => ({ loading: { ...s.loading, [key]: true } }))
     try {
-      const options = await storyOptionsApi.list(type)
+      const options = await storyOptionsApi.list(type, fandoms)
       set((s) => ({
-        options: { ...s.options, [type]: options },
-        loading: { ...s.loading, [type]: false },
+        options: { ...s.options, [key]: options },
+        loading: { ...s.loading, [key]: false },
       }))
     } catch {
-      set((s) => ({ loading: { ...s.loading, [type]: false } }))
+      set((s) => ({ loading: { ...s.loading, [key]: false } }))
     }
   },
 
-  addOption: async (type: OptionType, value: string, label: string) => {
-    const option = await storyOptionsApi.create(type, value, label)
+  addOption: async (type: OptionType, value: string, label: string, fandoms?: string[]) => {
+    const option = await storyOptionsApi.create(type, value, label, fandoms)
     set((s) => {
-      const current = s.options[type] ?? []
+      const key = optionCacheKey(type, fandoms)
+      const current = s.options[key] ?? []
       if (current.some((o) => o.value === option.value)) return {}
       return {
         options: {
           ...s.options,
-          [type]: [...current, option],
+          [key]: [...current, option],
         },
       }
     })

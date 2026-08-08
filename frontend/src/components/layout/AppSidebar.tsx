@@ -12,7 +12,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarProps) {
-  const { user, logout } = useAuthStore()
+  const { user, permissions, logout } = useAuthStore()
   const location = useLocation()
   const { t } = useTranslation()
 
@@ -24,7 +24,7 @@ export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarPro
   const secondaryNav = [
     { path: '/app/recent', label: t('sidebar.recent'), icon: Clock },
     { path: '/app/shared', label: t('sidebar.shared'), icon: Users2 },
-    ...(user?.role === 'superadmin'
+    ...(permissions.includes('admin')
       ? [{ path: '/app/admin', label: t('admin.title'), icon: ShieldCheck }]
       : []),
   ]

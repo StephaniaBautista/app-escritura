@@ -47,6 +47,7 @@ export type StoryOptionCountAggregateOutputType = {
   type: number
   value: number
   label: number
+  fandoms: number
   isDefault: number
   createdAt: number
   _all: number
@@ -76,6 +77,7 @@ export type StoryOptionCountAggregateInputType = {
   type?: true
   value?: true
   label?: true
+  fandoms?: true
   isDefault?: true
   createdAt?: true
   _all?: true
@@ -158,6 +160,7 @@ export type StoryOptionGroupByOutputType = {
   type: string
   value: string
   label: string
+  fandoms: string[]
   isDefault: boolean
   createdAt: Date
   _count: StoryOptionCountAggregateOutputType | null
@@ -188,6 +191,7 @@ export type StoryOptionWhereInput = {
   type?: Prisma.StringFilter<"StoryOption"> | string
   value?: Prisma.StringFilter<"StoryOption"> | string
   label?: Prisma.StringFilter<"StoryOption"> | string
+  fandoms?: Prisma.StringNullableListFilter<"StoryOption">
   isDefault?: Prisma.BoolFilter<"StoryOption"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StoryOption"> | Date | string
 }
@@ -197,6 +201,7 @@ export type StoryOptionOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   value?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  fandoms?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -210,6 +215,7 @@ export type StoryOptionWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"StoryOption"> | string
   value?: Prisma.StringFilter<"StoryOption"> | string
   label?: Prisma.StringFilter<"StoryOption"> | string
+  fandoms?: Prisma.StringNullableListFilter<"StoryOption">
   isDefault?: Prisma.BoolFilter<"StoryOption"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StoryOption"> | Date | string
 }, "id" | "type_value">
@@ -219,6 +225,7 @@ export type StoryOptionOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   value?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  fandoms?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.StoryOptionCountOrderByAggregateInput
@@ -234,6 +241,7 @@ export type StoryOptionScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"StoryOption"> | string
   value?: Prisma.StringWithAggregatesFilter<"StoryOption"> | string
   label?: Prisma.StringWithAggregatesFilter<"StoryOption"> | string
+  fandoms?: Prisma.StringNullableListFilter<"StoryOption">
   isDefault?: Prisma.BoolWithAggregatesFilter<"StoryOption"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StoryOption"> | Date | string
 }
@@ -243,6 +251,7 @@ export type StoryOptionCreateInput = {
   type: string
   value: string
   label: string
+  fandoms?: Prisma.StoryOptionCreatefandomsInput | string[]
   isDefault?: boolean
   createdAt?: Date | string
 }
@@ -252,6 +261,7 @@ export type StoryOptionUncheckedCreateInput = {
   type: string
   value: string
   label: string
+  fandoms?: Prisma.StoryOptionCreatefandomsInput | string[]
   isDefault?: boolean
   createdAt?: Date | string
 }
@@ -261,6 +271,7 @@ export type StoryOptionUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  fandoms?: Prisma.StoryOptionUpdatefandomsInput | string[]
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -270,6 +281,7 @@ export type StoryOptionUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  fandoms?: Prisma.StoryOptionUpdatefandomsInput | string[]
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -279,6 +291,7 @@ export type StoryOptionCreateManyInput = {
   type: string
   value: string
   label: string
+  fandoms?: Prisma.StoryOptionCreatefandomsInput | string[]
   isDefault?: boolean
   createdAt?: Date | string
 }
@@ -288,6 +301,7 @@ export type StoryOptionUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  fandoms?: Prisma.StoryOptionUpdatefandomsInput | string[]
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -297,8 +311,17 @@ export type StoryOptionUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
+  fandoms?: Prisma.StoryOptionUpdatefandomsInput | string[]
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type StoryOptionTypeValueCompoundUniqueInput = {
@@ -311,6 +334,7 @@ export type StoryOptionCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   value?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  fandoms?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -333,6 +357,15 @@ export type StoryOptionMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type StoryOptionCreatefandomsInput = {
+  set: string[]
+}
+
+export type StoryOptionUpdatefandomsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 
 
 export type StoryOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -340,6 +373,7 @@ export type StoryOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   type?: boolean
   value?: boolean
   label?: boolean
+  fandoms?: boolean
   isDefault?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["storyOption"]>
@@ -349,6 +383,7 @@ export type StoryOptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   value?: boolean
   label?: boolean
+  fandoms?: boolean
   isDefault?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["storyOption"]>
@@ -358,6 +393,7 @@ export type StoryOptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   value?: boolean
   label?: boolean
+  fandoms?: boolean
   isDefault?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["storyOption"]>
@@ -367,11 +403,12 @@ export type StoryOptionSelectScalar = {
   type?: boolean
   value?: boolean
   label?: boolean
+  fandoms?: boolean
   isDefault?: boolean
   createdAt?: boolean
 }
 
-export type StoryOptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "value" | "label" | "isDefault" | "createdAt", ExtArgs["result"]["storyOption"]>
+export type StoryOptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "value" | "label" | "fandoms" | "isDefault" | "createdAt", ExtArgs["result"]["storyOption"]>
 
 export type $StoryOptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StoryOption"
@@ -381,6 +418,7 @@ export type $StoryOptionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     type: string
     value: string
     label: string
+    fandoms: string[]
     isDefault: boolean
     createdAt: Date
   }, ExtArgs["result"]["storyOption"]>
@@ -810,6 +848,7 @@ export interface StoryOptionFieldRefs {
   readonly type: Prisma.FieldRef<"StoryOption", 'String'>
   readonly value: Prisma.FieldRef<"StoryOption", 'String'>
   readonly label: Prisma.FieldRef<"StoryOption", 'String'>
+  readonly fandoms: Prisma.FieldRef<"StoryOption", 'String[]'>
   readonly isDefault: Prisma.FieldRef<"StoryOption", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"StoryOption", 'DateTime'>
 }

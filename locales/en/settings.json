@@ -1,0 +1,29 @@
+{
+  "title": "Settings",
+  "saving": "Saving...",
+  "saved": "Settings saved",
+  "saveError": "Error saving settings",
+  "autoVersion": {
+    "title": "Automatic versioning",
+    "description": "Configure when versions are automatically created for your documents.",
+    "inactivity": "On inactivity",
+    "inactivityDesc": "Create version after a period without writing",
+    "exit": "On document exit",
+    "exitDesc": "Create version when closing tab or navigating to another page",
+    "hourly": "Every hour",
+    "hourlyDesc": "Create version periodically every hour",
+    "daily": "Every day",
+    "dailyDesc": "Create version once a day",
+    "weekly": "Every week",
+    "weeklyDesc": "Create version once a week",
+    "monthly": "Every month",
+    "monthlyDesc": "Create version once a month",
+    "interval": "Interval",
+    "minutes": "minutes",
+    "hours": "hours",
+    "days": "days",
+    "weeks": "weeks",
+    "months": "months",
+    "enabled": "Enabled"
+  }
+}

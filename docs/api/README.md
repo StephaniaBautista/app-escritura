@@ -112,23 +112,55 @@ Reglas:
 - Detección de conflictos: diff por índice de nodos TipTap JSON contra el punto de bifurcación (`sourceVersionId` de la rama origen; fallback: primera versión del documento).
 - Mismas ramas → `400 MERGE_FAILED`.
 
-### Story Options (2026-08-04, Fase 4; M28: + ship, character; Fase 04b: globales)
-- `GET /api/story-options?type=rating|storyType|category|narrator|ending|fandom|tag|problem|ship|character` - Listar opciones **globales** de un tipo (mismas para todos los usuarios)
+### Story Options (2026-08-04, Fase 4; M28: + ship, character; Fase 04b: globales; Fase 04d: por fandom)
+- `GET /api/story-options?type=rating|storyType|category|narrator|ending|fandom|tag|problem|ship|character[&fandoms=...]` - Listar opciones **globales**. Para `ship`/`character`, `fandoms` (comas) filtra por los fandoms seleccionados (`hasSome`); `fandoms=` vacío devuelve solo generales (`isEmpty`); sin el parámetro devuelve todas.
 - `GET /api/story-options/all` - Listar todas las opciones globales agrupadas por tipo
-- `POST /api/story-options` - Crear opción global `{ type, value, label }` (cualquier usuario autenticado; dedupe case-insensitive)
-- `DELETE /api/story-options/:id` - Eliminar opción global (**solo superadmin**; los defaults no se pueden eliminar)
+- `POST /api/story-options` - Crear opción global `{ type, value, label, fandoms? }` (cualquier usuario autenticado; dedupe case-insensitive)
+- `DELETE /api/story-options/:id` - Eliminar opción global (**permiso `moderate`**; los defaults no se pueden eliminar)
 
 Reglas:
 - **Global**: todas las opciones son compartidas por todos los usuarios (modelo AO3). `fandom`, `ship`, `character`, `tag` se consumen con autocompletado en el wizard; los demás con select.
+- **Por fandom**: solo ships y personajes tienen `fandoms[]`; el autocompletado filtra por los fandoms elegidos (estricto: con fandom → solo los suyos; sin fandom → solo generales). Las **etiquetas son siempre globales** (nunca se filtran por fandom).
 - **Defaults**: `isDefault=true`, seedeados al arrancar el servidor.
 - `@@unique([type, value])` evita duplicados; el servicio además deduplica case-insensitive.
 - La creación requiere sesión; el listado devuelve el pool completo.
 
-### Admin: Moderación (2026-08-06, Fase 04c)
-- `GET /api/admin/story-options/groups?type=...` (**superadmin**) - Listar opciones del tipo agrupadas por **similitud de texto** (normalización + Levenshtein ≥ 0.8)
-- `DELETE /api/admin/story-options/:id` (**superadmin**) - Eliminar una opción global (sin tocar defaults)
-- **Rol**: campo `User.role` (`'user' | 'superadmin'`), asignado manualmente en BD. `session.user.role` expuesto por BetterAuth (`additionalFields`).
-- Guard: `requireSuperadmin` → 401 sin sesión, 403 si el rol no es superadmin.
+### Admin: Moderación (2026-08-06, Fase 04c; jerarquía por fandom en Fase 04e)
+- `GET /api/admin/story-options/tree` (**permiso `moderate`**) - Listar **fandoms con sus hijos** (ships/characters) agrupados por tipo. Las opciones sin fandom (OC, generales) se **descartan**: no aparecen en el panel. Las **etiquetas son globales** y no forman parte del árbol.
+- `GET /api/admin/story-options/groups?type=...` (**permiso `moderate`**) - Listar opciones del tipo agrupadas por **similitud de texto** (normalización + Levenshtein ≥ 0.8). La UI de moderación lo usa para las **etiquetas globales** (`type=tag`).
+- `PATCH /api/admin/story-options/:id/fandom` (**permiso `moderate`**) - **Mover** una opción (ship/character) a un fandom: body `{ fandom: string }`. **Reemplaza** el array `fandoms` por `[fandom]` (movimiento, no suma). Las etiquetas no son movibles (son globales).
+- `DELETE /api/admin/story-options/:id` (**permiso `moderate`**) - Eliminar una opción global. Si el tipo es `fandom` y **tiene hijos** → `409 HAS_CHILDREN` (hay que moverlos antes).
+- **Permisos**: `admin` (gestionar roles/cuentas) y `moderate` (moderar opciones). `GET /api/me` devuelve `{ user, role, permissions }`.
+
+Respuesta de `tree`:
+```json
+{
+  "fandoms": [
+    { "id": "...", "value": "Harry Potter", "label": "Harry Potter", "isDefault": false,
+      "counts": { "ship": 1, "character": 2 } }
+  ],
+  "children": {
+    "Harry Potter": { "ship": [ ... ], "character": [ ... ] }
+  }
+}
+```
+
+### Admin: Roles y Cuentas (2026-08-06, Fase 04c; + gestión de cuentas 2026-08-08)
+- `GET /api/admin/roles` (**permiso `admin`**) - Listar roles con nº de cuentas
+- `POST /api/admin/roles` (**`admin`**) - Crear rol `{ name, label, permissions[] }` (name minúsculas sin espacios; system no modificable)
+- `PATCH /api/admin/roles/:id` (**`admin`**) - Actualizar `label`/`permissions`
+- `DELETE /api/admin/roles/:id` (**`admin`**) - Eliminar rol; las cuentas asignadas pasan a `user` (los roles de sistema no se eliminan)
+- `GET /api/admin/users` (**`admin`**) - Listar cuentas `{ id, email, name, role, status, suspendedUntil }`
+- `PATCH /api/admin/users/:id/role` (**`admin`**) - Asignar rol `{ role }`
+- `PATCH /api/admin/users/:id/status` (**`admin`**) - Cambiar estado `{ status: 'active'|'suspended'|'banned', until? }`. `until` (ISO) obligatorio y futuro para `suspended`; al banear/suspender se borran las sesiones del usuario. Errores: `403` no (es `400`) → `SELF_TARGET` (cuenta propia), `PROTECTED_ADMIN` (otro superadmin), `INVALID_UNTIL`, `NOT_FOUND`.
+- `DELETE /api/admin/users/:id` (**`admin`**) - **Eliminación física total** de la cuenta (cascada: proyectos, documentos, notas, versiones, ramas, settings, actividad, sesiones, accounts). Errores: `404 NOT_FOUND`, `400 SELF_TARGET`/`PROTECTED_ADMIN`.
+
+Reglas de estado de cuenta:
+- `status`: `active` | `suspended` | `banned`. La suspensión es temporal (`suspendedUntil`; reactiva sola al vencer); el ban es permanente hasta desbanear manualmente.
+- **Login bloqueado al instante**: `POST /api/auth/sign-in/email` devuelve `403 ACCOUNT_BANNED` / `403 ACCOUNT_SUSPENDED` si la cuenta está bloqueada.
+- **Sesiones activas**: al banear/suspender se borran las sesiones en DB; por el cookieCache de BetterAuth (1 día) un usuario ya logueado tarda hasta 24 h en ser expulsado.
+- **Protección**: no se puede modificar/eliminar la propia cuenta ni a otro superadmin (por permiso `admin`).
+- **Modelo**: tabla `Role` (catálogo gestionable, seed `user`/`superadmin`). `User.role` guarda el nombre del rol. Roles con permisos configurables (`admin`, `moderate`).
 
 ### Activity (2026-08-06, M29)
 - `GET /api/activity` - Listar la actividad reciente del usuario (más reciente primero, máx. 20)
@@ -139,6 +171,22 @@ Reglas:
 Reglas:
 - El feed de actividad reciente migró de `localStorage` al backend (M29): cada usuario solo ve su propia actividad (ownership por `userId` en todas las operaciones).
 - Las entradas se crean desde el frontend al crear/editar documentos y carpetas; se limpian al eliminar el recurso.
+
+### Cache en memoria (2026-08-08, M31 T7)
+
+Los endpoints de **datos globales** (idénticos para todos los usuarios, leídos mucho y modificados rara vez) usan `backend/src/lib/cache.ts` (`MemoryCache<T>`), un cache en memoria por-instancia con TTL:
+
+| Endpoint | Clave de cache | TTL | Invalidación |
+|----------|----------------|-----|--------------|
+| `GET /api/story-options?type=...&fandoms=...` | `list:{type}:{fandoms}` | 5 min | create/delete/moveFandom |
+| `GET /api/story-options/all` | `all` | 5 min | ídem |
+| `GET /api/admin/story-options/tree` | `fandomTree` | 5 min | ídem |
+| `GET /api/admin/story-options/groups?type=...` | `groups:{type}` | 5 min | ídem |
+| `GET /api/i18n/:lng/:ns` (M31 T2) | `i18n:{lng}:{ns}` | largo | — (archivos estáticos) |
+
+- TTL corto (5 min) como red de seguridad; la **invalidación en escritura** hace que las mutaciones (crear/borrar/mover opción, seed) se reflejen de inmediato.
+- **No** se cachea ningún dato por-usuario (ownership): solo datos globales/compartidos.
+- **Escala:** el cache es por-instancia del backend. Al desplegar más de una instancia se sustituye por **Redis/Upstash** manteniendo la misma API (`get/set/delete/clear`) sin tocar los services.
 
 ## Autenticacion
 

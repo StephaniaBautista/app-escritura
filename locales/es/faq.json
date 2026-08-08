@@ -1,0 +1,16 @@
+{
+  "tag": "Preguntas frecuentes",
+  "title": "Dudas sobre precios",
+  "q1": "¿Puedo empezar gratis y subir después?",
+  "a1": "Sí. El plan Gratis es ilimitado en escritura básica. Cuando necesites más personajes, ramas, o IA, subes al plan que necesites. Sin sorpresas.",
+  "q2": "¿Qué son los tokens de IA?",
+  "a2": "Los tokens son la unidad de medida para las llamadas a la IA. Un mensaje corto usa ~500 tokens. Un mensaje largo con contexto de historia puede usar ~2000 tokens.",
+  "q3": "¿La IA escribe mi historia?",
+  "a3": "No. La IA es un companion que sugiere, detecta inconsistencias y habla con tus personajes. Nunca escribe la historia por ti.",
+  "q4": "¿Qué pasa si me paso de tokens?",
+  "a4": "Puedes comprar tokens extra a $2 por 50K tokens. O puedes esperar al siguiente mes para que se renueve tu pool.",
+  "q5": "¿Puedo cancelar en cualquier momento?",
+  "a5": "Sí. Sin permanencia. Cancelas cuando quieras y mantienes acceso hasta el final del periodo pagado.",
+  "q6": "¿El plan Gratis tiene límite de tiempo?",
+  "a6": "No. El plan Gratis es para siempre. Solo tiene límites en funcionalidades avanzadas, no en tiempo de uso."
+}

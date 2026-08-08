@@ -1,0 +1,14 @@
+{
+  "title": "Mis proyectos",
+  "subtitle": "Organiza tus historias",
+  "newFolder": "Nueva Carpeta",
+  "newDocument": "Nuevo Documento",
+  "folderNamePlaceholder": "Nombre de la carpeta...",
+  "noFolders": "No hay carpetas",
+  "noFoldersDesc": "Crea tu primera carpeta para organizar tus historias",
+  "createFolder": "Crear Carpeta",
+  "startHere": "¡Empieza aquí!",
+  "documentsCount": "{{count}} documentos",
+  "confirmDelete": "¿Eliminar este proyecto y todo su contenido?",
+  "deleteProject": "Eliminar proyecto"
+}

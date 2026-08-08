@@ -9,6 +9,7 @@ interface User {
 
 interface AuthState {
   user: User | null
+  permissions: string[]
   isAuthenticated: boolean
   isLoading: boolean
   isInitialized: boolean
@@ -20,8 +21,16 @@ interface AuthState {
   clearError: () => void
 }
 
+async function fetchMe() {
+  const response = await fetch('/api/me', { credentials: 'include' })
+  if (!response.ok) return null
+  const data = await response.json()
+  return { user: data.user, permissions: data.permissions }
+}
+
 export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
+  permissions: [],
   isAuthenticated: false,
   isLoading: false,
   isInitialized: false,
@@ -48,9 +57,10 @@ export const useAuthStore = create<AuthState>()((set) => ({
         throw new Error(message)
       }
 
-      const data = await response.json()
+      const me = await fetchMe()
       set({
-        user: data.user,
+        user: me?.user ?? null,
+        permissions: me?.permissions ?? [],
         isAuthenticated: true,
         isLoading: false,
       })
@@ -82,9 +92,10 @@ export const useAuthStore = create<AuthState>()((set) => ({
         throw new Error(message)
       }
 
-      const data = await response.json()
+      const me = await fetchMe()
       set({
-        user: data.user,
+        user: me?.user ?? null,
+        permissions: me?.permissions ?? [],
         isAuthenticated: true,
         isLoading: false,
       })
@@ -107,6 +118,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
     } finally {
       set({
         user: null,
+        permissions: [],
         isAuthenticated: false,
         isLoading: false,
       })
@@ -116,17 +128,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
   checkSession: async () => {
     set({ isLoading: true })
     try {
-      const response = await fetch('/api/auth/get-session', {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Sesión inválida')
-      }
-
-      const data = await response.json()
+      const me = await fetchMe()
+      if (!me) throw new Error('Sesión inválida')
       set({
-        user: data.user,
+        user: me.user,
+        permissions: me.permissions,
         isAuthenticated: true,
         isLoading: false,
         isInitialized: true,
@@ -134,6 +140,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
     } catch (error) {
       set({
         user: null,
+        permissions: [],
         isAuthenticated: false,
         isLoading: false,
         isInitialized: true,

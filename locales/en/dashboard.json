@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome, {{name}}",
+  "welcomeDefault": "Welcome, Writer",
+  "workspace": "Your creative workspace",
+  "letsWrite": "Let's write!",
+  "quickDoc": "Quick Document",
+  "quickDocDesc": "Create a document without a project",
+  "newProject": "New Project",
+  "newProjectDesc": "Create a project with characters and worlds",
+  "recentActivity": "Recent activity",
+  "noActivity": "No recent activity",
+  "startCreating": "Start creating your first story"
+}

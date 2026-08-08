@@ -1,0 +1,22 @@
+{
+  "tag": "Tu universo",
+  "title": "Personajes con profundidad",
+  "description": "Fichas completas con 30+ atributos. Árbol genealógico, evolución, mapa de relaciones.",
+  "name": "Elena Voss",
+  "role": "Protagonista",
+  "age": "24 años",
+  "traits": "Rasgos",
+  "trait1": "Determinada",
+  "trait2": "Sarcástica",
+  "trait3": "Leal",
+  "motivation": "Motivación",
+  "motivationText": "Encontrar a su hermano perdido",
+  "weakness": "Debilidad",
+  "weaknessText": "No sabe pedir ayuda",
+  "familyTree": "Árbol genealógico",
+  "familyTreeDesc": "Visualiza familias, conecta padres e hijos.",
+  "evolution": "Evolución de personajes",
+  "evolutionDesc": "Crea versiones del personaje en diferentes puntos.",
+  "aiComplete": "IA autocompleta",
+  "aiCompleteDesc": "La IA sugiere basado en lo que ya escribiste."
+}

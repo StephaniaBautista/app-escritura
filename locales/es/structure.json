@@ -1,0 +1,15 @@
+{
+  "tag": "Organiza",
+  "title": "Tablero tipo Trello",
+  "description": "Columnas personalizables. Arrastra capítulos, personajes, documentos.",
+  "start": "Inicio",
+  "startCard1": "Presentación",
+  "startCard2": "Estado actual",
+  "development": "Desarrollo",
+  "devCard1": "Incidente",
+  "devCard2": "Escenas clave",
+  "climax": "Climax",
+  "climaxCard": "Giro de trama",
+  "conclusion": "Concluye",
+  "addCard": "+ Añadir tarjeta"
+}

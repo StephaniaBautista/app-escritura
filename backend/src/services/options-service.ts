@@ -1,14 +1,37 @@
 import { prisma } from '../lib/prisma.js'
+import { MemoryCache } from '../lib/cache.js'
 
 export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'ending' | 'fandom' | 'tag' | 'problem' | 'ship' | 'character'
+
+export const FANDOM_CHILD_TYPES = ['ship', 'character'] as const
+export type FandomChildType = (typeof FANDOM_CHILD_TYPES)[number]
 
 export interface StoryOptionRow {
   id: string
   type: string
   value: string
   label: string
+  fandoms: string[]
   isDefault: boolean
   createdAt: Date
+}
+
+export interface FandomNode {
+  id: string
+  value: string
+  label: string
+  isDefault: boolean
+  counts: Record<FandomChildType, number>
+}
+
+export interface FandomChildren {
+  ship: StoryOptionRow[]
+  character: StoryOptionRow[]
+}
+
+export interface FandomTree {
+  fandoms: FandomNode[]
+  children: Record<string, FandomChildren>
 }
 
 export const SIMILARITY_THRESHOLD = 0.8
@@ -46,29 +69,52 @@ export function optionSimilarity(a: string, b: string): number {
   return 1 - levenshteinDistance(na, nb) / maxLen
 }
 
+const OPTIONS_CACHE_TTL_MS = 5 * 60 * 1000
+const optionsCache = new MemoryCache<unknown>({ defaultTtlMs: OPTIONS_CACHE_TTL_MS })
+
 export const optionsService = {
-  async list(type: OptionType): Promise<StoryOptionRow[]> {
-    return prisma.storyOption.findMany({
-      where: { type },
+  async list(type: OptionType, opts?: { fandoms?: string[] }): Promise<StoryOptionRow[]> {
+    const key = `list:${type}:${opts?.fandoms?.join(',') ?? ''}`
+    const cached = optionsCache.get(key)
+    if (cached) return cached as StoryOptionRow[]
+
+    const where: { type: string; fandoms?: object } = { type }
+    const scoped = type === 'ship' || type === 'character'
+    if (opts?.fandoms && scoped) {
+      where.fandoms = opts.fandoms.length > 0
+        ? { hasSome: opts.fandoms }
+        : { isEmpty: true }
+    }
+    const result = await prisma.storyOption.findMany({
+      where,
       orderBy: [{ isDefault: 'desc' }, { label: 'asc' }],
     })
+    optionsCache.set(key, result)
+    return result
   },
 
   async listAll(): Promise<StoryOptionRow[]> {
-    return prisma.storyOption.findMany({
+    const cached = optionsCache.get('all')
+    if (cached) return cached as StoryOptionRow[]
+
+    const result = await prisma.storyOption.findMany({
       orderBy: [{ type: 'asc' }, { isDefault: 'desc' }, { label: 'asc' }],
     })
+    optionsCache.set('all', result)
+    return result
   },
 
-  async create(type: OptionType, value: string, label: string): Promise<StoryOptionRow> {
+  async create(type: OptionType, value: string, label: string, fandoms?: string[]): Promise<StoryOptionRow> {
     const existing = await prisma.storyOption.findFirst({
       where: { type, value: { equals: value, mode: 'insensitive' } },
     })
     if (existing) return existing
 
-    return prisma.storyOption.create({
-      data: { type, value, label, isDefault: false },
+    const created = await prisma.storyOption.create({
+      data: { type, value, label, fandoms: fandoms ?? [], isDefault: false },
     })
+    optionsCache.clear()
+    return created
   },
 
   async delete(id: string): Promise<boolean> {
@@ -78,10 +124,95 @@ export const optionsService = {
     if (!option) return false
 
     await prisma.storyOption.delete({ where: { id } })
+    optionsCache.clear()
     return true
   },
 
+  invalidate(): void {
+    optionsCache.clear()
+  },
+
+  async findById(id: string): Promise<StoryOptionRow | null> {
+    return prisma.storyOption.findUnique({ where: { id } })
+  },
+
+  async listByFandom(): Promise<FandomTree> {
+    const cached = optionsCache.get('fandomTree')
+    if (cached) return cached as FandomTree
+
+    const fandoms = await prisma.storyOption.findMany({
+      where: { type: 'fandom' },
+      orderBy: [{ isDefault: 'desc' }, { label: 'asc' }],
+    })
+
+    const children = await prisma.storyOption.findMany({
+      where: { type: { in: [...FANDOM_CHILD_TYPES] }, fandoms: { isEmpty: false } },
+      orderBy: [{ isDefault: 'desc' }, { label: 'asc' }],
+    })
+
+    const childrenMap: Record<string, FandomChildren> = {}
+    for (const f of fandoms) {
+      childrenMap[f.value] = { ship: [], character: [] }
+    }
+
+    for (const child of children) {
+      if (!FANDOM_CHILD_TYPES.includes(child.type as FandomChildType)) continue
+      for (const fandomValue of child.fandoms) {
+        const bucket = childrenMap[fandomValue]
+        if (!bucket) continue
+        bucket[child.type as FandomChildType].push(child)
+      }
+    }
+
+    const nodes: FandomNode[] = fandoms.map((f) => ({
+      id: f.id,
+      value: f.value,
+      label: f.label,
+      isDefault: f.isDefault,
+      counts: {
+        ship: childrenMap[f.value]?.ship.length ?? 0,
+        character: childrenMap[f.value]?.character.length ?? 0,
+      },
+    }))
+
+    const tree: FandomTree = { fandoms: nodes, children: childrenMap }
+    optionsCache.set('fandomTree', tree)
+    return tree
+  },
+
+  async hasFandomChildren(fandomValue: string): Promise<boolean> {
+    const child = await prisma.storyOption.findFirst({
+      where: { type: { in: [...FANDOM_CHILD_TYPES] }, fandoms: { has: fandomValue } },
+    })
+    return child !== null
+  },
+
+  async moveFandom(
+    id: string,
+    fandomValue: string,
+  ): Promise<{ ok: true } | { ok: false; reason: 'not-found' | 'is-default' | 'invalid-type' | 'invalid-fandom' }> {
+    const option = await prisma.storyOption.findUnique({ where: { id } })
+    if (!option) return { ok: false, reason: 'not-found' }
+    if (option.isDefault) return { ok: false, reason: 'is-default' }
+    if (!FANDOM_CHILD_TYPES.includes(option.type as FandomChildType)) {
+      return { ok: false, reason: 'invalid-type' }
+    }
+
+    const fandom = await prisma.storyOption.findFirst({
+      where: { type: 'fandom', value: fandomValue },
+    })
+    if (!fandom) return { ok: false, reason: 'invalid-fandom' }
+
+    await prisma.storyOption.update({ where: { id }, data: { fandoms: [fandomValue] } })
+    optionsCache.clear()
+    return { ok: true }
+  },
+
   async groups(type: OptionType): Promise<StoryOptionRow[][]> {
+    const key = `groups:${type}`
+    const cached = optionsCache.get(key)
+    if (cached) return cached as StoryOptionRow[][]
+
     const options = await this.list(type)
     const groups: StoryOptionRow[][] = []
     const used = new Set<string>()
@@ -100,6 +231,7 @@ export const optionsService = {
       groups.push(group)
     }
 
+    optionsCache.set(key, groups)
     return groups
   },
 
@@ -148,6 +280,7 @@ export const optionsService = {
         created++
       }
     }
+    if (created > 0) optionsCache.clear()
     return created
   },
 }

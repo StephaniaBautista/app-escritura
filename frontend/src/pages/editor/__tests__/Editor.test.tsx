@@ -1,16 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { EditorPage } from '../Editor'
 
-const { useDocumentStoreMock, navigateMock, useAutoVersionMock, paramsMock } = vi.hoisted(() => ({
+const { useDocumentStoreMock, navigateMock, useAutoVersionMock, paramsMock, activityApiMock } = vi.hoisted(() => ({
   useDocumentStoreMock: vi.fn(),
   navigateMock: vi.fn(),
   useAutoVersionMock: vi.fn(() => ({ handleKeystroke: vi.fn() })),
   paramsMock: { projectId: 'proj-1', documentId: 'doc-1' },
+  activityApiMock: { addActivity: vi.fn() },
 }))
 
 vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
+}))
+
+vi.mock('@/stores/activity-store', () => ({
+  useActivityStore: () => ({ addActivity: activityApiMock.addActivity }),
 }))
 
 vi.mock('@/hooks/useAutoVersion', () => ({
@@ -27,7 +32,9 @@ vi.mock('react-i18next', () => ({
 }))
 
 vi.mock('@/components/editor/DocumentEditor', () => ({
-  DocumentEditor: () => <div data-testid="document-editor">editor</div>,
+  DocumentEditor: ({ onKeystroke }: { onKeystroke?: () => void }) => (
+    <div data-testid="document-editor" onClick={() => onKeystroke?.()}>editor</div>
+  ),
 }))
 
 vi.mock('@/components/sidebar/Sidebar', () => ({
@@ -132,5 +139,28 @@ describe('EditorPage: el documento (contenedor) siempre lleva a una pestaña', (
 
     expect(navigateMock).not.toHaveBeenCalled()
     expect(screen.getByTestId('document-editor')).toBeInTheDocument()
+  })
+
+  it('registra la actividad document_edited al editar (una vez por documento, throttle 60s)', () => {
+    paramsMock.documentId = 'tab-1'
+    useDocumentStoreMock.mockReturnValue({
+      ...baseStore,
+      currentDocument: tabDoc,
+      documentTree: tree,
+    })
+
+    render(<EditorPage />)
+    const editor = screen.getByTestId('document-editor')
+
+    fireEvent.click(editor)
+    fireEvent.click(editor)
+
+    expect(activityApiMock.addActivity).toHaveBeenCalledTimes(1)
+    expect(activityApiMock.addActivity).toHaveBeenCalledWith({
+      type: 'document_edited',
+      title: 'Pestaña 1',
+      folderId: 'proj-1',
+      documentId: 'tab-1',
+    })
   })
 })

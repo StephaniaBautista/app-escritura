@@ -1,0 +1,19 @@
+{
+  "title": "Versiones",
+  "newVersion": "Crear versión",
+  "empty": "Sin versiones todavía",
+  "emptyDesc": "Crea un snapshot para poder volver a este punto",
+  "restore": "Restaurar",
+  "restoreTitle": "Restaurar versión",
+  "confirmRestore": "¿Restaurar esta versión? El contenido actual se reemplazará.",
+  "delete": "Eliminar",
+  "deleteTitle": "Eliminar versión",
+  "confirmDelete": "¿Eliminar esta versión? Esta acción no se puede deshacer.",
+  "created": "Versión creada",
+  "restored": "Versión restaurada",
+  "deleted": "Versión eliminada",
+  "versionNum": "Versión {{version}}",
+  "noContent": "Sin contenido",
+  "selectHint": "Elige un documento para ver sus versiones",
+  "noDocuments": "Crea un documento para poder crear versiones"
+}

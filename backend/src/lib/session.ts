@@ -1,5 +1,6 @@
 import type { FastifyRequest, FastifyReply } from 'fastify'
 import { auth } from './auth.js'
+import { roleService } from '../services/role-service.js'
 
 export async function getSessionUser(request: FastifyRequest) {
   const session = await auth.api.getSession({
@@ -8,13 +9,16 @@ export async function getSessionUser(request: FastifyRequest) {
   return session?.user ?? null
 }
 
-export async function requireSuperadmin(request: FastifyRequest, reply: FastifyReply) {
+export async function requirePermission(request: FastifyRequest, reply: FastifyReply, permission: string) {
   const user = await getSessionUser(request)
   if (!user) {
-    return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+    reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+    return null
   }
-  if (user.role !== 'superadmin') {
-    return reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Requiere rol superadmin' } })
+  const permissions = await roleService.getPermissions(user.role ?? 'user')
+  if (!permissions.includes(permission)) {
+    reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Sin permiso para esta acción' } })
+    return null
   }
   return user
 }

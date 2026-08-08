@@ -1,0 +1,14 @@
+{
+  "back": "← Volver a documentos",
+  "documents": "Documentos",
+  "characters": "Personajes",
+  "worlds": "Mundos",
+  "newDocument": "Nuevo Documento",
+  "docTitlePlaceholder": "Título del documento...",
+  "noDocuments": "No hay documentos aún",
+  "noDocumentsDesc": "Crea tu primer documento en esta carpeta",
+  "confirmDelete": "¿Eliminar este documento?",
+  "deleteDocument": "Eliminar documento",
+  "selectDocument": "Documento",
+  "selectDocumentPlaceholder": "Selecciona un documento..."
+}

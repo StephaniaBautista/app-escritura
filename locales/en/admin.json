@@ -1,0 +1,89 @@
+{
+  "title": "Admin panel",
+  "subtitle": "Review community options, manage roles, and assign roles to accounts.",
+  "keep": "Keep",
+  "keepThis": "Keep this one",
+  "delete": "Delete",
+  "deleteOthers": "Delete the others",
+  "deleted": "Option deleted",
+  "merged": "Duplicates merged",
+  "groupedBy": "grouped by similarity",
+  "noOptions": "No options of this type",
+  "noTags": "No tags yet",
+  "tagsSection": "Global tags",
+  "noFandoms": "No fandoms yet",
+  "noResults": "No results",
+  "fandomSearchPlaceholder": "Search fandom...",
+  "fandoms": "Fandoms",
+  "fandomCounts": "{{ship}} ships · {{character}} characters",
+  "dragHint": "Drag a ship or character onto another fandom to move it.",
+  "dragToMove": "Drag to another fandom",
+  "moved": "Moved to {{fandom}}",
+  "deleteFandom": "Delete fandom",
+  "deleteFandomTitle": "Delete fandom",
+  "deleteFandomConfirm": "Delete the fandom {{name}}? If it has children, move them first.",
+  "emptyFandom": "This fandom has no ships or characters.",
+  "tabs": {
+    "moderate": "Moderation",
+    "roles": "Roles",
+    "users": "Accounts"
+  },
+  "permissions": {
+    "admin": "Admin panel",
+    "moderate": "Moderation"
+  },
+  "roles": {
+    "title": "Roles",
+    "create": "Create role",
+    "searchPlaceholder": "Search role...",
+    "name": "Name (lowercase, no spaces)",
+    "label": "Label",
+    "permissions": "Permissions",
+    "usersCount": "{{count}} accounts",
+    "system": "system",
+    "edit": "Edit",
+    "created": "Role created",
+    "updated": "Role updated",
+    "deleted": "Role deleted",
+    "deleteTitle": "Delete role",
+    "deleteConfirm": "Accounts with this role will be demoted to 'user'. Delete the role?"
+  },
+  "users": {
+    "title": "Accounts",
+    "noUsers": "No accounts",
+    "searchPlaceholder": "Search by name or email...",
+    "roleAssigned": "Role assigned",
+    "protected": "protected",
+    "statusUpdated": "Status updated",
+    "deleted": "Account deleted",
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended",
+      "banned": "Banned"
+    },
+    "suspendedUntil": "Suspended until {{date}}",
+    "suspend": {
+      "short": "Suspend",
+      "title": "Suspend {{name}}",
+      "message": "The account won't be able to sign in until the chosen date.",
+      "confirm": "Suspend",
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days"
+    },
+    "ban": "Ban",
+    "banConfirm": "Yes, ban",
+    "banTitle": "Ban {{name}}",
+    "banMessage": "The account will be permanently blocked. You can unban it later.",
+    "reactivate": "Reactivate",
+    "deleteAccount": "Delete account",
+    "deleteTitle": "Delete {{name}}",
+    "deleteMessage": "The account and all its data (projects, documents, notes and versions) will be permanently deleted. This action cannot be undone."
+  },
+  "types": {
+    "fandom": "Fandoms",
+    "ship": "Ships",
+    "character": "Characters",
+    "tag": "Tags"
+  }
+}

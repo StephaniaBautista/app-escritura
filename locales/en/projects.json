@@ -1,0 +1,14 @@
+{
+  "title": "My projects",
+  "subtitle": "Organize your stories",
+  "newFolder": "New Folder",
+  "newDocument": "New Document",
+  "folderNamePlaceholder": "Folder name...",
+  "noFolders": "No folders",
+  "noFoldersDesc": "Create your first folder to organize your stories",
+  "createFolder": "Create Folder",
+  "startHere": "Start here!",
+  "documentsCount": "{{count}} documents",
+  "confirmDelete": "Delete this project and all its content?",
+  "deleteProject": "Delete project"
+}

@@ -11,9 +11,10 @@ vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
 }))
 
-vi.mock('@/stores/options-store', () => ({
-  useOptionsStore: useOptionsStoreMock,
-}))
+vi.mock('@/stores/options-store', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@/stores/options-store')>()
+  return { ...mod, useOptionsStore: useOptionsStoreMock }
+})
 
 const t = (key: string) => key
 

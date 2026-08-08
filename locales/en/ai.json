@@ -1,0 +1,18 @@
+{
+  "tag": "Artificial intelligence",
+  "title": "AI that understands your universe",
+  "description": "Three modes. Knows your story, characters, timeline, and lore. Never writes for you.",
+  "chat": "Chat companion",
+  "chatDesc": "Knows your story in real time. Suggests when you're stuck so you never have writer's block again.",
+  "chatUser": "What do you think of the end of chapter 3?",
+  "chatAi": "Elena's arc has good progression, but the revelation feels rushed.",
+  "characterAi": "Character.AI",
+  "characterAiDesc": "Talk to your characters in role. Based on their sheet and context.",
+  "characterUser": "Why did you make that decision?",
+  "characterAi2": "\"Because you left me no choice. If I didn't, I'd lose everything again...\"",
+  "suggestions": "Real-time suggestions",
+  "suggestionsDesc": "Reads as you write. Flags inconsistencies, detects plot holes.",
+  "inconsistency": "Inconsistency: age changed from ch. 2 to ch. 5",
+  "plotHole": "Plot hole: how did Elena get to the port?",
+  "autocomplete": "Autocomplete: guard's name"
+}

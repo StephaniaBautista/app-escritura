@@ -1,0 +1,19 @@
+{
+  "newNote": "Nueva nota",
+  "notePlaceholder": "Título de la nota...",
+  "filterAll": "Todas",
+  "filterStory": "Historia",
+  "filterDocument": "Documento",
+  "filterSubtab": "Subpestaña",
+  "filterHidden": "Ocultas",
+  "noHidden": "No hay notas ocultas",
+  "noNotesInFilter": "No hay notas aquí",
+  "hide": "Ocultar",
+  "show": "Mostrar",
+  "restore": "Restaurar",
+  "scopeStory": "Historia",
+  "scopeDocument": "Documento",
+  "scopeSubtab": "Subpestaña",
+  "collapse": "Colapsar pared",
+  "expand": "Expandir pared"
+}

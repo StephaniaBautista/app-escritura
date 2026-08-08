@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Plus, FileText, BookOpen, FolderOpen, History } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
+import { useActivityStore } from '@/stores/activity-store'
 import { getDocumentRootId, getDocumentTabs, getFirstTabId } from '@/lib/document-tabs'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
 import { Sidebar } from '@/components/sidebar/Sidebar'
@@ -36,8 +37,25 @@ export function EditorPage() {
   const [localError, setLocalError] = useState<string | null>(null)
   const loadedProjectRef = useRef<string | null>(null)
   const hasChangesRef = useRef(false)
+  const { addActivity } = useActivityStore()
+  const activityThrottleRef = useRef<{ docId: string; at: number } | null>(null)
 
   const hasUnsavedChanges = useCallback(() => hasChangesRef.current, [])
+
+  const recordEditActivity = useCallback(() => {
+    if (!currentDocument) return
+    const docId = currentDocument.id
+    const now = Date.now()
+    const prev = activityThrottleRef.current
+    if (prev && prev.docId === docId && now - prev.at < 60_000) return
+    activityThrottleRef.current = { docId, at: now }
+    addActivity({
+      type: 'document_edited',
+      title: currentDocument.title,
+      folderId: projectId,
+      documentId: docId,
+    })
+  }, [addActivity, currentDocument, projectId])
 
   const { handleKeystroke } = useAutoVersion({
     documentId: documentId ?? null,
@@ -231,6 +249,7 @@ export function EditorPage() {
               onKeystroke={() => {
                 hasChangesRef.current = true
                 handleKeystroke()
+                recordEditActivity()
               }}
             />
           </div>

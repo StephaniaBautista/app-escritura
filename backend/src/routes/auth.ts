@@ -4,6 +4,7 @@ import { auth } from '../lib/auth.js'
 import { getTrustedHost } from '../lib/trusted-host.js'
 import { normalizeAuthError } from '../lib/auth-error-normalizer.js'
 import { logSecurityEvent } from '../lib/security-log.js'
+import { userAdminService } from '../services/user-admin-service.js'
 
 // Extend FastifyRequest to include session
 declare module 'fastify' {
@@ -145,10 +146,32 @@ export async function authRoutes(app: FastifyInstance) {
   // Catch-all for BetterAuth handler - handles all /auth/* paths
   app.all('/auth/*', async (request, reply) => {
     try {
+      const body = request.body as Record<string, unknown> | null
+
+      if (request.url.includes('/auth/sign-in/email')) {
+        const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : null
+        if (email) {
+          const account = await userAdminService.findForLogin(email)
+          if (account) {
+            const { blocked, reason } = userAdminService.isBlocked(account.status, account.suspendedUntil)
+            if (blocked) {
+              logSecurityEvent(request, { event: `auth.sign_in.blocked_${reason}`, email })
+              return reply.status(403).send({
+                error: {
+                  code: reason === 'banned' ? 'ACCOUNT_BANNED' : 'ACCOUNT_SUSPENDED',
+                  message: reason === 'banned'
+                    ? 'Esta cuenta ha sido baneada'
+                    : 'Esta cuenta está suspendida temporalmente',
+                },
+              })
+            }
+          }
+        }
+      }
+
       const webRequest = toWebRequest(request)
       const webResponse = await auth.handler(webRequest)
 
-      const body = request.body as Record<string, unknown> | null
       const email = typeof body?.email === 'string' ? body.email : undefined
 
       if (request.url.includes('/auth/sign-in/email') && webResponse.status >= 400) {

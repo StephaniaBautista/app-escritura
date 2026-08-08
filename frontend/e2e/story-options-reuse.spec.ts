@@ -37,9 +37,9 @@ test.describe('Story options global + autocomplete', () => {
   test.afterAll(async () => {
     if (ctx?.requestA) {
       for (const id of ctx.createdOptionIds) {
-        await ctx.requestA.delete(`${API}/story-options/${id}`).catch(() => {})
+        await ctx.requestA.delete(`${API}/story-options/${id}`, { headers: { 'Content-Type': 'text/plain' } }).catch(() => {})
       }
-      await ctx.requestA.delete(`${API}/projects/${ctx.projectA}`).catch(() => {})
+      await ctx.requestA.delete(`${API}/projects/${ctx.projectA}`, { headers: { 'Content-Type': 'text/plain' } }).catch(() => {})
       await ctx.requestA.dispose()
       await ctx.requestB.dispose()
     }

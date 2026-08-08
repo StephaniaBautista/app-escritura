@@ -1,0 +1,14 @@
+{
+  "back": "← Back to documents",
+  "documents": "Documents",
+  "characters": "Characters",
+  "worlds": "Worlds",
+  "newDocument": "New Document",
+  "docTitlePlaceholder": "Document title...",
+  "noDocuments": "No documents yet",
+  "noDocumentsDesc": "Create your first document in this folder",
+  "confirmDelete": "Delete this document?",
+  "deleteDocument": "Delete document",
+  "selectDocument": "Document",
+  "selectDocumentPlaceholder": "Select a document..."
+}

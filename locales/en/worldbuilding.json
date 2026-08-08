@@ -1,0 +1,17 @@
+{
+  "tag": "Build worlds",
+  "title": "Complete worldbuilding",
+  "description": "Lore, races, glossary, creatures, world map.",
+  "races": "Races and peoples",
+  "racesDesc": "Classification, physique, magic, language, culture.",
+  "lore": "Lore",
+  "loreDesc": "Magic, factions, religions. OCR for PDFs.",
+  "worldmap": "World map",
+  "worldmapDesc": "Location nodes with routes.",
+  "glossary": "Glossary",
+  "glossaryDesc": "Word, pronunciation, meaning.",
+  "creatures": "Beasts and creatures",
+  "creaturesDesc": "Name, species, danger type.",
+  "relations": "Relationship map",
+  "relationsDesc": "Romance, friends, enemies, family."
+}

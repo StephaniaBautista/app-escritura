@@ -1,0 +1,14 @@
+{
+  "tag": "Motivación",
+  "title": "Tu actividad de escritura",
+  "description": "Palabras por día, horas dedicadas, racha, promedio diario.",
+  "yearWords": "palabras en el último año",
+  "less": "Menos",
+  "more": "Más",
+  "noWriting": "Sin escritura",
+  "wordsWritten": "palabras escritas",
+  "totalWords": "Palabras totales",
+  "streak": "Días de racha",
+  "average": "Promedio diario",
+  "totalTime": "Tiempo total"
+}

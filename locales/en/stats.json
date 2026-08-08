@@ -1,0 +1,14 @@
+{
+  "tag": "Motivation",
+  "title": "Your writing activity",
+  "description": "Words per day, hours spent, streak, daily average.",
+  "yearWords": "words in the last year",
+  "less": "Less",
+  "more": "More",
+  "noWriting": "No writing",
+  "wordsWritten": "words written",
+  "totalWords": "Total words",
+  "streak": "Day streak",
+  "average": "Daily average",
+  "totalTime": "Total time"
+}

@@ -1,0 +1,13 @@
+{
+  "tag": "Publica",
+  "title": "Exporta donde quieras",
+  "description": "PDF, Markdown, HTML con CSS, AO3.",
+  "pdf": "PDF",
+  "pdfDesc": "Con formato profesional",
+  "markdown": "Markdown",
+  "markdownDesc": "Para cualquier plataforma",
+  "html": "HTML",
+  "htmlDesc": "Con CSS personalizado",
+  "ao3": "AO3",
+  "ao3Desc": "Publica directo o copia"
+}

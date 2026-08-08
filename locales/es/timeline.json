@@ -1,0 +1,13 @@
+{
+  "tag": "Estructura tu historia",
+  "title": "Línea del tiempo",
+  "description": "Eventos con fecha, personajes involucrados. Se auto-genera con el modo guiado.",
+  "morning": "Mañana",
+  "morningEvent": "María descubre la carta",
+  "noon": "Mediodía",
+  "noonEvent": "Encuentro en el café",
+  "afternoon": "Tarde",
+  "afternoonEvent": "La revelación cambia todo",
+  "night": "Noche",
+  "nightEvent": "Decisión irreversible"
+}

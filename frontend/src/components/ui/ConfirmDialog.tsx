@@ -9,6 +9,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string
   cancelLabel?: string
   variant?: 'danger' | 'default'
+  children?: React.ReactNode
   onConfirm: () => void
   onCancel: () => void
 }
@@ -20,6 +21,7 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel,
   variant = 'danger',
+  children,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -65,6 +67,7 @@ export function ConfirmDialog({
             </p>
           </div>
         </div>
+        {children}
         <div className="flex justify-end gap-2">
           <button
             onClick={onCancel}

@@ -1,0 +1,16 @@
+{
+  "tag": "FAQ",
+  "title": "Pricing questions",
+  "q1": "Can I start free and upgrade later?",
+  "a1": "Yes. The Free plan is unlimited for basic writing. When you need more characters, branches, or AI, upgrade to the plan you need. No surprises.",
+  "q2": "What are AI tokens?",
+  "a2": "Tokens are the unit of measurement for AI calls. A short message uses ~500 tokens. A long message with story context can use ~2000 tokens.",
+  "q3": "Does the AI write my story?",
+  "a3": "No. The AI is a companion that suggests, detects inconsistencies, and talks to your characters. It never writes the story for you.",
+  "q4": "What happens if I exceed my tokens?",
+  "a4": "You can buy extra tokens at $2 per 50K tokens. Or wait until next month for your pool to renew.",
+  "q5": "Can I cancel anytime?",
+  "a5": "Yes. No commitment. Cancel whenever you want and keep access until the end of the paid period.",
+  "q6": "Does the Free plan have a time limit?",
+  "a6": "No. The Free plan is forever. It only has limits on advanced features, not on usage time."
+}

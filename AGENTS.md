@@ -75,21 +75,29 @@ frontend/src/
 ├── stores/
 │   ├── auth-store.ts           ← Auth state (Zustand)
 │   ├── document-store.ts       ← Documents state
-│   ├── activity-store.ts       ← Activity feed (localStorage)
+│   ├── activity-store.ts       ← Activity feed (persistido en backend, M29)
+│   ├── settings-store.ts       ← UserSettings (M22)
 │   └── toast-store.ts          ← Toast notifications
 ├── services/
 │   ├── documents.ts            ← API client (proyectos, documentos, notas, versiones)
-│   └── auth.ts                 ← API client auth
+│   ├── auth.ts                 ← API client auth
+│   ├── settings.ts             ← API client settings
+│   ├── options.ts              ← API client story-options
+│   ├── activity.ts             ← API client activity
+│   └── i18n-backend.ts         ← Backend de i18next (fetch /api/i18n, cache en memoria)
 ├── lib/
 │   ├── utils.ts                ← cn(), formatTime()
+│   ├── document-tabs.ts        ← Lógica de pestañas/árbol de documentos
 │   └── activity-helpers.ts     ← getActivityIcon/Label/Link
 ├── hooks/
 │   └── useAutoSave.ts          ← Debounced auto-save
 ├── types/
-│   └── document.ts             ← Interfaces
+│   ├── document.ts             ← Interfaces
+│   └── settings.ts             ← Interfaces settings
 └── i18n/
-    ├── index.ts                ← i18next config
-    └── locales/                ← es.json, en.json
+    ├── index.ts                ← i18next config (nsSeparator '.', core estático + backend)
+    ├── core-resources.ts       ← Importa los 24 namespaces core desde locales/ (raíz)
+    └── language.ts             ← applySavedLanguage (sin localStorage, regla 22)
 
 backend/src/
 ├── index.ts                    ← Fastify server, CORS, Helmet, rate-limit

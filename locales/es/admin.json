@@ -1,0 +1,89 @@
+{
+  "title": "Panel de administración",
+  "subtitle": "Revisa las opciones de la comunidad, gestiona roles y asigna roles a las cuentas.",
+  "keep": "Conservar",
+  "keepThis": "Conservar esta",
+  "delete": "Eliminar",
+  "deleteOthers": "Eliminar las demás",
+  "deleted": "Opción eliminada",
+  "merged": "Duplicados fusionados",
+  "groupedBy": "agrupadas por similitud",
+  "noOptions": "No hay opciones de este tipo",
+  "noTags": "No hay etiquetas todavía",
+  "tagsSection": "Etiquetas globales",
+  "noFandoms": "No hay fandoms todavía",
+  "noResults": "Sin resultados",
+  "fandomSearchPlaceholder": "Buscar fandom...",
+  "fandoms": "Fandoms",
+  "fandomCounts": "{{ship}} parejas · {{character}} personajes",
+  "dragHint": "Arrastra una pareja o personaje sobre otro fandom para moverlo.",
+  "dragToMove": "Arrastrar a otro fandom",
+  "moved": "Movido a {{fandom}}",
+  "deleteFandom": "Eliminar fandom",
+  "deleteFandomTitle": "Eliminar fandom",
+  "deleteFandomConfirm": "¿Eliminar el fandom {{name}}? Si tiene hijos, muévelos primero.",
+  "emptyFandom": "Este fandom no tiene parejas ni personajes.",
+  "tabs": {
+    "moderate": "Moderación",
+    "roles": "Roles",
+    "users": "Cuentas"
+  },
+  "permissions": {
+    "admin": "Panel admin",
+    "moderate": "Moderación"
+  },
+  "roles": {
+    "title": "Roles",
+    "create": "Crear rol",
+    "searchPlaceholder": "Buscar rol...",
+    "name": "Nombre (minúsculas, sin espacios)",
+    "label": "Etiqueta",
+    "permissions": "Permisos",
+    "usersCount": "{{count}} cuentas",
+    "system": "sistema",
+    "edit": "Editar",
+    "created": "Rol creado",
+    "updated": "Rol actualizado",
+    "deleted": "Rol eliminado",
+    "deleteTitle": "Eliminar rol",
+    "deleteConfirm": "Las cuentas con este rol pasarán a 'user'. ¿Eliminar el rol?"
+  },
+  "users": {
+    "title": "Cuentas",
+    "noUsers": "No hay cuentas",
+    "searchPlaceholder": "Buscar por nombre o email...",
+    "roleAssigned": "Rol asignado",
+    "protected": "protegido",
+    "statusUpdated": "Estado actualizado",
+    "deleted": "Cuenta eliminada",
+    "status": {
+      "active": "Activa",
+      "suspended": "Suspendida",
+      "banned": "Baneada"
+    },
+    "suspendedUntil": "Suspendida hasta el {{date}}",
+    "suspend": {
+      "short": "Suspender",
+      "title": "Suspender a {{name}}",
+      "message": "La cuenta no podrá iniciar sesión hasta la fecha elegida.",
+      "confirm": "Suspender",
+      "24h": "24 horas",
+      "7d": "7 días",
+      "30d": "30 días"
+    },
+    "ban": "Banear",
+    "banConfirm": "Sí, banear",
+    "banTitle": "Banear a {{name}}",
+    "banMessage": "La cuenta quedará bloqueada permanentemente. Podrás desbanearla después.",
+    "reactivate": "Reactivar",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteTitle": "Eliminar a {{name}}",
+    "deleteMessage": "Se borrarán permanentemente la cuenta y todos sus datos (proyectos, documentos, notas y versiones). Esta acción no se puede deshacer."
+  },
+  "types": {
+    "fandom": "Fandoms",
+    "ship": "Parejas",
+    "character": "Personajes",
+    "tag": "Etiquetas"
+  }
+}

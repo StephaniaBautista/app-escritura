@@ -1,0 +1,19 @@
+{
+  "title": "Versions",
+  "newVersion": "Create version",
+  "empty": "No versions yet",
+  "emptyDesc": "Create a snapshot to be able to go back to this point",
+  "restore": "Restore",
+  "restoreTitle": "Restore version",
+  "confirmRestore": "Restore this version? Current content will be replaced.",
+  "delete": "Delete",
+  "deleteTitle": "Delete version",
+  "confirmDelete": "Delete this version? This action cannot be undone.",
+  "created": "Version created",
+  "restored": "Version restored",
+  "deleted": "Version deleted",
+  "versionNum": "Version {{version}}",
+  "noContent": "No content",
+  "selectHint": "Choose a document to see its versions",
+  "noDocuments": "Create a document to create versions"
+}

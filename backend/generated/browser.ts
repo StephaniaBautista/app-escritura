@@ -102,3 +102,8 @@ export type StoryOption = Prisma.StoryOptionModel
  * 
  */
 export type Activity = Prisma.ActivityModel
+/**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel

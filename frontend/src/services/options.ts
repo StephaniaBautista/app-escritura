@@ -5,6 +5,7 @@ export interface StoryOption {
   type: string
   value: string
   label: string
+  fandoms: string[]
   isDefault: boolean
   createdAt: string
 }
@@ -29,16 +30,19 @@ async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 export const storyOptionsApi = {
-  list: (type: OptionType) =>
-    fetchJson<StoryOption[]>(`${API}/story-options?type=${encodeURIComponent(type)}`),
+  list: (type: OptionType, fandoms?: string[]) => {
+    const base = `${API}/story-options?type=${encodeURIComponent(type)}`
+    const fandomQuery = fandoms === undefined ? '' : `&fandoms=${encodeURIComponent(fandoms.join(','))}`
+    return fetchJson<StoryOption[]>(base + fandomQuery)
+  },
 
   listAll: () =>
     fetchJson<StoryOption[]>(`${API}/story-options/all`),
 
-  create: (type: OptionType, value: string, label: string) =>
+  create: (type: OptionType, value: string, label: string, fandoms?: string[]) =>
     fetchJson<StoryOption>(`${API}/story-options`, {
       method: 'POST',
-      body: JSON.stringify({ type, value, label }),
+      body: JSON.stringify({ type, value, label, fandoms }),
     }),
 
   delete: (id: string) =>

@@ -38,6 +38,7 @@ export function StoryCharacters({ meta, update }: StoryCharactersProps) {
         onChange={handleChange}
         placeholder={t('storySetup.charactersPlaceholder')}
         hideChips
+        fandoms={meta.fandoms ?? []}
       />
       {characters.length > 0 && (
         <div className="space-y-1.5 mt-2">

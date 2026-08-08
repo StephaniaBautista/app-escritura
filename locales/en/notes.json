@@ -1,0 +1,14 @@
+{
+  "title": "Notes",
+  "newNote": "New note",
+  "notePlaceholder": "Note title...",
+  "contentPlaceholder": "Write your note...",
+  "emptyContent": "No content",
+  "empty": "No notes yet",
+  "emptyDesc": "Create your first note to save ideas and reminders",
+  "deleteTitle": "Delete note",
+  "confirmDelete": "Delete this note?",
+  "deleted": "Note deleted",
+  "selectHint": "Choose a document to see its notes",
+  "noDocuments": "Create a document to add notes"
+}

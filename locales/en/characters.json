@@ -1,0 +1,22 @@
+{
+  "tag": "Your universe",
+  "title": "Characters with depth",
+  "description": "Full sheets with 30+ attributes. Family tree, evolution, relationship map.",
+  "name": "Elena Voss",
+  "role": "Protagonist",
+  "age": "24 years",
+  "traits": "Traits",
+  "trait1": "Determined",
+  "trait2": "Sarcastic",
+  "trait3": "Loyal",
+  "motivation": "Motivation",
+  "motivationText": "Find her lost brother",
+  "weakness": "Weakness",
+  "weaknessText": "Can't ask for help",
+  "familyTree": "Family tree",
+  "familyTreeDesc": "Visualize families, connect parents and children.",
+  "evolution": "Character evolution",
+  "evolutionDesc": "Create versions of the character at different points.",
+  "aiComplete": "AI autocomplete",
+  "aiCompleteDesc": "AI suggests based on what you've already written."
+}

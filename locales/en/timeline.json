@@ -1,0 +1,13 @@
+{
+  "tag": "Structure your story",
+  "title": "Timeline",
+  "description": "Events with dates, involved characters. Auto-generates with guided mode.",
+  "morning": "Morning",
+  "morningEvent": "Maria discovers the letter",
+  "noon": "Noon",
+  "noonEvent": "Meeting at the cafe",
+  "afternoon": "Afternoon",
+  "afternoonEvent": "The revelation changes everything",
+  "night": "Night",
+  "nightEvent": "Irreversible decision"
+}

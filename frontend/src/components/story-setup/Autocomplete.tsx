@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X, Check } from 'lucide-react'
-import { useOptionsStore } from '@/stores/options-store'
+import { useOptionsStore, optionCacheKey } from '@/stores/options-store'
 import type { OptionType } from '@/types/story'
 import { cn } from '@/lib/utils'
 
@@ -12,9 +12,11 @@ interface AutocompleteProps {
   placeholder?: string
   id?: string
   hideChips?: boolean
+  fandoms?: string[]
 }
 
 const MAX_SUGGESTIONS = 8
+const FANDOM_SCOPED: OptionType[] = ['ship', 'character']
 
 export function Autocomplete({
   value,
@@ -23,23 +25,26 @@ export function Autocomplete({
   placeholder,
   id,
   hideChips = false,
+  fandoms,
 }: AutocompleteProps) {
   const { t } = useTranslation()
-  const storeOptions = useOptionsStore((s) => (optionType ? s.options[optionType] : undefined))
+  const storeOptions = useOptionsStore((s) => (optionType ? s.options[optionCacheKey(optionType, fandoms)] : undefined))
   const loadOptions = useOptionsStore((s) => s.loadOptions)
   const addStoreOption = useOptionsStore((s) => s.addOption)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(-1)
   const [creating, setCreating] = useState(false)
+  const [pendingCreate, setPendingCreate] = useState<string | null>(null)
+  const [pendingFandoms, setPendingFandoms] = useState<string[]>([])
   const rootRef = useRef<HTMLDivElement>(null)
   const justSelectedRef = useRef(false)
 
   useEffect(() => {
     if (optionType && !storeOptions) {
-      loadOptions(optionType)
+      loadOptions(optionType, fandoms)
     }
-  }, [optionType, storeOptions, loadOptions])
+  }, [optionType, storeOptions, loadOptions, fandoms])
 
   const allOptions = storeOptions?.map((o) => ({ value: o.value, label: o.label })) ?? []
   const trimmed = query.trim()
@@ -71,6 +76,11 @@ export function Autocomplete({
     setActive(-1)
   }
 
+  const doCreate = async (label: string, chosenFandoms: string[]) => {
+    const option = await addStoreOption(optionType ?? 'tag', label, label, chosenFandoms)
+    selectValue(option.value)
+  }
+
   const createOption = async (raw: string) => {
     const label = raw.trim()
     if (!label) return
@@ -79,16 +89,42 @@ export function Autocomplete({
       selectValue(existing.value)
       return
     }
-    if (optionType) {
-      const option = await addStoreOption(optionType, label, label)
-      selectValue(option.value)
-    } else {
+    if (!optionType) {
       selectValue(label)
+      return
+    }
+    if (FANDOM_SCOPED.includes(optionType) && (fandoms?.length ?? 0) > 0) {
+      setPendingCreate(label)
+      setPendingFandoms([...(fandoms ?? [])])
+      setOpen(false)
+      return
+    }
+    await doCreate(label, [])
+  }
+
+  const confirmPending = async () => {
+    if (!pendingCreate) return
+    setCreating(true)
+    try {
+      await doCreate(pendingCreate, pendingFandoms)
+    } finally {
+      setCreating(false)
+      setPendingCreate(null)
+      setPendingFandoms([])
     }
   }
 
+  const cancelPending = () => {
+    setPendingCreate(null)
+    setPendingFandoms([])
+  }
+
+  const togglePendingFandom = (fandom: string) => {
+    setPendingFandoms((prev) => (prev.includes(fandom) ? prev.filter((f) => f !== fandom) : [...prev, fandom]))
+  }
+
   const handleBlur = () => {
-    if (creating || justSelectedRef.current) {
+    if (pendingCreate || creating || justSelectedRef.current) {
       justSelectedRef.current = false
       return
     }
@@ -186,6 +222,44 @@ export function Autocomplete({
           </button>
         )}
       </div>
+
+      {pendingCreate && (
+        <div className="notebook-paper mt-2 p-3 rounded-lg">
+          <p className="text-sm mb-2" style={{ color: 'var(--color-ink)' }}>
+            {t('storySetup.fandomBelongsTo', { name: pendingCreate })}
+          </p>
+          <div className="space-y-1.5 mb-3">
+            {(fandoms ?? []).map((f) => {
+              const checked = pendingFandoms.includes(f)
+              return (
+                <label key={f} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-ink)' }}>
+                  <input type="checkbox" checked={checked} onChange={() => togglePendingFandom(f)} className="accent-current" />
+                  {f}
+                </label>
+              )
+            })}
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={cancelPending}
+              className="px-3 py-1.5 rounded-lg text-sm border hover:opacity-80"
+              style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-light)' }}
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              type="button"
+              disabled={creating}
+              onClick={confirmPending}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+              style={{ background: 'var(--color-accent)' }}
+            >
+              {t('common.confirm')}
+            </button>
+          </div>
+        </div>
+      )}
 
       {open && suggestions.length > 0 && (
         <div

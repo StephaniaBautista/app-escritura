@@ -1,0 +1,19 @@
+{
+  "newNote": "New note",
+  "notePlaceholder": "Note title...",
+  "filterAll": "All",
+  "filterStory": "Story",
+  "filterDocument": "Document",
+  "filterSubtab": "Subtab",
+  "filterHidden": "Hidden",
+  "noHidden": "No hidden notes",
+  "noNotesInFilter": "No notes here",
+  "hide": "Hide",
+  "show": "Show",
+  "restore": "Restore",
+  "scopeStory": "Story",
+  "scopeDocument": "Document",
+  "scopeSubtab": "Subtab",
+  "collapse": "Collapse wall",
+  "expand": "Expand wall"
+}

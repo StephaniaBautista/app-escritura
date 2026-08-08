@@ -1,0 +1,18 @@
+{
+  "tag": "Inteligencia artificial",
+  "title": "IA que entiende tu universo",
+  "description": "Tres modos. Conoce tu historia, personajes, timeline y lore. Nunca escribe por ti.",
+  "chat": "Chat companion",
+  "chatDesc": "Conoce tu historia en tiempo real. Sugiere avances para que no tengas un bloqueo de escritor nunca más.",
+  "chatUser": "¿Qué te parece el final del capítulo 3?",
+  "chatAi": "El arco de Elena tiene buena progresión, pero la revelación se siente apresurada.",
+  "characterAi": "Character.AI",
+  "characterAiDesc": "Habla con tus personajes en rol. Basado en su ficha y contexto.",
+  "characterUser": "¿Por qué tomaste esa decisión?",
+  "characterAi2": "—Porque me dejaste sin opción. Si no lo hacía, perdería todo otra vez...",
+  "suggestions": "Sugerencias en tiempo real",
+  "suggestionsDesc": "Lee mientras escribes. Marca inconsistencias, detecta agujeros de guión.",
+  "inconsistency": "Inconsistencia: edad cambio de cap 2 a cap 5",
+  "plotHole": "Agujero: ¿cómo llegó Elena al puerto?",
+  "autocomplete": "Autocompletado: nombre del guardia"
+}

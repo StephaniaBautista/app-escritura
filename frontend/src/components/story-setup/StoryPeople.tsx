@@ -36,6 +36,7 @@ export function StoryPeople({ meta, update }: StoryPeopleProps) {
           value={meta.ships ?? []}
           onChange={(ships) => update({ ships })}
           placeholder={t('storySetup.shipsPlaceholder')}
+          fandoms={meta.fandoms ?? []}
         />
       </div>
     </div>
