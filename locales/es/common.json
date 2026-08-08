@@ -12,5 +12,6 @@
   "add": "Añadir",
   "remove": "Quitar",
   "edit": "Editar",
-  "select": "Seleccionar"
+  "select": "Seleccionar",
+  "save": "Guardar"
 }

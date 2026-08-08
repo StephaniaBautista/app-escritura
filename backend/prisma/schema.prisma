@@ -313,6 +313,34 @@ model StoryOption {
   @@map("story_options")
 }
 
+// StoryQuestion model for the guided-mode question bank (Slice 5, Fase 4)
+// Preguntas globales de respuesta abierta; el admin las gestiona en el panel.
+model StoryQuestion {
+  id        String   @id @default(cuid())
+  text      String
+  textEn    String?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("story_questions")
+}
+
+// StoryTemplate model for structure templates (Slice 5, Fase 4)
+// Plantilla = nombre + secciones (Inicio/Desarrollo/Clímax/Final o custom) con las
+// preguntas del banco asignadas por sección. Gestionadas por el admin.
+model StoryTemplate {
+  id            String   @id @default(cuid())
+  name          String
+  nameEn        String?
+  description   String?
+  descriptionEn String?
+  sections      Json     @default("[]") // [{ id, title, titleEn, questionIds: [] }]
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@map("story_templates")
+}
+
 // Activity feed (M29): actividad reciente del usuario, antes en localStorage.
 // Un único modelo por usuario, sin datos de otro tenant.
 model Activity {

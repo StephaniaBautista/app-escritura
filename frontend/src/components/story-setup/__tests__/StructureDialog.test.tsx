@@ -2,24 +2,56 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { StructureDialog } from '../StructureDialog'
 
-const { useDocumentStoreMock } = vi.hoisted(() => ({ useDocumentStoreMock: vi.fn() }))
+const { useDocumentStoreMock, storyBankApiMock } = vi.hoisted(() => ({
+  useDocumentStoreMock: vi.fn(),
+  storyBankApiMock: {
+    listTemplates: vi.fn(),
+    listQuestions: vi.fn(),
+  },
+}))
 
 vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
 }))
 
+vi.mock('@/services/story-bank', () => ({
+  storyBankApi: storyBankApiMock,
+}))
+
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'es' } }),
 }))
 
 const baseStore = {
   updateStoryMeta: vi.fn().mockResolvedValue(undefined),
 }
 
+const templates = [
+  {
+    id: 't-1',
+    name: 'Inicio y Final',
+    nameEn: 'Beginning and Ending',
+    description: null,
+    descriptionEn: null,
+    sections: [
+      { id: 'inicio', questionIds: ['q-1'] },
+      { id: 'final', questionIds: [] },
+    ],
+    isDefault: true,
+    createdAt: '',
+  },
+]
+
+const questions = [
+  { id: 'q-1', text: '¿Qué evento del pasado marca al protagonista?', textEn: null, isDefault: true, createdAt: '' },
+]
+
 describe('StructureDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     useDocumentStoreMock.mockReturnValue(baseStore)
+    storyBankApiMock.listTemplates.mockResolvedValue(templates)
+    storyBankApiMock.listQuestions.mockResolvedValue(questions)
   })
 
   it('no renderiza nada si está cerrado', () => {
@@ -43,17 +75,21 @@ describe('StructureDialog', () => {
     expect(screen.queryByText('storySetup.guidedEnding')).not.toBeInTheDocument()
   })
 
-  it('con modo guiado: muestra preguntas guiadas antes de estructura', () => {
+  it('con modo guiado: muestra preguntas guiadas antes de estructura', async () => {
     render(<StructureDialog projectId="folder-1" isOpen onClose={vi.fn()} />)
 
     fireEvent.click(screen.getByText('storySetup.guidedModeYes'))
     fireEvent.click(screen.getByText('storySetup.next'))
 
     expect(screen.getByText('storySetup.guidedEnding')).toBeInTheDocument()
-    expect(screen.getByText('storySetup.guidedMentalState')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.guidedWorldContext')).toBeInTheDocument()
+    expect(screen.queryByText('storySetup.guidedMentalState')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByText('storySetup.next'))
-    expect(screen.getByText('storySetup.structureInicio')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('storySetup.templateQuestion')).toBeInTheDocument()
+      expect(screen.getByText('Inicio y Final')).toBeInTheDocument()
+    })
   })
 
   it('muestra pantalla de completado al final', () => {

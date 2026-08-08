@@ -5,8 +5,9 @@ import { useAuthStore } from '@/stores/auth-store'
 import { ModerationSection } from './sections/ModerationSection'
 import { RolesSection } from './sections/RolesSection'
 import { UsersSection } from './sections/UsersSection'
+import { StoryBankSection } from './sections/StoryBankSection'
 
-type AdminTab = 'moderate' | 'roles' | 'users'
+type AdminTab = 'moderate' | 'roles' | 'users' | 'structure'
 
 export function AdminPage() {
   const { t } = useTranslation()
@@ -18,6 +19,7 @@ export function AdminPage() {
 
   const tabs: { id: AdminTab; label: string }[] = [
     ...(canModerate ? [{ id: 'moderate' as AdminTab, label: t('admin.tabs.moderate') }] : []),
+    ...(canModerate ? [{ id: 'structure' as AdminTab, label: t('admin.tabs.structure') }] : []),
     ...(canAdmin
       ? [
           { id: 'roles' as AdminTab, label: t('admin.tabs.roles') },
@@ -62,6 +64,7 @@ export function AdminPage() {
         </div>
 
         {active === 'moderate' && <ModerationSection />}
+        {active === 'structure' && <StoryBankSection />}
         {active === 'roles' && <RolesSection />}
         {active === 'users' && <UsersSection />}
       </div>

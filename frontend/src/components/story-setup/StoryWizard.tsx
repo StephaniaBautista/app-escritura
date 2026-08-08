@@ -7,6 +7,7 @@ import { StoryBasics } from './StoryBasics'
 import { StoryPeople } from './StoryPeople'
 import { StoryCharacters } from './StoryCharacters'
 import { StoryTags } from './StoryTags'
+import { StoryStructure } from './StoryStructure'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryWizardProps {
@@ -41,6 +42,7 @@ function buildSteps(meta: StoryMeta): WizardStep[] {
   steps.push(
     { id: 'characters', titleKey: 'storySetup.stepCharacters' },
     { id: 'tags', titleKey: 'storySetup.stepTags' },
+    { id: 'structure', titleKey: 'storySetup.stepStructure' },
   )
 
   return steps
@@ -167,6 +169,7 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
           {step.id === 'couples' && <StoryPeople meta={meta} update={update} />}
           {step.id === 'characters' && <StoryCharacters meta={meta} update={update} />}
           {step.id === 'tags' && <StoryTags meta={meta} update={update} />}
+          {step.id === 'structure' && <StoryStructure meta={meta} update={update} />}
         </div>
 
         {error && (

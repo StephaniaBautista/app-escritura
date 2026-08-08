@@ -22,10 +22,10 @@ Plataforma de escritura creativa con IA. Monorepo pnpm con frontend React y back
 | 1: Autenticación | ✅ | BetterAuth, login/register, session cookies |
 | 2: Core Editor | ✅ | TipTap, capítulos, subpáginas, auto-save |
 | 3: Notas y Versionado | ✅ | CRUD notas, versiones con restore, máx 50 |
-| 4: Modo de Creación | ⏳ (Slices 1-3 ✅) | Wizard directo + guiado (5 pasos AO3 + estructura); metadata en `Project.storyMeta` (nunca como documento); IA = scaffolding (Fase 9) |
+| 4: Modo de Creación | ⏳ (Slices 1-3 + 5 ✅) | Wizard directo + guiado (AO3 + estructura con plantillas y banco de preguntas admin-editable); metadata en `Project.storyMeta` (nunca como documento); IA = scaffolding (Fase 9) |
 | 5-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
 
-**Fase actual: 4 (Modo de Creación) en curso — Slices 1-3 completos (wizard guiado funcional). Siguiente: Slice 4 (T25, scaffolding IA).**
+**Fase actual: 4 (Modo de Creación) en curso — Slices 1-3 y 5 completos (estructura editable + banco de preguntas). Siguiente: Slice 4 (T25, scaffolding IA).**
 
 > ⚠️ **Prisma**: tras cambiar `schema.prisma` hay que correr `prisma db push` **y** `prisma generate` (el push no regenera el cliente; el backend en ejecución no lo recoge hasta reiniciar).
 
@@ -62,6 +62,7 @@ frontend/src/
 │   ├── versions/               ← VersionCard, VersionsList (Fase 3)
 │   ├── sidebar/
 │   │   └── Sidebar.tsx         ← Editor sidebar (solo Contenido, M18)
+│   ├── story-setup/            ← Wizard + estructura: StoryWizard, StoryStructure, StoryGuidedQuestions, StoryCharacters, StructureDialog, StoryStructureTab (Fase 4 + Slice 5)
 │   └── landing/                ← Componentes landing page
 ├── pages/
 │   ├── DashboardHome.tsx       ← Bienvenida + actividad
@@ -71,6 +72,7 @@ frontend/src/
 │   ├── RecentPage.tsx          ← Actividad reciente
 │   ├── SharedPage.tsx          ← Placeholder
 │   ├── Login.tsx, Register.tsx, etc.
+│   ├── admin/                   ← Panel admin: ModerationSection, StoryBankSection (QuestionsManager, TemplatesManager, TemplateEditor, Fase 04 + Slice 5)
 │   ├── Landing.tsx             ← Landing page (36 líneas)
 │   └── landing-sections/       ← 12 secciones extraídas
 ├── stores/
@@ -84,11 +86,13 @@ frontend/src/
 │   ├── auth.ts                 ← API client auth
 │   ├── settings.ts             ← API client settings
 │   ├── options.ts              ← API client story-options
+│   ├── story-bank.ts           ← API client banco de preguntas + plantillas (Slice 5)
 │   ├── activity.ts             ← API client activity
 │   └── i18n-backend.ts         ← Backend de i18next (fetch /api/i18n, cache en memoria)
 ├── lib/
 │   ├── utils.ts                ← cn(), formatTime()
 │   ├── document-tabs.ts        ← Lógica de pestañas/árbol de documentos
+│   ├── story-structure.ts      ← Migración legacy + secciones estándar (Slice 5)
 │   └── activity-helpers.ts     ← getActivityIcon/Label/Link
 ├── hooks/
 │   └── useAutoSave.ts          ← Debounced auto-save
@@ -111,12 +115,14 @@ backend/src/
 │   ├── settings.ts             ← UserSettings (M22)
 │   ├── activity.ts             ← Activity feed (M29)
 │   ├── i18n.ts                 ← GET /api/i18n/:lng/:ns (M31)
+│   ├── story-bank.ts           ← Banco de preguntas + plantillas de estructura (Slice 5)
 │   └── options.ts, admin-*.ts, etc. ← Story options + admin (Fase 04)
 ├── services/
 │   ├── document-service.ts     ← Prisma queries (proyectos + documentos)
 │   ├── note-service.ts         ← CRUD notas con ownership, ámbito documento/proyecto, isHidden (Fase 3 + M15)
 │   ├── version-service.ts      ← Snapshots, límite 50 FIFO, restore (Fase 3)
 │   ├── options-service.ts      ← Story options globales + cache en memoria (M31 T7)
+│   ├── story-bank-service.ts   ← Preguntas + plantillas (CRUD, cache, seed solo tabla vacía; Slice 5)
 │   ├── i18n-service.ts         ← Namespaces de traducción + cache mtime-aware (M31)
 │   └── activity-service.ts     ← Activity feed (M29)
 ├── lib/

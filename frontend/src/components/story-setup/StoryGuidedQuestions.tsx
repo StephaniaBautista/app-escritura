@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Check, Loader2, Plus, X } from 'lucide-react'
 import { SingleSelect } from './SingleSelect'
-import { ChipInput } from './ChipInput'
+import { storyBankApi, type StoryQuestion } from '@/services/story-bank'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryGuidedQuestionsProps {
@@ -46,7 +48,43 @@ function TextArea({
 }
 
 export function StoryGuidedQuestions({ meta, update }: StoryGuidedQuestionsProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const [bank, setBank] = useState<StoryQuestion[] | null>(null)
+  const [picking, setPicking] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    storyBankApi
+      .listQuestions()
+      .then((questions) => {
+        if (alive) setBank(questions)
+      })
+      .catch(() => {
+        if (alive) setBank([])
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const lang = i18n.language
+  const qText = (q: StoryQuestion): string => (lang === 'en' && q.textEn ? q.textEn : q.text)
+
+  const bankAnswers = meta.bankAnswers ?? {}
+  const answeredIds = new Set(Object.keys(bankAnswers))
+
+  const addQuestion = (id: string) => {
+    update({ bankAnswers: { ...bankAnswers, [id]: '' } })
+    setPicking(false)
+  }
+
+  const removeQuestion = (id: string) => {
+    const next = { ...bankAnswers }
+    delete next[id]
+    update({ bankAnswers: next })
+  }
+
+  const available = (bank ?? []).filter((q) => !answeredIds.has(q.id))
 
   return (
     <div className="space-y-5">
@@ -78,35 +116,119 @@ export function StoryGuidedQuestions({ meta, update }: StoryGuidedQuestionsProps
         />
       </Field>
 
-      <Field label={t('storySetup.guidedMentalState')} id="guided-mental">
+      <Field label={t('storySetup.guidedWorldContext')} id="guided-world">
         <TextArea
-          id="guided-mental"
-          value={meta.initialState ?? ''}
-          onChange={(v) => update({ initialState: v })}
-          placeholder={t('storySetup.guidedMentalStatePlaceholder')}
+          id="guided-world"
+          value={meta.worldContext ?? ''}
+          onChange={(v) => update({ worldContext: v })}
+          placeholder={t('storySetup.guidedWorldContextPlaceholder')}
           rows={2}
         />
       </Field>
 
-      <Field label={t('storySetup.guidedPhysicalState')} id="guided-physical">
+      <Field label={t('storySetup.guidedInitialSituation')} id="guided-situation">
         <TextArea
-          id="guided-physical"
-          value={meta.initialPhysicalState ?? ''}
-          onChange={(v) => update({ initialPhysicalState: v })}
-          placeholder={t('storySetup.guidedPhysicalStatePlaceholder')}
+          id="guided-situation"
+          value={meta.initialSituation ?? ''}
+          onChange={(v) => update({ initialSituation: v })}
+          placeholder={t('storySetup.guidedInitialSituationPlaceholder')}
           rows={2}
+        />
+      </Field>
+
+      <Field label={t('storySetup.guidedCentralTheme')} id="guided-theme">
+        <TextArea
+          id="guided-theme"
+          value={meta.centralTheme ?? ''}
+          onChange={(v) => update({ centralTheme: v })}
+          placeholder={t('storySetup.guidedCentralThemePlaceholder')}
+          rows={2}
+        />
+      </Field>
+
+      <Field label={t('storySetup.guidedProblems')} id="guided-problems">
+        <TextArea
+          id="guided-problems"
+          value={meta.problems ?? ''}
+          onChange={(v) => update({ problems: v })}
+          placeholder={t('storySetup.problemsPlaceholder')}
+          rows={3}
         />
       </Field>
 
       <div>
-        <p className="block text-sm font-medium mb-2" style={{ color: 'var(--color-ink-light)' }}>
-          {t('storySetup.guidedProblems')}
-        </p>
-        <ChipInput
-          value={meta.problems ?? []}
-          onChange={(problems) => update({ problems })}
-          placeholder={t('storySetup.problemsPlaceholder')}
-        />
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <p className="text-sm font-medium" style={{ color: 'var(--color-ink-light)' }}>
+            {t('storySetup.bankTitle')}
+          </p>
+          <button
+            type="button"
+            onClick={() => setPicking((p) => !p)}
+            disabled={bank === null || available.length === 0}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-90 disabled:opacity-50"
+            style={{ background: 'var(--color-accent)', color: '#fff' }}
+          >
+            {bank === null ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Plus className="w-3.5 h-3.5" />
+            )}
+            {t('storySetup.bankAdd')}
+          </button>
+        </div>
+
+        {picking && bank !== null && (
+          <div className="space-y-1.5 mb-3 rounded-lg border p-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
+            {available.length === 0 ? (
+              <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+                {t('storySetup.bankEmpty')}
+              </p>
+            ) : (
+              available.map((q) => (
+                <button
+                  key={q.id}
+                  type="button"
+                  onClick={() => addQuestion(q.id)}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm border hover:opacity-90 transition-all"
+                  style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
+                >
+                  <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
+                  {qText(q)}
+                </button>
+              ))
+            )}
+          </div>
+        )}
+
+        {answeredIds.size === 0 && !picking && (
+          <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+            {t('storySetup.bankHint')}
+          </p>
+        )}
+
+        <div className="space-y-3">
+          {Object.entries(bankAnswers).map(([questionId, answer]) => {
+            const question = (bank ?? []).find((q) => q.id === questionId)
+            return (
+              <div key={questionId}>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <label htmlFor={`bank-${questionId}`} className="text-xs font-medium" style={{ color: 'var(--color-ink-light)' }}>
+                    {question ? qText(question) : questionId}
+                  </label>
+                  <button type="button" onClick={() => removeQuestion(questionId)} aria-label={t('common.remove')} className="hover:opacity-70">
+                    <X className="w-4 h-4" style={{ color: 'var(--color-ink-light)' }} />
+                  </button>
+                </div>
+                <TextArea
+                  id={`bank-${questionId}`}
+                  value={answer}
+                  onChange={(v) => update({ bankAnswers: { ...bankAnswers, [questionId]: v } })}
+                  rows={2}
+                />
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

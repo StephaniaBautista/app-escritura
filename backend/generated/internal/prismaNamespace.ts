@@ -413,6 +413,8 @@ export const ModelName = {
   World: 'World',
   Diagram: 'Diagram',
   StoryOption: 'StoryOption',
+  StoryQuestion: 'StoryQuestion',
+  StoryTemplate: 'StoryTemplate',
   Activity: 'Activity',
   Role: 'Role'
 } as const
@@ -430,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "diagram" | "storyOption" | "activity" | "role"
+    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "diagram" | "storyOption" | "storyQuestion" | "storyTemplate" | "activity" | "role"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1618,6 +1620,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StoryQuestion: {
+      payload: Prisma.$StoryQuestionPayload<ExtArgs>
+      fields: Prisma.StoryQuestionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StoryQuestionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StoryQuestionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        findFirst: {
+          args: Prisma.StoryQuestionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StoryQuestionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        findMany: {
+          args: Prisma.StoryQuestionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>[]
+        }
+        create: {
+          args: Prisma.StoryQuestionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        createMany: {
+          args: Prisma.StoryQuestionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StoryQuestionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>[]
+        }
+        delete: {
+          args: Prisma.StoryQuestionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        update: {
+          args: Prisma.StoryQuestionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        deleteMany: {
+          args: Prisma.StoryQuestionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StoryQuestionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StoryQuestionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>[]
+        }
+        upsert: {
+          args: Prisma.StoryQuestionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryQuestionPayload>
+        }
+        aggregate: {
+          args: Prisma.StoryQuestionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStoryQuestion>
+        }
+        groupBy: {
+          args: Prisma.StoryQuestionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryQuestionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StoryQuestionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryQuestionCountAggregateOutputType> | number
+        }
+      }
+    }
+    StoryTemplate: {
+      payload: Prisma.$StoryTemplatePayload<ExtArgs>
+      fields: Prisma.StoryTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StoryTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StoryTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.StoryTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StoryTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.StoryTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.StoryTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.StoryTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StoryTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.StoryTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        update: {
+          args: Prisma.StoryTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.StoryTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StoryTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StoryTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.StoryTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StoryTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.StoryTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStoryTemplate>
+        }
+        groupBy: {
+          args: Prisma.StoryTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StoryTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StoryTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
     Activity: {
       payload: Prisma.$ActivityPayload<ExtArgs>
       fields: Prisma.ActivityFieldRefs
@@ -2021,6 +2171,31 @@ export const StoryOptionScalarFieldEnum = {
 export type StoryOptionScalarFieldEnum = (typeof StoryOptionScalarFieldEnum)[keyof typeof StoryOptionScalarFieldEnum]
 
 
+export const StoryQuestionScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  textEn: 'textEn',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryQuestionScalarFieldEnum = (typeof StoryQuestionScalarFieldEnum)[keyof typeof StoryQuestionScalarFieldEnum]
+
+
+export const StoryTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nameEn: 'nameEn',
+  description: 'description',
+  descriptionEn: 'descriptionEn',
+  sections: 'sections',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryTemplateScalarFieldEnum = (typeof StoryTemplateScalarFieldEnum)[keyof typeof StoryTemplateScalarFieldEnum]
+
+
 export const ActivityScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -2335,6 +2510,8 @@ export type GlobalOmitConfig = {
   world?: Prisma.WorldOmit
   diagram?: Prisma.DiagramOmit
   storyOption?: Prisma.StoryOptionOmit
+  storyQuestion?: Prisma.StoryQuestionOmit
+  storyTemplate?: Prisma.StoryTemplateOmit
   activity?: Prisma.ActivityOmit
   role?: Prisma.RoleOmit
 }

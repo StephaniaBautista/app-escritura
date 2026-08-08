@@ -67,6 +67,8 @@ export const ModelName = {
   World: 'World',
   Diagram: 'Diagram',
   StoryOption: 'StoryOption',
+  StoryQuestion: 'StoryQuestion',
+  StoryTemplate: 'StoryTemplate',
   Activity: 'Activity',
   Role: 'Role'
 } as const
@@ -301,6 +303,31 @@ export const StoryOptionScalarFieldEnum = {
 } as const
 
 export type StoryOptionScalarFieldEnum = (typeof StoryOptionScalarFieldEnum)[keyof typeof StoryOptionScalarFieldEnum]
+
+
+export const StoryQuestionScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  textEn: 'textEn',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryQuestionScalarFieldEnum = (typeof StoryQuestionScalarFieldEnum)[keyof typeof StoryQuestionScalarFieldEnum]
+
+
+export const StoryTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nameEn: 'nameEn',
+  description: 'description',
+  descriptionEn: 'descriptionEn',
+  sections: 'sections',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryTemplateScalarFieldEnum = (typeof StoryTemplateScalarFieldEnum)[keyof typeof StoryTemplateScalarFieldEnum]
 
 
 export const ActivityScalarFieldEnum = {

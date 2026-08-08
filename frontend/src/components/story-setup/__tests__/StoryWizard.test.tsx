@@ -19,7 +19,7 @@ vi.mock('@/stores/options-store', async (importOriginal) => {
 const t = (key: string) => key
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t }),
+  useTranslation: () => ({ t, i18n: { language: 'es' } }),
 }))
 
 const baseStore = {
@@ -97,7 +97,7 @@ describe('StoryWizard', () => {
   it('permite hacer click en un tab para saltar directamente a ese paso', () => {
     render(<StoryWizard projectId="folder-1" isOpen onClose={vi.fn()} onSaved={vi.fn()} />)
 
-    fireEvent.click(screen.getByText('storySetup.stepTags'))
+    fireEvent.click(screen.getByText('storySetup.stepStructure'))
     expect(screen.getByText('storySetup.finish')).toBeInTheDocument()
     expect(screen.queryByText('storySetup.next')).not.toBeInTheDocument()
   })
@@ -123,7 +123,7 @@ describe('StoryWizard', () => {
     fireEvent.click(screen.getByText('storySetup.stepBasics'))
     fireEvent.change(screen.getByLabelText('storySetup.rating'), { target: { value: 'teen' } })
 
-    fireEvent.click(screen.getByText('storySetup.stepTags'))
+    fireEvent.click(screen.getByText('storySetup.stepStructure'))
     fireEvent.click(screen.getByText('storySetup.finish'))
 
     await waitFor(() => {
@@ -143,7 +143,7 @@ describe('StoryWizard', () => {
       />,
     )
 
-    fireEvent.click(screen.getByText('storySetup.stepTags'))
+    fireEvent.click(screen.getByText('storySetup.stepStructure'))
     fireEvent.click(screen.getByText('storySetup.finish'))
 
     await waitFor(() => {
@@ -155,7 +155,7 @@ describe('StoryWizard', () => {
     const onSaved = vi.fn()
     render(<StoryWizard projectId="folder-1" isOpen onClose={vi.fn()} onSaved={onSaved} />)
 
-    fireEvent.click(screen.getByText('storySetup.stepTags'))
+    fireEvent.click(screen.getByText('storySetup.stepStructure'))
     fireEvent.click(screen.getByText('storySetup.finish'))
 
     await waitFor(() => {

@@ -122,6 +122,16 @@ export type Diagram = Prisma.DiagramModel
  */
 export type StoryOption = Prisma.StoryOptionModel
 /**
+ * Model StoryQuestion
+ * 
+ */
+export type StoryQuestion = Prisma.StoryQuestionModel
+/**
+ * Model StoryTemplate
+ * 
+ */
+export type StoryTemplate = Prisma.StoryTemplateModel
+/**
  * Model Activity
  * 
  */

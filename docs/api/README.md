@@ -162,6 +162,22 @@ Reglas de estado de cuenta:
 - **Protección**: no se puede modificar/eliminar la propia cuenta ni a otro superadmin (por permiso `admin`).
 - **Modelo**: tabla `Role` (catálogo gestionable, seed `user`/`superadmin`). `User.role` guarda el nombre del rol. Roles con permisos configurables (`admin`, `moderate`).
 
+### Story Bank: preguntas y plantillas (2026-08-08, Fase 4 Slice 5)
+- `GET /api/story-questions` - Listar todas las preguntas del **banco de preguntas** (modo guiado del wizard)
+- `POST /api/story-questions` (**permiso `moderate`**) - Crear pregunta `{ text, textEn? }`
+- `PATCH /api/story-questions/:id` (**`moderate`**) - Editar pregunta `{ text?, textEn? }`
+- `DELETE /api/story-questions/:id` (**`moderate`**) - Eliminar pregunta (incluidas las de sistema)
+- `GET /api/story-templates` - Listar las **plantillas de estructura** (con sus secciones y `questionIds` por sección)
+- `POST /api/story-templates` (**`moderate`**) - Crear plantilla `{ name, nameEn?, description?, descriptionEn?, sections[] }`
+- `PATCH /api/story-templates/:id` (**`moderate`**) - Editar plantilla (mismos campos, todos opcionales)
+- `DELETE /api/story-templates/:id` (**`moderate`**) - Eliminar plantilla (incluidas las de sistema)
+
+Reglas:
+- **Banco de preguntas**: respuestas siempre texto abierto; el usuario del modo guiado elige preguntas extra del banco (`StoryMeta.bankAnswers`). Un solo banco global para todos los usuarios.
+- **Plantillas**: cada plantilla define sus secciones (`id`: `inicio|desarrollo|climax|final` o custom con `title`/`titleEn`) y las preguntas asignadas por sección (`questionIds` referencian `StoryQuestion`). Máx 12 secciones; ids únicos; títulos obligatorios en secciones custom.
+- **Defaults**: `isDefault=true`, sembrados **solo si la tabla está vacía** (primer arranque). El admin puede **editar y borrar cualquier pregunta/plantilla, incluidas las de sistema**; los cambios persisten entre reinicios (el seed no vuelve a crearlas).
+- Cache en memoria 5 min (`MemoryCache`), invalidada en cualquier escritura.
+
 ### Activity (2026-08-06, M29)
 - `GET /api/activity` - Listar la actividad reciente del usuario (más reciente primero, máx. 20)
 - `POST /api/activity` - Crear entrada `{ type, title, folderId?, documentId? }` (`type`: `folder_created | document_created | document_edited`)

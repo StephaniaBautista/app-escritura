@@ -20,8 +20,10 @@ import { adminUsersRoutes } from './routes/admin-users.js'
 import { meRoutes } from './routes/me.js'
 import { activityRoutes } from './routes/activity.js'
 import { i18nRoutes } from './routes/i18n.js'
+import { storyBankRoutes } from './routes/story-bank.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
+import { storyBankService } from './services/story-bank-service.js'
 
 const app = Fastify({
   logger: true,
@@ -167,6 +169,9 @@ await app.register(activityRoutes, { prefix: '/api' })
 // i18n translation namespaces (M31)
 await app.register(i18nRoutes, { prefix: '/api' })
 
+// Story bank (questions + structure templates, Fase 4 Slice 5)
+await app.register(storyBankRoutes, { prefix: '/api' })
+
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {
   app.register(async function apiRoutes(app) {
@@ -202,6 +207,11 @@ const start = async () => {
 
     const seededRoles = await roleService.seedDefaults()
     if (seededRoles > 0) console.log(`Seeded ${seededRoles} default roles`)
+
+    const seededBank = await storyBankService.seedDefaults()
+    if (seededBank.questions > 0 || seededBank.templates > 0) {
+      console.log(`Seeded ${seededBank.questions} questions and ${seededBank.templates} templates`)
+    }
   } catch (err) {
     app.log.error(err)
     process.exit(1)

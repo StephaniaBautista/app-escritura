@@ -5,13 +5,20 @@ export type OptionType = 'rating' | 'storyType' | 'category' | 'narrator' | 'end
 export interface StoryCharacter {
   name: string
   isOC: boolean
+  initialState?: string
+  initialPhysicalState?: string
+}
+
+export interface StoryStructureSection {
+  id: string
+  title?: string
+  content?: string
+  answers?: Record<string, string>
 }
 
 export interface StoryStructure {
-  inicio?: string
-  desarrollo?: string
-  climax?: string
-  final?: string
+  templateId?: string
+  sections: StoryStructureSection[]
 }
 
 export interface StoryDuration {
@@ -35,8 +42,10 @@ export interface StoryMeta {
   ending?: string
   protagonistLife?: string
   protagonistEvolution?: string
-  initialState?: string
-  initialPhysicalState?: string
-  problems?: string[]
+  worldContext?: string
+  initialSituation?: string
+  centralTheme?: string
+  problems?: string
+  bankAnswers?: Record<string, string>
   extra?: Record<string, unknown>
 }
