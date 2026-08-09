@@ -6,14 +6,6 @@
 
 ---
 
-## Proyecto: Archivum
-
-Plataforma de escritura creativa con IA. Monorepo pnpm con frontend React y backend Fastify.
-
-**Stack:** React 19 + Vite 8 + TypeScript 6 + Tailwind 4 + Zustand 5 + TipTap | Fastify 5 + Prisma + PostgreSQL (Supabase) + BetterAuth
-
----
-
 ## Estado Actual
 
 | Fase | Estado | Detalle |
@@ -23,9 +15,9 @@ Plataforma de escritura creativa con IA. Monorepo pnpm con frontend React y back
 | 2: Core Editor | ✅ | TipTap, capítulos, subpáginas, auto-save |
 | 3: Notas y Versionado | ✅ | CRUD notas, versiones con restore, máx 50 |
 | 4: Modo de Creación | ⏳ (Slices 1-3 + 5 ✅) | Wizard directo + guiado (AO3 + estructura con plantillas y banco de preguntas admin-editable); metadata en `Project.storyMeta` (nunca como documento); IA = scaffolding (Fase 9) |
+| 5: Personajes | ✅ (T26-T32; T33 → Fase 9) | CRUD completo, formulario con imagen (Supabase Storage), fichas + filtros, árbol genealógico, evolución |
 | 5-15 | ⏳ | Pendientes (ver `tasks/todo.md`) |
 
-**Fase actual: 4 (Modo de Creación) en curso — Slices 1-3 y 5 completos (estructura editable + banco de preguntas). Siguiente: Slice 4 (T25, scaffolding IA).**
 
 > ⚠️ **Prisma**: tras cambiar `schema.prisma` hay que correr `prisma db push` **y** `prisma generate` (el push no regenera el cliente; el backend en ejecución no lo recoge hasta reiniciar).
 
@@ -63,6 +55,7 @@ frontend/src/
 │   ├── sidebar/
 │   │   └── Sidebar.tsx         ← Editor sidebar (solo Contenido, M18)
 │   ├── story-setup/            ← Wizard + estructura: StoryWizard, StoryStructure, StoryGuidedQuestions, StoryCharacters, StructureDialog, StoryStructureTab (Fase 4 + Slice 5)
+│   ├── characters/             ← Personajes (Fase 5): CharactersPanel, CharacterForm, CharacterCard, CharacterDetail, CharacterFilters, FamilyTree, CharacterEvolutionDialog, CharacterImageField, ChipsInput, FamilyMultiSelect, SelectOrCustom
 │   └── landing/                ← Componentes landing page
 ├── pages/
 │   ├── DashboardHome.tsx       ← Bienvenida + actividad
@@ -87,12 +80,14 @@ frontend/src/
 │   ├── settings.ts             ← API client settings
 │   ├── options.ts              ← API client story-options
 │   ├── story-bank.ts           ← API client banco de preguntas + plantillas (Slice 5)
+│   ├── characters.ts           ← API client personajes (Fase 5)
 │   ├── activity.ts             ← API client activity
 │   └── i18n-backend.ts         ← Backend de i18next (fetch /api/i18n, cache en memoria)
 ├── lib/
 │   ├── utils.ts                ← cn(), formatTime()
 │   ├── document-tabs.ts        ← Lógica de pestañas/árbol de documentos
 │   ├── story-structure.ts      ← Migración legacy + secciones estándar (Slice 5)
+│   ├── character-filters.ts    ← Filtros de personajes (Fase 5)
 │   └── activity-helpers.ts     ← getActivityIcon/Label/Link
 ├── hooks/
 │   └── useAutoSave.ts          ← Debounced auto-save
@@ -116,6 +111,7 @@ backend/src/
 │   ├── activity.ts             ← Activity feed (M29)
 │   ├── i18n.ts                 ← GET /api/i18n/:lng/:ns (M31)
 │   ├── story-bank.ts           ← Banco de preguntas + plantillas de estructura (Slice 5)
+│   ├── characters.ts           ← CRUD personajes + evolve + image (Fase 5)
 │   └── options.ts, admin-*.ts, etc. ← Story options + admin (Fase 04)
 ├── services/
 │   ├── document-service.ts     ← Prisma queries (proyectos + documentos)
@@ -124,13 +120,16 @@ backend/src/
 │   ├── options-service.ts      ← Story options globales + cache en memoria (M31 T7)
 │   ├── story-bank-service.ts   ← Preguntas + plantillas (CRUD, cache, seed solo tabla vacía; Slice 5)
 │   ├── i18n-service.ts         ← Namespaces de traducción + cache mtime-aware (M31)
-│   └── activity-service.ts     ← Activity feed (M29)
+│   ├── activity-service.ts     ← Activity feed (M29)
+│   ├── character-service.ts    ← CRUD personajes, parentIds saneados, evolve (Fase 5)
+│   └── storage-service.ts      ← Supabase Storage imágenes (upload/delete, whitelist, máx 3 MB; Fase 5)
 ├── lib/
 │   ├── auth.ts                 ← BetterAuth config
 │   ├── prisma.ts               ← Prisma client (valida DATABASE_URL)
 │   ├── email.ts                ← Nodemailer SMTP
 │   ├── session.ts              ← getSessionUser compartido (Fase 3)
 │   ├── cache.ts                ← MemoryCache<T> genérico con TTL (M31 T7)
+│   ├── supabase.ts             ← Cliente admin Supabase (Fase 5)
 │   └── trusted-host.ts, security-log.ts, auth-error-normalizer.ts (M29)
 └── prisma/
     └── schema.prisma           ← Modelos (User, Session, ..., Project, Folder, Document, Note, DocumentVersion, Character, World, Diagram, StoryOption, Role, Activity, UserSettings)
@@ -177,6 +176,7 @@ backend/src/
     - **Editar traducciones siempre en UTF-8 sin BOM.** Nunca editar JSON con PowerShell (corrompe la codificación, error real sufrido en M31). Reutilizar `scripts/split-locales.mjs` para regenerar/validar paridad.
     - **Regla 22 aplica**: el detector de idioma NO usa localStorage; el idioma se persiste en `UserSettings.language` vía `/api/settings` (`i18n/language.ts` + `LanguageSwitcher`).
 26. **Cache de datos globales (M31 T7)** — los datos idénticos para todos los usuarios (story-options, traducciones) se cachean en memoria con `backend/src/lib/cache.ts` (`MemoryCache<T>`, TTL + maxEntries). No cachear datos por-usuario. El cache de `i18n-service` es **mtime-aware** (se invalida al editar el archivo, no espera el TTL). Al escalar a varias instancias, sustituir por Redis/Upstash manteniendo la API get/set/delete/clear.
+27. **E2E: NUNCA correr la suite completa** (`npx playwright test` sin filtros). Correr **solo los specs relevantes al cambio** (`npx playwright test e2e/<spec>.spec.ts [--grep "nombre"]`). La suite completa hace ~35 peticiones de auth (16 logins API + 13 logins UI + 5 sign-ups); repetirla satura los rate limits (auth 500/15min, global 100/min) y produce **429 en cascada** que la UI muestra como "Credenciales inválidas" (fallos falsos que parecen de auth). Preferir login por API + `storageState()` en `beforeAll` (patrón `e2e/characters.spec.ts`) sobre UI login por test. Lo ya probado no se vuelve a probar.
 
 ---
 

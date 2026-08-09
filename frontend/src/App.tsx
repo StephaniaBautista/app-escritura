@@ -27,11 +27,11 @@ const PRICING_NS = ['pricing', 'pricingPage', 'comparison', 'faq', 'cta', 'ai', 
 const AUTH_NS = ['auth', 'common']
 const SHELL_NS = ['sidebar', 'admin', 'settings', 'common']
 const DOCUMENTS_NS = ['projects', 'storySetup', 'common']
-const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'common']
+const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'common']
 const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'common']
 
 function App() {
-  const { checkSession, isInitialized } = useAuthStore()
+  const { checkSession, isInitialized, isAuthenticated } = useAuthStore()
 
   useEffect(() => {
     if (!isInitialized) {
@@ -46,7 +46,7 @@ function App() {
         .then((settings) => applySavedLanguage(settings.language))
         .catch(() => applySavedLanguage())
     }
-  }, [isInitialized])
+  }, [isInitialized, isAuthenticated])
 
   return (
     <Suspense fallback={null}>

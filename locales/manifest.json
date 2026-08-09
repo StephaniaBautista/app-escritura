@@ -57,6 +57,7 @@
     "editorApp",
     "sidebar",
     "auth",
-    "admin"
+    "admin",
+    "characterApp"
   ]
 }

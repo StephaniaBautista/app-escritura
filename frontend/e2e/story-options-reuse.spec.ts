@@ -55,9 +55,9 @@ test.describe('Story options global + autocomplete', () => {
 
   async function openWizardBasicsFanfic(page: import('@playwright/test').Page, projectId: string) {
     await page.goto(`/app/documents/${projectId}`)
-    await page.getByRole('button', { name: 'Complete story' }).click()
+    await page.getByRole('button', { name: 'Completar historia' }).click()
     const dialog = page.getByRole('dialog')
-    await dialog.getByRole('button', { name: /Basics/ }).click()
+    await dialog.getByRole('button', { name: 'Información' }).click()
     await expect(dialog.getByLabel('Fanfic?')).toBeVisible()
     const fandomLoaded = page.waitForResponse(
       (r) => r.url().includes('/story-options?type=fandom') && r.status() === 200,
@@ -65,7 +65,7 @@ test.describe('Story options global + autocomplete', () => {
     )
     await dialog.getByLabel('Fanfic?').selectOption('yes')
     await fandomLoaded
-    await expect(dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')).toBeVisible()
+    await expect(dialog.getByPlaceholder('ej: Harry Potter, Star Wars...')).toBeVisible()
   }
 
   test('cuenta A crea fandoms y ships globales desde el autocompletado del wizard', async ({ page }) => {
@@ -73,16 +73,20 @@ test.describe('Story options global + autocomplete', () => {
     await openWizardBasicsFanfic(page, ctx.projectA)
 
     const dialog = page.getByRole('dialog')
-    const fandomInput = dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')
+    const fandomInput = dialog.getByPlaceholder('ej: Harry Potter, Star Wars...')
     await fandomInput.fill('E2E Global Fandom')
     await fandomInput.press('Enter')
     await expect(dialog.getByText('E2E Global Fandom', { exact: true })).toBeVisible()
 
-    await dialog.getByRole('button', { name: /Couples/ }).click()
+    await dialog.getByRole('button', { name: /(Couples|Parejas)/ }).click()
     const shipsInput = dialog.locator('#story-ships')
     await expect(shipsInput).toBeVisible()
     await shipsInput.fill('E2E Global Ship')
     await shipsInput.press('Enter')
+    await expect(dialog.getByText(/(Which fandom does|¿A qué fandom pertenece)/)).toBeVisible()
+    const confirm = dialog.getByRole('button', { name: 'Confirmar' })
+    await expect(confirm).toBeEnabled()
+    await confirm.click()
     await expect(dialog.getByText('E2E Global Ship', { exact: true })).toBeVisible()
 
     const fandoms = await (await ctx.requestA.get(`${API}/story-options?type=fandom`)).json()

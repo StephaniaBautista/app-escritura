@@ -65,11 +65,11 @@ test.describe('Notes - Kebab menu edit title', () => {
     const postIt = page
       .getByText('Nota original', { exact: true })
       .locator('xpath=ancestor::div[contains(@style, "rotate")][1]')
-    await postIt.locator('[aria-label="More options"]').click()
+    await postIt.locator('[aria-label="Más opciones"]').click()
 
-    await page.getByRole('button', { name: 'Edit' }).click()
+    await page.getByRole('button', { name: 'Editar' }).click()
 
-    const input = page.locator('input[aria-label="Edit"]')
+    const input = page.locator('input[aria-label="Editar"]')
     await expect(input).toBeVisible()
     await input.fill('Nota renombrada')
     await input.press('Enter')
@@ -97,7 +97,7 @@ test.describe('Notes - Kebab menu edit title', () => {
     const postIt = page
       .getByText('Nota posicion', { exact: true })
       .locator('xpath=ancestor::div[contains(@style, "rotate")][1]')
-    const kebab = postIt.locator('[aria-label="More options"]')
+    const kebab = postIt.locator('[aria-label="Más opciones"]')
     await kebab.click()
 
     const menu = page.locator('div[class*="fixed"][class*="z-50"][class*="rounded-lg"]')

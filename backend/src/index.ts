@@ -21,6 +21,7 @@ import { meRoutes } from './routes/me.js'
 import { activityRoutes } from './routes/activity.js'
 import { i18nRoutes } from './routes/i18n.js'
 import { storyBankRoutes } from './routes/story-bank.js'
+import { characterRoutes } from './routes/characters.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
 import { storyBankService } from './services/story-bank-service.js'
@@ -103,8 +104,11 @@ await app.register(cors, {
 await app.register(helmet)
 
 await app.register(rateLimit, {
-  max: 100,
+  max: parseInt(process.env.RATE_MAX ?? '100', 10),
   timeWindow: '1 minute',
+  // /api/i18n son recursos estáticos (allowlist + cache + ETag) que cada page
+  // load consume ~15 veces; no cuentan para el presupuesto anti-brute-force.
+  allowList: (request) => request.url.startsWith('/api/i18n/'),
 })
 
 // Health check
@@ -171,6 +175,9 @@ await app.register(i18nRoutes, { prefix: '/api' })
 
 // Story bank (questions + structure templates, Fase 4 Slice 5)
 await app.register(storyBankRoutes, { prefix: '/api' })
+
+// Characters (Fase 5)
+await app.register(characterRoutes, { prefix: '/api' })
 
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {

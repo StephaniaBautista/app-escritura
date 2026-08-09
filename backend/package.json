@@ -26,6 +26,7 @@
     "@fastify/swagger-ui": "^6.1.0",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
+    "@supabase/supabase-js": "^2.112.2",
     "better-auth": "^1.6.25",
     "dotenv": "^17.4.2",
     "fastify": "^5.10.0",

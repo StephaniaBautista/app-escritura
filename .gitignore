@@ -54,3 +54,7 @@ tasks/
 .playwright/
 .playwright-mcp/
 
+
+# Playwright test artifacts
+test-results/
+playwright-report/

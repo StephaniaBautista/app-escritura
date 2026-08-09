@@ -46,12 +46,28 @@ Devuelve el proyecto **y** su árbol de documentos en un solo round-trip:
 - Cambio **aditivo**: el resto de campos se mantiene; reemplaza a los 2 requests (`GET /projects/:id` + `GET /projects/:id/documents`) que el frontend hacía antes.
 - El frontend renderiza el título al instante desde el cache del store y solo espera el `tree` para el contenido.
 
-### Characters
-- `GET /api/characters` - Listar personajes
-- `POST /api/characters` - Crear personaje
-- `GET /api/characters/:id` - Obtener personaje
-- `PATCH /api/characters/:id` - Actualizar personaje
-- `DELETE /api/characters/:id` - Eliminar personaje
+### Characters (2026-08-08, Fase 5)
+- `GET /api/projects/:projectId/characters` - Listar personajes del proyecto (orden alfabético)
+- `POST /api/projects/:projectId/characters` - Crear personaje `{ name, ... }` (todos los campos opcionales salvo `name`)
+- `GET /api/characters/:id` - Obtener personaje con sus **evoluciones** (`evolutions[]`)
+- `PUT /api/characters/:id` - Actualizar personaje
+- `DELETE /api/characters/:id` - Eliminar personaje (limpieza transaccional de `parentIds` huérfanos en otros personajes)
+- `POST /api/characters/:id/evolve` - Crear evolución `{ reason, changes? }` (copia con cambios)
+- `PUT /api/characters/:id/image` - Subir imagen `{ dataUrl }` (base64, mime `jpeg|png|webp|gif`, máx 3 MB) → Supabase Storage → actualiza `imageUrl` y borra la imagen anterior
+- `DELETE /api/characters/:id/image` - Eliminar imagen (storage + campo `imageUrl`)
+
+Campos del personaje:
+- Datos: `name`, `description`, `nicknames[]`, `age`, `gender`, `heightCm`, `orientation`, `maritalStatus`, `species`, `birthPlace`, `birthDate`, `isOC`
+- Rol: `role` (Principal/Secundario/Extra/custom), `roleSpec`
+- Familia: `parentIds[]` (los hijos se derivan: personajes cuyo `parentIds` contiene el id)
+- Evolución: `evolvesFromId`, `evolutionReason`
+- Texto libre (Json `attributes`): `motivations`, `weaknesses`, `internalConflict`, `personality`, `virtues`, `flaws`, `jobStudies`, `clothing`, `skills`, `health`, `hobbies`, `extraData`
+
+Reglas:
+- **Ownership**: todas las operaciones verifican que el proyecto pertenezca a la sesión (404 si no).
+- **parentIds saneados al proyecto**: al crear/actualizar/evolucionar, los ids que no pertenezcan al mismo proyecto se descartan.
+- **Evolución**: copia con cambios que hereda atributos y `parentIds`; registra `evolvesFromId` y `evolutionReason`. Al borrar un personaje con evoluciones, `evolvesFromId` pasa a `null` (las evoluciones sobreviven).
+- **Imagen**: escritura solo desde el backend (service role). Si faltan `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` → `503 STORAGE_UNAVAILABLE`. El gate de evolución "después de la primera aparición" se añade con Timeline (Fase 6).
 
 ### Notes (2026-07-31, Fase 3 + M15)
 - `GET /api/documents/:documentId/notes` - Listar notas de un documento (más reciente primero)

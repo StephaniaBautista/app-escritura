@@ -15,6 +15,7 @@ import { VersionsList } from '@/components/versions/VersionsList'
 import { StoryDescriptionSection } from '@/components/story-setup/StoryDescriptionSection'
 import { StoryStructureTab } from '@/components/story-setup/StoryStructureTab'
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
+import { CharactersPanel } from '@/components/characters/CharactersPanel'
 import type { StoryMeta } from '@/types/story'
 import { FileText, Plus, Users, Globe, StickyNote, History, Layers } from 'lucide-react'
 
@@ -226,12 +227,8 @@ export function FolderPage() {
           />
         )}
 
-        {activeTab === 'characters' && (
-          <div className="notebook-paper p-8 text-center">
-            <Users className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-teal)' }} />
-            <h2 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--color-ink)' }}>Personajes</h2>
-            <p style={{ color: 'var(--color-ink-light)' }}>Próximamente: gestión de personajes</p>
-          </div>
+        {activeTab === 'characters' && folderId && (
+          <CharactersPanel projectId={folderId} />
         )}
 
         {activeTab === 'worlds' && (

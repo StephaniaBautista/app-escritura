@@ -137,9 +137,10 @@ const messageSchema = {
 export async function authRoutes(app: FastifyInstance) {
   // Rate limit for auth endpoints (intentionally loose: the E2E suite and
   // rapid local logins must not be blocked; brute-force protection is the
-  // global 100/min limit plus the platform proxy)
+  // global 100/min limit plus the platform proxy). Configurable via env for
+  // dev/E2E; production keeps the default.
   await app.register(rateLimit, {
-    max: 500,
+    max: parseInt(process.env.AUTH_RATE_MAX ?? '500', 10),
     timeWindow: '15 minutes',
   })
 

@@ -15,7 +15,21 @@ vi.mock('react-router', () => ({
 }))
 
 vi.mock('react-i18next', () => ({
+  initReactI18next: { init: vi.fn() },
   useTranslation: () => ({ t: (key: string) => key }),
+}))
+
+vi.mock('@/stores/characters-store', () => ({
+  useCharactersStore: () => ({
+    characters: [],
+    isLoading: false,
+    load: vi.fn(),
+    remove: vi.fn(),
+  }),
+}))
+
+vi.mock('@/stores/toast-store', () => ({
+  useToastStore: () => ({ success: vi.fn(), error: vi.fn(), toasts: [], remove: vi.fn() }),
 }))
 
 const baseStore = {

@@ -256,10 +256,26 @@ export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[k
 
 export const CharacterScalarFieldEnum = {
   id: 'id',
+  projectId: 'projectId',
   name: 'name',
   description: 'description',
+  imageUrl: 'imageUrl',
+  nicknames: 'nicknames',
+  age: 'age',
+  gender: 'gender',
+  heightCm: 'heightCm',
+  orientation: 'orientation',
+  maritalStatus: 'maritalStatus',
+  species: 'species',
+  birthPlace: 'birthPlace',
+  birthDate: 'birthDate',
+  role: 'role',
+  roleSpec: 'roleSpec',
+  isOC: 'isOC',
+  parentIds: 'parentIds',
+  evolvesFromId: 'evolvesFromId',
+  evolutionReason: 'evolutionReason',
   attributes: 'attributes',
-  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

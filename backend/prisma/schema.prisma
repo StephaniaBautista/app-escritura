@@ -250,19 +250,38 @@ model UserSettings {
   @@map("user_settings")
 }
 
-// Character model for story characters
+// Character model for story characters (Fase 5)
 model Character {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  attributes  Json     @default("{}")
-  projectId   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String    @id @default(cuid())
+  projectId       String
+  name            String
+  description     String?
+  imageUrl        String?
+  nicknames       String[]  @default([])
+  age             String?
+  gender          String?
+  heightCm        Int?
+  orientation     String?
+  maritalStatus   String?
+  species         String?
+  birthPlace      String?
+  birthDate       String?
+  role            String?
+  roleSpec        String?
+  isOC            Boolean   @default(false)
+  parentIds       String[]  @default([])
+  evolvesFromId   String?
+  evolutionReason String?
+  attributes      Json      @default("{}")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
-  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  evolvesFrom Character?  @relation("CharacterEvolution", fields: [evolvesFromId], references: [id], onDelete: SetNull)
+  evolutions  Character[] @relation("CharacterEvolution")
 
+  @@index([projectId])
   @@map("characters")
 }
 

@@ -57,9 +57,9 @@ test.describe('Opciones por fandom', () => {
 
   async function openWizardBasicsFanfic(page: import('@playwright/test').Page) {
     await page.goto(`/app/documents/${ctx.projectId}`)
-    await page.getByRole('button', { name: 'Complete story' }).click()
+    await page.getByRole('button', { name: 'Completar historia' }).click()
     const dialog = page.getByRole('dialog')
-    await dialog.getByRole('button', { name: /Basics/ }).click()
+    await dialog.getByRole('button', { name: 'Información' }).click()
     await expect(dialog.getByLabel('Fanfic?')).toBeVisible()
     const fandomLoaded = page.waitForResponse(
       (r) => r.url().includes('/story-options?type=fandom') && r.status() === 200,
@@ -67,11 +67,11 @@ test.describe('Opciones por fandom', () => {
     )
     await dialog.getByLabel('Fanfic?').selectOption('yes')
     await fandomLoaded
-    await expect(dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')).toBeVisible()
+    await expect(dialog.getByPlaceholder('ej: Harry Potter, Star Wars...')).toBeVisible()
   }
 
   async function addFandom(dialog: import('@playwright/test').Locator, value: string) {
-    const input = dialog.getByPlaceholder('e.g. Harry Potter, Star Wars...')
+    const input = dialog.getByPlaceholder('ej: Harry Potter, Star Wars...')
     await input.fill(value)
     await input.press('Enter')
     await expect(dialog.getByText(value, { exact: true })).toBeVisible()
@@ -84,7 +84,7 @@ test.describe('Opciones por fandom', () => {
     const dialog = page.getByRole('dialog')
     await addFandom(dialog, 'E2E Fandom A')
 
-    await dialog.getByRole('button', { name: /Couples/ }).click()
+    await dialog.getByRole('button', { name: /(Couples|Parejas)/ }).click()
     const shipsInput = dialog.locator('#story-ships')
     await expect(shipsInput).toBeVisible()
 
@@ -94,8 +94,8 @@ test.describe('Opciones por fandom', () => {
 
     await shipsInput.fill('E2E New Ship A')
     await shipsInput.press('Enter')
-    await expect(dialog.getByText(/Which fandom does/)).toBeVisible()
-    const confirm = dialog.getByRole('button', { name: 'Confirm' })
+    await expect(dialog.getByText(/(Which fandom does|¿A qué fandom pertenece)/)).toBeVisible()
+    const confirm = dialog.getByRole('button', { name: 'Confirmar' })
     await expect(confirm).toBeEnabled()
     await confirm.click()
     await expect(dialog.getByText('E2E New Ship A', { exact: true })).toBeVisible()
@@ -118,7 +118,7 @@ test.describe('Opciones por fandom', () => {
     await addFandom(dialog, 'E2E Fandom A')
     await addFandom(dialog, 'E2E Fandom B')
 
-    await dialog.getByRole('button', { name: /Couples/ }).click()
+    await dialog.getByRole('button', { name: /(Couples|Parejas)/ }).click()
     const shipsInput = dialog.locator('#story-ships')
     await expect(shipsInput).toBeVisible()
 
