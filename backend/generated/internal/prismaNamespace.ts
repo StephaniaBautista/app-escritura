@@ -2126,6 +2126,8 @@ export const CharacterScalarFieldEnum = {
   name: 'name',
   description: 'description',
   imageUrl: 'imageUrl',
+  sheetBackgroundMode: 'sheetBackgroundMode',
+  sheetBackgroundImages: 'sheetBackgroundImages',
   nicknames: 'nicknames',
   age: 'age',
   gender: 'gender',

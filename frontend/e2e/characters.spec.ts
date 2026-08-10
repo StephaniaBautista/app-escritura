@@ -78,6 +78,7 @@ test.describe('Personajes (Fase 5)', () => {
     await dialog.getByLabel('Altura (cm)').fill('165')
     await dialog.getByLabel('Rol', { exact: true }).selectOption({ label: 'Principal' })
     await dialog.getByLabel('Especificación del rol').fill('Protagonista')
+    await dialog.getByRole('button', { name: 'Características emocionales' }).click()
     await dialog.getByLabel('Motivaciones').fill('Encontrar a su padre')
     await dialog.getByLabel('Personalidad').fill('Curiosa y valiente')
     await dialog.getByRole('button', { name: 'Guardar' }).click()
@@ -212,6 +213,37 @@ test.describe('Personajes (Fase 5)', () => {
 
     await evolvedCard.click()
     await expect(page.getByRole('dialog').getByText('Curiosa')).toBeVisible()
+
+    await page.close()
+  })
+
+  test('ficha editorial: cambia entre fondo predeterminado, imagen única y collage', async ({ browser }) => {
+    const projectId = await createProject('E2E Ficha Personaje')
+    await createCharacter(projectId, {
+      name: 'Bridget of Hearts',
+      role: 'Principal',
+      description: 'Princesa de corazones',
+      attributes: { personality: 'Carismática' },
+      sheetBackgroundMode: 'default',
+    })
+
+    const page = await newPage(browser)
+    await openCharactersTab(page, projectId)
+
+    await page.locator('.notebook-paper', { hasText: 'Bridget of Hearts' }).first().click()
+    await expect(page.getByTestId('character-sheet')).toHaveAttribute('data-background-mode', 'default')
+
+    await page.getByRole('dialog').getByRole('button', { name: 'Editar' }).click()
+    const editDialog = page.getByRole('dialog')
+    await editDialog.getByLabel('Imagen única').check()
+    await editDialog.getByRole('button', { name: 'Guardar' }).click()
+    await expect(page.getByTestId('character-sheet')).toHaveAttribute('data-background-mode', 'single')
+
+    await page.getByRole('dialog').getByRole('button', { name: 'Editar' }).click()
+    await page.getByRole('dialog').getByLabel('Collage').check()
+    await expect(page.getByRole('dialog').getByText(/de 6 imágenes/)).toBeVisible()
+    await page.getByRole('dialog').getByRole('button', { name: 'Guardar' }).click()
+    await expect(page.getByTestId('character-sheet')).toHaveAttribute('data-background-mode', 'collage')
 
     await page.close()
   })

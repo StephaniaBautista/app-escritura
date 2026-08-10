@@ -59,4 +59,10 @@ export const charactersApi = {
     fetchJson<Character>(`${API}/characters/${id}/image`, {
       method: 'DELETE',
     }),
+
+  syncBackgroundImages: (id: string, keepUrls: string[], dataUrls: string[]) =>
+    fetchJson<Character>(`${API}/characters/${id}/background-images`, {
+      method: 'PUT',
+      body: JSON.stringify({ keepUrls, dataUrls }),
+    }),
 }

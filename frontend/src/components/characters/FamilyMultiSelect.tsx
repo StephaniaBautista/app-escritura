@@ -42,12 +42,7 @@ export function FamilyMultiSelect({ id, options, selected, onChange }: FamilyMul
         onChange={(e) => {
           if (e.target.value) onChange([...selected, e.target.value])
         }}
-        className="w-full px-3 py-2 text-sm rounded-lg border outline-none focus:ring-2"
-        style={{
-          background: 'var(--color-background)',
-          borderColor: 'var(--color-paper-lines)',
-          color: 'var(--color-ink)',
-        }}
+        className="character-form__control"
       >
         <option value="">{selected.length === 0 ? '—' : `+ ${t('characterApp.addFamilyMember')}`}</option>
         {available.map((c) => (

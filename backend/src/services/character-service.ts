@@ -1,6 +1,10 @@
 import { Prisma } from '@generated/client'
 import { prisma } from '../lib/prisma.js'
 
+export const SHEET_BACKGROUND_MODES = ['default', 'single', 'collage'] as const
+export type SheetBackgroundMode = typeof SHEET_BACKGROUND_MODES[number]
+export const MAX_SHEET_BACKGROUND_IMAGES = 6
+
 export interface CharacterAttributes {
   motivations?: string
   weaknesses?: string
@@ -20,6 +24,8 @@ export interface CharacterInput {
   name?: string
   description?: string | null
   imageUrl?: string | null
+  sheetBackgroundMode?: SheetBackgroundMode
+  sheetBackgroundImages?: string[]
   nicknames?: string[]
   age?: string | null
   gender?: string | null
@@ -43,6 +49,24 @@ export interface EvolveInput {
 
 function isProjectOwner(projectId: string, userId: string) {
   return prisma.project.findFirst({ where: { id: projectId, userId } })
+}
+
+function normalizeSheetBackgroundMode(mode: string | undefined): SheetBackgroundMode {
+  return SHEET_BACKGROUND_MODES.includes(mode as SheetBackgroundMode)
+    ? mode as SheetBackgroundMode
+    : 'default'
+}
+
+export function sanitizeSheetBackgroundImages(urls: string[] | undefined): string[] {
+  if (!urls) return []
+  const valid = urls.filter((url) => {
+    try {
+      return new URL(url).protocol === 'https:'
+    } catch {
+      return false
+    }
+  })
+  return [...new Set(valid)].slice(0, MAX_SHEET_BACKGROUND_IMAGES)
 }
 
 async function sanitizeParentIds(projectId: string, parentIds: string[] | undefined, selfId?: string) {
@@ -83,6 +107,8 @@ export const characterService = {
         name: data.name ?? '',
         description: data.description ?? null,
         imageUrl: data.imageUrl ?? null,
+        sheetBackgroundMode: normalizeSheetBackgroundMode(data.sheetBackgroundMode),
+        sheetBackgroundImages: sanitizeSheetBackgroundImages(data.sheetBackgroundImages),
         nicknames: data.nicknames ?? [],
         age: data.age ?? null,
         gender: data.gender ?? null,
@@ -113,6 +139,10 @@ export const characterService = {
         name: data.name,
         description: data.description,
         imageUrl: data.imageUrl,
+        sheetBackgroundMode: data.sheetBackgroundMode,
+        sheetBackgroundImages: data.sheetBackgroundImages === undefined
+          ? undefined
+          : sanitizeSheetBackgroundImages(data.sheetBackgroundImages),
         nicknames: data.nicknames,
         age: data.age,
         gender: data.gender,
@@ -162,6 +192,8 @@ export const characterService = {
         name: changes.name ?? source.name,
         description: changes.description ?? source.description,
         imageUrl: changes.imageUrl ?? source.imageUrl,
+        sheetBackgroundMode: normalizeSheetBackgroundMode(changes.sheetBackgroundMode ?? source.sheetBackgroundMode),
+        sheetBackgroundImages: sanitizeSheetBackgroundImages(changes.sheetBackgroundImages ?? source.sheetBackgroundImages),
         nicknames: changes.nicknames ?? source.nicknames,
         age: changes.age ?? source.age,
         gender: changes.gender ?? source.gender,

@@ -106,6 +106,22 @@ describe('storageService', () => {
     })
   })
 
+  describe('uploadCharacterBackgroundImage', () => {
+    it('usa una ruta aislada por personaje y devuelve la URL pública', async () => {
+      supabaseMock.getSupabaseAdmin.mockReturnValue(supabaseMock)
+      supabaseMock.__upload.mockResolvedValue({ error: null })
+
+      const url = await storageService.uploadCharacterBackgroundImage('char-1', Buffer.from('img'), 'image/png')
+
+      expect(supabaseMock.__upload).toHaveBeenCalledWith(
+        expect.stringMatching(/^background\/char-1\/.+\.png$/),
+        Buffer.from('img'),
+        expect.objectContaining({ contentType: 'image/png', upsert: false }),
+      )
+      expect(url).toContain('/character-images/background/char-1/')
+    })
+  })
+
   describe('deleteCharacterImage', () => {
     it('borra el objeto correspondiente a la url', async () => {
       supabaseMock.getSupabaseAdmin.mockReturnValue(supabaseMock)

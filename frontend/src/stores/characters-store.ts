@@ -16,6 +16,7 @@ interface CharactersState {
   evolve: (id: string, reason: string, changes: CharacterInput) => Promise<Character | null>
   uploadImage: (id: string, dataUrl: string) => Promise<void>
   deleteImage: (id: string) => Promise<void>
+  syncBackgroundImages: (id: string, keepUrls: string[], dataUrls: string[]) => Promise<Character | null>
 }
 
 function getErrorMessage(error: unknown): string {
@@ -95,6 +96,17 @@ export const useCharactersStore = create<CharactersState>()((set, get) => ({
       set({ characters: get().characters.map((c) => (c.id === id ? updated : c)) })
     } catch (err: unknown) {
       useToastStore.getState().error(getErrorMessage(err))
+    }
+  },
+
+  async syncBackgroundImages(id: string, keepUrls: string[], dataUrls: string[]) {
+    try {
+      const updated = await charactersApi.syncBackgroundImages(id, keepUrls, dataUrls)
+      set({ characters: get().characters.map((c) => (c.id === id ? updated : c)) })
+      return updated
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
     }
   },
 }))

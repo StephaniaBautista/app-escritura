@@ -1,4 +1,5 @@
 import { getSupabaseAdmin, SUPABASE_BUCKET } from '../lib/supabase.js'
+import { randomUUID } from 'node:crypto'
 
 export const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
 export const MAX_IMAGE_BYTES = 3 * 1024 * 1024
@@ -29,19 +30,11 @@ export function validateImage(buffer: Buffer, mime: string): string {
 
 export const storageService = {
   async uploadCharacterImage(characterId: string, buffer: Buffer, mime: string) {
-    const client = getSupabaseAdmin()
-    if (!client) throw new StorageUnavailableError()
+    return uploadImage(`${characterId}-${Date.now()}`, buffer, mime)
+  },
 
-    const ext = validateImage(buffer, mime)
-    const path = `${characterId}-${Date.now()}.${ext}`
-    const { error } = await client.storage.from(SUPABASE_BUCKET).upload(path, buffer, {
-      contentType: mime,
-      upsert: false,
-    })
-    if (error) throw error
-
-    const { data } = client.storage.from(SUPABASE_BUCKET).getPublicUrl(path)
-    return data.publicUrl
+  async uploadCharacterBackgroundImage(characterId: string, buffer: Buffer, mime: string) {
+    return uploadImage(`background/${characterId}/${randomUUID()}`, buffer, mime)
   },
 
   async deleteCharacterImage(url: string) {
@@ -54,6 +47,22 @@ export const storageService = {
     const { error } = await client.storage.from(SUPABASE_BUCKET).remove([path])
     return !error
   },
+}
+
+async function uploadImage(pathPrefix: string, buffer: Buffer, mime: string) {
+  const client = getSupabaseAdmin()
+  if (!client) throw new StorageUnavailableError()
+
+  const ext = validateImage(buffer, mime)
+  const path = `${pathPrefix}.${ext}`
+  const { error } = await client.storage.from(SUPABASE_BUCKET).upload(path, buffer, {
+    contentType: mime,
+    upsert: false,
+  })
+  if (error) throw error
+
+  const { data } = client.storage.from(SUPABASE_BUCKET).getPublicUrl(path)
+  return data.publicUrl
 }
 
 export function extractPathFromPublicUrl(url: string): string | null {

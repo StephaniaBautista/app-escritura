@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Loader2 } from 'lucide-react'
 
 interface ConfirmDialogProps {
   isOpen: boolean
@@ -9,6 +9,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string
   cancelLabel?: string
   variant?: 'danger' | 'default'
+  loading?: boolean
   children?: React.ReactNode
   onConfirm: () => void
   onCancel: () => void
@@ -21,6 +22,7 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel,
   variant = 'danger',
+  loading = false,
   children,
   onConfirm,
   onCancel,
@@ -32,20 +34,20 @@ export function ConfirmDialog({
     if (!isOpen) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel()
+      if (e.key === 'Escape' && !loading) onCancel()
     }
     document.addEventListener('keydown', handleKeyDown)
     confirmRef.current?.focus()
 
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onCancel])
+  }, [isOpen, onCancel, loading])
 
   if (!isOpen) return null
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={onCancel}
+      onClick={loading ? undefined : onCancel}
     >
       <div className="absolute inset-0 bg-black/40" />
       <div
@@ -71,7 +73,8 @@ export function ConfirmDialog({
         <div className="flex justify-end gap-2">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg text-sm font-medium border transition-all hover:opacity-80"
+            disabled={loading}
+            className="px-4 py-2 rounded-lg text-sm font-medium border transition-all hover:opacity-80 disabled:opacity-50"
             style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
           >
             {cancelLabel || t('common.cancel')}
@@ -79,10 +82,16 @@ export function ConfirmDialog({
           <button
             ref={confirmRef}
             onClick={onConfirm}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
+            disabled={loading}
+            aria-busy={loading}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
             style={{ background: variant === 'danger' ? 'var(--color-accent)' : 'var(--color-accent)' }}
           >
-            {confirmLabel || t('common.confirm')}
+            {loading ? (
+              <Loader2 data-testid="confirm-loading-spinner" className="w-4 h-4 animate-spin mx-auto" />
+            ) : (
+              confirmLabel || t('common.confirm')
+            )}
           </button>
         </div>
       </div>

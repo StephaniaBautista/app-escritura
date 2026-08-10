@@ -45,8 +45,7 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden border"
-      style={{ borderColor: 'var(--color-paper-lines)' }}
+      className="flex shrink-0 flex-col items-center"
       onPaste={(e) => {
         const item = e.clipboardData?.items
         if (!item) return
@@ -62,45 +61,41 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
         onChange={(e) => handleFile(e.target.files?.[0])}
       />
       {imageUrl ? (
-        <div className="flex items-center gap-3 p-3">
-          <img src={imageUrl} alt="" className="w-20 h-20 object-cover rounded-lg" />
-          <div className="flex flex-col gap-1.5">
-            <button
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              disabled={isLoading}
-              className="text-xs font-medium px-3 py-1.5 rounded-lg border transition-all hover:opacity-80 disabled:opacity-50"
-              style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-light)' }}
-            >
-              {isLoading ? t('characterApp.imageLoading') : t('characterApp.imageUpload')}
-            </button>
-            <button
-              type="button"
-              onClick={() => onChange(null)}
-              className="text-xs font-medium px-3 py-1.5 rounded-lg border transition-all hover:opacity-80 flex items-center gap-1"
-              style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-faint)' }}
-            >
-              <X className="w-3 h-3" />
-              {t('characterApp.imageRemove')}
-            </button>
-          </div>
+        <div className="character-form__portrait">
+          <img src={imageUrl} alt="" className="h-full w-full object-cover" />
         </div>
       ) : (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={isLoading}
-          className="w-full flex flex-col items-center gap-1.5 py-6 transition-all hover:opacity-80 disabled:opacity-50"
-          style={{ color: 'var(--color-ink-faint)', background: 'var(--color-background)' }}
+          aria-label={isLoading ? t('characterApp.imageLoading') : t('characterApp.imageUpload')}
+          className="character-form__portrait character-form__portrait--empty"
         >
-          <ImageIcon className="w-6 h-6" />
-          <span className="text-xs font-medium">{isLoading ? t('characterApp.imageLoading') : t('characterApp.imageUpload')}</span>
-          <span className="text-[11px] flex items-center gap-1">
-            <Upload className="w-3 h-3" />
-            {t('characterApp.imagePaste')}
-          </span>
+          <ImageIcon className="h-6 w-6" />
         </button>
       )}
+      <div className="mt-1.5 flex flex-wrap justify-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={isLoading}
+          className="character-form__portrait-action"
+        >
+          <Upload className="h-3 w-3" />
+          {isLoading ? t('characterApp.imageLoading') : t('characterApp.imageUpload')}
+        </button>
+        {imageUrl && (
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            className="character-form__portrait-action"
+          >
+            <X className="h-3 w-3" />
+            {t('characterApp.imageRemove')}
+          </button>
+        )}
+      </div>
     </div>
   )
 }

@@ -13,12 +13,17 @@ export interface CharacterAttributes {
   extraData?: string
 }
 
+export const SHEET_BACKGROUND_MODES = ['default', 'single', 'collage'] as const
+export type SheetBackgroundMode = typeof SHEET_BACKGROUND_MODES[number]
+
 export interface Character {
   id: string
   projectId: string
   name: string
   description: string | null
   imageUrl: string | null
+  sheetBackgroundMode: SheetBackgroundMode
+  sheetBackgroundImages: string[]
   nicknames: string[]
   age: string | null
   gender: string | null

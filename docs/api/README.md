@@ -55,9 +55,11 @@ Devuelve el proyecto **y** su árbol de documentos en un solo round-trip:
 - `POST /api/characters/:id/evolve` - Crear evolución `{ reason, changes? }` (copia con cambios)
 - `PUT /api/characters/:id/image` - Subir imagen `{ dataUrl }` (base64, mime `jpeg|png|webp|gif`, máx 3 MB) → Supabase Storage → actualiza `imageUrl` y borra la imagen anterior
 - `DELETE /api/characters/:id/image` - Eliminar imagen (storage + campo `imageUrl`)
+- `PUT /api/characters/:id/background-images` - Reemplazar fondos de la ficha `{ keepUrls?: string[], dataUrls?: string[] }` (hasta 6 imágenes nuevas, mime `jpeg|png|webp|gif`, máx 3 MB por imagen) → Supabase Storage; las URLs retiradas se eliminan
 
 Campos del personaje:
 - Datos: `name`, `description`, `nicknames[]`, `age`, `gender`, `heightCm`, `orientation`, `maritalStatus`, `species`, `birthPlace`, `birthDate`, `isOC`
+- Ficha visual: `sheetBackgroundMode` (`default|single|collage`) y `sheetBackgroundImages[]` (hasta 6 URLs HTTPS)
 - Rol: `role` (Principal/Secundario/Extra/custom), `roleSpec`
 - Familia: `parentIds[]` (los hijos se derivan: personajes cuyo `parentIds` contiene el id)
 - Evolución: `evolvesFromId`, `evolutionReason`

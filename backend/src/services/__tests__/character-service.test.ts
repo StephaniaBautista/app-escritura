@@ -42,6 +42,8 @@ const characterRow = {
   roleSpec: 'Protagonista',
   isOC: false,
   parentIds: ['char-2'],
+  sheetBackgroundMode: 'default',
+  sheetBackgroundImages: [],
   evolvesFromId: null,
   evolutionReason: null,
   attributes: { personality: 'Curiosa' },
@@ -102,6 +104,8 @@ describe('characterService', () => {
       const character = await characterService.create('proj-1', 'user-1', {
         name: 'Lyra',
         parentIds: ['char-2', 'char-otro-proyecto'],
+        sheetBackgroundMode: 'collage',
+        sheetBackgroundImages: ['https://cdn.example.com/one.jpg'],
         attributes: { personality: 'Curiosa' },
       })
 
@@ -111,6 +115,8 @@ describe('characterService', () => {
           name: 'Lyra',
           parentIds: ['char-2'],
           nicknames: [],
+          sheetBackgroundMode: 'collage',
+          sheetBackgroundImages: ['https://cdn.example.com/one.jpg'],
           attributes: { personality: 'Curiosa' },
           projectId: 'proj-1',
         }),
@@ -140,6 +146,28 @@ describe('characterService', () => {
       expect(prismaMock.character.update).toHaveBeenCalledWith({
         where: { id: 'char-1' },
         data: expect.objectContaining({ name: 'Lyra Belacqua', parentIds: ['char-2'] }),
+      })
+    })
+
+    it('guarda el modo y las imágenes de fondo saneadas', async () => {
+      prismaMock.character.findFirst.mockResolvedValue(characterRow)
+      prismaMock.character.findMany.mockResolvedValue([])
+      prismaMock.character.update.mockResolvedValue(characterRow)
+
+      await characterService.update('char-1', 'user-1', {
+        sheetBackgroundMode: 'single',
+        sheetBackgroundImages: [
+          'https://cdn.example.com/one.jpg',
+          'http://insecure.example.com/two.jpg',
+        ],
+      })
+
+      expect(prismaMock.character.update).toHaveBeenCalledWith({
+        where: { id: 'char-1' },
+        data: expect.objectContaining({
+          sheetBackgroundMode: 'single',
+          sheetBackgroundImages: ['https://cdn.example.com/one.jpg'],
+        }),
       })
     })
 
@@ -216,6 +244,8 @@ describe('characterService', () => {
           attributes: { personality: 'Curiosa' },
           parentIds: ['char-2'],
           imageUrl: null,
+          sheetBackgroundMode: 'default',
+          sheetBackgroundImages: [],
         }),
       })
     })

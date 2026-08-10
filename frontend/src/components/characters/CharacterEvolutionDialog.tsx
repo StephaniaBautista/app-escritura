@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import type { Character } from '@/types/character'
 import { useCharactersStore } from '@/stores/characters-store'
 import { useToastStore } from '@/stores/toast-store'
@@ -99,10 +99,16 @@ export function CharacterEvolutionDialog({ character, onClose, onEvolved }: Char
           <button
             onClick={handleSave}
             disabled={isSaving}
+            aria-busy={isSaving}
             className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
             style={{ background: 'var(--color-accent-violet)' }}
           >
-            {isSaving ? '...' : t('characterApp.evolve')}
+            {isSaving ? (
+              <span className="inline-flex items-center gap-2">
+                <Loader2 data-testid="character-evolve-spinner" className="w-4 h-4 animate-spin" />
+                {t('common.saving')}
+              </span>
+            ) : t('characterApp.evolve')}
           </button>
         </div>
       </div>

@@ -20,7 +20,7 @@ export function ChipsInput({ id, value, onChange, placeholder }: ChipsInputProps
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5 px-3 py-2 rounded-lg border min-h-[42px] cursor-text"
+      className="character-form__chips flex flex-wrap items-center gap-1.5 px-3 py-2 rounded-[var(--radius)] border"
       style={{
         background: 'var(--color-background)',
         borderColor: 'var(--color-paper-lines)',

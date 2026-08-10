@@ -12,13 +12,17 @@ const { mocks } = vi.hoisted(() => {
   }
   const storageService = {
     uploadCharacterImage: vi.fn(),
+    uploadCharacterBackgroundImage: vi.fn(),
     deleteCharacterImage: vi.fn(),
   }
   return {
     mocks: {
       getSessionUser: vi.fn(),
       characterService,
+      MAX_SHEET_BACKGROUND_IMAGES: 6,
+      SHEET_BACKGROUND_MODES: ['default', 'single', 'collage'],
       storageService,
+      validateImage: vi.fn(),
       StorageUnavailableError: class extends Error {
         constructor() {
           super('storage unavailable')
@@ -31,9 +35,14 @@ const { mocks } = vi.hoisted(() => {
 })
 
 vi.mock('../../lib/session.js', () => ({ getSessionUser: mocks.getSessionUser }))
-vi.mock('../../services/character-service.js', () => ({ characterService: mocks.characterService }))
+vi.mock('../../services/character-service.js', () => ({
+  characterService: mocks.characterService,
+  MAX_SHEET_BACKGROUND_IMAGES: mocks.MAX_SHEET_BACKGROUND_IMAGES,
+  SHEET_BACKGROUND_MODES: mocks.SHEET_BACKGROUND_MODES,
+}))
 vi.mock('../../services/storage-service.js', () => ({
   storageService: mocks.storageService,
+  validateImage: mocks.validateImage,
   StorageUnavailableError: mocks.StorageUnavailableError,
   MAX_IMAGE_BYTES: mocks.MAX_IMAGE_BYTES,
 }))
@@ -66,6 +75,8 @@ const charRow = {
   roleSpec: null,
   isOC: false,
   parentIds: [],
+  sheetBackgroundMode: 'default',
+  sheetBackgroundImages: [],
   evolvesFromId: null,
   evolutionReason: null,
   attributes: {},
@@ -114,6 +125,38 @@ describe('characterRoutes', () => {
     })
     expect(res.statusCode).toBe(201)
     expect(mocks.characterService.create).toHaveBeenCalledWith('proj-1', 'user-1', { name: 'Lyra' })
+    await app.close()
+  })
+
+  it('POST create: acepta la configuración visual de la ficha', async () => {
+    mocks.characterService.create.mockResolvedValue(charRow)
+    const app = await buildApp()
+    const payload = {
+      name: 'Lyra',
+      sheetBackgroundMode: 'collage',
+      sheetBackgroundImages: ['https://cdn.example.com/one.jpg'],
+    }
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/projects/proj-1/characters',
+      payload,
+    })
+
+    expect(res.statusCode).toBe(201)
+    expect(mocks.characterService.create).toHaveBeenCalledWith('proj-1', 'user-1', payload)
+    await app.close()
+  })
+
+  it('POST create: rechaza un modo de fondo desconocido', async () => {
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/projects/proj-1/characters',
+      payload: { name: 'Lyra', sheetBackgroundMode: 'poster' },
+    })
+
+    expect(res.statusCode).toBe(400)
     await app.close()
   })
 
@@ -242,6 +285,53 @@ describe('characterRoutes', () => {
     const res = await app.inject({ method: 'DELETE', url: '/api/characters/char-1/image' })
     expect(res.statusCode).toBe(200)
     expect(mocks.characterService.update).toHaveBeenCalledWith('char-1', 'user-1', { imageUrl: null })
+    await app.close()
+  })
+
+  it('PUT background-images: sube las nuevas, conserva las elegidas y elimina las retiradas', async () => {
+    mocks.characterService.get.mockResolvedValue({
+      ...charRow,
+      sheetBackgroundImages: ['https://cdn.example.com/keep.jpg', 'https://cdn.example.com/remove.jpg'],
+    })
+    mocks.storageService.uploadCharacterBackgroundImage.mockResolvedValue('https://cdn.example.com/new.jpg')
+    mocks.storageService.deleteCharacterImage.mockResolvedValue(true)
+    mocks.characterService.update.mockResolvedValue({
+      ...charRow,
+      sheetBackgroundMode: 'collage',
+      sheetBackgroundImages: ['https://cdn.example.com/keep.jpg', 'https://cdn.example.com/new.jpg'],
+    })
+    const app = await buildApp()
+
+    const res = await app.inject({
+      method: 'PUT',
+      url: '/api/characters/char-1/background-images',
+      payload: {
+        keepUrls: ['https://cdn.example.com/keep.jpg'],
+        dataUrls: ['data:image/png;base64,iVBORw0KGgo='],
+      },
+    })
+
+    expect(res.statusCode).toBe(200)
+    expect(mocks.storageService.uploadCharacterBackgroundImage).toHaveBeenCalled()
+    expect(mocks.characterService.update).toHaveBeenCalledWith('char-1', 'user-1', {
+      sheetBackgroundImages: ['https://cdn.example.com/keep.jpg', 'https://cdn.example.com/new.jpg'],
+    })
+    expect(mocks.storageService.deleteCharacterImage).toHaveBeenCalledWith('https://cdn.example.com/remove.jpg')
+    await app.close()
+  })
+
+  it('PUT background-images: no permite conservar una URL ajena al personaje', async () => {
+    mocks.characterService.get.mockResolvedValue(charRow)
+    const app = await buildApp()
+
+    const res = await app.inject({
+      method: 'PUT',
+      url: '/api/characters/char-1/background-images',
+      payload: { keepUrls: ['https://cdn.example.com/unknown.jpg'], dataUrls: [] },
+    })
+
+    expect(res.statusCode).toBe(400)
+    expect(mocks.storageService.uploadCharacterBackgroundImage).not.toHaveBeenCalled()
     await app.close()
   })
 })

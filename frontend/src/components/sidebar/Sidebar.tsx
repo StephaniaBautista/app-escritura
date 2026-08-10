@@ -23,6 +23,7 @@ export function Sidebar() {
   } = useDocumentStore()
   const [creatingChapter, setCreatingChapter] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  const [deletingTab, setDeletingTab] = useState(false)
   const [subpageParent, setSubpageParent] = useState<string | null>(null)
   const [renameTarget, setRenameTarget] = useState<{ id: string; title: string } | null>(null)
   const [collapsed, setCollapsed] = useState(false)
@@ -85,19 +86,24 @@ export function Sidebar() {
     }
   }
 
-  const handleConfirmDelete = () => {
-    if (!deleteTarget) return
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || deletingTab) return
     const isCurrent = currentDocument?.id === deleteTarget
     const children = documentTree
       .filter((d) => d.parentId === deleteTarget)
       .sort((a, b) => a.order - b.order)
     const parentId = currentDocument?.parent?.id
-    deleteDocument(deleteTarget)
-    if (isCurrent && projectId) {
-      const destination = children[0]?.id ?? parentId ?? null
-      navigate(destination ? `/app/editor/${projectId}/${destination}` : `/app/editor/${projectId}`)
+    setDeletingTab(true)
+    try {
+      await deleteDocument(deleteTarget)
+      if (isCurrent && projectId) {
+        const destination = children[0]?.id ?? parentId ?? null
+        navigate(destination ? `/app/editor/${projectId}/${destination}` : `/app/editor/${projectId}`)
+      }
+    } finally {
+      setDeletingTab(false)
+      setDeleteTarget(null)
     }
-    setDeleteTarget(null)
   }
 
   if (collapsed) {
@@ -189,6 +195,7 @@ export function Sidebar() {
         title={t('folder.deleteDocument')}
         message={t('folder.confirmDelete')}
         confirmLabel={t('common.delete')}
+        loading={deletingTab}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteTarget(null)}
       />

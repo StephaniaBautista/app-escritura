@@ -257,6 +257,8 @@ model Character {
   name            String
   description     String?
   imageUrl        String?
+  sheetBackgroundMode   String    @default("default")
+  sheetBackgroundImages String[]  @default([])
   nicknames       String[]  @default([])
   age             String?
   gender          String?

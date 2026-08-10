@@ -6,12 +6,52 @@ interface AccordionSectionProps {
   title: string
   actions?: ReactNode
   defaultOpen?: boolean
+  variant?: 'default' | 'sheet'
   children: ReactNode
 }
 
-export function AccordionSection({ title, actions, defaultOpen = true, children }: AccordionSectionProps) {
+export function AccordionSection({
+  title,
+  actions,
+  defaultOpen = true,
+  variant = 'default',
+  children,
+}: AccordionSectionProps) {
   const [open, setOpen] = useState(defaultOpen)
   const contentId = useId()
+
+  if (variant === 'sheet') {
+    return (
+      <section>
+        <div className="character-form__section-heading">
+          <span className="character-form__section-mark" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-expanded={open}
+            aria-controls={contentId}
+            className="character-form__accordion-button"
+          >
+            <h3 id={`${contentId}-heading`} className="character-form__accordion-title">{title}</h3>
+            <ChevronDown
+              className={cn('character-form__accordion-chevron', !open && 'character-form__accordion-chevron--closed')}
+            />
+          </button>
+        </div>
+        <div
+          id={contentId}
+          aria-hidden={!open}
+          className={cn(
+            'grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none',
+            open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          )}
+          style={open ? undefined : { visibility: 'hidden' }}
+        >
+          <div className="overflow-hidden min-h-0">{children}</div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section>
