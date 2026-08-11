@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@/i18n'
 import { HeightMap } from '../HeightMap'
@@ -37,13 +37,17 @@ function makeCharacter(overrides: Partial<Character>): Character {
   }
 }
 
+function renderMap(characters: Character[], onClose = vi.fn()) {
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <HeightMap characters={characters} onClose={onClose} />
+    </I18nextProvider>,
+  )
+}
+
 describe('HeightMap', () => {
   it('muestra el mensaje vacío si nadie tiene altura', () => {
-    render(
-      <I18nextProvider i18n={i18n}>
-        <HeightMap characters={[makeCharacter({})]} />
-      </I18nextProvider>,
-    )
+    renderMap([makeCharacter({})])
     expect(screen.getByText((content) => content.includes('heightMapEmpty'))).toBeTruthy()
   })
 
@@ -53,21 +57,20 @@ describe('HeightMap', () => {
       makeCharacter({ id: 'noheight', name: 'NoHeight', heightCm: null }),
       makeCharacter({ id: 'short', name: 'Short', heightCm: 140 }),
     ]
-    render(
-      <I18nextProvider i18n={i18n}>
-        <HeightMap characters={characters} />
-      </I18nextProvider>,
-    )
+    renderMap(characters)
     const figures = screen.getAllByRole('figure')
     expect(figures.map((f) => f.getAttribute('title'))).toEqual(['Short', 'Tall', 'NoHeight'])
   })
 
   it('muestra la altura en cm de cada personaje', () => {
-    render(
-      <I18nextProvider i18n={i18n}>
-        <HeightMap characters={[makeCharacter({ id: 'a', name: 'A', heightCm: 165 })]} />
-      </I18nextProvider>,
-    )
+    renderMap([makeCharacter({ id: 'a', name: 'A', heightCm: 165 })])
     expect(screen.getByText('165 cm')).toBeTruthy()
+  })
+
+  it('llama a onClose al pulsar el botón de cerrar', () => {
+    const onClose = vi.fn()
+    renderMap([makeCharacter({ id: 'a', name: 'A', heightCm: 165 })], onClose)
+    fireEvent.click(screen.getByTestId('height-map-close'))
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 })

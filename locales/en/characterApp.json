@@ -19,6 +19,7 @@
   "heightMapEmptyDesc": "Give your characters a height (cm) to see them in the group photo",
   "heightMapLegend": "Sorted from shortest to tallest",
   "heightMapUnknown": "No height",
+  "heightMapClose": "Close height map",
   "edit": "Edit",
   "deleteTitle": "Delete character",
   "confirmDelete": "Delete this character?",

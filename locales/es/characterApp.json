@@ -19,6 +19,7 @@
   "heightMapEmptyDesc": "Asigna altura (cm) a tus personajes para verlos en la foto de grupo",
   "heightMapLegend": "Ordenados de menor a mayor",
   "heightMapUnknown": "Sin altura",
+  "heightMapClose": "Cerrar mapa de alturas",
   "edit": "Editar",
   "deleteTitle": "Eliminar personaje",
   "confirmDelete": "¿Eliminar este personaje?",

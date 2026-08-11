@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Users, Plus } from 'lucide-react'
+import { Users, Plus, Ruler } from 'lucide-react'
 import type { Character } from '@/types/character'
 import { useCharactersStore } from '@/stores/characters-store'
 import { useRelationshipsStore } from '@/stores/relationships-store'
@@ -29,6 +29,7 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
   const [detailId, setDetailId] = useState<string | null>(null)
   const [evolving, setEvolving] = useState<Character | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Character | null>(null)
+  const [heightMapOpen, setHeightMapOpen] = useState(false)
 
   useEffect(() => {
     load(projectId)
@@ -71,20 +72,29 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
             {t('characterApp.subtitle')} · {characters.length}
           </p>
         </div>
-        <button
-          onClick={() => { setEditing(null); setFormOpen(true) }}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
-          style={{ background: 'var(--color-accent)' }}
-        >
-          <Plus className="w-4 h-4" />
-          {t('characterApp.newCharacter')}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setHeightMapOpen(true)}
+            className="flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all hover:opacity-80"
+            style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
+          >
+            <Ruler className="h-4 w-4" style={{ color: 'var(--color-accent-teal)' }} />
+            {t('characterApp.heightMapTitle')}
+          </button>
+          <button
+            onClick={() => { setEditing(null); setFormOpen(true) }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
+            style={{ background: 'var(--color-accent)' }}
+          >
+            <Plus className="w-4 h-4" />
+            {t('characterApp.newCharacter')}
+          </button>
+        </div>
       </div>
 
       {characters.length > 0 && (
         <>
           <CharacterFilters characters={characters} filters={filters} onChange={setFilters} />
-          <HeightMap characters={characters} />
         </>
       )}
 
@@ -147,6 +157,10 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
           onClose={() => setEvolving(null)}
           onEvolved={handleEvolved}
         />
+      )}
+
+      {heightMapOpen && (
+        <HeightMap characters={characters} onClose={() => setHeightMapOpen(false)} />
       )}
 
       <ConfirmDialog
