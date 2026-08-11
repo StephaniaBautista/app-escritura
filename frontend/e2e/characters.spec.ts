@@ -89,7 +89,7 @@ test.describe('Personajes (Fase 5)', () => {
     await expect(detail.getByText('Sin vínculos familiares')).toBeVisible()
     await detail.getByLabel('Cancelar').click()
 
-    const card = page.locator('.notebook-paper', { hasText: 'Lyra Belacqua' }).first()
+    const card = page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra Belacqua' }).first()
     await expect(card).toBeVisible()
     await expect(card).toContainText('Principal')
     await expect(card).toContainText('17')
@@ -123,25 +123,25 @@ test.describe('Personajes (Fase 5)', () => {
     const page = await newPage(browser)
     await openCharactersTab(page, projectId)
 
-    await expect(page.getByText('Arya')).toBeVisible()
-    await expect(page.getByText('Ned')).toBeVisible()
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Arya' }).first()).toBeVisible()
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned' }).first()).toBeVisible()
 
     await page.getByPlaceholder('Buscar por nombre...').fill('ned')
-    await expect(page.getByText('Ned')).toBeVisible()
-    await expect(page.locator('.notebook-paper', { hasText: 'Arya' })).toHaveCount(0)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned' })).toHaveCount(1)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Arya' })).toHaveCount(0)
 
     await page.getByPlaceholder('Buscar por nombre...').fill('')
     await page.getByLabel('Rol').selectOption({ label: 'Secundario' })
-    await expect(page.locator('.notebook-paper', { hasText: 'Arya' })).toHaveCount(0)
-    await expect(page.locator('.notebook-paper', { hasText: 'Ned' })).toHaveCount(1)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Arya' })).toHaveCount(0)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned' })).toHaveCount(1)
 
-    await page.getByLabel('Altura').selectOption({ label: 'Muy alta (>185 cm)' })
-    await expect(page.locator('.notebook-paper', { hasText: 'Ned' })).toHaveCount(1)
-    await expect(page.locator('.notebook-paper', { hasText: 'Bran' })).toHaveCount(0)
+    await page.getByRole('combobox', { name: 'Altura' }).selectOption({ label: 'Muy alta (>185 cm)' })
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned' })).toHaveCount(1)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Bran' })).toHaveCount(0)
 
     await page.getByLabel('Rol').selectOption('')
-    await expect(page.locator('.notebook-paper', { hasText: 'Ned' })).toHaveCount(1)
-    await expect(page.locator('.notebook-paper', { hasText: 'Bran' })).toHaveCount(0)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned' })).toHaveCount(1)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Bran' })).toHaveCount(0)
 
     await page.getByPlaceholder('Buscar por nombre...').fill('zzz')
     await expect(page.getByText('Ningún personaje coincide con los filtros')).toBeVisible()
@@ -158,13 +158,13 @@ test.describe('Personajes (Fase 5)', () => {
     const page = await newPage(browser)
     await openCharactersTab(page, projectId)
 
-    const nedCard = page.locator('.notebook-paper', { hasText: 'Ned Stark' }).first()
+    const nedCard = page.locator('.notebook-paper.rounded-xl', { hasText: 'Ned Stark' }).first()
     await nedCard.click()
     const detail = page.getByRole('dialog')
-    await expect(detail.getByText('Robb Stark')).toBeVisible()
+    await expect(detail.getByRole('button', { name: 'RO Robb Stark' })).toBeVisible()
     await detail.getByLabel('Cancelar').click()
 
-    const catelynCard = page.locator('.notebook-paper', { hasText: 'Catelyn Stark' }).first()
+    const catelynCard = page.locator('.notebook-paper.rounded-xl', { hasText: 'Catelyn Stark' }).first()
     await catelynCard.click()
     await page.getByRole('dialog').getByRole('button', { name: 'Editar' }).click()
     const editDialog = page.getByRole('dialog')
@@ -179,7 +179,7 @@ test.describe('Personajes (Fase 5)', () => {
     await page.close()
   })
 
-  test('evolución: hereda atributos y registra el motivo', async ({ browser }) => {
+  test('evolución: formulario completo con punto de la historia, editar motivo y eliminar', async ({ browser }) => {
     const projectId = await createProject('E2E Personajes Evolución')
     await createCharacter(projectId, {
       name: 'Lyra',
@@ -191,28 +191,71 @@ test.describe('Personajes (Fase 5)', () => {
     const page = await newPage(browser)
     await openCharactersTab(page, projectId)
 
-    const card = page.locator('.notebook-paper', { hasText: 'Lyra' }).first()
+    const card = page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra' }).first()
     await card.click()
     const detail = page.getByRole('dialog')
     await detail.getByRole('button', { name: 'Crear evolución' }).click()
 
     const evolveDialog = page.getByRole('dialog')
+    await expect(evolveDialog.getByLabel('Nombre')).toHaveValue('Lyra')
+    await expect(evolveDialog.getByLabel('Edad')).toHaveValue('17')
+    await expect(evolveDialog.getByLabel('Personalidad')).toHaveValue('Curiosa')
     await evolveDialog.getByLabel('Nombre').fill('Lyra la Dama')
+    await evolveDialog.getByLabel('¿En qué punto de la historia aparece esta versión?').selectOption({ label: 'Clímax' })
     await evolveDialog.getByLabel('¿Qué evolucionó y por qué?').fill('Tras el segundo libro se vuelve reservada')
     await evolveDialog.getByRole('button', { name: 'Crear evolución' }).click()
 
     await expect(page.getByRole('dialog').getByText('Lyra la Dama')).toBeVisible()
     await expect(page.getByRole('dialog').getByText('Evolución de Lyra')).toBeVisible()
     await expect(page.getByRole('dialog').getByText('Tras el segundo libro se vuelve reservada')).toBeVisible()
+    await expect(page.getByRole('dialog').getByText('Clímax')).toBeVisible()
+
+    await page.getByRole('dialog').getByLabel('Editar motivo de la evolución').click()
+    await page.getByRole('dialog').getByPlaceholder('Tras el segundo libro se vuelve reservada...').fill('Ahora lidera a los gyptians')
+    await page.getByRole('dialog').getByRole('button', { name: 'Guardar motivo' }).click()
+    await expect(page.getByRole('dialog').getByText('Ahora lidera a los gyptians')).toBeVisible()
 
     await page.getByRole('dialog').getByLabel('Cancelar').click()
 
-    const evolvedCard = page.locator('.notebook-paper', { hasText: 'Lyra la Dama' }).first()
+    const evolvedCard = page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra la Dama' }).first()
     await expect(evolvedCard).toBeVisible()
-    await expect(evolvedCard).toContainText('Evolución de')
+    await expect(evolvedCard).toContainText('Clímax')
 
     await evolvedCard.click()
     await expect(page.getByRole('dialog').getByText('Curiosa')).toBeVisible()
+
+    await page.getByRole('dialog').getByLabel('Eliminar esta evolución').click()
+    await page.getByRole('button', { name: 'Eliminar' }).last().click()
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra la Dama' })).toHaveCount(0)
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra' }).first()).toBeVisible()
+
+    await page.close()
+  })
+
+  test('relaciones: añadir pareja desde la ficha y quitarla', async ({ browser }) => {
+    const projectId = await createProject('E2E Personajes Relaciones')
+    await createCharacter(projectId, { name: 'Lyra' })
+    await createCharacter(projectId, { name: 'Will' })
+
+    const page = await newPage(browser)
+    await openCharactersTab(page, projectId)
+
+    await page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra' }).first().click()
+    const detail = page.getByRole('dialog')
+    await expect(detail.getByText('Familia y relaciones')).toBeVisible()
+
+    await detail.getByRole('button', { name: 'Añadir relación' }).click()
+    const relDialog = page.getByRole('dialog').last()
+    await relDialog.getByLabel('Con quién').selectOption({ label: 'Will' })
+    await relDialog.getByRole('button', { name: 'Guardar relación' }).click()
+
+    await expect(detail.getByText('Will')).toBeVisible()
+    await expect(detail.getByText('Pareja').first()).toBeVisible()
+
+    await detail.getByLabel('Quitar relación').click()
+    await page.getByRole('button', { name: 'Eliminar' }).last().click()
+
+    await expect(detail.getByText('Will')).toHaveCount(0)
 
     await page.close()
   })
@@ -230,7 +273,7 @@ test.describe('Personajes (Fase 5)', () => {
     const page = await newPage(browser)
     await openCharactersTab(page, projectId)
 
-    await page.locator('.notebook-paper', { hasText: 'Bridget of Hearts' }).first().click()
+    await page.locator('.notebook-paper.rounded-xl', { hasText: 'Bridget of Hearts' }).first().click()
     await expect(page.getByTestId('character-sheet')).toHaveAttribute('data-background-mode', 'default')
 
     await page.getByRole('dialog').getByRole('button', { name: 'Editar' }).click()

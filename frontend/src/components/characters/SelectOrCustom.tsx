@@ -12,9 +12,10 @@ interface SelectOrCustomProps {
   options: SelectOption[]
   onChange: (value: string | null) => void
   id?: string
+  disabled?: boolean
 }
 
-export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomProps) {
+export function SelectOrCustom({ value, options, onChange, id, disabled = false }: SelectOrCustomProps) {
   const { t } = useTranslation()
   const [showInput, setShowInput] = useState(false)
   const [draft, setDraft] = useState('')
@@ -23,6 +24,7 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
   )
 
   const addCustom = () => {
+    if (disabled) return
     const label = draft.trim()
     if (!label) return
     const existing = options.find((o) => o.label.toLowerCase() === label.toLowerCase())
@@ -45,6 +47,7 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
           id={id}
           value={value ?? ''}
           onChange={(e) => onChange(e.target.value === '' ? null : e.target.value)}
+          disabled={disabled}
           className="character-form__control min-w-0 flex-1"
         >
           <option value="">—</option>
@@ -59,6 +62,7 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
           type="button"
           onClick={() => setShowInput((s) => !s)}
           aria-label={t('characterApp.customOption')}
+          disabled={disabled}
           className="character-form__add-button"
         >
           <Plus className="h-4 w-4" />
@@ -70,12 +74,14 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
+              if (disabled) return
               if (e.key === 'Enter') {
                 e.preventDefault()
                 addCustom()
               }
             }}
             placeholder={t('characterApp.customAddPlaceholder')}
+            disabled={disabled}
             autoFocus
             className="character-form__control"
           />
@@ -83,6 +89,7 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
             type="button"
             onClick={addCustom}
             aria-label={t('characterApp.customAddConfirm')}
+            disabled={disabled}
             className="character-form__button text-white"
             style={{ background: 'var(--color-accent)' }}
           >
@@ -95,6 +102,7 @@ export function SelectOrCustom({ value, options, onChange, id }: SelectOrCustomP
               setDraft('')
             }}
             aria-label={t('characterApp.customCancel')}
+            disabled={disabled}
             className="character-form__button"
             style={{ color: 'var(--color-ink-light)' }}
           >

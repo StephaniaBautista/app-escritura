@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import type { Character, CharacterAttributes, SheetBackgroundMode } from '@/types/character'
 import { SHEET_BACKGROUND_MODES } from '@/types/character'
+import type { CharacterRelationship } from '@/types/relationship'
+import { CharacterRelations } from './CharacterRelations'
 
 type AttributeKey = keyof CharacterAttributes
 
@@ -36,9 +38,17 @@ function getMode(mode: string | undefined): SheetBackgroundMode {
 
 interface CharacterSheetProps {
   character: Character
+  characters?: Character[]
+  relations?: CharacterRelationship[]
+  onSelectCharacter?: (id: string) => void
+  onAddRelation?: () => void
+  onRemoveRelation?: (relation: CharacterRelationship) => void
 }
 
-export function CharacterSheet({ character }: CharacterSheetProps) {
+export function CharacterSheet({
+  character, characters = [], relations = [],
+  onSelectCharacter, onAddRelation, onRemoveRelation,
+}: CharacterSheetProps) {
   const { t } = useTranslation()
   const mode = getMode(character.sheetBackgroundMode)
   const backgroundImages = character.sheetBackgroundImages?.slice(0, 6) ?? []
@@ -125,6 +135,15 @@ export function CharacterSheet({ character }: CharacterSheetProps) {
             <p className="character-sheet__empty mt-3">{t('characterApp.sheetFactsEmpty')}</p>
           )}
         </section>
+
+        <CharacterRelations
+          character={character}
+          characters={characters}
+          relations={relations}
+          onSelectCharacter={onSelectCharacter}
+          onAddRelation={onAddRelation}
+          onRemoveRelation={onRemoveRelation}
+        />
 
         <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1.35fr)_minmax(220px,0.65fr)]">
           <div className="space-y-7">

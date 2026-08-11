@@ -51,8 +51,9 @@ Devuelve el proyecto **y** su árbol de documentos en un solo round-trip:
 - `POST /api/projects/:projectId/characters` - Crear personaje `{ name, ... }` (todos los campos opcionales salvo `name`)
 - `GET /api/characters/:id` - Obtener personaje con sus **evoluciones** (`evolutions[]`)
 - `PUT /api/characters/:id` - Actualizar personaje
-- `DELETE /api/characters/:id` - Eliminar personaje (limpieza transaccional de `parentIds` huérfanos en otros personajes)
-- `POST /api/characters/:id/evolve` - Crear evolución `{ reason, changes? }` (copia con cambios)
+- `DELETE /api/characters/:id` - Eliminar personaje (limpieza transaccional de `parentIds` huérfanos y reparenting de evoluciones hijas al origen anterior)
+- `POST /api/characters/:id/evolve` - Crear evolución `{ reason, changes? }` (copia con cambios; `changes.storyPoint` opcional pero si viene debe ser **posterior** al del origen → `400 EVOLUTION_POINT_INVALID`)
+- `PATCH /api/characters/:id/evolution-reason` - Actualizar el motivo de una evolución `{ reason }` (string o null para limpiar)
 - `PUT /api/characters/:id/image` - Subir imagen `{ dataUrl }` (base64, mime `jpeg|png|webp|gif`, máx 3 MB) → Supabase Storage → actualiza `imageUrl` y borra la imagen anterior
 - `DELETE /api/characters/:id/image` - Eliminar imagen (storage + campo `imageUrl`)
 - `PUT /api/characters/:id/background-images` - Reemplazar fondos de la ficha `{ keepUrls?: string[], dataUrls?: string[] }` (hasta 6 imágenes nuevas, mime `jpeg|png|webp|gif`, máx 3 MB por imagen) → Supabase Storage; las URLs retiradas se eliminan
@@ -62,14 +63,33 @@ Campos del personaje:
 - Ficha visual: `sheetBackgroundMode` (`default|single|collage`) y `sheetBackgroundImages[]` (hasta 6 URLs HTTPS)
 - Rol: `role` (Principal/Secundario/Extra/custom), `roleSpec`
 - Familia: `parentIds[]` (los hijos se derivan: personajes cuyo `parentIds` contiene el id)
-- Evolución: `evolvesFromId`, `evolutionReason`
+- Evolución: `evolvesFromId`, `evolutionReason`, `storyPoint` (`inicio|desarrollo|climax|final` — punto de la historia en que aparece esta versión del personaje)
 - Texto libre (Json `attributes`): `motivations`, `weaknesses`, `internalConflict`, `personality`, `virtues`, `flaws`, `jobStudies`, `clothing`, `skills`, `health`, `hobbies`, `extraData`
 
 Reglas:
 - **Ownership**: todas las operaciones verifican que el proyecto pertenezca a la sesión (404 si no).
 - **parentIds saneados al proyecto**: al crear/actualizar/evolucionar, los ids que no pertenezcan al mismo proyecto se descartan.
-- **Evolución**: copia con cambios que hereda atributos y `parentIds`; registra `evolvesFromId` y `evolutionReason`. Al borrar un personaje con evoluciones, `evolvesFromId` pasa a `null` (las evoluciones sobreviven).
-- **Imagen**: escritura solo desde el backend (service role). Si faltan `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` → `503 STORAGE_UNAVAILABLE`. El gate de evolución "después de la primera aparición" se añade con Timeline (Fase 6).
+- **Evolución**: copia con cambios que hereda atributos y `parentIds`; registra `evolvesFromId`, `evolutionReason` y `storyPoint`. Al borrar una evolución con evoluciones hijas, las hijas se reparentan al origen anterior de la borrada (las cadenas A→A1→A2 sobreviven). La coherencia de línea de tiempo (marcador ligero): una evolución solo puede tener un `storyPoint` estrictamente posterior al de su origen; se integrará con la Timeline en Fase 6.
+- **Imagen**: escritura solo desde el backend (service role). Si faltan `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` → `503 STORAGE_UNAVAILABLE`. La coherencia temporal entre evolución y origen (marcador ligero `storyPoint`) ya está implementada; la Timeline (Fase 6) la usará como gate.
+
+### Relaciones entre personajes (2026-08-10, Fase 6 + M41)
+- `GET /api/projects/:projectId/relationships` - Listar relaciones del proyecto (opcional `?type=romance|friendship|enemity|family|custom`); incluye `characterA`/`characterB` embebidos (id, name, imageUrl, heightCm)
+- `POST /api/projects/:projectId/relationships` - Crear relación `{ characterAId, characterBId, type, label?, description? }` (par normalizado A<B; `409 RELATIONSHIP_EXISTS` si ya existe; `400 INVALID_CHARACTERS` si el par no pertenece al proyecto o es el mismo personaje)
+- `PUT /api/relationships/:id` - Actualizar relación (tipo, label, descripción o re-vincular el par; `409`/`404` tipados)
+- `DELETE /api/relationships/:id` - Eliminar relación (`204`; `404` si no existe o no es del usuario)
+
+Reglas:
+- **Simétricas**: el par se normaliza (`characterAId < characterBId`) y el `@unique` impide duplicados en ambos sentidos. La UI resuelve la otra parte según el punto de vista.
+- **Tipos**: `romance` (pareja), `friendship`, `enemity`, `family` (requiere `label`: hermano, primo, abuelo...), `custom` (label libre).
+- **Ownership**: todas las operaciones verifican el proyecto del usuario (404 si no).
+
+### Catálogos estáticos (2026-08-10, M41)
+Tablas de solo lectura sembradas al arranque (seed idempotente), servidas por API autenticada con cache en memoria (TTL 5 min). Sin endpoints de escritura: son catálogos de sistema, no gestionables por admin.
+
+- `GET /api/character-options` - Catálogo de opciones del formulario de personaje agrupado por `type` (`gender`, `orientation`, `maritalStatus`, `role`). Opcional `?type=` para filtrar un solo tipo. Cada opción: `{ id, type, value, label, labelEn, sortOrder, isDefault }`. El personaje guarda `value` como string libre (**modo híbrido**: la tabla sugiere, el usuario puede escribir valores custom vía `SelectOrCustom`).
+- `GET /api/story-sections` - Secciones estándar de estructura (`inicio`, `desarrollo`, `climax`, `final`) con `sortOrder`. Fuente de validación del banco de plantillas: `validateSections` consulta esta tabla para decidir si un id de sección es estándar (sin título) o custom (título obligatorio).
+
+Seed: 17 opciones de personaje (4 géneros, 5 orientaciones, 5 estados civiles, 3 roles) y 4 secciones. Solo se siembran filas que no existen (el patrón de "tabla vacía" de Fase 4).
 
 ### Notes (2026-07-31, Fase 3 + M15)
 - `GET /api/documents/:documentId/notes` - Listar notas de un documento (más reciente primero)
@@ -205,6 +225,34 @@ Reglas:
 Reglas:
 - El feed de actividad reciente migró de `localStorage` al backend (M29): cada usuario solo ve su propia actividad (ownership por `userId` en todas las operaciones).
 - Las entradas se crean desde el frontend al crear/editar documentos y carpetas; se limpian al eliminar el recurso.
+
+### Timeline, Relaciones y Diagramas (2026-08-10, Fase 6)
+
+**Timeline:**
+- `GET /api/projects/:projectId/timeline` - Listar eventos (ordenados por `order` asc)
+- `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, characterIds? }` (fecha texto libre; `characterIds` saneados al proyecto; sin `order` usa el contador)
+- `PUT /api/timeline/:id` - Actualizar evento (mismos campos, todos opcionales)
+- `DELETE /api/timeline/:id` - Borrar evento (204)
+
+**Relaciones (estructuradas):**
+- `GET /api/projects/:projectId/relationships?type=` - Listar relaciones `{ characterA, characterB, type, label?, description? }` (filtro opcional por tipo)
+- `POST /api/projects/:projectId/relationships` - Crear relación `{ characterAId, characterBId, type, label?, description? }`. El par se **normaliza** (`characterAId < characterBId`); `409 RELATIONSHIP_EXISTS` si el par ya existe; `400 INVALID_CHARACTERS` si algún personaje no es del proyecto
+- `PUT /api/relationships/:id` - Actualizar relación (cambiar tipo/label/descripción o el par con las mismas validaciones)
+- `DELETE /api/relationships/:id` - Borrar relación (204)
+
+Tipos: `romance | friendship | enemity | family | custom` (custom/family requieren `label`).
+
+**Diagramas (pizarra):**
+- `GET /api/projects/:projectId/diagrams` - Listar diagramas del proyecto
+- `POST /api/projects/:projectId/diagrams` - Crear diagrama `{ name?, type?: familyTree|relationships|custom, layout? }`
+- `POST /api/projects/:projectId/diagrams/generate` - Auto-generar `{ type: familyTree|relationships, name? }`: el árbol se posiciona por niveles desde `parentIds` (raíces arriba); las relaciones en círculo con todos los personajes
+- `GET /api/diagrams/:id` - Obtener diagrama con su `layout`
+- `PUT /api/diagrams/:id` - Renombrar o guardar layout `{ layout: { nodes: [{id, position}], notes: [{id, position, text}] } }` (mantiene lo no enviado)
+- `DELETE /api/diagrams/:id` - Borrar diagrama (204)
+
+Reglas:
+- El layout guarda **solo posiciones** de nodos y notas; los edges se derivan: `familyTree` → `parentIds`, `relationships|custom` → `CharacterRelationship`.
+- Las conexiones dibujadas en la pizarra crean/borran **relaciones estructuradas reales** (no dibujo muerto); las relaciones se pueden filtrar por tipo y se ven también en la ficha de personaje (Fase 5).
 
 ### Cache en memoria (2026-08-08, M31 T7)
 

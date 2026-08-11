@@ -19,7 +19,7 @@ const { prismaMock } = vi.hoisted(() => {
 
 vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
 
-import { characterService } from '../character-service.js'
+import { characterService, StoryPointError } from '../character-service.js'
 
 const projectRow = { id: 'proj-1', name: 'Mi novela', description: null, userId: 'user-1', createdAt: new Date('2026-01-01'), updatedAt: new Date('2026-01-01') }
 
@@ -46,6 +46,7 @@ const characterRow = {
   sheetBackgroundImages: [],
   evolvesFromId: null,
   evolutionReason: null,
+  storyPoint: null,
   attributes: { personality: 'Curiosa' },
   createdAt: new Date('2026-01-01'),
   updatedAt: new Date('2026-01-01'),
@@ -206,6 +207,60 @@ describe('characterService', () => {
 
       expect(result).toBe(false)
     })
+
+    it('reparenta los hijos de evolución al abuelo al eliminar una evolución', async () => {
+      prismaMock.character.findFirst.mockResolvedValue({ ...characterRow, evolvesFromId: 'char-0' })
+      prismaMock.character.findMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([{ id: 'char-4' }])
+      prismaMock.character.delete.mockResolvedValue(characterRow)
+
+      const result = await characterService.delete('char-1', 'user-1')
+
+      expect(result).toBe(true)
+      expect(prismaMock.character.update).toHaveBeenCalledWith({
+        where: { id: 'char-4' },
+        data: { evolvesFromId: 'char-0' },
+      })
+    })
+  })
+
+  describe('setEvolutionReason', () => {
+    it('actualiza el motivo de la evolución con ownership', async () => {
+      prismaMock.character.findFirst.mockResolvedValue(characterRow)
+      prismaMock.character.update.mockResolvedValue({ ...characterRow, evolutionReason: 'Nuevo motivo' })
+
+      const character = await characterService.setEvolutionReason('char-1', 'user-1', 'Nuevo motivo')
+
+      expect(prismaMock.character.findFirst).toHaveBeenCalledWith({
+        where: { id: 'char-1', project: { userId: 'user-1' } },
+      })
+      expect(prismaMock.character.update).toHaveBeenCalledWith({
+        where: { id: 'char-1' },
+        data: { evolutionReason: 'Nuevo motivo' },
+      })
+      expect(character?.evolutionReason).toBe('Nuevo motivo')
+    })
+
+    it('permite limpiar el motivo con null', async () => {
+      prismaMock.character.findFirst.mockResolvedValue(characterRow)
+      prismaMock.character.update.mockResolvedValue({ ...characterRow, evolutionReason: null })
+
+      await characterService.setEvolutionReason('char-1', 'user-1', null)
+
+      expect(prismaMock.character.update).toHaveBeenCalledWith({
+        where: { id: 'char-1' },
+        data: { evolutionReason: null },
+      })
+    })
+
+    it('devuelve null si el personaje no pertenece al usuario', async () => {
+      prismaMock.character.findFirst.mockResolvedValue(null)
+
+      const character = await characterService.setEvolutionReason('char-1', 'user-1', 'x')
+
+      expect(character).toBeNull()
+    })
   })
 
   describe('evolve', () => {
@@ -248,6 +303,49 @@ describe('characterService', () => {
           sheetBackgroundImages: [],
         }),
       })
+    })
+
+    it('guarda el punto de la historia cuando es posterior al del origen', async () => {
+      prismaMock.character.findFirst.mockResolvedValue({ ...characterRow, storyPoint: 'inicio' })
+      prismaMock.character.create.mockResolvedValue({ ...characterRow, storyPoint: 'climax' })
+
+      const evolved = await characterService.evolve('char-1', 'user-1', {
+        reason: 'Cambia en el clímax',
+        changes: { storyPoint: 'climax', name: 'Lyra la Dama' },
+      })
+
+      expect(prismaMock.character.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ storyPoint: 'climax', evolvesFromId: 'char-1' }),
+      })
+      expect(evolved?.storyPoint).toBe('climax')
+    })
+
+    it('rechaza un punto igual o anterior al del origen', async () => {
+      prismaMock.character.findFirst.mockResolvedValue({ ...characterRow, storyPoint: 'climax' })
+
+      await expect(characterService.evolve('char-1', 'user-1', {
+        reason: 'Mal punto',
+        changes: { storyPoint: 'inicio' },
+      })).rejects.toThrow(StoryPointError)
+      await expect(characterService.evolve('char-1', 'user-1', {
+        reason: 'Mismo punto',
+        changes: { storyPoint: 'climax' },
+      })).rejects.toThrow(StoryPointError)
+    })
+
+    it('no restringe el punto si el origen no tiene uno', async () => {
+      prismaMock.character.findFirst.mockResolvedValue(characterRow)
+      prismaMock.character.create.mockResolvedValue({ ...characterRow, storyPoint: 'final' })
+
+      const evolved = await characterService.evolve('char-1', 'user-1', {
+        reason: 'Sin punto previo',
+        changes: { storyPoint: 'final' },
+      })
+
+      expect(prismaMock.character.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ storyPoint: 'final' }),
+      })
+      expect(evolved?.storyPoint).toBe('final')
     })
 
     it('devuelve null si el origen no pertenece al usuario', async () => {

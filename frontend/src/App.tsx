@@ -27,7 +27,7 @@ const PRICING_NS = ['pricing', 'pricingPage', 'comparison', 'faq', 'cta', 'ai', 
 const AUTH_NS = ['auth', 'common']
 const SHELL_NS = ['sidebar', 'admin', 'settings', 'common']
 const DOCUMENTS_NS = ['projects', 'storySetup', 'common']
-const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'common']
+const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'common']
 const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'common']
 
 function App() {

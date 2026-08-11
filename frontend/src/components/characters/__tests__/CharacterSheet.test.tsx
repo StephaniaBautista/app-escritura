@@ -30,6 +30,7 @@ const character: Character = {
   parentIds: [],
   evolvesFromId: null,
   evolutionReason: null,
+  storyPoint: null,
   attributes: {
     motivations: 'Encontrar a su padre',
     personality: 'Curiosa y valiente',

@@ -14,6 +14,7 @@ function detectBrowserLanguage(): string {
 const ALL_NAMESPACES = [
   ...CORE_NAMESPACES,
   'storySetup', 'notes', 'postit', 'versions', 'branches', 'editorApp', 'admin',
+  'characterApp', 'timelineApp', 'diagramApp',
 ] as const
 
 i18n

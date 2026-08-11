@@ -15,6 +15,7 @@ interface CharacterBackgroundFieldProps {
   onModeChange: (mode: SheetBackgroundMode) => void
   onExistingImagesChange: (images: string[]) => void
   onNewImagesChange: (images: string[]) => void
+  disabled?: boolean
 }
 
 const MODES: { value: SheetBackgroundMode; label: string; description: string }[] = [
@@ -39,6 +40,7 @@ export function CharacterBackgroundField({
   onModeChange,
   onExistingImagesChange,
   onNewImagesChange,
+  disabled = false,
 }: CharacterBackgroundFieldProps) {
   const { t } = useTranslation()
   const toast = useToastStore()
@@ -58,7 +60,7 @@ export function CharacterBackgroundField({
   }
 
   const handleFiles = async (files: File[]) => {
-    if (files.length === 0 || mode === 'default') return
+    if (files.length === 0 || mode === 'default' || disabled) return
 
     const validFiles = files.filter((file) => ALLOWED_MIMES.includes(file.type) && file.size <= MAX_BYTES)
     if (validFiles.length !== files.length) toast.error(t('characterApp.imageError'))
@@ -88,6 +90,7 @@ export function CharacterBackgroundField({
   }
 
   const handleModeChange = (nextMode: SheetBackgroundMode) => {
+    if (disabled) return
     onModeChange(nextMode)
     if (nextMode === 'single') {
       onExistingImagesChange(existingImages.slice(0, 1))
@@ -100,6 +103,7 @@ export function CharacterBackgroundField({
       className="character-background-field rounded-[var(--radius)] border p-3"
       style={{ borderColor: 'var(--color-paper-lines)' }}
       onPaste={(event) => {
+        if (disabled) return
         const file = Array.from(event.clipboardData?.items ?? [])
           .find((item) => item.type.startsWith('image/'))
           ?.getAsFile()
@@ -124,6 +128,7 @@ export function CharacterBackgroundField({
               value={option.value}
               checked={mode === option.value}
               onChange={() => handleModeChange(option.value)}
+              disabled={disabled}
               className="mt-0.5 accent-[var(--color-accent)]"
               aria-label={t(`characterApp.${option.label}`)}
             />
@@ -157,7 +162,7 @@ export function CharacterBackgroundField({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            disabled={isLoading || remaining === 0}
+            disabled={isLoading || remaining === 0 || disabled}
             className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border px-3 py-2 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-50"
             style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-light)' }}
           >
@@ -174,7 +179,8 @@ export function CharacterBackgroundField({
                     type="button"
                     onClick={() => removeImage(url, false)}
                     aria-label={t('characterApp.sheetBackgroundRemove')}
-                    className="absolute right-1 top-1 rounded-full p-1 text-white transition-opacity hover:opacity-80"
+                    disabled={disabled}
+                    className="absolute right-1 top-1 rounded-full p-1 text-white transition-opacity hover:opacity-80 disabled:opacity-50"
                     style={{ background: 'var(--color-accent)' }}
                   >
                     <X className="h-3 w-3" />
@@ -188,7 +194,8 @@ export function CharacterBackgroundField({
                     type="button"
                     onClick={() => removeImage(url, true)}
                     aria-label={t('characterApp.sheetBackgroundRemove')}
-                    className="absolute right-1 top-1 rounded-full p-1 text-white transition-opacity hover:opacity-80"
+                    disabled={disabled}
+                    className="absolute right-1 top-1 rounded-full p-1 text-white transition-opacity hover:opacity-80 disabled:opacity-50"
                     style={{ background: 'var(--color-accent)' }}
                   >
                     <X className="h-3 w-3" />

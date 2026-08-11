@@ -20,6 +20,11 @@ const { prismaMock } = vi.hoisted(() => ({
       update: vi.fn(),
       delete: vi.fn(),
     },
+    storySection: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+    },
   },
 }))
 
@@ -28,11 +33,11 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
 import {
   storyBankService,
   validateSections,
-  STANDARD_SECTION_IDS,
   type TemplateSection,
   type StoryTemplateRow,
   type StoryQuestionRow,
 } from '../story-bank-service.js'
+import { storySectionService } from '../story-section-service.js'
 
 const question: StoryQuestionRow = {
   id: 'q-1',
@@ -57,9 +62,21 @@ const templateRow = (overrides: Partial<StoryTemplateRow> = {}): StoryTemplateRo
   ...overrides,
 })
 
+const standardSections = ['inicio', 'desarrollo', 'climax', 'final'].map((id, i) => ({
+  id,
+  sortOrder: i + 1,
+  createdAt: new Date(),
+}))
+
 describe('validateSections', () => {
-  it('acepta secciones estándar sin título', () => {
-    const sections = validateSections([
+  beforeEach(() => {
+    vi.clearAllMocks()
+    prismaMock.storySection.findMany.mockResolvedValue(standardSections)
+    storySectionService.invalidate()
+  })
+
+  it('acepta secciones estándar sin título', async () => {
+    const sections = await validateSections([
       { id: 'inicio', questionIds: ['q-1'] },
       { id: 'final', questionIds: [] },
     ])
@@ -67,33 +84,33 @@ describe('validateSections', () => {
     expect(sections[0].title).toBeUndefined()
   })
 
-  it('exige título en secciones personalizadas', () => {
-    expect(() => validateSections([{ id: 'epilogo', questionIds: [] }])).toThrow('título')
+  it('exige título en secciones personalizadas', async () => {
+    await expect(validateSections([{ id: 'epilogo', questionIds: [] }])).rejects.toThrow('título')
   })
 
-  it('rechaza ids duplicados y demasiadas secciones', () => {
-    expect(() =>
+  it('rechaza ids duplicados y demasiadas secciones', async () => {
+    await expect(
       validateSections([
         { id: 'inicio', questionIds: [] },
         { id: 'inicio', questionIds: [] },
       ]),
-    ).toThrow('duplicada')
+    ).rejects.toThrow('duplicada')
 
     const many = Array.from({ length: 13 }, (_, i) => ({ id: `s-${i}`, title: `Sección ${i}`, questionIds: [] }))
-    expect(() => validateSections(many)).toThrow('más de 12')
+    await expect(validateSections(many)).rejects.toThrow('más de 12')
   })
 
-  it('filtra questionIds no string y limpia títulos largos', () => {
-    const sections = validateSections([
+  it('filtra questionIds no string y limpia títulos largos', async () => {
+    const sections = await validateSections([
       { id: 'epilogo', title: 'x'.repeat(200), questionIds: ['q-1', 42, 'q-2'] },
     ])
     expect(sections[0].title).toHaveLength(100)
     expect(sections[0].questionIds).toEqual(['q-1', 'q-2'])
   })
 
-  it('valida ids de sección estándar', () => {
-    expect(STANDARD_SECTION_IDS).toContain('inicio')
-    expect(STANDARD_SECTION_IDS).toContain('final')
+  it('valida los ids de sección estándar contra la tabla', async () => {
+    await validateSections([{ id: 'inicio', questionIds: [] }])
+    expect(prismaMock.storySection.findMany).toHaveBeenCalled()
   })
 })
 
@@ -101,6 +118,8 @@ describe('storyBankService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     storyBankService.invalidate()
+    prismaMock.storySection.findMany.mockResolvedValue(standardSections)
+    storySectionService.invalidate()
   })
 
   describe('preguntas', () => {
@@ -220,7 +239,7 @@ describe('storyBankService', () => {
       expect(missing).toBeNull()
 
       prismaMock.storyTemplate.findUnique.mockResolvedValue(templateRow())
-      expect(() =>
+      await expect(
         storyBankService.updateTemplate('t-1', { sections: [{ id: 'custom', questionIds: [] }] as TemplateSection[] }),
       ).rejects.toThrow()
     })

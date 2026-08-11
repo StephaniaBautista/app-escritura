@@ -9,6 +9,7 @@ const MAX_BYTES = 3 * 1024 * 1024
 interface CharacterImageFieldProps {
   imageUrl: string | null
   onChange: (dataUrl: string | null) => void
+  disabled?: boolean
 }
 
 function readAsDataUrl(file: File): Promise<string> {
@@ -20,14 +21,14 @@ function readAsDataUrl(file: File): Promise<string> {
   })
 }
 
-export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldProps) {
+export function CharacterImageField({ imageUrl, onChange, disabled = false }: CharacterImageFieldProps) {
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const toast = useToastStore()
 
   const handleFile = async (file: File | undefined | null) => {
-    if (!file) return
+    if (!file || disabled) return
     if (!ALLOWED_MIMES.includes(file.type) || file.size > MAX_BYTES) {
       toast.error(t('characterApp.imageError'))
       return
@@ -47,6 +48,7 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
     <div
       className="flex shrink-0 flex-col items-center"
       onPaste={(e) => {
+        if (disabled) return
         const item = e.clipboardData?.items
         if (!item) return
         const file = Array.from(item).find((i) => i.type.startsWith('image/'))?.getAsFile()
@@ -68,7 +70,7 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           aria-label={isLoading ? t('characterApp.imageLoading') : t('characterApp.imageUpload')}
           className="character-form__portrait character-form__portrait--empty"
         >
@@ -79,7 +81,7 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           className="character-form__portrait-action"
         >
           <Upload className="h-3 w-3" />
@@ -89,6 +91,7 @@ export function CharacterImageField({ imageUrl, onChange }: CharacterImageFieldP
           <button
             type="button"
             onClick={() => onChange(null)}
+            disabled={disabled}
             className="character-form__portrait-action"
           >
             <X className="h-3 w-3" />

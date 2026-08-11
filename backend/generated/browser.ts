@@ -93,6 +93,16 @@ export type World = Prisma.WorldModel
  */
 export type Diagram = Prisma.DiagramModel
 /**
+ * Model TimelineEvent
+ * 
+ */
+export type TimelineEvent = Prisma.TimelineEventModel
+/**
+ * Model CharacterRelationship
+ * 
+ */
+export type CharacterRelationship = Prisma.CharacterRelationshipModel
+/**
  * Model StoryOption
  * 
  */
@@ -117,3 +127,13 @@ export type Activity = Prisma.ActivityModel
  * 
  */
 export type Role = Prisma.RoleModel
+/**
+ * Model CharacterOption
+ * 
+ */
+export type CharacterOption = Prisma.CharacterOptionModel
+/**
+ * Model StorySection
+ * 
+ */
+export type StorySection = Prisma.StorySectionModel

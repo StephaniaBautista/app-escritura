@@ -16,6 +16,34 @@ export interface CharacterAttributes {
 export const SHEET_BACKGROUND_MODES = ['default', 'single', 'collage'] as const
 export type SheetBackgroundMode = typeof SHEET_BACKGROUND_MODES[number]
 
+export const CHARACTER_OPTION_TYPES = ['gender', 'orientation', 'maritalStatus', 'role'] as const
+export type CharacterOptionType = (typeof CHARACTER_OPTION_TYPES)[number]
+
+export interface CharacterOptionRow {
+  id: string
+  type: CharacterOptionType
+  value: string
+  label: string
+  labelEn: string | null
+  sortOrder: number
+  isDefault: boolean
+}
+
+export interface CharacterOptionGroup {
+  type: CharacterOptionType
+  options: CharacterOptionRow[]
+}
+
+export const STORY_POINTS = ['inicio', 'desarrollo', 'climax', 'final'] as const
+export type StoryPoint = typeof STORY_POINTS[number]
+
+export const STORY_POINT_ORDER: Record<StoryPoint, number> = { inicio: 0, desarrollo: 1, climax: 2, final: 3 }
+
+export function storyPointsAfter(point: StoryPoint | null | undefined): StoryPoint[] {
+  const current = point ? STORY_POINT_ORDER[point] : -1
+  return STORY_POINTS.filter((p) => STORY_POINT_ORDER[p] > current)
+}
+
 export interface Character {
   id: string
   projectId: string
@@ -39,6 +67,7 @@ export interface Character {
   parentIds: string[]
   evolvesFromId: string | null
   evolutionReason: string | null
+  storyPoint: StoryPoint | null
   attributes: CharacterAttributes
   createdAt: string
   updatedAt: string

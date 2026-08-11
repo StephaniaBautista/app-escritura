@@ -104,6 +104,8 @@ model Project {
   worlds      World[]
   diagrams    Diagram[]
   notes       Note[]
+  timelineEvents  TimelineEvent[]
+  relationships   CharacterRelationship[]
 
   @@map("projects")
 }
@@ -274,6 +276,7 @@ model Character {
   parentIds       String[]  @default([])
   evolvesFromId   String?
   evolutionReason String?
+  storyPoint      String?
   attributes      Json      @default("{}")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -282,6 +285,8 @@ model Character {
   project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   evolvesFrom Character?  @relation("CharacterEvolution", fields: [evolvesFromId], references: [id], onDelete: SetNull)
   evolutions  Character[] @relation("CharacterEvolution")
+  relationshipsA CharacterRelationship[] @relation("RelA")
+  relationshipsB CharacterRelationship[] @relation("RelB")
 
   @@index([projectId])
   @@map("characters")
@@ -304,10 +309,14 @@ model World {
 }
 
 // Diagram model for plot diagrams
+// type: familyTree (auto-generado desde parentIds) | relationships (auto desde CharacterRelationship) | custom (manual)
+// layout: { nodes: [{ id: characterId, position }], notes: [{ id, position, text }] } — edges se derivan de los datos
 model Diagram {
   id        String   @id @default(cuid())
   name      String
+  type      String   @default("custom")
   data      Json     @default("{}")
+  layout    Json     @default("{}")
   projectId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -316,6 +325,49 @@ model Diagram {
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@map("diagrams")
+}
+
+// TimelineEvent model for the story timeline (Fase 6)
+model TimelineEvent {
+  id           String   @id @default(cuid())
+  projectId    String
+  title        String
+  date         String?             // texto libre: "Año 3", "Era de los dragones"
+  description  String?
+  order        Int      @default(0)
+  characterIds String[] @default([])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("timeline_events")
+}
+
+// CharacterRelationship model (Fase 6) — relación estructurada A ↔ B
+// type: romance | friendship | enemity | family | custom (label si custom)
+// Normalizado: characterAId < characterBId para el @unique (relación simétrica)
+model CharacterRelationship {
+  id           String   @id @default(cuid())
+  projectId    String
+  characterAId String
+  characterBId String
+  type         String
+  label        String?
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  characterA Character @relation("RelA", fields: [characterAId], references: [id], onDelete: Cascade)
+  characterB Character @relation("RelB", fields: [characterBId], references: [id], onDelete: Cascade)
+
+  @@unique([characterAId, characterBId])
+  @@index([projectId])
+  @@map("character_relationships")
 }
 
 // StoryOption model for reusable wizard options per user (Fase 4)
@@ -389,4 +441,32 @@ model Role {
   createdAt   DateTime @default(now())
 
   @@map("roles")
+}
+
+// Catálogo estático de opciones del formulario de personaje (M41): listas servidas
+// por API de solo lectura. Character guarda el valor como string libre (híbrido:
+// la tabla sugiere, el usuario puede escribir valores custom).
+model CharacterOption {
+  id        String   @id @default(cuid())
+  type      String   // gender | orientation | maritalStatus | role
+  value     String   // valor canónico que se guarda en Character
+  label     String   // etiqueta ES
+  labelEn   String?  // etiqueta EN
+  sortOrder Int      @default(0)
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([type, value])
+  @@index([type])
+  @@map("character_options")
+}
+
+// Secciones estándar de estructura (M41): ids fijos que los templates referencian
+// en su JSON `sections`. Fuente de validación para el banco de plantillas.
+model StorySection {
+  id        String   @id // 'inicio' | 'desarrollo' | 'climax' | 'final'
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("story_sections")
 }

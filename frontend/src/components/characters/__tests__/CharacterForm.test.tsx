@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { CharacterForm } from '../CharacterForm'
 import type { Character } from '@/types/character'
+import { getTestOptions } from './character-options-test-data'
 
 const mocks = vi.hoisted(() => ({
   toastError: vi.fn(),
@@ -13,7 +14,7 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'es' } }),
 }))
 
 vi.mock('@/stores/toast-store', () => ({
@@ -28,6 +29,14 @@ vi.mock('@/stores/characters-store', () => ({
     uploadImage: mocks.uploadImage,
     syncBackgroundImages: mocks.syncBackgroundImages,
   }),
+}))
+
+vi.mock('@/stores/character-options-store', () => ({
+  useCharacterOptionsStore: (selector: (s: unknown) => unknown) =>
+    selector({
+      load: () => Promise.resolve(),
+      getOptions: getTestOptions,
+    }),
 }))
 
 const savedCharacter: Character = {
@@ -53,6 +62,7 @@ const savedCharacter: Character = {
   parentIds: [],
   evolvesFromId: null,
   evolutionReason: null,
+  storyPoint: null,
   attributes: { motivations: 'Encontrar a su padre' },
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -90,6 +100,7 @@ describe('CharacterForm', () => {
     expect(screen.getByLabelText('characterApp.fieldAge')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.fieldGender')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.fieldRole', { exact: true })).toBeInTheDocument()
+    expect(screen.getByLabelText('characterApp.storyPoint')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.attr_personality')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.attr_extraData')).toBeInTheDocument()
   })
@@ -106,6 +117,20 @@ describe('CharacterForm', () => {
     const emotional = screen.getByText('characterApp.sheetEmotional').closest('section')
     expect(emotional).toBeTruthy()
     expect(emotional).toHaveTextContent('characterApp.attr_internalConflict')
+  })
+
+  it('muestra las opciones del catálogo servidas por la API (género y rol)', () => {
+    renderForm()
+
+    const gender = screen.getByLabelText('characterApp.fieldGender') as HTMLSelectElement
+    const genderLabels = Array.from(gender.options).map((o) => o.textContent)
+    expect(genderLabels).toContain('Femenino')
+    expect(genderLabels).toContain('Masculino')
+
+    const role = screen.getByLabelText('characterApp.fieldRole') as HTMLSelectElement
+    const roleLabels = Array.from(role.options).map((o) => o.textContent)
+    expect(roleLabels).toContain('Principal')
+    expect(roleLabels).toContain('Secundario')
   })
 
   it('no guarda sin nombre y muestra el error', () => {

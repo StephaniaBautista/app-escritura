@@ -7,9 +7,10 @@ interface FamilyMultiSelectProps {
   options: Character[]
   selected: string[]
   onChange: (value: string[]) => void
+  disabled?: boolean
 }
 
-export function FamilyMultiSelect({ id, options, selected, onChange }: FamilyMultiSelectProps) {
+export function FamilyMultiSelect({ id, options, selected, onChange, disabled = false }: FamilyMultiSelectProps) {
   const { t } = useTranslation()
   const available = options.filter((o) => !selected.includes(o.id))
 
@@ -28,7 +29,8 @@ export function FamilyMultiSelect({ id, options, selected, onChange }: FamilyMul
                 type="button"
                 onClick={() => onChange(selected.filter((id) => id !== c.id))}
                 aria-label={`unlink-${c.name}`}
-                className="hover:opacity-70"
+                disabled={disabled}
+                className="hover:opacity-70 disabled:opacity-50"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -42,6 +44,7 @@ export function FamilyMultiSelect({ id, options, selected, onChange }: FamilyMul
         onChange={(e) => {
           if (e.target.value) onChange([...selected, e.target.value])
         }}
+        disabled={disabled}
         className="character-form__control"
       >
         <option value="">{selected.length === 0 ? '—' : `+ ${t('characterApp.addFamilyMember')}`}</option>

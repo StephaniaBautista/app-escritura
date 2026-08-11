@@ -9,6 +9,7 @@ const { mocks } = vi.hoisted(() => {
     update: vi.fn(),
     delete: vi.fn(),
     evolve: vi.fn(),
+    setEvolutionReason: vi.fn(),
   }
   const storageService = {
     uploadCharacterImage: vi.fn(),
@@ -23,6 +24,12 @@ const { mocks } = vi.hoisted(() => {
       SHEET_BACKGROUND_MODES: ['default', 'single', 'collage'],
       storageService,
       validateImage: vi.fn(),
+      StoryPointError: class extends Error {
+        constructor() {
+          super('EVOLUTION_POINT_INVALID')
+          this.name = 'StoryPointError'
+        }
+      },
       StorageUnavailableError: class extends Error {
         constructor() {
           super('storage unavailable')
@@ -39,6 +46,8 @@ vi.mock('../../services/character-service.js', () => ({
   characterService: mocks.characterService,
   MAX_SHEET_BACKGROUND_IMAGES: mocks.MAX_SHEET_BACKGROUND_IMAGES,
   SHEET_BACKGROUND_MODES: mocks.SHEET_BACKGROUND_MODES,
+  STORY_POINTS: ['inicio', 'desarrollo', 'climax', 'final'],
+  StoryPointError: mocks.StoryPointError,
 }))
 vi.mock('../../services/storage-service.js', () => ({
   storageService: mocks.storageService,
@@ -216,6 +225,67 @@ describe('characterRoutes', () => {
     const app = await buildApp()
     const res = await app.inject({ method: 'POST', url: '/api/characters/char-1/evolve', payload: {} })
     expect(res.statusCode).toBe(400)
+    await app.close()
+  })
+
+  it('POST evolve: 400 EVOLUTION_POINT_INVALID si el punto no es posterior', async () => {
+    mocks.characterService.evolve.mockRejectedValue(new mocks.StoryPointError())
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/characters/char-1/evolve',
+      payload: { reason: 'x', changes: { storyPoint: 'inicio' } },
+    })
+    expect(res.statusCode).toBe(400)
+    expect(res.json().error.code).toBe('EVOLUTION_POINT_INVALID')
+    await app.close()
+  })
+
+  it('POST evolve: rechaza storyPoint fuera del enum', async () => {
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/characters/char-1/evolve',
+      payload: { reason: 'x', changes: { storyPoint: 'epilogo' } },
+    })
+    expect(res.statusCode).toBe(400)
+    await app.close()
+  })
+
+  it('PATCH evolution-reason: 200 y actualiza el motivo', async () => {
+    mocks.characterService.setEvolutionReason.mockResolvedValue({ ...charRow, evolutionReason: 'Motivo nuevo' })
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'PATCH',
+      url: '/api/characters/char-1/evolution-reason',
+      payload: { reason: '  Motivo nuevo  ' },
+    })
+    expect(res.statusCode).toBe(200)
+    expect(mocks.characterService.setEvolutionReason).toHaveBeenCalledWith('char-1', 'user-1', 'Motivo nuevo')
+    expect(res.json().evolutionReason).toBe('Motivo nuevo')
+    await app.close()
+  })
+
+  it('PATCH evolution-reason: 400 sin reason', async () => {
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'PATCH',
+      url: '/api/characters/char-1/evolution-reason',
+      payload: {},
+    })
+    expect(res.statusCode).toBe(400)
+    await app.close()
+  })
+
+  it('PATCH evolution-reason: 404 si el personaje no pertenece al usuario', async () => {
+    mocks.characterService.setEvolutionReason.mockResolvedValue(null)
+    const app = await buildApp()
+    const res = await app.inject({
+      method: 'PATCH',
+      url: '/api/characters/char-1/evolution-reason',
+      payload: { reason: 'x' },
+    })
+    expect(res.statusCode).toBe(404)
     await app.close()
   })
 

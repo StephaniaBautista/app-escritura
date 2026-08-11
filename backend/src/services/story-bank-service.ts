@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma.js'
 import type { Prisma } from '@generated/client'
 import { MemoryCache } from '../lib/cache.js'
+import { storySectionService } from './story-section-service.js'
 
 export interface StoryQuestionRow {
   id: string
@@ -36,9 +37,7 @@ export interface TemplateInput {
   sections: TemplateSection[]
 }
 
-export const STANDARD_SECTION_IDS = ['inicio', 'desarrollo', 'climax', 'final'] as const
-
-function normalizeSections(raw: unknown): TemplateSection[] {
+async function normalizeSections(raw: unknown): Promise<TemplateSection[]> {
   const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw
   return validateSections(parsed)
 }
@@ -50,7 +49,7 @@ const MAX_SECTIONS = 12
 const MAX_SECTION_TITLE = 100
 const MAX_QUESTION_TEXT = 500
 
-export function validateSections(sections: unknown): TemplateSection[] {
+export async function validateSections(sections: unknown): Promise<TemplateSection[]> {
   if (!Array.isArray(sections)) {
     throw new Error('sections debe ser un array')
   }
@@ -69,7 +68,7 @@ export function validateSections(sections: unknown): TemplateSection[] {
     if (seen.has(id)) throw new Error(`Sección duplicada: ${id}`)
     seen.add(id)
 
-    const isStandard = (STANDARD_SECTION_IDS as readonly string[]).includes(id)
+    const isStandard = await storySectionService.isStandard(id)
     const title = typeof section.title === 'string' ? section.title.trim().slice(0, MAX_SECTION_TITLE) : ''
     if (!isStandard && !title) {
       throw new Error('Las secciones personalizadas necesitan un título')
@@ -146,7 +145,7 @@ export const storyBankService = {
     const result = await prisma.storyTemplate.findMany({
       orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
     })
-    const normalized = result.map((t) => ({ ...t, sections: normalizeSections(t.sections) }))
+    const normalized = await Promise.all(result.map(async (t) => ({ ...t, sections: await normalizeSections(t.sections) })))
     bankCache.set('templates', normalized)
     return normalized
   },
@@ -154,11 +153,11 @@ export const storyBankService = {
   async getTemplate(id: string): Promise<StoryTemplateRow | null> {
     const template = await prisma.storyTemplate.findUnique({ where: { id } })
     if (!template) return null
-    return { ...template, sections: normalizeSections(template.sections) }
+    return { ...template, sections: await normalizeSections(template.sections) }
   },
 
   async createTemplate(input: TemplateInput): Promise<StoryTemplateRow> {
-    const sections = validateSections(input.sections)
+    const sections = await validateSections(input.sections)
     const template = await prisma.storyTemplate.create({
       data: {
         name: input.name,
@@ -170,7 +169,7 @@ export const storyBankService = {
       },
     })
     bankCache.clear()
-    return { ...template, sections: normalizeSections(template.sections) }
+    return { ...template, sections: await normalizeSections(template.sections) }
   },
 
   async updateTemplate(id: string, input: Partial<TemplateInput>): Promise<StoryTemplateRow | null> {
@@ -182,11 +181,11 @@ export const storyBankService = {
     if (input.nameEn !== undefined) data.nameEn = input.nameEn?.trim() || null
     if (input.description !== undefined) data.description = input.description?.trim() || null
     if (input.descriptionEn !== undefined) data.descriptionEn = input.descriptionEn?.trim() || null
-    if (input.sections !== undefined) data.sections = validateSections(input.sections) as unknown as Prisma.InputJsonValue
+    if (input.sections !== undefined) data.sections = (await validateSections(input.sections)) as unknown as Prisma.InputJsonValue
 
     const updated = await prisma.storyTemplate.update({ where: { id }, data })
     bankCache.clear()
-    return { ...updated, sections: normalizeSections(updated.sections) }
+    return { ...updated, sections: await normalizeSections(updated.sections) }
   },
 
   async deleteTemplate(id: string): Promise<boolean> {

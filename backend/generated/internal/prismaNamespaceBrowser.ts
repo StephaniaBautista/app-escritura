@@ -66,11 +66,15 @@ export const ModelName = {
   Character: 'Character',
   World: 'World',
   Diagram: 'Diagram',
+  TimelineEvent: 'TimelineEvent',
+  CharacterRelationship: 'CharacterRelationship',
   StoryOption: 'StoryOption',
   StoryQuestion: 'StoryQuestion',
   StoryTemplate: 'StoryTemplate',
   Activity: 'Activity',
-  Role: 'Role'
+  Role: 'Role',
+  CharacterOption: 'CharacterOption',
+  StorySection: 'StorySection'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -277,6 +281,7 @@ export const CharacterScalarFieldEnum = {
   parentIds: 'parentIds',
   evolvesFromId: 'evolvesFromId',
   evolutionReason: 'evolutionReason',
+  storyPoint: 'storyPoint',
   attributes: 'attributes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -301,13 +306,45 @@ export type WorldScalarFieldEnum = (typeof WorldScalarFieldEnum)[keyof typeof Wo
 export const DiagramScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  type: 'type',
   data: 'data',
+  layout: 'layout',
   projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeof DiagramScalarFieldEnum]
+
+
+export const TimelineEventScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  date: 'date',
+  description: 'description',
+  order: 'order',
+  characterIds: 'characterIds',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimelineEventScalarFieldEnum = (typeof TimelineEventScalarFieldEnum)[keyof typeof TimelineEventScalarFieldEnum]
+
+
+export const CharacterRelationshipScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  characterAId: 'characterAId',
+  characterBId: 'characterBId',
+  type: 'type',
+  label: 'label',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterRelationshipScalarFieldEnum = (typeof CharacterRelationshipScalarFieldEnum)[keyof typeof CharacterRelationshipScalarFieldEnum]
 
 
 export const StoryOptionScalarFieldEnum = {
@@ -371,6 +408,29 @@ export const RoleScalarFieldEnum = {
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+export const CharacterOptionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  value: 'value',
+  label: 'label',
+  labelEn: 'labelEn',
+  sortOrder: 'sortOrder',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt'
+} as const
+
+export type CharacterOptionScalarFieldEnum = (typeof CharacterOptionScalarFieldEnum)[keyof typeof CharacterOptionScalarFieldEnum]
+
+
+export const StorySectionScalarFieldEnum = {
+  id: 'id',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type StorySectionScalarFieldEnum = (typeof StorySectionScalarFieldEnum)[keyof typeof StorySectionScalarFieldEnum]
 
 
 export const SortOrder = {

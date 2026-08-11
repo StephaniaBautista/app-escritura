@@ -58,6 +58,8 @@
     "sidebar",
     "auth",
     "admin",
-    "characterApp"
+    "characterApp",
+    "timelineApp",
+    "diagramApp"
   ]
 }

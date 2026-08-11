@@ -6,12 +6,14 @@ interface ChipsInputProps {
   value: string[]
   onChange: (value: string[]) => void
   placeholder?: string
+  disabled?: boolean
 }
 
-export function ChipsInput({ id, value, onChange, placeholder }: ChipsInputProps) {
+export function ChipsInput({ id, value, onChange, placeholder, disabled = false }: ChipsInputProps) {
   const [text, setText] = useState('')
 
   const add = () => {
+    if (disabled) return
     const trimmed = text.trim()
     if (!trimmed) return
     if (!value.includes(trimmed)) onChange([...value, trimmed])
@@ -42,7 +44,8 @@ export function ChipsInput({ id, value, onChange, placeholder }: ChipsInputProps
             type="button"
             onClick={() => onChange(value.filter((c) => c !== chip))}
             aria-label={`remove-${chip}`}
-            className="hover:opacity-70"
+            disabled={disabled}
+            className="hover:opacity-70 disabled:opacity-50"
           >
             <X className="w-3 h-3" />
           </button>
@@ -54,6 +57,7 @@ export function ChipsInput({ id, value, onChange, placeholder }: ChipsInputProps
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
+          if (disabled) return
           if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault()
             add()
@@ -62,8 +66,9 @@ export function ChipsInput({ id, value, onChange, placeholder }: ChipsInputProps
           }
         }}
         onBlur={add}
+        disabled={disabled}
         placeholder={value.length === 0 ? placeholder : ''}
-        className="flex-1 min-w-[100px] bg-transparent text-sm outline-none"
+        className="flex-1 min-w-[100px] bg-transparent text-sm outline-none disabled:opacity-50"
         style={{ color: 'var(--color-ink)' }}
       />
     </div>

@@ -16,8 +16,10 @@ import { StoryDescriptionSection } from '@/components/story-setup/StoryDescripti
 import { StoryStructureTab } from '@/components/story-setup/StoryStructureTab'
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
 import { CharactersPanel } from '@/components/characters/CharactersPanel'
+import { TimelinePanel } from '@/components/timeline/TimelinePanel'
+import { DiagramsPanel } from '@/components/diagrams/DiagramsPanel'
 import type { StoryMeta } from '@/types/story'
-import { FileText, Plus, Users, Globe, StickyNote, History, Layers } from 'lucide-react'
+import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, Network } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
@@ -75,6 +77,8 @@ export function FolderPage() {
     { id: 'documents', label: 'Documentos', icon: FileText },
     { id: 'structure', label: t('storySetup.structureTab'), icon: Layers },
     { id: 'characters', label: 'Personajes', icon: Users },
+    { id: 'timeline', label: t('timelineApp.title'), icon: Clock },
+    { id: 'diagrams', label: t('diagramApp.title'), icon: Network },
     { id: 'worlds', label: 'Mundos', icon: Globe },
     { id: 'notes', label: t('notes.title'), icon: StickyNote },
     { id: 'versions', label: t('versions.title'), icon: History },
@@ -229,6 +233,14 @@ export function FolderPage() {
 
         {activeTab === 'characters' && folderId && (
           <CharactersPanel projectId={folderId} />
+        )}
+
+        {activeTab === 'timeline' && folderId && (
+          <TimelinePanel projectId={folderId} />
+        )}
+
+        {activeTab === 'diagrams' && folderId && (
+          <DiagramsPanel projectId={folderId} />
         )}
 
         {activeTab === 'worlds' && (

@@ -13,7 +13,8 @@ interface CharactersState {
   create: (projectId: string, data: CharacterInput) => Promise<Character | null>
   update: (id: string, data: CharacterInput) => Promise<Character | null>
   remove: (id: string) => Promise<void>
-  evolve: (id: string, reason: string, changes: CharacterInput) => Promise<Character | null>
+  evolve: (id: string, reason: string, changes: CharacterInput) => Promise<Character>
+  setEvolutionReason: (id: string, reason: string) => Promise<void>
   uploadImage: (id: string, dataUrl: string) => Promise<void>
   deleteImage: (id: string) => Promise<void>
   syncBackgroundImages: (id: string, keepUrls: string[], dataUrls: string[]) => Promise<Character | null>
@@ -71,14 +72,14 @@ export const useCharactersStore = create<CharactersState>()((set, get) => ({
   },
 
   async evolve(id: string, reason: string, changes: CharacterInput) {
-    try {
-      const evolved = await charactersApi.evolve(id, reason, changes)
-      set({ characters: [...get().characters, evolved].sort((a, b) => a.name.localeCompare(b.name)) })
-      return evolved
-    } catch (err: unknown) {
-      useToastStore.getState().error(getErrorMessage(err))
-      return null
-    }
+    const evolved = await charactersApi.evolve(id, reason, changes)
+    set({ characters: [...get().characters, evolved].sort((a, b) => a.name.localeCompare(b.name)) })
+    return evolved
+  },
+
+  async setEvolutionReason(id: string, reason: string) {
+    const updated = await charactersApi.setEvolutionReason(id, reason)
+    set({ characters: get().characters.map((c) => (c.id === id ? updated : c)) })
   },
 
   async uploadImage(id: string, dataUrl: string) {

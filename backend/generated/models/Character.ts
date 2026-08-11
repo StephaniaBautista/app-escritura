@@ -54,6 +54,7 @@ export type CharacterMinAggregateOutputType = {
   isOC: boolean | null
   evolvesFromId: string | null
   evolutionReason: string | null
+  storyPoint: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +79,7 @@ export type CharacterMaxAggregateOutputType = {
   isOC: boolean | null
   evolvesFromId: string | null
   evolutionReason: string | null
+  storyPoint: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -105,6 +107,7 @@ export type CharacterCountAggregateOutputType = {
   parentIds: number
   evolvesFromId: number
   evolutionReason: number
+  storyPoint: number
   attributes: number
   createdAt: number
   updatedAt: number
@@ -140,6 +143,7 @@ export type CharacterMinAggregateInputType = {
   isOC?: true
   evolvesFromId?: true
   evolutionReason?: true
+  storyPoint?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -164,6 +168,7 @@ export type CharacterMaxAggregateInputType = {
   isOC?: true
   evolvesFromId?: true
   evolutionReason?: true
+  storyPoint?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -191,6 +196,7 @@ export type CharacterCountAggregateInputType = {
   parentIds?: true
   evolvesFromId?: true
   evolutionReason?: true
+  storyPoint?: true
   attributes?: true
   createdAt?: true
   updatedAt?: true
@@ -306,6 +312,7 @@ export type CharacterGroupByOutputType = {
   parentIds: string[]
   evolvesFromId: string | null
   evolutionReason: string | null
+  storyPoint: string | null
   attributes: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
@@ -357,12 +364,15 @@ export type CharacterWhereInput = {
   parentIds?: Prisma.StringNullableListFilter<"Character">
   evolvesFromId?: Prisma.StringNullableFilter<"Character"> | string | null
   evolutionReason?: Prisma.StringNullableFilter<"Character"> | string | null
+  storyPoint?: Prisma.StringNullableFilter<"Character"> | string | null
   attributes?: Prisma.JsonFilter<"Character">
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   evolvesFrom?: Prisma.XOR<Prisma.CharacterNullableScalarRelationFilter, Prisma.CharacterWhereInput> | null
   evolutions?: Prisma.CharacterListRelationFilter
+  relationshipsA?: Prisma.CharacterRelationshipListRelationFilter
+  relationshipsB?: Prisma.CharacterRelationshipListRelationFilter
 }
 
 export type CharacterOrderByWithRelationInput = {
@@ -388,12 +398,15 @@ export type CharacterOrderByWithRelationInput = {
   parentIds?: Prisma.SortOrder
   evolvesFromId?: Prisma.SortOrderInput | Prisma.SortOrder
   evolutionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  storyPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   attributes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   evolvesFrom?: Prisma.CharacterOrderByWithRelationInput
   evolutions?: Prisma.CharacterOrderByRelationAggregateInput
+  relationshipsA?: Prisma.CharacterRelationshipOrderByRelationAggregateInput
+  relationshipsB?: Prisma.CharacterRelationshipOrderByRelationAggregateInput
 }
 
 export type CharacterWhereUniqueInput = Prisma.AtLeast<{
@@ -422,12 +435,15 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   parentIds?: Prisma.StringNullableListFilter<"Character">
   evolvesFromId?: Prisma.StringNullableFilter<"Character"> | string | null
   evolutionReason?: Prisma.StringNullableFilter<"Character"> | string | null
+  storyPoint?: Prisma.StringNullableFilter<"Character"> | string | null
   attributes?: Prisma.JsonFilter<"Character">
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   evolvesFrom?: Prisma.XOR<Prisma.CharacterNullableScalarRelationFilter, Prisma.CharacterWhereInput> | null
   evolutions?: Prisma.CharacterListRelationFilter
+  relationshipsA?: Prisma.CharacterRelationshipListRelationFilter
+  relationshipsB?: Prisma.CharacterRelationshipListRelationFilter
 }, "id">
 
 export type CharacterOrderByWithAggregationInput = {
@@ -453,6 +469,7 @@ export type CharacterOrderByWithAggregationInput = {
   parentIds?: Prisma.SortOrder
   evolvesFromId?: Prisma.SortOrderInput | Prisma.SortOrder
   evolutionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  storyPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   attributes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -489,6 +506,7 @@ export type CharacterScalarWhereWithAggregatesInput = {
   parentIds?: Prisma.StringNullableListFilter<"Character">
   evolvesFromId?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   evolutionReason?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  storyPoint?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   attributes?: Prisma.JsonWithAggregatesFilter<"Character">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Character"> | Date | string
@@ -515,12 +533,15 @@ export type CharacterCreateInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterUncheckedCreateInput = {
@@ -546,10 +567,13 @@ export type CharacterUncheckedCreateInput = {
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolvesFromId?: string | null
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterUpdateInput = {
@@ -573,12 +597,15 @@ export type CharacterUpdateInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateInput = {
@@ -604,10 +631,13 @@ export type CharacterUncheckedUpdateInput = {
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterCreateManyInput = {
@@ -633,6 +663,7 @@ export type CharacterCreateManyInput = {
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolvesFromId?: string | null
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -659,6 +690,7 @@ export type CharacterUpdateManyMutationInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +719,7 @@ export type CharacterUncheckedUpdateManyInput = {
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -738,6 +771,7 @@ export type CharacterCountOrderByAggregateInput = {
   parentIds?: Prisma.SortOrder
   evolvesFromId?: Prisma.SortOrder
   evolutionReason?: Prisma.SortOrder
+  storyPoint?: Prisma.SortOrder
   attributes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -767,6 +801,7 @@ export type CharacterMaxOrderByAggregateInput = {
   isOC?: Prisma.SortOrder
   evolvesFromId?: Prisma.SortOrder
   evolutionReason?: Prisma.SortOrder
+  storyPoint?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -791,12 +826,18 @@ export type CharacterMinOrderByAggregateInput = {
   isOC?: Prisma.SortOrder
   evolvesFromId?: Prisma.SortOrder
   evolutionReason?: Prisma.SortOrder
+  storyPoint?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type CharacterSumOrderByAggregateInput = {
   heightCm?: Prisma.SortOrder
+}
+
+export type CharacterScalarRelationFilter = {
+  is?: Prisma.CharacterWhereInput
+  isNot?: Prisma.CharacterWhereInput
 }
 
 export type CharacterCreateNestedManyWithoutProjectInput = {
@@ -934,6 +975,34 @@ export type CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput = {
   deleteMany?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
 }
 
+export type CharacterCreateNestedOneWithoutRelationshipsAInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsAInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsAInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutRelationshipsAInput
+  connect?: Prisma.CharacterWhereUniqueInput
+}
+
+export type CharacterCreateNestedOneWithoutRelationshipsBInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsBInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsBInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutRelationshipsBInput
+  connect?: Prisma.CharacterWhereUniqueInput
+}
+
+export type CharacterUpdateOneRequiredWithoutRelationshipsANestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsAInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsAInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutRelationshipsAInput
+  upsert?: Prisma.CharacterUpsertWithoutRelationshipsAInput
+  connect?: Prisma.CharacterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutRelationshipsAInput, Prisma.CharacterUpdateWithoutRelationshipsAInput>, Prisma.CharacterUncheckedUpdateWithoutRelationshipsAInput>
+}
+
+export type CharacterUpdateOneRequiredWithoutRelationshipsBNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsBInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsBInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutRelationshipsBInput
+  upsert?: Prisma.CharacterUpsertWithoutRelationshipsBInput
+  connect?: Prisma.CharacterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutRelationshipsBInput, Prisma.CharacterUpdateWithoutRelationshipsBInput>, Prisma.CharacterUncheckedUpdateWithoutRelationshipsBInput>
+}
+
 export type CharacterCreateWithoutProjectInput = {
   id?: string
   name: string
@@ -955,11 +1024,14 @@ export type CharacterCreateWithoutProjectInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterUncheckedCreateWithoutProjectInput = {
@@ -984,10 +1056,13 @@ export type CharacterUncheckedCreateWithoutProjectInput = {
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolvesFromId?: string | null
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterCreateOrConnectWithoutProjectInput = {
@@ -1042,6 +1117,7 @@ export type CharacterScalarWhereInput = {
   parentIds?: Prisma.StringNullableListFilter<"Character">
   evolvesFromId?: Prisma.StringNullableFilter<"Character"> | string | null
   evolutionReason?: Prisma.StringNullableFilter<"Character"> | string | null
+  storyPoint?: Prisma.StringNullableFilter<"Character"> | string | null
   attributes?: Prisma.JsonFilter<"Character">
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
@@ -1068,11 +1144,14 @@ export type CharacterCreateWithoutEvolutionsInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterUncheckedCreateWithoutEvolutionsInput = {
@@ -1098,9 +1177,12 @@ export type CharacterUncheckedCreateWithoutEvolutionsInput = {
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolvesFromId?: string | null
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterCreateOrConnectWithoutEvolutionsInput = {
@@ -1129,11 +1211,14 @@ export type CharacterCreateWithoutEvolvesFromInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterUncheckedCreateWithoutEvolvesFromInput = {
@@ -1158,10 +1243,13 @@ export type CharacterUncheckedCreateWithoutEvolvesFromInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
 }
 
 export type CharacterCreateOrConnectWithoutEvolvesFromInput = {
@@ -1206,11 +1294,14 @@ export type CharacterUpdateWithoutEvolutionsInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutEvolutionsInput = {
@@ -1236,9 +1327,12 @@ export type CharacterUncheckedUpdateWithoutEvolutionsInput = {
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUpsertWithWhereUniqueWithoutEvolvesFromInput = {
@@ -1255,6 +1349,286 @@ export type CharacterUpdateWithWhereUniqueWithoutEvolvesFromInput = {
 export type CharacterUpdateManyWithWhereWithoutEvolvesFromInput = {
   where: Prisma.CharacterScalarWhereInput
   data: Prisma.XOR<Prisma.CharacterUpdateManyMutationInput, Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromInput>
+}
+
+export type CharacterCreateWithoutRelationshipsAInput = {
+  id?: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
+  evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
+  evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+}
+
+export type CharacterUncheckedCreateWithoutRelationshipsAInput = {
+  id?: string
+  projectId: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolvesFromId?: string | null
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+}
+
+export type CharacterCreateOrConnectWithoutRelationshipsAInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsAInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsAInput>
+}
+
+export type CharacterCreateWithoutRelationshipsBInput = {
+  id?: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
+  evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
+  evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+}
+
+export type CharacterUncheckedCreateWithoutRelationshipsBInput = {
+  id?: string
+  projectId: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolvesFromId?: string | null
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+}
+
+export type CharacterCreateOrConnectWithoutRelationshipsBInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsBInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsBInput>
+}
+
+export type CharacterUpsertWithoutRelationshipsAInput = {
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutRelationshipsAInput, Prisma.CharacterUncheckedUpdateWithoutRelationshipsAInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsAInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsAInput>
+  where?: Prisma.CharacterWhereInput
+}
+
+export type CharacterUpdateToOneWithWhereWithoutRelationshipsAInput = {
+  where?: Prisma.CharacterWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutRelationshipsAInput, Prisma.CharacterUncheckedUpdateWithoutRelationshipsAInput>
+}
+
+export type CharacterUpdateWithoutRelationshipsAInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
+  evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
+  evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+}
+
+export type CharacterUncheckedUpdateWithoutRelationshipsAInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+}
+
+export type CharacterUpsertWithoutRelationshipsBInput = {
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutRelationshipsBInput, Prisma.CharacterUncheckedUpdateWithoutRelationshipsBInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutRelationshipsBInput, Prisma.CharacterUncheckedCreateWithoutRelationshipsBInput>
+  where?: Prisma.CharacterWhereInput
+}
+
+export type CharacterUpdateToOneWithWhereWithoutRelationshipsBInput = {
+  where?: Prisma.CharacterWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutRelationshipsBInput, Prisma.CharacterUncheckedUpdateWithoutRelationshipsBInput>
+}
+
+export type CharacterUpdateWithoutRelationshipsBInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
+  evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
+  evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+}
+
+export type CharacterUncheckedUpdateWithoutRelationshipsBInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
 }
 
 export type CharacterCreateManyProjectInput = {
@@ -1279,6 +1653,7 @@ export type CharacterCreateManyProjectInput = {
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolvesFromId?: string | null
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1305,11 +1680,14 @@ export type CharacterUpdateWithoutProjectInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutProjectInput = {
@@ -1334,10 +1712,13 @@ export type CharacterUncheckedUpdateWithoutProjectInput = {
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutProjectInput = {
@@ -1362,6 +1743,7 @@ export type CharacterUncheckedUpdateManyWithoutProjectInput = {
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1389,6 +1771,7 @@ export type CharacterCreateManyEvolvesFromInput = {
   isOC?: boolean
   parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
   evolutionReason?: string | null
+  storyPoint?: string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1415,11 +1798,14 @@ export type CharacterUpdateWithoutEvolvesFromInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutEvolvesFromInput = {
@@ -1444,10 +1830,13 @@ export type CharacterUncheckedUpdateWithoutEvolvesFromInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutEvolvesFromInput = {
@@ -1472,6 +1861,7 @@ export type CharacterUncheckedUpdateManyWithoutEvolvesFromInput = {
   isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
   evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1484,10 +1874,14 @@ export type CharacterUncheckedUpdateManyWithoutEvolvesFromInput = {
 
 export type CharacterCountOutputType = {
   evolutions: number
+  relationshipsA: number
+  relationshipsB: number
 }
 
 export type CharacterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   evolutions?: boolean | CharacterCountOutputTypeCountEvolutionsArgs
+  relationshipsA?: boolean | CharacterCountOutputTypeCountRelationshipsAArgs
+  relationshipsB?: boolean | CharacterCountOutputTypeCountRelationshipsBArgs
 }
 
 /**
@@ -1505,6 +1899,20 @@ export type CharacterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  */
 export type CharacterCountOutputTypeCountEvolutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CharacterWhereInput
+}
+
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeCountRelationshipsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterRelationshipWhereInput
+}
+
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeCountRelationshipsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterRelationshipWhereInput
 }
 
 
@@ -1531,12 +1939,15 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   parentIds?: boolean
   evolvesFromId?: boolean
   evolutionReason?: boolean
+  storyPoint?: boolean
   attributes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   evolvesFrom?: boolean | Prisma.Character$evolvesFromArgs<ExtArgs>
   evolutions?: boolean | Prisma.Character$evolutionsArgs<ExtArgs>
+  relationshipsA?: boolean | Prisma.Character$relationshipsAArgs<ExtArgs>
+  relationshipsB?: boolean | Prisma.Character$relationshipsBArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["character"]>
 
@@ -1563,6 +1974,7 @@ export type CharacterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   parentIds?: boolean
   evolvesFromId?: boolean
   evolutionReason?: boolean
+  storyPoint?: boolean
   attributes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1593,6 +2005,7 @@ export type CharacterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   parentIds?: boolean
   evolvesFromId?: boolean
   evolutionReason?: boolean
+  storyPoint?: boolean
   attributes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1623,16 +2036,19 @@ export type CharacterSelectScalar = {
   parentIds?: boolean
   evolvesFromId?: boolean
   evolutionReason?: boolean
+  storyPoint?: boolean
   attributes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "imageUrl" | "sheetBackgroundMode" | "sheetBackgroundImages" | "nicknames" | "age" | "gender" | "heightCm" | "orientation" | "maritalStatus" | "species" | "birthPlace" | "birthDate" | "role" | "roleSpec" | "isOC" | "parentIds" | "evolvesFromId" | "evolutionReason" | "attributes" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
+export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "imageUrl" | "sheetBackgroundMode" | "sheetBackgroundImages" | "nicknames" | "age" | "gender" | "heightCm" | "orientation" | "maritalStatus" | "species" | "birthPlace" | "birthDate" | "role" | "roleSpec" | "isOC" | "parentIds" | "evolvesFromId" | "evolutionReason" | "storyPoint" | "attributes" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
 export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   evolvesFrom?: boolean | Prisma.Character$evolvesFromArgs<ExtArgs>
   evolutions?: boolean | Prisma.Character$evolutionsArgs<ExtArgs>
+  relationshipsA?: boolean | Prisma.Character$relationshipsAArgs<ExtArgs>
+  relationshipsB?: boolean | Prisma.Character$relationshipsBArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CharacterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1650,6 +2066,8 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     project: Prisma.$ProjectPayload<ExtArgs>
     evolvesFrom: Prisma.$CharacterPayload<ExtArgs> | null
     evolutions: Prisma.$CharacterPayload<ExtArgs>[]
+    relationshipsA: Prisma.$CharacterRelationshipPayload<ExtArgs>[]
+    relationshipsB: Prisma.$CharacterRelationshipPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1674,6 +2092,7 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     parentIds: string[]
     evolvesFromId: string | null
     evolutionReason: string | null
+    storyPoint: string | null
     attributes: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
@@ -2074,6 +2493,8 @@ export interface Prisma__CharacterClient<T, Null = never, ExtArgs extends runtim
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   evolvesFrom<T extends Prisma.Character$evolvesFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$evolvesFromArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   evolutions<T extends Prisma.Character$evolutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$evolutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  relationshipsA<T extends Prisma.Character$relationshipsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$relationshipsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterRelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  relationshipsB<T extends Prisma.Character$relationshipsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$relationshipsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterRelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2125,6 +2546,7 @@ export interface CharacterFieldRefs {
   readonly parentIds: Prisma.FieldRef<"Character", 'String[]'>
   readonly evolvesFromId: Prisma.FieldRef<"Character", 'String'>
   readonly evolutionReason: Prisma.FieldRef<"Character", 'String'>
+  readonly storyPoint: Prisma.FieldRef<"Character", 'String'>
   readonly attributes: Prisma.FieldRef<"Character", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Character", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Character", 'DateTime'>
@@ -2569,6 +2991,54 @@ export type Character$evolutionsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
+}
+
+/**
+ * Character.relationshipsA
+ */
+export type Character$relationshipsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterRelationship
+   */
+  select?: Prisma.CharacterRelationshipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterRelationship
+   */
+  omit?: Prisma.CharacterRelationshipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterRelationshipInclude<ExtArgs> | null
+  where?: Prisma.CharacterRelationshipWhereInput
+  orderBy?: Prisma.CharacterRelationshipOrderByWithRelationInput | Prisma.CharacterRelationshipOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterRelationshipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterRelationshipScalarFieldEnum | Prisma.CharacterRelationshipScalarFieldEnum[]
+}
+
+/**
+ * Character.relationshipsB
+ */
+export type Character$relationshipsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterRelationship
+   */
+  select?: Prisma.CharacterRelationshipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterRelationship
+   */
+  omit?: Prisma.CharacterRelationshipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterRelationshipInclude<ExtArgs> | null
+  where?: Prisma.CharacterRelationshipWhereInput
+  orderBy?: Prisma.CharacterRelationshipOrderByWithRelationInput | Prisma.CharacterRelationshipOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterRelationshipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterRelationshipScalarFieldEnum | Prisma.CharacterRelationshipScalarFieldEnum[]
 }
 
 /**

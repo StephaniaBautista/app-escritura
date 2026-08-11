@@ -4,6 +4,8 @@ import {
   characterService,
   MAX_SHEET_BACKGROUND_IMAGES,
   SHEET_BACKGROUND_MODES,
+  STORY_POINTS,
+  StoryPointError,
   type CharacterInput,
 } from '../services/character-service.js'
 import { storageService, StorageUnavailableError, MAX_IMAGE_BYTES, validateImage } from '../services/storage-service.js'
@@ -36,6 +38,7 @@ const characterBodySchema = {
     roleSpec: { type: ['string', 'null'], maxLength: 500 },
     isOC: { type: 'boolean' },
     parentIds: { type: 'array', maxItems: 100, items: { type: 'string' } },
+    storyPoint: { type: ['string', 'null'], enum: [...STORY_POINTS, null] },
     attributes: {
       type: 'object',
       additionalProperties: { type: ['string', 'null'] },
@@ -178,9 +181,41 @@ export async function characterRoutes(app: FastifyInstance) {
 
     const { id } = request.params as { id: string }
     const body = request.body as { reason: string; changes?: Record<string, unknown> }
-    const evolved = await characterService.evolve(id, user.id, { reason: body.reason, changes: body.changes ?? {} })
-    if (!evolved) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Personaje no encontrado' } })
-    return reply.status(201).send(evolved)
+    try {
+      const evolved = await characterService.evolve(id, user.id, { reason: body.reason, changes: body.changes ?? {} })
+      if (!evolved) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Personaje no encontrado' } })
+      return reply.status(201).send(evolved)
+    } catch (err: unknown) {
+      if (err instanceof StoryPointError) {
+        return reply.status(400).send({
+          error: { code: 'EVOLUTION_POINT_INVALID', message: 'El punto de la evolución debe ser posterior al del personaje original' },
+        })
+      }
+      throw err
+    }
+  })
+
+  app.patch('/characters/:id/evolution-reason', {
+    schema: {
+      description: "Update an evolution's reason (what changed and why)",
+      tags: ['Characters'],
+      security: auth,
+      params: paramsIdSchema,
+      body: {
+        type: 'object',
+        required: ['reason'],
+        properties: { reason: { type: ['string', 'null'], maxLength: 2000 } },
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { id } = request.params as { id: string }
+    const reason = (request.body as { reason: string | null }).reason
+    const character = await characterService.setEvolutionReason(id, user.id, reason?.trim() ? reason.trim() : null)
+    if (!character) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Personaje no encontrado' } })
+    return character
   })
 
   app.put('/characters/:id/image', {

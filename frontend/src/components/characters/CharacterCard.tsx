@@ -63,6 +63,12 @@ export function CharacterCard({ character, onEdit, onEvolve, onDelete, onOpen, e
               </p>
             )}
             <div className="flex flex-wrap gap-1.5 mt-2">
+              {character.storyPoint && (
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                  style={{ background: 'var(--color-accent-violet-light)', color: 'var(--color-accent-violet)' }}>
+                  {t(`characterApp.storyPoint_${character.storyPoint}`)}
+                </span>
+              )}
               {facts.map((fact) => (
                 <span key={fact} className="px-2 py-0.5 rounded-full text-[11px] font-medium"
                   style={{ background: 'var(--color-background)', color: 'var(--color-ink-light)' }}>

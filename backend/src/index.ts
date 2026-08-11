@@ -22,9 +22,16 @@ import { activityRoutes } from './routes/activity.js'
 import { i18nRoutes } from './routes/i18n.js'
 import { storyBankRoutes } from './routes/story-bank.js'
 import { characterRoutes } from './routes/characters.js'
+import { characterOptionsRoutes } from './routes/character-options.js'
+import { storySectionsRoutes } from './routes/story-sections.js'
+import { timelineRoutes } from './routes/timeline.js'
+import { relationshipRoutes } from './routes/relationships.js'
+import { diagramRoutes } from './routes/diagrams.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
 import { storyBankService } from './services/story-bank-service.js'
+import { characterOptionService } from './services/character-option-service.js'
+import { storySectionService } from './services/story-section-service.js'
 
 const app = Fastify({
   logger: true,
@@ -74,6 +81,8 @@ await app.register(swagger, {
       { name: 'Characters', description: 'Gestión de personajes' },
       { name: 'AI', description: 'Integración con IA' },
       { name: 'Story Options', description: 'Opciones reutilizables del wizard de creación' },
+      { name: 'Character Options', description: 'Catálogo estático de opciones del formulario de personaje (M41)' },
+      { name: 'Story Sections', description: 'Secciones estándar de estructura de historia (M41)' },
       { name: 'i18n', description: 'Traducciones por namespace (público, cacheado)' },
     ],
   },
@@ -179,6 +188,15 @@ await app.register(storyBankRoutes, { prefix: '/api' })
 // Characters (Fase 5)
 await app.register(characterRoutes, { prefix: '/api' })
 
+// Static catalogs (M41): character form options + standard story sections
+await app.register(characterOptionsRoutes, { prefix: '/api' })
+await app.register(storySectionsRoutes, { prefix: '/api' })
+
+// Fase 6: timeline + relationships + diagrams
+await app.register(timelineRoutes, { prefix: '/api' })
+await app.register(relationshipRoutes, { prefix: '/api' })
+await app.register(diagramRoutes, { prefix: '/api' })
+
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {
   app.register(async function apiRoutes(app) {
@@ -219,6 +237,12 @@ const start = async () => {
     if (seededBank.questions > 0 || seededBank.templates > 0) {
       console.log(`Seeded ${seededBank.questions} questions and ${seededBank.templates} templates`)
     }
+
+    const seededCharacterOptions = await characterOptionService.seedDefaults()
+    if (seededCharacterOptions > 0) console.log(`Seeded ${seededCharacterOptions} default character options`)
+
+    const seededSections = await storySectionService.seedDefaults()
+    if (seededSections > 0) console.log(`Seeded ${seededSections} default story sections`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

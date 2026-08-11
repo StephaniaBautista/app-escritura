@@ -6,9 +6,10 @@ interface SuggestInputProps {
   onChange: (value: string) => void
   suggestions: string[]
   placeholder?: string
+  disabled?: boolean
 }
 
-export function SuggestInput({ id, value, onChange, suggestions, placeholder }: SuggestInputProps) {
+export function SuggestInput({ id, value, onChange, suggestions, placeholder, disabled = false }: SuggestInputProps) {
   const listId = useId()
 
   return (
@@ -20,6 +21,7 @@ export function SuggestInput({ id, value, onChange, suggestions, placeholder }: 
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        disabled={disabled}
         className="character-form__control"
       />
       <datalist id={listId}>

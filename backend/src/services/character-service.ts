@@ -5,6 +5,25 @@ export const SHEET_BACKGROUND_MODES = ['default', 'single', 'collage'] as const
 export type SheetBackgroundMode = typeof SHEET_BACKGROUND_MODES[number]
 export const MAX_SHEET_BACKGROUND_IMAGES = 6
 
+export const STORY_POINTS = ['inicio', 'desarrollo', 'climax', 'final'] as const
+export type StoryPoint = typeof STORY_POINTS[number]
+const STORY_POINT_ORDER: Record<StoryPoint, number> = { inicio: 0, desarrollo: 1, climax: 2, final: 3 }
+
+export function normalizeStoryPoint(point: string | null | undefined): StoryPoint | null {
+  return STORY_POINTS.includes(point as StoryPoint) ? point as StoryPoint : null
+}
+
+export function storyPointOrder(point: StoryPoint | null | undefined): number {
+  return point ? STORY_POINT_ORDER[point] : -1
+}
+
+export class StoryPointError extends Error {
+  constructor() {
+    super('EVOLUTION_POINT_INVALID')
+    this.name = 'StoryPointError'
+  }
+}
+
 export interface CharacterAttributes {
   motivations?: string
   weaknesses?: string
@@ -39,6 +58,7 @@ export interface CharacterInput {
   roleSpec?: string | null
   isOC?: boolean
   parentIds?: string[]
+  storyPoint?: string | null
   attributes?: CharacterAttributes
 }
 
@@ -122,6 +142,7 @@ export const characterService = {
         roleSpec: data.roleSpec ?? null,
         isOC: data.isOC ?? false,
         parentIds,
+        storyPoint: normalizeStoryPoint(data.storyPoint),
         attributes: (data.attributes ?? {}) as Prisma.InputJsonValue,
         projectId,
       },
@@ -156,8 +177,18 @@ export const characterService = {
         roleSpec: data.roleSpec,
         isOC: data.isOC,
         parentIds,
+        storyPoint: data.storyPoint === undefined ? undefined : normalizeStoryPoint(data.storyPoint),
         attributes: data.attributes as Prisma.InputJsonValue,
       },
+    })
+  },
+
+  async setEvolutionReason(id: string, userId: string, reason: string | null) {
+    const character = await prisma.character.findFirst({ where: { id, project: { userId } } })
+    if (!character) return null
+    return prisma.character.update({
+      where: { id },
+      data: { evolutionReason: reason },
     })
   },
 
@@ -176,6 +207,18 @@ export const characterService = {
           data: { parentIds: ref.parentIds.filter((pid) => pid !== id) },
         })
       }
+      if (character.evolvesFromId) {
+        const children = await tx.character.findMany({
+          where: { projectId: character.projectId, evolvesFromId: id },
+          select: { id: true },
+        })
+        for (const child of children) {
+          await tx.character.update({
+            where: { id: child.id },
+            data: { evolvesFromId: character.evolvesFromId },
+          })
+        }
+      }
       await tx.character.delete({ where: { id } })
     })
     return true
@@ -186,6 +229,11 @@ export const characterService = {
     if (!source) return null
 
     const changes = input.changes ?? {}
+    const storyPoint = normalizeStoryPoint(changes.storyPoint)
+    if (storyPoint && storyPointOrder(source.storyPoint as StoryPoint | null) >= storyPointOrder(storyPoint)) {
+      throw new StoryPointError()
+    }
+
     const parentIds = await sanitizeParentIds(source.projectId, changes.parentIds ?? source.parentIds)
     return prisma.character.create({
       data: {
@@ -207,6 +255,7 @@ export const characterService = {
         roleSpec: changes.roleSpec ?? source.roleSpec,
         isOC: changes.isOC ?? source.isOC,
         parentIds,
+        storyPoint,
         attributes: (changes.attributes ?? source.attributes) as Prisma.InputJsonValue,
         evolvesFromId: source.id,
         evolutionReason: input.reason ?? null,

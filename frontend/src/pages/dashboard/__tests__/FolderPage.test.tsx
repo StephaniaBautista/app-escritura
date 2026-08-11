@@ -19,11 +19,51 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }))
 
+vi.mock('@/i18n', () => ({ default: { t: (key: string) => key, changeLanguage: vi.fn() } }))
+
 vi.mock('@/stores/characters-store', () => ({
   useCharactersStore: () => ({
     characters: [],
     isLoading: false,
     load: vi.fn(),
+    remove: vi.fn(),
+  }),
+}))
+
+vi.mock('@/stores/relationships-store', () => ({
+  useRelationshipsStore: () => ({
+    relations: [],
+    isLoading: false,
+    load: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
+  }),
+}))
+
+vi.mock('@/stores/timeline-store', () => ({
+  useTimelineStore: () => ({
+    events: [],
+    isLoading: false,
+    error: null,
+    load: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    move: vi.fn(),
+    remove: vi.fn(),
+  }),
+}))
+
+vi.mock('@/stores/diagrams-store', () => ({
+  useDiagramsStore: () => ({
+    diagrams: [],
+    isLoading: false,
+    error: null,
+    load: vi.fn(),
+    create: vi.fn(),
+    generate: vi.fn(),
+    saveLayout: vi.fn(),
+    rename: vi.fn(),
     remove: vi.fn(),
   }),
 }))

@@ -49,6 +49,12 @@ export const charactersApi = {
       body: JSON.stringify({ reason, changes }),
     }),
 
+  setEvolutionReason: (id: string, reason: string) =>
+    fetchJson<Character>(`${API}/characters/${id}/evolution-reason`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reason }),
+    }),
+
   uploadImage: (id: string, dataUrl: string) =>
     fetchJson<Character>(`${API}/characters/${id}/image`, {
       method: 'PUT',

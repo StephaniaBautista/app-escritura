@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Users, Plus } from 'lucide-react'
 import type { Character } from '@/types/character'
 import { useCharactersStore } from '@/stores/characters-store'
+import { useRelationshipsStore } from '@/stores/relationships-store'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { LoadingState } from '@/components/ui/LoadingState'
 import { CharacterCard } from './CharacterCard'
@@ -10,6 +11,7 @@ import { CharacterForm } from './CharacterForm'
 import { CharacterDetail } from './CharacterDetail'
 import { CharacterEvolutionDialog } from './CharacterEvolutionDialog'
 import { CharacterFilters } from './CharacterFilters'
+import { HeightMap } from './HeightMap'
 import { EMPTY_FILTERS, filterCharacters, type CharacterFiltersState } from '@/lib/character-filters'
 
 interface CharactersPanelProps {
@@ -19,6 +21,7 @@ interface CharactersPanelProps {
 export function CharactersPanel({ projectId }: CharactersPanelProps) {
   const { t } = useTranslation()
   const { characters, isLoading, load, remove } = useCharactersStore()
+  const { relations, load: loadRelations } = useRelationshipsStore()
 
   const [filters, setFilters] = useState<CharacterFiltersState>(EMPTY_FILTERS)
   const [formOpen, setFormOpen] = useState(false)
@@ -29,7 +32,8 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
 
   useEffect(() => {
     load(projectId)
-  }, [projectId, load])
+    loadRelations(projectId)
+  }, [projectId, load, loadRelations])
 
   const filtered = useMemo(() => filterCharacters(characters, filters), [characters, filters])
 
@@ -78,7 +82,10 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
       </div>
 
       {characters.length > 0 && (
-        <CharacterFilters characters={characters} filters={filters} onChange={setFilters} />
+        <>
+          <CharacterFilters characters={characters} filters={filters} onChange={setFilters} />
+          <HeightMap characters={characters} />
+        </>
       )}
 
       {isLoading && characters.length === 0 ? (
@@ -124,16 +131,19 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
         <CharacterDetail
           character={detail}
           characters={characters}
+          relations={relations}
           onClose={() => setDetailId(null)}
           onEdit={() => { setDetailId(null); setEditing(detail); setFormOpen(true) }}
           onEvolve={() => { setDetailId(null); setEvolving(detail) }}
           onSelect={setDetailId}
+          onDelete={setDeleteTarget}
         />
       )}
 
       {evolving && (
         <CharacterEvolutionDialog
           character={evolving}
+          allCharacters={characters}
           onClose={() => setEvolving(null)}
           onEvolved={handleEvolved}
         />
@@ -141,8 +151,10 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
 
       <ConfirmDialog
         isOpen={deleteTarget !== null}
-        title={t('characterApp.deleteTitle')}
-        message={`${t('characterApp.confirmDelete')} ${deleteTarget?.name ?? ''}`}
+        title={deleteTarget?.evolvesFromId ? t('characterApp.evolveDeleteTitle') : t('characterApp.deleteTitle')}
+        message={deleteTarget?.evolvesFromId
+          ? t('characterApp.evolveDeleteConfirm')
+          : `${t('characterApp.confirmDelete')} ${deleteTarget?.name ?? ''}`}
         confirmLabel={t('common.delete')}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}

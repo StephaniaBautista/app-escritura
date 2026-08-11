@@ -859,6 +859,13 @@ a {
     repeating-linear-gradient(90deg, transparent 0 52px, color-mix(in srgb, var(--color-paper-lines) 60%, transparent) 52px 53px);
 }
 
+.character-form__hero--evolution {
+  background-image:
+    linear-gradient(125deg, color-mix(in srgb, var(--color-accent-violet) 30%, transparent) 0 22%, transparent 22% 100%),
+    linear-gradient(35deg, transparent 0 62%, color-mix(in srgb, var(--color-accent-teal) 22%, transparent) 62% 78%, transparent 78% 100%),
+    repeating-linear-gradient(90deg, transparent 0 52px, color-mix(in srgb, var(--color-paper-lines) 60%, transparent) 52px 53px);
+}
+
 .character-form__hero::after {
   content: '';
   position: absolute;
@@ -909,6 +916,11 @@ a {
 
 .character-form__close:hover {
   opacity: 0.75;
+}
+
+.character-form__close:disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .character-form__close:active {

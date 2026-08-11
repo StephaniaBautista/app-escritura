@@ -27,6 +27,7 @@ export type AggregateDiagram = {
 export type DiagramMinAggregateOutputType = {
   id: string | null
   name: string | null
+  type: string | null
   projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -35,6 +36,7 @@ export type DiagramMinAggregateOutputType = {
 export type DiagramMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  type: string | null
   projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,7 +45,9 @@ export type DiagramMaxAggregateOutputType = {
 export type DiagramCountAggregateOutputType = {
   id: number
   name: number
+  type: number
   data: number
+  layout: number
   projectId: number
   createdAt: number
   updatedAt: number
@@ -54,6 +58,7 @@ export type DiagramCountAggregateOutputType = {
 export type DiagramMinAggregateInputType = {
   id?: true
   name?: true
+  type?: true
   projectId?: true
   createdAt?: true
   updatedAt?: true
@@ -62,6 +67,7 @@ export type DiagramMinAggregateInputType = {
 export type DiagramMaxAggregateInputType = {
   id?: true
   name?: true
+  type?: true
   projectId?: true
   createdAt?: true
   updatedAt?: true
@@ -70,7 +76,9 @@ export type DiagramMaxAggregateInputType = {
 export type DiagramCountAggregateInputType = {
   id?: true
   name?: true
+  type?: true
   data?: true
+  layout?: true
   projectId?: true
   createdAt?: true
   updatedAt?: true
@@ -152,7 +160,9 @@ export type DiagramGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type DiagramGroupByOutputType = {
   id: string
   name: string
+  type: string
   data: runtime.JsonValue
+  layout: runtime.JsonValue
   projectId: string
   createdAt: Date
   updatedAt: Date
@@ -182,7 +192,9 @@ export type DiagramWhereInput = {
   NOT?: Prisma.DiagramWhereInput | Prisma.DiagramWhereInput[]
   id?: Prisma.StringFilter<"Diagram"> | string
   name?: Prisma.StringFilter<"Diagram"> | string
+  type?: Prisma.StringFilter<"Diagram"> | string
   data?: Prisma.JsonFilter<"Diagram">
+  layout?: Prisma.JsonFilter<"Diagram">
   projectId?: Prisma.StringFilter<"Diagram"> | string
   createdAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
@@ -192,7 +204,9 @@ export type DiagramWhereInput = {
 export type DiagramOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  layout?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -205,7 +219,9 @@ export type DiagramWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DiagramWhereInput[]
   NOT?: Prisma.DiagramWhereInput | Prisma.DiagramWhereInput[]
   name?: Prisma.StringFilter<"Diagram"> | string
+  type?: Prisma.StringFilter<"Diagram"> | string
   data?: Prisma.JsonFilter<"Diagram">
+  layout?: Prisma.JsonFilter<"Diagram">
   projectId?: Prisma.StringFilter<"Diagram"> | string
   createdAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
@@ -215,7 +231,9 @@ export type DiagramWhereUniqueInput = Prisma.AtLeast<{
 export type DiagramOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  layout?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -230,7 +248,9 @@ export type DiagramScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DiagramScalarWhereWithAggregatesInput | Prisma.DiagramScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Diagram"> | string
   name?: Prisma.StringWithAggregatesFilter<"Diagram"> | string
+  type?: Prisma.StringWithAggregatesFilter<"Diagram"> | string
   data?: Prisma.JsonWithAggregatesFilter<"Diagram">
+  layout?: Prisma.JsonWithAggregatesFilter<"Diagram">
   projectId?: Prisma.StringWithAggregatesFilter<"Diagram"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Diagram"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Diagram"> | Date | string
@@ -239,7 +259,9 @@ export type DiagramScalarWhereWithAggregatesInput = {
 export type DiagramCreateInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutDiagramsInput
@@ -248,7 +270,9 @@ export type DiagramCreateInput = {
 export type DiagramUncheckedCreateInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   projectId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -257,7 +281,9 @@ export type DiagramUncheckedCreateInput = {
 export type DiagramUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutDiagramsNestedInput
@@ -266,7 +292,9 @@ export type DiagramUpdateInput = {
 export type DiagramUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -275,7 +303,9 @@ export type DiagramUncheckedUpdateInput = {
 export type DiagramCreateManyInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   projectId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -284,7 +314,9 @@ export type DiagramCreateManyInput = {
 export type DiagramUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -292,7 +324,9 @@ export type DiagramUpdateManyMutationInput = {
 export type DiagramUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -311,7 +345,9 @@ export type DiagramOrderByRelationAggregateInput = {
 export type DiagramCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  layout?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -320,6 +356,7 @@ export type DiagramCountOrderByAggregateInput = {
 export type DiagramMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -328,6 +365,7 @@ export type DiagramMaxOrderByAggregateInput = {
 export type DiagramMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -378,7 +416,9 @@ export type DiagramUncheckedUpdateManyWithoutProjectNestedInput = {
 export type DiagramCreateWithoutProjectInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -386,7 +426,9 @@ export type DiagramCreateWithoutProjectInput = {
 export type DiagramUncheckedCreateWithoutProjectInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -423,7 +465,9 @@ export type DiagramScalarWhereInput = {
   NOT?: Prisma.DiagramScalarWhereInput | Prisma.DiagramScalarWhereInput[]
   id?: Prisma.StringFilter<"Diagram"> | string
   name?: Prisma.StringFilter<"Diagram"> | string
+  type?: Prisma.StringFilter<"Diagram"> | string
   data?: Prisma.JsonFilter<"Diagram">
+  layout?: Prisma.JsonFilter<"Diagram">
   projectId?: Prisma.StringFilter<"Diagram"> | string
   createdAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Diagram"> | Date | string
@@ -432,7 +476,9 @@ export type DiagramScalarWhereInput = {
 export type DiagramCreateManyProjectInput = {
   id?: string
   name: string
+  type?: string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -440,7 +486,9 @@ export type DiagramCreateManyProjectInput = {
 export type DiagramUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -448,7 +496,9 @@ export type DiagramUpdateWithoutProjectInput = {
 export type DiagramUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,7 +506,9 @@ export type DiagramUncheckedUpdateWithoutProjectInput = {
 export type DiagramUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  layout?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -466,7 +518,9 @@ export type DiagramUncheckedUpdateManyWithoutProjectInput = {
 export type DiagramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  type?: boolean
   data?: boolean
+  layout?: boolean
   projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -476,7 +530,9 @@ export type DiagramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type DiagramSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  type?: boolean
   data?: boolean
+  layout?: boolean
   projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -486,7 +542,9 @@ export type DiagramSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type DiagramSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  type?: boolean
   data?: boolean
+  layout?: boolean
   projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -496,13 +554,15 @@ export type DiagramSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type DiagramSelectScalar = {
   id?: boolean
   name?: boolean
+  type?: boolean
   data?: boolean
+  layout?: boolean
   projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DiagramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "data" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["diagram"]>
+export type DiagramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "data" | "layout" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["diagram"]>
 export type DiagramInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -521,7 +581,9 @@ export type $DiagramPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    type: string
     data: runtime.JsonValue
+    layout: runtime.JsonValue
     projectId: string
     createdAt: Date
     updatedAt: Date
@@ -951,7 +1013,9 @@ export interface Prisma__DiagramClient<T, Null = never, ExtArgs extends runtime.
 export interface DiagramFieldRefs {
   readonly id: Prisma.FieldRef<"Diagram", 'String'>
   readonly name: Prisma.FieldRef<"Diagram", 'String'>
+  readonly type: Prisma.FieldRef<"Diagram", 'String'>
   readonly data: Prisma.FieldRef<"Diagram", 'Json'>
+  readonly layout: Prisma.FieldRef<"Diagram", 'Json'>
   readonly projectId: Prisma.FieldRef<"Diagram", 'String'>
   readonly createdAt: Prisma.FieldRef<"Diagram", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Diagram", 'DateTime'>
