@@ -12,7 +12,7 @@ import {
 } from '@xyflow/react'
 import type { Connection, Edge, Node, NodeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { ArrowLeft, RefreshCw, StickyNote, Trash2 } from 'lucide-react'
+import { ArrowLeft, Heart, StickyNote, Trash2 } from 'lucide-react'
 import type { Character } from '@/types/character'
 import type { CharacterRelationship, RelationshipType } from '@/types/relationship'
 import type { Diagram } from '@/types/diagram'
@@ -21,6 +21,7 @@ import { useDiagramsStore } from '@/stores/diagrams-store'
 import { useToastStore } from '@/stores/toast-store'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { CharacterNode, type CharacterNodeType } from './CharacterNode'
+import { FamilyTree } from './FamilyTree'
 import { NoteNode, type NoteNodeData, type NoteNodeType } from './NoteNode'
 import { RelationFilters } from './RelationFilters'
 import { CreateRelationshipDialog } from './CreateRelationshipDialog'
@@ -103,23 +104,6 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
   const visibleEdges = useMemo(() => {
-    if (diagram.type === 'familyTree') {
-      const familyEdges: Edge[] = []
-      for (const c of characters) {
-        for (const parentId of c.parentIds) {
-          if (!charById.has(parentId)) continue
-          familyEdges.push({
-            id: `family-${parentId}-${c.id}`,
-            source: parentId,
-            target: c.id,
-            type: 'smoothstep',
-            style: { stroke: 'var(--color-ink-faint)', strokeWidth: 1.5 },
-            markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-ink-faint)' },
-          })
-        }
-      }
-      return familyEdges
-    }
     const canvasIds = new Set(nodes.map((n) => n.id))
     return relations
       .filter((rel) => filter === 'all' || rel.type === filter)
@@ -136,7 +120,7 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
         labelBgStyle: { fill: 'var(--color-paper)', fillOpacity: 0.9 },
         markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS[rel.type] },
       }))
-  }, [nodes, relations, filter, diagram.type, characters, charById, t])
+  }, [nodes, relations, filter, t])
 
   useEffect(() => {
     setEdges(visibleEdges)
@@ -340,41 +324,45 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
 
       {diagram.type === 'familyTree' && (
         <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-ink-faint)' }}>
-          <RefreshCw className="h-3.5 w-3.5" />
-          {t('diagramApp.connectHint')}
+          <Heart className="h-3.5 w-3.5" style={{ color: 'var(--color-romance)' }} />
+          {t('diagramApp.coupleHint')}
         </p>
       )}
 
-      <div
-        className="h-[560px] overflow-hidden rounded-2xl border"
-        style={{ borderColor: 'var(--color-paper-lines)', background: 'var(--color-background)' }}
-      >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={handleNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={isCustom ? handleConnect : undefined}
-          onNodesDelete={handleNodesDelete}
-          onEdgesDelete={handleEdgesDelete}
-          nodeTypes={nodeTypes}
-          fitView
-          minZoom={0.2}
-          maxZoom={2}
-          deleteKeyCode={['Backspace', 'Delete']}
-          nodesConnectable={isCustom}
-          proOptions={{ hideAttribution: true }}
+      {diagram.type === 'familyTree' ? (
+        <FamilyTree characters={characters} relations={relations} />
+      ) : (
+        <div
+          className="h-[560px] overflow-hidden rounded-2xl border"
+          style={{ borderColor: 'var(--color-paper-lines)', background: 'var(--color-background)' }}
         >
-          <Background gap={24} size={1} color="var(--color-paper-lines)" />
-          <Controls />
-          <MiniMap
-            pannable
-            zoomable
-            nodeColor="var(--color-accent-violet-light)"
-            maskColor="rgba(0,0,0,0.05)"
-          />
-        </ReactFlow>
-      </div>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={isCustom ? handleConnect : undefined}
+            onNodesDelete={handleNodesDelete}
+            onEdgesDelete={handleEdgesDelete}
+            nodeTypes={nodeTypes}
+            fitView
+            minZoom={0.2}
+            maxZoom={2}
+            deleteKeyCode={['Backspace', 'Delete']}
+            nodesConnectable={isCustom}
+            proOptions={{ hideAttribution: true }}
+          >
+            <Background gap={24} size={1} color="var(--color-paper-lines)" />
+            <Controls />
+            <MiniMap
+              pannable
+              zoomable
+              nodeColor="var(--color-accent-violet-light)"
+              maskColor="rgba(0,0,0,0.05)"
+            />
+          </ReactFlow>
+        </div>
+      )}
 
       {pendingConnection && (
         <CreateRelationshipDialog

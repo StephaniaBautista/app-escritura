@@ -17,7 +17,6 @@ const CM_TO_PX = 0.9
 const VIEWBOX_W = 100
 const VIEWBOX_H = 240
 const GRID_STEP = 20
-const MIN_GRID = 120
 
 function sortByHeight(characters: Character[]): SortedCharacter[] {
   return characters
@@ -80,12 +79,15 @@ export function HeightMap({ characters, onClose }: HeightMapProps) {
   const sorted = useMemo(() => sortByHeight(characters), [characters])
   const withHeight = sorted.filter((s) => s.heightCm !== null)
 
+  const tallestCm = Math.max(...sorted.map((s) => s.heightCm ?? 0), 0)
+
   const gridLines = useMemo(() => {
-    const topCm = Math.max(MIN_GRID, Math.ceil((Math.max(...sorted.map((s) => s.heightCm ?? 0), MIN_GRID)) / GRID_STEP) * GRID_STEP)
+    const topCm = Math.floor(tallestCm / GRID_STEP) * GRID_STEP
     const lines: number[] = []
-    for (let cm = MIN_GRID; cm <= topCm; cm += GRID_STEP) lines.push(cm)
+    for (let cm = 0; cm <= topCm; cm += GRID_STEP) lines.push(cm)
     return lines
-  }, [sorted])
+  }, [tallestCm])
+  const zoneHeight = tallestCm * CM_TO_PX
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -127,14 +129,19 @@ export function HeightMap({ characters, onClose }: HeightMapProps) {
             </p>
           ) : (
             <div className="relative overflow-x-auto pb-2">
-              <div className="pointer-events-none absolute inset-x-0 bottom-0" style={{ height: gridLines[gridLines.length - 1] * CM_TO_PX }} aria-hidden="true">
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0"
+                style={{ height: zoneHeight }}
+                aria-hidden="true"
+                data-testid="height-map-ruler"
+              >
                 {gridLines.map((cm) => (
                   <div
                     key={cm}
                     className="absolute inset-x-0 border-t border-dashed"
                     style={{ bottom: cm * CM_TO_PX, borderColor: 'var(--color-paper-lines)' }}
                   >
-                    <span className="absolute -top-2 left-1 text-[9px] tabular-nums" style={{ color: 'var(--color-ink-faint)' }}>
+                    <span className="absolute left-1 top-1 text-[9px] tabular-nums" style={{ color: 'var(--color-ink-faint)' }}>
                       {cm}
                     </span>
                   </div>
@@ -145,7 +152,13 @@ export function HeightMap({ characters, onClose }: HeightMapProps) {
                   const px = heightCm !== null ? heightCm * CM_TO_PX : 60
                   return (
                     <figure key={character.id} className="flex w-20 shrink-0 flex-col items-center" title={character.name}>
-                      <Silhouette heightPx={px} ghost={heightCm === null} />
+                      <div
+                        className="flex w-full items-end justify-center"
+                        style={{ height: zoneHeight }}
+                        data-testid={`height-map-stage-${character.id}`}
+                      >
+                        <Silhouette heightPx={px} ghost={heightCm === null} />
+                      </div>
                       <span
                         className="mt-1 rounded-full px-1.5 py-px text-[10px] font-semibold"
                         style={{ background: 'var(--color-background)', color: 'var(--color-ink-faint)' }}

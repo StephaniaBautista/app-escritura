@@ -114,7 +114,7 @@ export async function diagramRoutes(app: FastifyInstance) {
 
   app.post('/projects/:projectId/diagrams/generate', {
     schema: {
-      description: 'Auto-generate a diagram (familyTree from parentIds, relationships circle)',
+      description: 'Auto-generate a diagram (familyTree top-down from parentIds, relationships circle)',
       tags: ['Diagrams'],
       security: auth,
       params: paramsProjectSchema,

@@ -40,6 +40,7 @@
   --color-accent-teal-light: var(--accent-teal-light);
   --color-accent-violet: var(--accent-violet);
   --color-accent-violet-light: var(--accent-violet-light);
+  --color-romance: #e0556e;
   --color-shadow: var(--shadow);
 
   /* PostIt colors */
@@ -100,6 +101,7 @@
   --color-accent-teal-light: var(--accent-teal-light);
   --color-accent-violet: var(--accent-violet);
   --color-accent-violet-light: var(--accent-violet-light);
+  --color-romance: #f472b6;
   --color-shadow: var(--shadow);
 
   /* PostIt colors */

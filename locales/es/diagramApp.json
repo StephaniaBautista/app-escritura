@@ -39,6 +39,8 @@
   "family": "Familia",
   "relationships": "Relaciones",
   "custom": "Manual",
+  "couple": "Pareja",
+  "coupleHint": "Los personajes en pareja se unen con una barra rosa",
   "unknownHeight": "Altura desconocida",
   "deleteRelationship": "Eliminar relación",
   "nodeCount_one": "{{count}} personaje",

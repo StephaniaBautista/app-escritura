@@ -39,6 +39,8 @@
   "family": "Family",
   "relationships": "Relationships",
   "custom": "Manual",
+  "couple": "Couple",
+  "coupleHint": "Characters in a couple are joined with a pink bar",
   "unknownHeight": "Unknown height",
   "deleteRelationship": "Delete relationship",
   "nodeCount_one": "{{count}} character",

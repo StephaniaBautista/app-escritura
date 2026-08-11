@@ -71,7 +71,7 @@ describe('diagramService', () => {
   })
 
   describe('generate (familyTree)', () => {
-    it('genera layout por niveles: raíces arriba, hijos por debajo', async () => {
+    it('genera layout por generaciones: raices arriba, hijos por debajo', async () => {
       prismaMock.project.findFirst.mockResolvedValue(projectRow)
       prismaMock.character.findMany.mockResolvedValue([
         { id: 'abuelo', name: 'A', imageUrl: null, parentIds: [] },
@@ -89,10 +89,39 @@ describe('diagramService', () => {
 
       const nodes = diagram?.layout as { nodes: { id: string; position: { x: number; y: number } }[] }
       const pos = new Map(nodes.nodes.map((n) => [n.id, n.position]))
-      expect(pos.get('abuelo')).toEqual({ x: 0, y: 0 })
-      expect(pos.get('padre')?.x).toBe(260)
-      expect(pos.get('hija')?.x).toBe(520)
-      expect(pos.get('hija')?.y).not.toBe(pos.get('hijo')?.y)
+      expect(pos.get('abuelo')?.y).toBe(0)
+      expect(pos.get('padre')?.y).toBeGreaterThan(pos.get('abuelo')?.y ?? -1)
+      expect(pos.get('hija')?.y).toBe(pos.get('hijo')?.y)
+      expect(pos.get('hija')?.y).toBeGreaterThan(pos.get('padre')?.y ?? -1)
+      expect(pos.get('hija')?.x).toBeLessThan(pos.get('hijo')?.x ?? Infinity)
+    })
+
+    it('centra un hijo entre sus dos progenitores', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.character.findMany.mockResolvedValue([
+        { id: 'tio', name: 'T', imageUrl: null, parentIds: [] },
+        { id: 'tia', name: 'T2', imageUrl: null, parentIds: [] },
+        { id: 'madre', name: 'M', imageUrl: null, parentIds: [] },
+        { id: 'padre', name: 'P', imageUrl: null, parentIds: [] },
+        { id: 'hija', name: 'H', imageUrl: null, parentIds: ['madre', 'padre'] },
+      ])
+      prismaMock.diagram.create.mockImplementation(async ({ data }: { data: { layout: { nodes: { id: string; position: { x: number; y: number } }[] } } }) => ({
+        ...diagramRow,
+        type: 'familyTree',
+        layout: data.layout,
+      }))
+
+      const diagram = await diagramService.generateFamilyTree('proj-1', 'user-1')
+
+      const nodes = diagram?.layout as { nodes: { id: string; position: { x: number; y: number } }[] }
+      const pos = new Map(nodes.nodes.map((n) => [n.id, n.position]))
+      const parentX = [pos.get('madre')?.x ?? 0, pos.get('padre')?.x ?? 0].sort((a, b) => a - b)
+      const childX = pos.get('hija')?.x ?? 0
+      expect(pos.get('madre')?.y).toBe(0)
+      expect(pos.get('padre')?.y).toBe(0)
+      expect(pos.get('hija')?.y).toBeGreaterThan(0)
+      expect(childX).toBeGreaterThan(parentX[0])
+      expect(childX).toBeLessThan(parentX[1])
     })
 
     it('genera relaciones en círculo con todos los personajes', async () => {

@@ -59,18 +59,39 @@ test.describe('Diagramas (Fase 6)', () => {
     await page.getByRole('heading', { name: 'Diagramas' }).waitFor()
   }
 
-  test('genera árbol genealógico desde la familia de los personajes', async ({ browser }) => {
+  test('genera árbol genealógico desde la familia y une a las parejas', async ({ browser }) => {
     const projectId = await createProject('E2E Diagrama Árbol')
-    await createCharacter(projectId, { name: 'Lyra' })
+    const lyra = await createCharacter(projectId, { name: 'Lyra' })
     const will = await createCharacter(projectId, { name: 'Will' })
-    await createCharacter(projectId, { name: 'Percy', parentIds: [will.id] })
+    await createCharacter(projectId, { name: 'Percy', parentIds: [will.id, lyra.id] })
+    const rel = await req.post(`${API}/projects/${projectId}/relationships`, {
+      data: { characterAId: lyra.id, characterBId: will.id, type: 'romance' },
+    })
+    expect(rel.status()).toBe(201)
     const page = await newPage(browser)
     await openDiagrams(page, projectId)
 
     await page.getByTestId('generate-family').click()
-    await expect(page.locator('[data-testid="diagram-character-node"]')).toHaveCount(3)
+    const treePersons = page.locator('[data-testid="family-tree-person"]')
+    await expect(treePersons).toHaveCount(3)
+    await expect(page.getByTestId('family-couple-bar')).toBeVisible()
     await expect(page.getByText('Lyra')).toBeVisible()
     await expect(page.getByText('Percy')).toBeVisible()
+
+    const nodeFor = (name: string) => treePersons.filter({ has: page.getByText(name, { exact: true }) })
+    const lyraBox = await nodeFor('Lyra').boundingBox()
+    const willBox = await nodeFor('Will').boundingBox()
+    const percyBox = await nodeFor('Percy').boundingBox()
+    expect(lyraBox).not.toBeNull()
+    expect(willBox).not.toBeNull()
+    expect(percyBox).not.toBeNull()
+    if (!lyraBox || !willBox || !percyBox) throw new Error('No se encontraron los nodos del arbol')
+    expect(Math.abs(lyraBox.y - willBox.y)).toBeLessThan(2)
+    expect(percyBox.y).toBeGreaterThan(Math.max(lyraBox.y, willBox.y))
+    const parentCenters = [lyraBox.x + lyraBox.width / 2, willBox.x + willBox.width / 2].sort((a, b) => a - b)
+    const childCenter = percyBox.x + percyBox.width / 2
+    expect(childCenter).toBeGreaterThan(parentCenters[0])
+    expect(childCenter).toBeLessThan(parentCenters[1])
 
     await page.close()
   })

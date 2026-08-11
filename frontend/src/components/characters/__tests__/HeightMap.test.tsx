@@ -67,6 +67,51 @@ describe('HeightMap', () => {
     expect(screen.getByText('165 cm')).toBeTruthy()
   })
 
+  it('alinea el pie de las siluetas con la base de la escala, no con las etiquetas', () => {
+    renderMap([
+      makeCharacter({ id: 'short', name: 'Short', heightCm: 164 }),
+      makeCharacter({ id: 'tall', name: 'Tall', heightCm: 180 }),
+    ])
+
+    const shortStage = screen.getByTestId('height-map-stage-short')
+    const tallStage = screen.getByTestId('height-map-stage-tall')
+    const ruler = screen.getByTestId('height-map-ruler')
+
+    expect(shortStage).toHaveStyle({ height: '162px' })
+    expect(tallStage).toHaveStyle({ height: '162px' })
+    expect(ruler).toHaveStyle({ height: '162px' })
+    expect(ruler).toHaveClass('top-0')
+    expect(ruler).not.toHaveClass('bottom-0')
+    expect(ruler).toHaveTextContent('180')
+    expect(shortStage.querySelector('svg')).toHaveAttribute('height', '147.6')
+    expect(shortStage).not.toHaveTextContent('164 cm')
+    expect(shortStage.nextElementSibling).toHaveTextContent('164 cm')
+  })
+
+  it('no muestra líneas por encima de la persona más alta', () => {
+    renderMap([makeCharacter({ id: 'a', name: 'A', heightCm: 164 })])
+
+    const ruler = screen.getByTestId('height-map-ruler')
+
+    expect(ruler).toHaveStyle({ height: '147.6px' })
+    expect(ruler).toHaveTextContent('160')
+    expect(ruler).toHaveTextContent('140')
+    expect(ruler).toHaveTextContent('120')
+    expect(ruler).toHaveTextContent('100')
+    expect(ruler).toHaveTextContent('20')
+    expect(ruler).not.toHaveTextContent('180')
+  })
+
+  it('mantiene la marca de un personaje muy bajo', () => {
+    renderMap([makeCharacter({ id: 'tiny', name: 'Tiny', heightCm: 20 })])
+
+    const ruler = screen.getByTestId('height-map-ruler')
+
+    expect(ruler).toHaveStyle({ height: '18px' })
+    expect(ruler).toHaveTextContent('20')
+    expect(ruler).not.toHaveTextContent('40')
+  })
+
   it('llama a onClose al pulsar el botón de cerrar', () => {
     const onClose = vi.fn()
     renderMap([makeCharacter({ id: 'a', name: 'A', heightCm: 165 })], onClose)

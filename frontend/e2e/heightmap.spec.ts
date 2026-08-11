@@ -64,6 +64,8 @@ test.describe('Mapa de alturas (Fase 6)', () => {
     await page.getByRole('heading', { name: 'Personajes', exact: true }).waitFor()
 
     await expect(page.getByText('Mapa de alturas', { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: 'Mapa de alturas', exact: true }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
 
     const figures = page.getByRole('figure')
     await expect(figures).toHaveCount(3)
@@ -74,6 +76,10 @@ test.describe('Mapa de alturas (Fase 6)', () => {
     await expect(figures.nth(0)).toHaveAttribute('title', 'Short')
     await expect(figures.nth(1)).toHaveAttribute('title', 'Tall')
     await expect(figures.nth(2)).toHaveAttribute('title', 'NoHeight')
+
+    const ruler = page.getByTestId('height-map-ruler')
+    await expect(ruler).toContainText('180')
+    await expect(ruler).not.toContainText('200')
 
     await page.close()
   })

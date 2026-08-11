@@ -37,29 +37,42 @@ export function emptyLayout(): DiagramLayout {
 function layeredFamilyLayout(
   characters: { id: string; parentIds: string[] }[],
 ): DiagramLayoutNode[] {
+  const familyNodeStep = 240
+  const familyLevelStep = 180
   const charById = new Map(characters.map((c) => [c.id, c]))
   const childByParent = new Map<string, string[]>()
+  const parentCount = new Map<string, number>()
+  const parentIdsByChild = new Map<string, string[]>()
   for (const c of characters) {
-    for (const p of c.parentIds) {
-      if (!charById.has(p)) continue
+    const parentIds = [...new Set(c.parentIds.filter((parentId) => charById.has(parentId)))]
+    parentCount.set(c.id, parentIds.length)
+    parentIdsByChild.set(c.id, parentIds)
+    for (const p of parentIds) {
       const list = childByParent.get(p) ?? []
       list.push(c.id)
       childByParent.set(p, list)
     }
   }
-  const roots = characters.filter((c) => !c.parentIds.some((p) => charById.has(p)))
   const levelOf = new Map<string, number>()
-  const queue = roots.map((r) => r.id)
-  for (const r of roots) levelOf.set(r.id, 0)
+  const pendingLevel = new Map<string, number>()
+  const queue = characters.filter((c) => parentCount.get(c.id) === 0).map((c) => c.id)
+  for (const id of queue) levelOf.set(id, 0)
   while (queue.length > 0) {
     const id = queue.shift() as string
     const level = levelOf.get(id) ?? 0
     const children = childByParent.get(id) ?? []
     for (const child of children) {
-      if (levelOf.has(child)) continue
-      levelOf.set(child, level + 1)
-      queue.push(child)
+      pendingLevel.set(child, Math.max(pendingLevel.get(child) ?? 0, level + 1))
+      const remainingParents = (parentCount.get(child) ?? 1) - 1
+      parentCount.set(child, remainingParents)
+      if (remainingParents === 0) {
+        levelOf.set(child, pendingLevel.get(child) ?? 0)
+        queue.push(child)
+      }
     }
+  }
+  for (const c of characters) {
+    if (!levelOf.has(c.id)) levelOf.set(c.id, 0)
   }
   const byLevel = new Map<number, string[]>()
   for (const c of characters) {
@@ -68,13 +81,51 @@ function layeredFamilyLayout(
     list.push(c.id)
     byLevel.set(level, list)
   }
-  const nodes: DiagramLayoutNode[] = []
+  const xOf = new Map<string, number>()
   for (const [level, ids] of [...byLevel.entries()].sort((a, b) => a[0] - b[0])) {
-    ids.forEach((id, i) => {
-      nodes.push({ id, position: { x: level * 260, y: i * 180 } })
-    })
+    if (level === 0) {
+      ids.forEach((id, index) => xOf.set(id, index * familyNodeStep))
+      continue
+    }
+    const ordered = ids
+      .map((id, index) => {
+        const parentXs = (parentIdsByChild.get(id) ?? [])
+          .map((parentId) => xOf.get(parentId))
+          .filter((x): x is number => x !== undefined)
+        const desired = parentXs.length > 0
+          ? parentXs.reduce((sum, x) => sum + x, 0) / parentXs.length
+          : index * familyNodeStep
+        return { id, index, desired }
+      })
+      .sort((a, b) => a.desired - b.desired || a.index - b.index)
+    let cursor = Number.NEGATIVE_INFINITY
+    for (let index = 0; index < ordered.length;) {
+      let end = index + 1
+      while (end < ordered.length && ordered[end].desired === ordered[index].desired) end += 1
+      const groupSize = end - index
+      const groupStart = Math.max(
+        ordered[index].desired - ((groupSize - 1) * familyNodeStep) / 2,
+        cursor,
+      )
+      for (let groupIndex = index; groupIndex < end; groupIndex += 1) {
+        xOf.set(ordered[groupIndex].id, groupStart + (groupIndex - index) * familyNodeStep)
+      }
+      cursor = groupStart + groupSize * familyNodeStep
+      index = end
+    }
   }
-  return nodes
+  const minX = Math.min(...xOf.values(), 0)
+  return [...byLevel.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .flatMap(([level, ids]) => {
+      return ids.map((id, index) => ({
+        id,
+        position: {
+          x: (xOf.get(id) ?? index * familyNodeStep) - minX,
+          y: level * familyLevelStep,
+        },
+      }))
+    })
 }
 
 function circleLayout(ids: string[]): DiagramLayoutNode[] {
