@@ -1,6 +1,9 @@
 export const RELATIONSHIP_TYPES = ['romance', 'friendship', 'enemity', 'family', 'custom'] as const
 export type RelationshipType = typeof RELATIONSHIP_TYPES[number]
 
+export const LINE_STYLES = ['solid', 'dashed', 'dotted'] as const
+export type LineStyle = (typeof LINE_STYLES)[number]
+
 export interface RelationshipCharacterRef {
   id: string
   name: string
@@ -16,6 +19,8 @@ export interface CharacterRelationship {
   type: RelationshipType
   label: string | null
   description: string | null
+  lineColor: string | null
+  lineStyle: LineStyle | null
   createdAt: string
   updatedAt: string
   characterA: RelationshipCharacterRef
@@ -28,6 +33,8 @@ export interface RelationshipInput {
   type?: RelationshipType
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: LineStyle | null
 }
 
 export function isSelfRelation(relation: CharacterRelationship, characterId: string): boolean {

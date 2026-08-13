@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { CharacterEvolutionDialog } from '../CharacterEvolutionDialog'
+import { CharacterEvolutionSection } from '../CharacterEvolutionSection'
 import type { Character } from '@/types/character'
 import { getTestOptions } from './character-options-test-data'
 
@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   toastSuccess: vi.fn(),
   evolve: vi.fn(),
   uploadImage: vi.fn(),
+  deleteImage: vi.fn(),
   syncBackgroundImages: vi.fn(),
   update: vi.fn(),
 }))
@@ -26,6 +27,7 @@ vi.mock('@/stores/characters-store', () => ({
     characters: [],
     evolve: mocks.evolve,
     uploadImage: mocks.uploadImage,
+    deleteImage: mocks.deleteImage,
     syncBackgroundImages: mocks.syncBackgroundImages,
     update: mocks.update,
   }),
@@ -68,35 +70,41 @@ const sourceCharacter: Character = {
   updatedAt: '2026-01-01T00:00:00.000Z',
 }
 
-describe('CharacterEvolutionDialog', () => {
-  const renderDialog = (props: Partial<React.ComponentProps<typeof CharacterEvolutionDialog>> = {}) => {
-    const onClose = vi.fn()
+describe('CharacterEvolutionSection', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  const renderSection = (props: Partial<React.ComponentProps<typeof CharacterEvolutionSection>> = {}) => {
+    const onCancel = vi.fn()
     const onEvolved = vi.fn()
     render(
-      <CharacterEvolutionDialog
+      <CharacterEvolutionSection
         character={sourceCharacter}
         allCharacters={[]}
-        onClose={onClose}
+        onCancel={onCancel}
         onEvolved={onEvolved}
         {...props}
       />,
     )
-    return { onClose, onEvolved }
+    return { onCancel, onEvolved }
   }
 
-  it('pre-rellena todos los datos del personaje y muestra su nombre', () => {
-    renderDialog()
+  it('pre-rellena los datos del personaje actual y muestra la imagen anterior', () => {
+    renderSection({ character: { ...sourceCharacter, imageUrl: 'https://img/old.jpg' } })
 
     expect(screen.getByText('Lyra Belacqua')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.fieldName')).toHaveValue('Lyra Belacqua')
     expect(screen.getByLabelText('characterApp.fieldAge')).toHaveValue('17')
-    expect(screen.getByLabelText('characterApp.fieldGender')).toHaveValue('Femenino')
     expect(screen.getByLabelText('characterApp.fieldSpecies')).toHaveValue('Humana')
     expect(screen.getByLabelText('characterApp.attr_personality')).toHaveValue('Curiosa')
+    expect(document.querySelector('img')).toHaveAttribute('src', 'https://img/old.jpg')
+    expect(screen.getByLabelText('characterApp.evolvePoint')).toHaveValue('')
+    expect(screen.getByLabelText('characterApp.evolveReason')).toHaveValue('')
   })
 
   it('ofrece solo puntos posteriores al del personaje original', () => {
-    renderDialog()
+    renderSection()
 
     const select = screen.getByLabelText('characterApp.evolvePoint') as HTMLSelectElement
     const values = Array.from(select.querySelectorAll('option')).map((o) => o.getAttribute('value'))
@@ -107,7 +115,7 @@ describe('CharacterEvolutionDialog', () => {
   })
 
   it('no guarda sin motivo y muestra el error', async () => {
-    const { onEvolved } = renderDialog()
+    const { onEvolved } = renderSection()
 
     fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
     fireEvent.click(screen.getByText('characterApp.evolve'))
@@ -118,7 +126,7 @@ describe('CharacterEvolutionDialog', () => {
   })
 
   it('no guarda sin punto de la historia', async () => {
-    renderDialog()
+    renderSection()
 
     fireEvent.change(screen.getByLabelText('characterApp.evolveReason'), { target: { value: 'Se vuelve reservada' } })
     fireEvent.click(screen.getByText('characterApp.evolve'))
@@ -129,7 +137,7 @@ describe('CharacterEvolutionDialog', () => {
 
   it('guarda con motivo, punto posterior y cambios de datos', async () => {
     mocks.evolve.mockResolvedValue({ ...sourceCharacter, id: 'char-2', name: 'Lyra la Dama', storyPoint: 'climax' })
-    const { onClose, onEvolved } = renderDialog()
+    const { onEvolved } = renderSection()
 
     fireEvent.change(screen.getByLabelText('characterApp.fieldName'), { target: { value: 'Lyra la Dama' } })
     fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
@@ -146,13 +154,51 @@ describe('CharacterEvolutionDialog', () => {
     })
     expect(mocks.toastSuccess).toHaveBeenCalledWith('characterApp.evolveSuccess')
     expect(onEvolved).toHaveBeenCalledWith(expect.objectContaining({ id: 'char-2' }))
-    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('permite eliminar la imagen anterior y la aplica a la evolución', async () => {
+    mocks.evolve.mockResolvedValue({ ...sourceCharacter, id: 'char-2' })
+    const { onEvolved } = renderSection({ character: { ...sourceCharacter, imageUrl: 'https://img/old.jpg' } })
+
+    fireEvent.click(screen.getByText('characterApp.imageRemove'))
+    expect(document.querySelector('img')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
+    fireEvent.change(screen.getByLabelText('characterApp.evolveReason'), { target: { value: 'Motivo' } })
+    fireEvent.click(screen.getByText('characterApp.evolve'))
+
+    await waitFor(() => {
+      expect(mocks.evolve).toHaveBeenCalled()
+      expect(mocks.deleteImage).toHaveBeenCalledWith('char-2')
+    })
+    expect(mocks.uploadImage).not.toHaveBeenCalled()
+    expect(onEvolved).toHaveBeenCalled()
+  })
+
+  it('sube una imagen nueva a la evolución', async () => {
+    mocks.evolve.mockResolvedValue({ ...sourceCharacter, id: 'char-2' })
+    renderSection()
+
+    const file = new File(['x'], 'img.png', { type: 'image/png' })
+    fireEvent.change(document.querySelector('input[type="file"]')!, { target: { files: [file] } })
+    await waitFor(() => {
+      expect(document.querySelector('img')).toHaveAttribute('src', expect.stringContaining('data:image/png'))
+    })
+
+    fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
+    fireEvent.change(screen.getByLabelText('characterApp.evolveReason'), { target: { value: 'Motivo' } })
+    fireEvent.click(screen.getByText('characterApp.evolve'))
+
+    await waitFor(() => {
+      expect(mocks.uploadImage).toHaveBeenCalledWith('char-2', expect.stringContaining('data:image/png'))
+    })
+    expect(mocks.deleteImage).not.toHaveBeenCalled()
   })
 
   it('muestra spinner mientras guarda y bloquea los campos', async () => {
     let resolveEvolve!: (c: Character) => void
     mocks.evolve.mockImplementation(() => new Promise((resolve) => { resolveEvolve = resolve }))
-    const { onClose, onEvolved } = renderDialog()
+    const { onEvolved } = renderSection()
 
     fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
     fireEvent.change(screen.getByLabelText('characterApp.evolveReason'), { target: { value: 'Motivo' } })
@@ -161,19 +207,17 @@ describe('CharacterEvolutionDialog', () => {
     expect(screen.getByTestId('character-evolve-spinner')).toBeInTheDocument()
     expect(screen.getByText('common.saving').closest('button')).toBeDisabled()
     expect(screen.getByLabelText('characterApp.fieldName')).toBeDisabled()
-    expect(onClose).not.toHaveBeenCalled()
 
     resolveEvolve({ ...sourceCharacter, id: 'char-2' })
 
     await waitFor(() => {
-      expect(onClose).toHaveBeenCalled()
       expect(onEvolved).toHaveBeenCalled()
     })
   })
 
   it('no guarda si el punto es inválido y muestra el error específico', async () => {
     mocks.evolve.mockRejectedValue(new Error('EVOLUTION_POINT_INVALID'))
-    renderDialog()
+    renderSection()
 
     fireEvent.change(screen.getByLabelText('characterApp.evolvePoint'), { target: { value: 'climax' } })
     fireEvent.change(screen.getByLabelText('characterApp.evolveReason'), { target: { value: 'Motivo' } })

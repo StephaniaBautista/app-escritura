@@ -6,6 +6,7 @@ import {
   RELATIONSHIP_TYPES,
   type CharacterRelationship, type RelationshipType,
 } from '@/types/relationship'
+import { FamilyTree } from './FamilyTree'
 
 interface CharacterRelationsProps {
   character: Character
@@ -14,6 +15,8 @@ interface CharacterRelationsProps {
   onSelectCharacter?: (id: string) => void
   onAddRelation?: () => void
   onRemoveRelation?: (relation: CharacterRelationship) => void
+  showTree?: boolean
+  embedded?: boolean
 }
 
 const TYPE_ICONS: Record<RelationshipType, typeof Heart> = {
@@ -30,7 +33,7 @@ function chipsFor(relations: CharacterRelationship[], characterId: string): Char
 
 export function CharacterRelations({
   character, characters, relations,
-  onSelectCharacter, onAddRelation, onRemoveRelation,
+  onSelectCharacter, onAddRelation, onRemoveRelation, showTree = true, embedded = false,
 }: CharacterRelationsProps) {
   const { t } = useTranslation()
 
@@ -39,6 +42,9 @@ export function CharacterRelations({
     .filter((c): c is Character => Boolean(c))
   const children = characters.filter((c) => c.parentIds.includes(character.id))
   const mine = chipsFor(relations, character.id)
+  const treeCharacters = characters.some((c) => c.id === character.id)
+    ? characters
+    : [character, ...characters]
 
   const visible = parents.length > 0 || children.length > 0 || mine.length > 0
 
@@ -75,31 +81,22 @@ export function CharacterRelations({
   )
 
   return (
-    <section className="character-sheet__relations mt-6" aria-labelledby="character-sheet-relations-heading">
-      <div className="character-sheet__section-heading">
-        <span className="character-sheet__section-mark" aria-hidden="true" />
-        <h3 id="character-sheet-relations-heading">{t('characterApp.sheetRelationsHeading')}</h3>
-      </div>
+    <section className="character-sheet__relations mt-6" aria-labelledby={embedded ? undefined : 'character-sheet-relations-heading'}>
+      {!embedded && (
+        <div className="character-sheet__section-heading">
+          <span className="character-sheet__section-mark" aria-hidden="true" />
+          <h3 id="character-sheet-relations-heading">{t('characterApp.sheetRelationsHeading')}</h3>
+        </div>
+      )}
 
       <div className="mt-3 space-y-2.5">
-        {(parents.length > 0 || children.length > 0) && (
+        {showTree && (parents.length > 0 || children.length > 0) && (
           <div className="rounded-lg border p-2.5" style={{ borderColor: 'var(--color-paper-lines)' }}>
             <p className="mb-1.5 flex items-center gap-1 text-[11px] font-semibold" style={{ color: 'var(--color-ink-faint)' }}>
               <GitBranch className="h-3 w-3" />
               {t('characterApp.familyTree')}
             </p>
-            <div className="flex flex-wrap gap-1.5">
-              {parents.map((parent) => renderChip(
-                parent.name, parent.imageUrl, t('characterApp.parents'),
-                onSelectCharacter ? () => onSelectCharacter(parent.id) : undefined,
-                undefined,
-              ))}
-              {children.map((child) => renderChip(
-                child.name, child.imageUrl, t('characterApp.children'),
-                onSelectCharacter ? () => onSelectCharacter(child.id) : undefined,
-                undefined,
-              ))}
-            </div>
+            <FamilyTree character={character} characters={treeCharacters} onSelect={onSelectCharacter ?? (() => undefined)} />
           </div>
         )}
 

@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Loader2, X } from 'lucide-react'
 import type { Character, CharacterInput } from '@/types/character'
 import { useCharactersStore } from '@/stores/characters-store'
+import { useRelationshipsStore } from '@/stores/relationships-store'
 import { useToastStore } from '@/stores/toast-store'
 import { CharacterFormFields, draftFromCharacter, draftToInput, emptyDraft } from './CharacterFormFields'
+import { RelationshipDialog } from './RelationshipDialog'
 
 interface CharacterFormProps {
   projectId: string
@@ -18,10 +20,12 @@ export function CharacterForm({ projectId, allCharacters, character, onClose, on
   const { t } = useTranslation()
   const toast = useToastStore()
   const charactersStore = useCharactersStore()
-  const [draft, setDraft] = useState(() => character ? draftFromCharacter(character) : emptyDraft())
+  const relationshipsStore = useRelationshipsStore()
+  const [draft, setDraft] = useState(() => character ? draftFromCharacter(character, allCharacters) : emptyDraft())
   const [backgroundImageDataUrls, setBackgroundImageDataUrls] = useState<string[]>([])
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [relDialogOpen, setRelDialogOpen] = useState(false)
 
   const handleSave = async () => {
     if (!draft.name.trim()) {
@@ -112,8 +116,20 @@ export function CharacterForm({ projectId, allCharacters, character, onClose, on
             onImageChange={setImageDataUrl}
             backgroundImageDataUrls={backgroundImageDataUrls}
             onBackgroundNewImagesChange={setBackgroundImageDataUrls}
+            relations={relationshipsStore.relations}
+            onAddRelation={character ? () => setRelDialogOpen(true) : undefined}
+            onRemoveRelation={(relation) => void relationshipsStore.remove(relation.id)}
           />
         </div>
+
+        {relDialogOpen && character && (
+          <RelationshipDialog
+            character={character}
+            allCharacters={allCharacters}
+            onClose={() => setRelDialogOpen(false)}
+            onCreated={() => undefined}
+          />
+        )}
 
         <footer className="character-form__footer">
           <button type="button" onClick={onClose} disabled={isSaving} className="character-form__button"

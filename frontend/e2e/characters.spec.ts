@@ -217,22 +217,33 @@ test.describe('Personajes (Fase 5)', () => {
 
     await page.getByRole('dialog').getByLabel('Cancelar').click()
 
-    const evolvedCard = page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra la Dama' }).first()
-    await expect(evolvedCard).toBeVisible()
-    await expect(evolvedCard).toContainText('Clímax')
+    // el evolucionado ya no aparece como card en el listado
+    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra la Dama' })).toHaveCount(0)
 
-    await evolvedCard.click()
+    // se navega a la evolución desde la lista de la ficha del original
+    const lyraCard = page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra' }).first()
+    await lyraCard.click()
+    await page.getByRole('dialog').getByText('Lyra la Dama').click()
+    await expect(page.getByRole('dialog').getByText('Evolución de Lyra')).toBeVisible()
     await expect(page.getByRole('dialog').getByText('Curiosa')).toBeVisible()
 
+    // el botón Volver regresa al original
+    await page.getByRole('dialog').getByRole('button', { name: 'Volver' }).click()
+    await expect(page.getByRole('dialog').getByText('Evolución de Lyra')).toHaveCount(0)
+    await expect(page.getByRole('dialog').getByRole('button', { name: 'Volver' })).toHaveCount(0)
+    await expect(page.getByRole('dialog').getByText('Lyra la Dama')).toBeVisible()
+
+    // eliminar la evolución desde su ficha
+    await page.getByRole('dialog').getByText('Lyra la Dama').click()
     await page.getByRole('dialog').getByLabel('Eliminar esta evolución').click()
     await page.getByRole('button', { name: 'Eliminar' }).last().click()
-    await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra la Dama' })).toHaveCount(0)
+    await expect(page.getByRole('dialog')).toHaveCount(0)
     await expect(page.locator('.notebook-paper.rounded-xl', { hasText: 'Lyra' }).first()).toBeVisible()
 
     await page.close()
   })
 
-  test('relaciones: añadir pareja desde la ficha y quitarla', async ({ browser }) => {
+  test('relaciones: añadir pareja desde el formulario y quitarla', async ({ browser }) => {
     const projectId = await createProject('E2E Personajes Relaciones')
     await createCharacter(projectId, { name: 'Lyra' })
     await createCharacter(projectId, { name: 'Will' })
@@ -244,18 +255,26 @@ test.describe('Personajes (Fase 5)', () => {
     const detail = page.getByRole('dialog')
     await expect(detail.getByText('Familia y relaciones')).toBeVisible()
 
-    await detail.getByRole('button', { name: 'Añadir relación' }).click()
-    const relDialog = page.getByRole('dialog').last()
-    await relDialog.getByLabel('Con quién').selectOption({ label: 'Will' })
+    await detail.getByRole('button', { name: 'Editar' }).click()
+    const form = page.getByRole('dialog')
+    await form.getByRole('button', { name: 'Añadir relación' }).click()
+
+    const relDialog = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: 'Guardar relación' }) })
+    await relDialog.getByRole('checkbox', { name: 'Will' }).check()
     await relDialog.getByRole('button', { name: 'Guardar relación' }).click()
 
-    await expect(detail.getByText('Will')).toBeVisible()
-    await expect(detail.getByText('Pareja').first()).toBeVisible()
+    await expect(relDialog).toHaveCount(0)
+    await expect(form.getByLabel('Quitar relación')).toBeVisible()
 
-    await detail.getByLabel('Quitar relación').click()
+    await form.getByRole('button', { name: 'Guardar' }).click()
+
+    await expect(page.getByRole('dialog').getByRole('button', { name: 'Will' })).toBeVisible()
+    await expect(page.getByRole('dialog').getByText('Pareja').first()).toBeVisible()
+
+    await page.getByRole('dialog').getByLabel('Quitar relación').click()
     await page.getByRole('button', { name: 'Eliminar' }).last().click()
 
-    await expect(detail.getByText('Will')).toHaveCount(0)
+    await expect(page.getByRole('dialog').getByRole('button', { name: 'Will' })).toHaveCount(0)
 
     await page.close()
   })

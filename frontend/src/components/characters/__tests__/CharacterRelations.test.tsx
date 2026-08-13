@@ -49,6 +49,8 @@ function makeRelation(type: CharacterRelationship['type'], label: string | null,
     type,
     label,
     description: null,
+    lineColor: null,
+    lineStyle: null,
     characterA: { id: 'char-1', name: 'Lyra', imageUrl: null, heightCm: null },
     characterB: { id: otherId, name: otherId === 'char-2' ? 'Will' : 'Serafina', imageUrl: null, heightCm: null },
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -143,5 +145,21 @@ describe('CharacterRelations', () => {
 
     fireEvent.click(screen.getByText('characterApp.relAdd'))
     expect(onAdd).toHaveBeenCalled()
+  })
+
+  it('en modo embebido no repite el encabezado de sección', () => {
+    render(
+      <CharacterRelations
+        character={lyra}
+        characters={[will]}
+        relations={[makeRelation('romance', null, 'char-2')]}
+        onAddRelation={() => undefined}
+        embedded
+      />,
+    )
+
+    expect(screen.queryByText('characterApp.sheetRelationsHeading')).not.toBeInTheDocument()
+    expect(screen.getByText('Will')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'characterApp.relAdd' })).toBeInTheDocument()
   })
 })

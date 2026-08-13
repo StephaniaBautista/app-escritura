@@ -3,6 +3,11 @@ import { prisma } from '../lib/prisma.js'
 export const RELATIONSHIP_TYPES = ['romance', 'friendship', 'enemity', 'family', 'custom'] as const
 export type RelationshipType = typeof RELATIONSHIP_TYPES[number]
 
+export const LINE_STYLES = ['solid', 'dashed', 'dotted'] as const
+export type LineStyle = (typeof LINE_STYLES)[number]
+
+const LINE_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
+
 export class RelationshipExistsError extends Error {
   constructor() {
     super('RELATIONSHIP_EXISTS')
@@ -23,10 +28,20 @@ export interface RelationshipInput {
   type?: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
 }
 
 export function normalizeType(type: string | undefined): string {
   return RELATIONSHIP_TYPES.includes(type as RelationshipType) ? (type as string) : 'custom'
+}
+
+export function normalizeLineColor(color: string | null | undefined): string | null {
+  return typeof color === 'string' && LINE_COLOR_PATTERN.test(color) ? color : null
+}
+
+export function normalizeLineStyle(style: string | null | undefined): LineStyle | null {
+  return LINE_STYLES.includes(style as LineStyle) ? (style as LineStyle) : null
 }
 
 export function normalizePair(a: string, b: string): { characterAId: string; characterBId: string } {
@@ -79,6 +94,8 @@ export const relationshipService = {
         type: normalizeType(data.type),
         label: data.label ?? null,
         description: data.description ?? null,
+        lineColor: normalizeLineColor(data.lineColor),
+        lineStyle: normalizeLineStyle(data.lineStyle),
       },
       include: {
         characterA: { select: { id: true, name: true, imageUrl: true, heightCm: true } },
@@ -115,6 +132,8 @@ export const relationshipService = {
         type: data.type !== undefined ? normalizeType(data.type) : undefined,
         label: data.label,
         description: data.description,
+        lineColor: data.lineColor !== undefined ? normalizeLineColor(data.lineColor) : undefined,
+        lineStyle: data.lineStyle !== undefined ? normalizeLineStyle(data.lineStyle) : undefined,
       },
       include: {
         characterA: { select: { id: true, name: true, imageUrl: true, heightCm: true } },

@@ -2502,6 +2502,8 @@ export const CharacterRelationshipScalarFieldEnum = {
   type: 'type',
   label: 'label',
   description: 'description',
+  lineColor: 'lineColor',
+  lineStyle: 'lineStyle',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

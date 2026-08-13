@@ -287,6 +287,21 @@ describe('characterService', () => {
       expect(evolved).toEqual(expect.objectContaining({ id: 'char-3' }))
     })
 
+    it('con valores null explícitos no hereda del origen', async () => {
+      prismaMock.character.findFirst.mockResolvedValue({ ...characterRow, description: 'La original', age: '30' })
+      prismaMock.character.create.mockResolvedValue({ ...characterRow, id: 'char-3', name: 'Nueva', description: null, age: null })
+
+      const evolved = await characterService.evolve('char-1', 'user-1', {
+        reason: 'Hoja nueva',
+        changes: { name: 'Nueva', description: null, age: null },
+      })
+
+      expect(prismaMock.character.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ name: 'Nueva', description: null, age: null }),
+      })
+      expect(evolved?.description).toBeNull()
+    })
+
     it('sin changes copia todo tal cual', async () => {
       prismaMock.character.findFirst.mockResolvedValue(characterRow)
       prismaMock.character.create.mockResolvedValue(characterRow)

@@ -5,6 +5,7 @@ import {
   RelationshipExistsError,
   RelationshipNotFoundError,
   RELATIONSHIP_TYPES,
+  LINE_STYLES,
   type RelationshipInput,
 } from '../services/relationship-service.js'
 
@@ -16,6 +17,8 @@ const relationshipBodySchema = {
     type: { type: 'string', enum: [...RELATIONSHIP_TYPES] },
     label: { type: ['string', 'null'], maxLength: 200 },
     description: { type: ['string', 'null'], maxLength: 2000 },
+    lineColor: { type: ['string', 'null'], pattern: '^#[0-9a-fA-F]{6}$' },
+    lineStyle: { type: ['string', 'null'], enum: [...LINE_STYLES] },
   },
 } as const
 

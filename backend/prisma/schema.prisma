@@ -357,6 +357,8 @@ model CharacterRelationship {
   type         String
   label        String?
   description  String?
+  lineColor    String?
+  lineStyle    String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

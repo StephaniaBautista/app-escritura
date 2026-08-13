@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X, Pencil, GitFork, History, Trash2, Check, Loader2 } from 'lucide-react'
+import { X, Pencil, GitFork, History, Trash2, Check, Loader2, ArrowLeft } from 'lucide-react'
 import type { Character } from '@/types/character'
 import type { CharacterRelationship } from '@/types/relationship'
-import { FamilyTree } from './FamilyTree'
 import { CharacterSheet } from './CharacterSheet'
+import { CharacterEvolutionSection } from './CharacterEvolutionSection'
 import { RelationshipDialog } from './RelationshipDialog'
 import { useCharactersStore } from '@/stores/characters-store'
 import { useRelationshipsStore } from '@/stores/relationships-store'
@@ -18,16 +18,21 @@ interface CharacterDetailProps {
   onClose: () => void
   onEdit: () => void
   onEvolve: () => void
+  evolving: boolean
+  onCancelEvolve: () => void
+  onEvolved: (evolved: Character) => void
   onSelect: (id: string) => void
   onDelete: (character: Character) => void
 }
 
-export function CharacterDetail({ character, characters, relations = [], onClose, onEdit, onEvolve, onSelect, onDelete }: CharacterDetailProps) {
+export function CharacterDetail({ character, characters, relations = [], onClose, onEdit, onEvolve, evolving, onCancelEvolve, onEvolved, onSelect, onDelete }: CharacterDetailProps) {
   const { t } = useTranslation()
   const toast = useToastStore()
   const setEvolutionReason = useCharactersStore((s) => s.setEvolutionReason)
   const removeRelation = useRelationshipsStore((s) => s.remove)
   const source = characters.find((c) => c.id === character.evolvesFromId)
+  const backId = character.evolvesFromId
+  const evolutions = characters.filter((c) => c.evolvesFromId === character.id)
   const [editingReason, setEditingReason] = useState(false)
   const [reasonDraft, setReasonDraft] = useState('')
   const [isSavingReason, setIsSavingReason] = useState(false)
@@ -68,24 +73,39 @@ export function CharacterDetail({ character, characters, relations = [], onClose
             {t('characterApp.sheetLabel')}
           </h2>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <button
-              type="button"
-              onClick={onEvolve}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 sm:px-3"
-              style={{ background: 'var(--color-accent-violet-light)', color: 'var(--color-accent-violet)' }}
-            >
-              <GitFork className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{t('characterApp.evolve')}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onEdit}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 sm:px-3"
-              style={{ background: 'var(--color-accent)' }}
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{t('characterApp.edit')}</span>
-            </button>
+            {!evolving && (
+              <>
+                {backId && (
+                  <button
+                    type="button"
+                    onClick={() => onSelect(backId)}
+                    className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 sm:px-3"
+                    style={{ background: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">{t('common.back')}</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={onEvolve}
+                  className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 sm:px-3"
+                  style={{ background: 'var(--color-accent-violet-light)', color: 'var(--color-accent-violet)' }}
+                >
+                  <GitFork className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{t('characterApp.evolve')}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 sm:px-3"
+                  style={{ background: 'var(--color-accent)' }}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{t('characterApp.edit')}</span>
+                </button>
+              </>
+            )}
             <button type="button" onClick={onClose} aria-label={t('characterApp.cancel')} className="p-1 hover:opacity-70">
               <X className="h-5 w-5" style={{ color: 'var(--color-ink-light)' }} />
             </button>
@@ -93,14 +113,23 @@ export function CharacterDetail({ character, characters, relations = [], onClose
         </div>
 
         <div className="space-y-5 p-3 sm:p-5">
-          <CharacterSheet
-            character={character}
-            characters={characters}
-            relations={relations}
-            onSelectCharacter={onSelect}
-            onAddRelation={() => setRelDialogOpen(true)}
-            onRemoveRelation={setRelRemoveTarget}
-          />
+          {evolving ? (
+            <CharacterEvolutionSection
+              character={character}
+              allCharacters={characters}
+              onCancel={onCancelEvolve}
+              onEvolved={onEvolved}
+            />
+          ) : (
+            <>
+              <CharacterSheet
+                character={character}
+                characters={characters}
+                relations={relations}
+                onSelectCharacter={onSelect}
+                onAddRelation={() => setRelDialogOpen(true)}
+                onRemoveRelation={setRelRemoveTarget}
+              />
 
           {source && (
             <section className="rounded-lg border p-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
@@ -183,13 +212,13 @@ export function CharacterDetail({ character, characters, relations = [], onClose
             </section>
           )}
 
-          {(character.evolutions?.length ?? 0) > 0 && (
+          {evolutions.length > 0 && (
             <section>
               <h3 className="mb-2 text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--color-ink-faint)' }}>
                 {t('characterApp.evolutions')}
               </h3>
               <div className="space-y-1.5">
-                {character.evolutions?.map((evolution) => (
+                {evolutions.map((evolution) => (
                   <button
                     key={evolution.id}
                     type="button"
@@ -217,15 +246,8 @@ export function CharacterDetail({ character, characters, relations = [], onClose
               </div>
             </section>
           )}
-
-          <section>
-            <h3 className="mb-2 text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--color-ink-faint)' }}>
-              {t('characterApp.familyTree')}
-            </h3>
-            <div className="rounded-lg border p-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
-              <FamilyTree character={character} characters={characters} onSelect={onSelect} />
-            </div>
-          </section>
+          </>
+          )}
         </div>
       </div>
 

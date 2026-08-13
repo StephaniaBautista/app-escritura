@@ -30,9 +30,9 @@ export function DashboardLayout() {
         />
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         <Topbar onMenuClick={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 min-w-0 overflow-auto">
           <Outlet />
         </main>
       </div>

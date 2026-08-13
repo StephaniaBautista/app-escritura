@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { RelationshipDialog } from '../RelationshipDialog'
 import type { Character } from '@/types/character'
@@ -56,6 +56,10 @@ const lyra: Character = {
 const will: Character = { ...lyra, id: 'char-2', name: 'Will' }
 
 describe('RelationshipDialog', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   const renderDialog = (props: Partial<React.ComponentProps<typeof RelationshipDialog>> = {}) => {
     const onClose = vi.fn()
     const onCreated = vi.fn()
@@ -74,10 +78,8 @@ describe('RelationshipDialog', () => {
   it('no incluye al propio personaje entre las opciones', () => {
     renderDialog()
 
-    const select = screen.getByLabelText('characterApp.relPerson') as HTMLSelectElement
-    const values = Array.from(select.querySelectorAll('option')).map((o) => o.getAttribute('value'))
-    expect(values).toContain('char-2')
-    expect(values).not.toContain('char-1')
+    expect(screen.getByRole('checkbox', { name: 'Will' })).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: 'Lyra' })).not.toBeInTheDocument()
   })
 
   it('no guarda sin personaje elegido', async () => {
@@ -94,7 +96,7 @@ describe('RelationshipDialog', () => {
     renderDialog()
 
     fireEvent.change(screen.getByLabelText('characterApp.relType'), { target: { value: 'family' } })
-    fireEvent.change(screen.getByLabelText('characterApp.relPerson'), { target: { value: 'char-2' } })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Will' }))
     fireEvent.click(screen.getByText('characterApp.relSave'))
 
     expect(mocks.toastError).toHaveBeenCalledWith('characterApp.relLabelRequired')
@@ -106,7 +108,7 @@ describe('RelationshipDialog', () => {
     const { onClose, onCreated } = renderDialog()
 
     fireEvent.change(screen.getByLabelText('characterApp.relType'), { target: { value: 'romance' } })
-    fireEvent.change(screen.getByLabelText('characterApp.relPerson'), { target: { value: 'char-2' } })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Will' }))
     fireEvent.click(screen.getByText('characterApp.relSave'))
 
     await waitFor(() => {
@@ -118,7 +120,7 @@ describe('RelationshipDialog', () => {
         description: null,
       })
     })
-    expect(mocks.toastSuccess).toHaveBeenCalledWith('characterApp.relAdded')
+    expect(mocks.toastSuccess).toHaveBeenCalledWith('characterApp.relAddedMultiple')
     expect(onCreated).toHaveBeenCalled()
     expect(onClose).toHaveBeenCalled()
   })
@@ -128,7 +130,7 @@ describe('RelationshipDialog', () => {
     renderDialog()
 
     fireEvent.change(screen.getByLabelText('characterApp.relType'), { target: { value: 'family' } })
-    fireEvent.change(screen.getByLabelText('characterApp.relPerson'), { target: { value: 'char-2' } })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Will' }))
     fireEvent.change(screen.getByLabelText('characterApp.relLabel'), { target: { value: 'Hermano' } })
     fireEvent.click(screen.getByText('characterApp.relSave'))
 
@@ -138,5 +140,59 @@ describe('RelationshipDialog', () => {
         label: 'Hermano',
       }))
     })
+  })
+
+  it('crea una relación por cada persona seleccionada', async () => {
+    const will: Character = { ...lyra, id: 'char-2', name: 'Will' }
+    const marisa: Character = { ...lyra, id: 'char-3', name: 'Marisa' }
+    mocks.create.mockResolvedValue({ id: 'rel-4' })
+    const { onClose, onCreated } = renderDialog({ allCharacters: [lyra, will, marisa] })
+
+    fireEvent.change(screen.getByLabelText('characterApp.relType'), { target: { value: 'family' } })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Will' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Marisa' }))
+    fireEvent.change(screen.getByLabelText('characterApp.relLabel'), { target: { value: 'Hermana' } })
+    fireEvent.click(screen.getByText('characterApp.relSave'))
+
+    await waitFor(() => {
+      expect(mocks.create).toHaveBeenCalledWith('project-1', expect.objectContaining({
+        characterBId: 'char-2',
+        type: 'family',
+        label: 'Hermana',
+      }))
+      expect(mocks.create).toHaveBeenCalledWith('project-1', expect.objectContaining({
+        characterBId: 'char-3',
+        type: 'family',
+        label: 'Hermana',
+      }))
+    })
+    expect(mocks.create).toHaveBeenCalledTimes(2)
+    expect(mocks.toastSuccess).toHaveBeenCalledWith('characterApp.relAddedMultiple')
+    expect(onCreated).toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('diferencia versiones con el mismo nombre y envía el ID elegido', async () => {
+    const aliciaV1: Character = { ...lyra, id: 'alicia-v1', name: 'Alicia' }
+    const aliciaV2: Character = { ...lyra, id: 'alicia-v2', name: 'Alicia', evolvesFromId: 'alicia-v1' }
+    mocks.create.mockResolvedValue({ id: 'rel-3' })
+    const { onClose, onCreated } = renderDialog({ allCharacters: [lyra, aliciaV1, aliciaV2] })
+
+    expect(screen.getByRole('checkbox', { name: /characterApp.relVersionOriginal/ })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: /characterApp.relEvolutionOf/ })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('checkbox', { name: /characterApp.relEvolutionOf/ }))
+    fireEvent.click(screen.getByText('characterApp.relSave'))
+
+    await waitFor(() => {
+      expect(mocks.create).toHaveBeenCalledWith('project-1', expect.objectContaining({
+        characterBId: 'alicia-v2',
+      }))
+    })
+    expect(mocks.create).not.toHaveBeenCalledWith('project-1', expect.objectContaining({
+      characterBId: 'alicia-v1',
+    }))
+    expect(onCreated).toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
   })
 })

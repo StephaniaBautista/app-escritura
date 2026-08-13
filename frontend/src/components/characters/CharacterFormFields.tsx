@@ -7,6 +7,8 @@ import { SuggestInput } from './SuggestInput'
 import { ChipsInput } from './ChipsInput'
 import { FamilyMultiSelect } from './FamilyMultiSelect'
 import { CharacterBackgroundField } from './CharacterBackgroundField'
+import { CharacterRelations } from './CharacterRelations'
+import type { CharacterRelationship } from '@/types/relationship'
 import { useCharacterOptionsStore } from '@/stores/character-options-store'
 import { useEffect } from 'react'
 
@@ -53,7 +55,7 @@ export function emptyDraft(): CharacterDraft {
   }
 }
 
-export function draftFromCharacter(c: Character): CharacterDraft {
+export function draftFromCharacter(c: Character, allCharacters: Character[] = []): CharacterDraft {
   const d = emptyDraft()
   d.name = c.name
   d.description = c.description ?? ''
@@ -72,6 +74,9 @@ export function draftFromCharacter(c: Character): CharacterDraft {
   d.roleSpec = c.roleSpec ?? ''
   d.isOC = c.isOC
   d.parents = [...c.parentIds]
+  d.children = allCharacters
+    .filter((item) => item.id !== c.id && item.parentIds.includes(c.id))
+    .map((item) => item.id)
   d.storyPoint = c.storyPoint ?? null
   for (const k of ATTRIBUTE_KEYS) {
     d.attributes[k] = c.attributes?.[k] ?? ''
@@ -124,7 +129,8 @@ function Field({
 export function CharacterFormFields({
   draft, setDraft, disabled = false, allCharacters, character,
   imageUrl, onImageChange, backgroundImageDataUrls, onBackgroundNewImagesChange,
-  showStoryPoint = true,
+  showStoryPoint = true, identityOverlap = true, afterIdentity = null,
+  relations, onAddRelation, onRemoveRelation,
 }: {
   draft: CharacterDraft
   setDraft: React.Dispatch<React.SetStateAction<CharacterDraft>>
@@ -136,6 +142,11 @@ export function CharacterFormFields({
   backgroundImageDataUrls: string[]
   onBackgroundNewImagesChange: (images: string[]) => void
   showStoryPoint?: boolean
+  identityOverlap?: boolean
+  afterIdentity?: React.ReactNode
+  relations?: CharacterRelationship[]
+  onAddRelation?: () => void
+  onRemoveRelation?: (relation: CharacterRelationship) => void
 }) {
   const { t, i18n } = useTranslation()
 
@@ -175,7 +186,7 @@ export function CharacterFormFields({
 
   return (
     <>
-      <div className="character-form__identity flex flex-col items-center gap-3 sm:flex-row sm:items-end">
+      <div className={`character-form__identity flex flex-col items-center gap-3 sm:flex-row sm:items-end${identityOverlap ? '' : ' character-form__identity--flow'}`}>
         <CharacterImageField imageUrl={imageUrl} onChange={onImageChange} disabled={disabled} />
         <div className="w-full min-w-0 flex-1 pb-0.5">
           <div className="flex flex-wrap items-center gap-2">
@@ -212,6 +223,8 @@ export function CharacterFormFields({
           </div>
         </div>
       </div>
+
+      {afterIdentity}
 
       <Field id="char-description" label={t('characterApp.fieldDescription')} srOnly>
         <textarea
@@ -321,6 +334,19 @@ export function CharacterFormFields({
                     onChange={(v) => set('children', v)} disabled={disabled} />
                 </div>
               </Field>
+              {character && onAddRelation && (
+                <div>
+                  <CharacterRelations
+                    character={character}
+                    characters={allCharacters}
+                    relations={relations ?? []}
+                    onAddRelation={onAddRelation}
+                    onRemoveRelation={onRemoveRelation}
+                    showTree={false}
+                    embedded
+                  />
+                </div>
+              )}
             </div>
           </AccordionSection>
         ) : (

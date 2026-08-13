@@ -22,6 +22,8 @@ import {
   RelationshipNotFoundError,
   normalizeType,
   normalizePair,
+  normalizeLineColor,
+  normalizeLineStyle,
 } from '../relationship-service.js'
 
 const projectRow = { id: 'proj-1', name: 'Mi novela', userId: 'user-1' }
@@ -58,6 +60,22 @@ describe('relationshipService', () => {
       expect(normalizeType('romance')).toBe('romance')
       expect(normalizeType('rivales')).toBe('custom')
       expect(normalizeType(undefined)).toBe('custom')
+    })
+
+    it('normalizeLineColor valida hex de 6 digitos', () => {
+      expect(normalizeLineColor('#22c55e')).toBe('#22c55e')
+      expect(normalizeLineColor('rojo')).toBeNull()
+      expect(normalizeLineColor('#abc')).toBeNull()
+      expect(normalizeLineColor(null)).toBeNull()
+      expect(normalizeLineColor(undefined)).toBeNull()
+    })
+
+    it('normalizeLineStyle acepta solid, dashed y dotted; invalido a null', () => {
+      expect(normalizeLineStyle('solid')).toBe('solid')
+      expect(normalizeLineStyle('dashed')).toBe('dashed')
+      expect(normalizeLineStyle('dotted')).toBe('dotted')
+      expect(normalizeLineStyle('wavy')).toBeNull()
+      expect(normalizeLineStyle(undefined)).toBeNull()
     })
   })
 
@@ -102,10 +120,56 @@ describe('relationshipService', () => {
           type: 'romance',
           label: null,
           description: null,
+          lineColor: null,
+          lineStyle: null,
         },
         include,
       })
       expect(rel).toEqual(relRow)
+    })
+
+    it('persiste lineColor y lineStyle y descarta valores invalidos', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.character.findMany.mockResolvedValue([{ id: 'char-1' }, { id: 'char-2' }])
+      prismaMock.characterRelationship.findFirst.mockResolvedValue(null)
+      prismaMock.characterRelationship.create.mockResolvedValue(relRow)
+
+      const rel = await relationshipService.create('proj-1', 'user-1', {
+        characterAId: 'char-1',
+        characterBId: 'char-2',
+        type: 'custom',
+        lineColor: '#22c55e',
+        lineStyle: 'dashed',
+      })
+
+      expect(prismaMock.characterRelationship.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          lineColor: '#22c55e',
+          lineStyle: 'dashed',
+        }),
+        include,
+      })
+      expect(rel).toEqual(relRow)
+    })
+
+    it('descarta colores y estilos invalidos', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.character.findMany.mockResolvedValue([{ id: 'char-1' }, { id: 'char-2' }])
+      prismaMock.characterRelationship.findFirst.mockResolvedValue(null)
+      prismaMock.characterRelationship.create.mockResolvedValue(relRow)
+
+      await relationshipService.create('proj-1', 'user-1', {
+        characterAId: 'char-1',
+        characterBId: 'char-2',
+        type: 'custom',
+        lineColor: 'rojo',
+        lineStyle: 'wavy',
+      })
+
+      expect(prismaMock.characterRelationship.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ lineColor: null, lineStyle: null }),
+        include,
+      })
     })
 
     it('lanza RelationshipExistsError si el par ya existe', async () => {

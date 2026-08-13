@@ -9,7 +9,6 @@ import { LoadingState } from '@/components/ui/LoadingState'
 import { CharacterCard } from './CharacterCard'
 import { CharacterForm } from './CharacterForm'
 import { CharacterDetail } from './CharacterDetail'
-import { CharacterEvolutionDialog } from './CharacterEvolutionDialog'
 import { CharacterFilters } from './CharacterFilters'
 import { HeightMap } from './HeightMap'
 import { EMPTY_FILTERS, filterCharacters, type CharacterFiltersState } from '@/lib/character-filters'
@@ -36,7 +35,8 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
     loadRelations(projectId)
   }, [projectId, load, loadRelations])
 
-  const filtered = useMemo(() => filterCharacters(characters, filters), [characters, filters])
+  const visibleCharacters = useMemo(() => characters.filter((c) => !c.evolvesFromId), [characters])
+  const filtered = useMemo(() => filterCharacters(visibleCharacters, filters), [visibleCharacters, filters])
 
   const detail = characters.find((c) => c.id === detailId) ?? null
 
@@ -69,7 +69,7 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
             {t('characterApp.title')}
           </h2>
           <p className="text-sm mt-0.5" style={{ color: 'var(--color-ink-faint)' }}>
-            {t('characterApp.subtitle')} · {characters.length}
+            {t('characterApp.subtitle')} · {visibleCharacters.length}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -92,15 +92,15 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
         </div>
       </div>
 
-      {characters.length > 0 && (
+      {visibleCharacters.length > 0 && (
         <>
-          <CharacterFilters characters={characters} filters={filters} onChange={setFilters} />
+          <CharacterFilters characters={visibleCharacters} filters={filters} onChange={setFilters} />
         </>
       )}
 
-      {isLoading && characters.length === 0 ? (
+      {isLoading && visibleCharacters.length === 0 ? (
         <LoadingState label={t('common.loading')} className="notebook-paper" />
-      ) : characters.length === 0 ? (
+      ) : visibleCharacters.length === 0 ? (
         <div className="notebook-paper p-10 text-center">
           <Users className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-teal)' }} />
           <p className="font-display text-lg" style={{ color: 'var(--color-ink-light)' }}>{t('characterApp.empty')}</p>
@@ -119,7 +119,7 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
               evolutionCount={evolutionCount(character.id)}
               onOpen={() => setDetailId(character.id)}
               onEdit={() => { setEditing(character); setFormOpen(true) }}
-              onEvolve={() => setEvolving(character)}
+              onEvolve={() => { setEvolving(character); setDetailId(character.id) }}
               onDelete={() => setDeleteTarget(character)}
             />
           ))}
@@ -144,18 +144,12 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
           relations={relations}
           onClose={() => setDetailId(null)}
           onEdit={() => { setDetailId(null); setEditing(detail); setFormOpen(true) }}
-          onEvolve={() => { setDetailId(null); setEvolving(detail) }}
+          onEvolve={() => setEvolving(detail)}
+          evolving={evolving?.id === detail?.id}
+          onCancelEvolve={() => setEvolving(null)}
+          onEvolved={handleEvolved}
           onSelect={setDetailId}
           onDelete={setDeleteTarget}
-        />
-      )}
-
-      {evolving && (
-        <CharacterEvolutionDialog
-          character={evolving}
-          allCharacters={characters}
-          onClose={() => setEvolving(null)}
-          onEvolved={handleEvolved}
         />
       )}
 

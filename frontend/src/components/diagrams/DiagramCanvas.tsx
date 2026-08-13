@@ -12,10 +12,11 @@ import {
 } from '@xyflow/react'
 import type { Connection, Edge, Node, NodeChange } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { ArrowLeft, Heart, StickyNote, Trash2 } from 'lucide-react'
+import { ArrowLeft, Heart, StickyNote, Trash2, Users } from 'lucide-react'
 import type { Character } from '@/types/character'
-import type { CharacterRelationship, RelationshipType } from '@/types/relationship'
+import type { CharacterRelationship, LineStyle, RelationshipType } from '@/types/relationship'
 import type { Diagram } from '@/types/diagram'
+import { edgeStroke, LINE_STYLE_DASH } from '@/lib/diagram-edges'
 import { useRelationshipsStore } from '@/stores/relationships-store'
 import { useDiagramsStore } from '@/stores/diagrams-store'
 import { useToastStore } from '@/stores/toast-store'
@@ -27,14 +28,6 @@ import { RelationFilters } from './RelationFilters'
 import { CreateRelationshipDialog } from './CreateRelationshipDialog'
 
 type CanvasNode = CharacterNodeType | NoteNodeType
-
-const EDGE_COLORS: Record<RelationshipType, string> = {
-  romance: '#ec4899',
-  friendship: '#22c55e',
-  enemity: '#ef4444',
-  family: '#8b5cf6',
-  custom: '#f59e0b',
-}
 
 const nodeTypes = {
   character: CharacterNode,
@@ -60,8 +53,10 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
   const relationshipsStore = useRelationshipsStore()
   const [filter, setFilter] = useState<RelationshipType | 'all'>('all')
   const [pendingConnection, setPendingConnection] = useState<PendingConnection | null>(null)
+  const [editingRelation, setEditingRelation] = useState<CharacterRelationship | null>(null)
   const [edgesToDelete, setEdgesToDelete] = useState<Edge[]>([])
   const [saving, setSaving] = useState(false)
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
 
   const charById = useMemo(() => new Map(characters.map((c) => [c.id, c])), [characters])
   const layoutNodes = diagram.layout.nodes ?? []
@@ -108,23 +103,52 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
     return relations
       .filter((rel) => filter === 'all' || rel.type === filter)
       .filter((rel) => canvasIds.has(rel.characterAId) && canvasIds.has(rel.characterBId))
-      .map((rel) => ({
-        id: `rel-${rel.id}`,
-        source: rel.characterAId,
-        target: rel.characterBId,
-        type: 'smoothstep',
-        animated: rel.type === 'romance',
-        label: (rel.type === 'custom' || rel.type === 'family') && rel.label ? rel.label : t(`diagramApp.type_${rel.type}`),
-        style: { stroke: EDGE_COLORS[rel.type], strokeWidth: 2 },
-        labelStyle: { fill: EDGE_COLORS[rel.type], fontSize: 10, fontWeight: 600 },
-        labelBgStyle: { fill: 'var(--color-paper)', fillOpacity: 0.9 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS[rel.type] },
-      }))
+      .map((rel) => {
+        const stroke = edgeStroke(rel.type, rel.lineColor)
+        return {
+          id: `rel-${rel.id}`,
+          source: rel.characterAId,
+          target: rel.characterBId,
+          type: 'smoothstep',
+          animated: rel.type === 'romance',
+          label: (rel.type === 'custom' || rel.type === 'family') && rel.label ? rel.label : t(`diagramApp.type_${rel.type}`),
+          style: { stroke, strokeWidth: 2, strokeDasharray: LINE_STYLE_DASH[rel.lineStyle ?? 'solid'] },
+          labelStyle: { fill: stroke, fontSize: 10, fontWeight: 600 },
+          labelBgStyle: { fill: 'var(--color-paper)', fillOpacity: 0.9 },
+          markerEnd: { type: MarkerType.ArrowClosed, color: stroke },
+        }
+      })
   }, [nodes, relations, filter, t])
 
   useEffect(() => {
     setEdges(visibleEdges)
   }, [visibleEdges, setEdges])
+
+  const hoveredEdges = useMemo(() => {
+    if (!hoveredNodeId) return edges
+    return edges.map((edge) => ({
+      ...edge,
+      style: {
+        ...edge.style,
+        opacity: edge.source === hoveredNodeId || edge.target === hoveredNodeId ? 1 : 0.12,
+      },
+    }))
+  }, [edges, hoveredNodeId])
+
+  const hoveredNodes = useMemo(() => {
+    if (!hoveredNodeId) return nodes
+    return nodes.map((node) => {
+      const related = node.id === hoveredNodeId
+        || edges.some((edge) =>
+          (edge.source === hoveredNodeId && edge.target === node.id)
+          || (edge.target === hoveredNodeId && edge.source === node.id))
+      return {
+        ...node,
+        className: 'transition-opacity duration-150',
+        style: { ...node.style, opacity: related ? 1 : 0.25 },
+      }
+    })
+  }, [nodes, edges, hoveredNodeId])
 
   const persistLayout = useCallback(
     async (nodeList: Diagram['layout']['nodes'], noteList: Diagram['layout']['notes']) => {
@@ -167,7 +191,21 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
     setPendingConnection({ source: connection.source, target: connection.target })
   }, [])
 
-  const handleCreateRelation = async (data: { type: RelationshipType; label: string | null; description: string | null }) => {
+  const handleEdgeClick = useCallback(
+    (_event: React.MouseEvent, edge: Edge) => {
+      const rel = relations.find((r) => `rel-${r.id}` === edge.id)
+      if (rel) setEditingRelation(rel)
+    },
+    [relations],
+  )
+
+  const handleCreateRelation = async (data: {
+    type: RelationshipType
+    label: string | null
+    description: string | null
+    lineColor: string | null
+    lineStyle: LineStyle | null
+  }) => {
     if (!pendingConnection) return
     const rel = await relationshipsStore.create(diagram.projectId, {
       characterAId: pendingConnection.source,
@@ -175,9 +213,30 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
       type: data.type,
       label: data.label,
       description: data.description,
+      lineColor: data.lineColor,
+      lineStyle: data.lineStyle,
     })
     setPendingConnection(null)
     if (rel) toast.success(t('diagramApp.relationshipCreated'))
+  }
+
+  const handleUpdateRelation = async (data: {
+    type: RelationshipType
+    label: string | null
+    description: string | null
+    lineColor: string | null
+    lineStyle: LineStyle | null
+  }) => {
+    if (!editingRelation) return
+    const updated = await relationshipsStore.update(editingRelation.id, {
+      type: data.type,
+      label: data.label,
+      description: data.description,
+      lineColor: data.lineColor,
+      lineStyle: data.lineStyle,
+    })
+    setEditingRelation(null)
+    if (updated) toast.success(t('diagramApp.relationshipUpdated'))
   }
 
   const addNodes = useCallback(
@@ -239,7 +298,7 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
   const availableCharacters = characters.filter((c) => !nodes.some((n) => n.id === c.id))
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <button
@@ -323,10 +382,16 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
       )}
 
       {diagram.type === 'familyTree' && (
-        <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-ink-faint)' }}>
-          <Heart className="h-3.5 w-3.5" style={{ color: 'var(--color-romance)' }} />
-          {t('diagramApp.coupleHint')}
-        </p>
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+            <Heart className="h-3.5 w-3.5" style={{ color: 'var(--color-romance)' }} />
+            {t('diagramApp.coupleHint')}
+          </p>
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+            <Users className="h-3.5 w-3.5" style={{ color: 'var(--color-accent-teal)' }} />
+            {t('diagramApp.siblingHint')}
+          </p>
+        </div>
       )}
 
       {diagram.type === 'familyTree' ? (
@@ -337,13 +402,16 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
           style={{ borderColor: 'var(--color-paper-lines)', background: 'var(--color-background)' }}
         >
           <ReactFlow
-            nodes={nodes}
-            edges={edges}
+            nodes={hoveredNodes}
+            edges={hoveredEdges}
             onNodesChange={handleNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={isCustom ? handleConnect : undefined}
+            onEdgeClick={handleEdgeClick}
             onNodesDelete={handleNodesDelete}
             onEdgesDelete={handleEdgesDelete}
+            onNodeMouseEnter={(_event, node) => setHoveredNodeId(node.id)}
+            onNodeMouseLeave={() => setHoveredNodeId(null)}
             nodeTypes={nodeTypes}
             fitView
             minZoom={0.2}
@@ -370,6 +438,22 @@ export function DiagramCanvas({ diagram, characters, relations, onBack, onDelete
           targetName={charById.get(pendingConnection.target)?.name ?? ''}
           onCancel={() => setPendingConnection(null)}
           onSave={handleCreateRelation}
+        />
+      )}
+
+      {editingRelation && !pendingConnection && (
+        <CreateRelationshipDialog
+          initial={{
+            type: editingRelation.type,
+            label: editingRelation.label,
+            description: editingRelation.description,
+            lineColor: editingRelation.lineColor,
+            lineStyle: editingRelation.lineStyle,
+          }}
+          sourceName={editingRelation.characterA.name}
+          targetName={editingRelation.characterB.name}
+          onCancel={() => setEditingRelation(null)}
+          onSave={handleUpdateRelation}
         />
       )}
 

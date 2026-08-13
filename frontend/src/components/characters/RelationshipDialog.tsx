@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Plus, X } from 'lucide-react'
 import type { Character } from '@/types/character'
@@ -25,15 +25,42 @@ export function RelationshipDialog({ character, allCharacters, onClose, onCreate
   const toast = useToastStore()
   const relationshipsStore = useRelationshipsStore()
   const [type, setType] = useState<RelationshipType>('romance')
-  const [targetId, setTargetId] = useState('')
   const [label, setLabel] = useState('')
   const [description, setDescription] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   const others = allCharacters.filter((c) => c.id !== character.id)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  const nameCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const candidate of allCharacters) {
+      counts.set(candidate.name, (counts.get(candidate.name) ?? 0) + 1)
+    }
+    return counts
+  }, [allCharacters])
+
+  const optionLabel = (candidate: Character): string => {
+    if (candidate.evolvesFromId) {
+      const source = allCharacters.find((item) => item.id === candidate.evolvesFromId)
+      const suffix = source
+        ? t('characterApp.relEvolutionOf', { name: source.name })
+        : t('characterApp.evolutions')
+      return `${candidate.name} (${suffix})`
+    }
+    if ((nameCounts.get(candidate.name) ?? 0) > 1) {
+      return `${candidate.name} (${t('characterApp.relVersionOriginal')})`
+    }
+    return candidate.name
+  }
+
+  const toggleSelected = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((selected) => selected !== id) : [...prev, id])
+  }
 
   const handleSave = async () => {
-    if (!targetId) {
+    if (selectedIds.length === 0) {
       toast.error(t('characterApp.relPersonRequired'))
       return
     }
@@ -43,15 +70,19 @@ export function RelationshipDialog({ character, allCharacters, onClose, onCreate
     }
     setIsSaving(true)
     try {
-      const relation = await relationshipsStore.create(character.projectId, {
-        characterAId: character.id,
-        characterBId: targetId,
-        type,
-        label: (type === 'family' || type === 'custom') ? label.trim() : null,
-        description: description.trim() || null,
-      })
-      if (relation) {
-        toast.success(t('characterApp.relAdded'))
+      let createdCount = 0
+      for (const targetId of selectedIds) {
+        const relation = await relationshipsStore.create(character.projectId, {
+          characterAId: character.id,
+          characterBId: targetId,
+          type,
+          label: (type === 'family' || type === 'custom') ? label.trim() : null,
+          description: description.trim() || null,
+        })
+        if (relation) createdCount += 1
+      }
+      if (createdCount > 0) {
+        toast.success(t('characterApp.relAddedMultiple', { count: createdCount }))
         onCreated()
         onClose()
       }
@@ -102,18 +133,36 @@ export function RelationshipDialog({ character, allCharacters, onClose, onCreate
 
           <div>
             <label htmlFor="rel-target" className="character-form__label">{t('characterApp.relPerson')}</label>
-            <select
-              id="rel-target"
-              value={targetId}
-              onChange={(e) => setTargetId(e.target.value)}
-              disabled={isSaving}
-              className="character-form__control mt-1.5"
+            <div
+              className="mt-1.5 max-h-52 space-y-0.5 overflow-y-auto rounded-lg border p-2"
+              style={{ borderColor: 'var(--color-paper-lines)', background: 'var(--color-background)' }}
+              role="group"
+              aria-label={t('characterApp.relPerson')}
             >
-              <option value="">—</option>
-              {others.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+              {others.length === 0 ? (
+                <p className="px-1.5 py-1 text-sm" style={{ color: 'var(--color-ink-faint)' }}>
+                  {t('characterApp.relNoOthers')}
+                </p>
+              ) : (
+                others.map((c) => (
+                  <label
+                    key={c.id}
+                    className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 transition-opacity hover:opacity-80"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(c.id)}
+                      onChange={() => toggleSelected(c.id)}
+                      disabled={isSaving}
+                      className="shrink-0"
+                    />
+                    <span className="min-w-0 truncate text-sm" style={{ color: 'var(--color-ink)' }}>
+                      {optionLabel(c)}
+                    </span>
+                  </label>
+                ))
+              )}
+            </div>
           </div>
 
           {(type === 'family' || type === 'custom') && (

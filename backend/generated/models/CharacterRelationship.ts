@@ -32,6 +32,8 @@ export type CharacterRelationshipMinAggregateOutputType = {
   type: string | null
   label: string | null
   description: string | null
+  lineColor: string | null
+  lineStyle: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,8 @@ export type CharacterRelationshipMaxAggregateOutputType = {
   type: string | null
   label: string | null
   description: string | null
+  lineColor: string | null
+  lineStyle: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +60,8 @@ export type CharacterRelationshipCountAggregateOutputType = {
   type: number
   label: number
   description: number
+  lineColor: number
+  lineStyle: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,6 +76,8 @@ export type CharacterRelationshipMinAggregateInputType = {
   type?: true
   label?: true
   description?: true
+  lineColor?: true
+  lineStyle?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +90,8 @@ export type CharacterRelationshipMaxAggregateInputType = {
   type?: true
   label?: true
   description?: true
+  lineColor?: true
+  lineStyle?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +104,8 @@ export type CharacterRelationshipCountAggregateInputType = {
   type?: true
   label?: true
   description?: true
+  lineColor?: true
+  lineStyle?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +191,8 @@ export type CharacterRelationshipGroupByOutputType = {
   type: string
   label: string | null
   description: string | null
+  lineColor: string | null
+  lineStyle: string | null
   createdAt: Date
   updatedAt: Date
   _count: CharacterRelationshipCountAggregateOutputType | null
@@ -212,6 +226,8 @@ export type CharacterRelationshipWhereInput = {
   type?: Prisma.StringFilter<"CharacterRelationship"> | string
   label?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   description?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineColor?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineStyle?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -227,6 +243,8 @@ export type CharacterRelationshipOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  lineColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  lineStyle?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
@@ -246,6 +264,8 @@ export type CharacterRelationshipWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"CharacterRelationship"> | string
   label?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   description?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineColor?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineStyle?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -261,6 +281,8 @@ export type CharacterRelationshipOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  lineColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  lineStyle?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CharacterRelationshipCountOrderByAggregateInput
@@ -279,6 +301,8 @@ export type CharacterRelationshipScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"CharacterRelationship"> | string
   label?: Prisma.StringNullableWithAggregatesFilter<"CharacterRelationship"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"CharacterRelationship"> | string | null
+  lineColor?: Prisma.StringNullableWithAggregatesFilter<"CharacterRelationship"> | string | null
+  lineStyle?: Prisma.StringNullableWithAggregatesFilter<"CharacterRelationship"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CharacterRelationship"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CharacterRelationship"> | Date | string
 }
@@ -288,6 +312,8 @@ export type CharacterRelationshipCreateInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutRelationshipsInput
@@ -303,6 +329,8 @@ export type CharacterRelationshipUncheckedCreateInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -312,6 +340,8 @@ export type CharacterRelationshipUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutRelationshipsNestedInput
@@ -327,6 +357,8 @@ export type CharacterRelationshipUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -339,6 +371,8 @@ export type CharacterRelationshipCreateManyInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -348,6 +382,8 @@ export type CharacterRelationshipUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,6 +396,8 @@ export type CharacterRelationshipUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -387,6 +425,8 @@ export type CharacterRelationshipCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   label?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  lineColor?: Prisma.SortOrder
+  lineStyle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -399,6 +439,8 @@ export type CharacterRelationshipMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   label?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  lineColor?: Prisma.SortOrder
+  lineStyle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -411,6 +453,8 @@ export type CharacterRelationshipMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   label?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  lineColor?: Prisma.SortOrder
+  lineStyle?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -546,6 +590,8 @@ export type CharacterRelationshipCreateWithoutProjectInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characterA: Prisma.CharacterCreateNestedOneWithoutRelationshipsAInput
@@ -559,6 +605,8 @@ export type CharacterRelationshipUncheckedCreateWithoutProjectInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -600,6 +648,8 @@ export type CharacterRelationshipScalarWhereInput = {
   type?: Prisma.StringFilter<"CharacterRelationship"> | string
   label?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   description?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineColor?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
+  lineStyle?: Prisma.StringNullableFilter<"CharacterRelationship"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CharacterRelationship"> | Date | string
 }
@@ -609,6 +659,8 @@ export type CharacterRelationshipCreateWithoutCharacterAInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutRelationshipsInput
@@ -622,6 +674,8 @@ export type CharacterRelationshipUncheckedCreateWithoutCharacterAInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -641,6 +695,8 @@ export type CharacterRelationshipCreateWithoutCharacterBInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutRelationshipsInput
@@ -654,6 +710,8 @@ export type CharacterRelationshipUncheckedCreateWithoutCharacterBInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -707,6 +765,8 @@ export type CharacterRelationshipCreateManyProjectInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -716,6 +776,8 @@ export type CharacterRelationshipUpdateWithoutProjectInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characterA?: Prisma.CharacterUpdateOneRequiredWithoutRelationshipsANestedInput
@@ -729,6 +791,8 @@ export type CharacterRelationshipUncheckedUpdateWithoutProjectInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -740,6 +804,8 @@ export type CharacterRelationshipUncheckedUpdateManyWithoutProjectInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -751,6 +817,8 @@ export type CharacterRelationshipCreateManyCharacterAInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -762,6 +830,8 @@ export type CharacterRelationshipCreateManyCharacterBInput = {
   type: string
   label?: string | null
   description?: string | null
+  lineColor?: string | null
+  lineStyle?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -771,6 +841,8 @@ export type CharacterRelationshipUpdateWithoutCharacterAInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutRelationshipsNestedInput
@@ -784,6 +856,8 @@ export type CharacterRelationshipUncheckedUpdateWithoutCharacterAInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -795,6 +869,8 @@ export type CharacterRelationshipUncheckedUpdateManyWithoutCharacterAInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -804,6 +880,8 @@ export type CharacterRelationshipUpdateWithoutCharacterBInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutRelationshipsNestedInput
@@ -817,6 +895,8 @@ export type CharacterRelationshipUncheckedUpdateWithoutCharacterBInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -828,6 +908,8 @@ export type CharacterRelationshipUncheckedUpdateManyWithoutCharacterBInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -842,6 +924,8 @@ export type CharacterRelationshipSelect<ExtArgs extends runtime.Types.Extensions
   type?: boolean
   label?: boolean
   description?: boolean
+  lineColor?: boolean
+  lineStyle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -857,6 +941,8 @@ export type CharacterRelationshipSelectCreateManyAndReturn<ExtArgs extends runti
   type?: boolean
   label?: boolean
   description?: boolean
+  lineColor?: boolean
+  lineStyle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -872,6 +958,8 @@ export type CharacterRelationshipSelectUpdateManyAndReturn<ExtArgs extends runti
   type?: boolean
   label?: boolean
   description?: boolean
+  lineColor?: boolean
+  lineStyle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -887,11 +975,13 @@ export type CharacterRelationshipSelectScalar = {
   type?: boolean
   label?: boolean
   description?: boolean
+  lineColor?: boolean
+  lineStyle?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CharacterRelationshipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "characterAId" | "characterBId" | "type" | "label" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["characterRelationship"]>
+export type CharacterRelationshipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "characterAId" | "characterBId" | "type" | "label" | "description" | "lineColor" | "lineStyle" | "createdAt" | "updatedAt", ExtArgs["result"]["characterRelationship"]>
 export type CharacterRelationshipInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   characterA?: boolean | Prisma.CharacterDefaultArgs<ExtArgs>
@@ -923,6 +1013,8 @@ export type $CharacterRelationshipPayload<ExtArgs extends runtime.Types.Extensio
     type: string
     label: string | null
     description: string | null
+    lineColor: string | null
+    lineStyle: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["characterRelationship"]>
@@ -1358,6 +1450,8 @@ export interface CharacterRelationshipFieldRefs {
   readonly type: Prisma.FieldRef<"CharacterRelationship", 'String'>
   readonly label: Prisma.FieldRef<"CharacterRelationship", 'String'>
   readonly description: Prisma.FieldRef<"CharacterRelationship", 'String'>
+  readonly lineColor: Prisma.FieldRef<"CharacterRelationship", 'String'>
+  readonly lineStyle: Prisma.FieldRef<"CharacterRelationship", 'String'>
   readonly createdAt: Prisma.FieldRef<"CharacterRelationship", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CharacterRelationship", 'DateTime'>
 }

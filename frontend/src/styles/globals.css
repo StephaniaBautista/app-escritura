@@ -935,6 +935,11 @@ a {
   margin-top: -2.6rem;
 }
 
+.character-form__identity--flow {
+  margin-top: 0;
+  z-index: auto;
+}
+
 .character-form__kicker {
   margin: 0;
   color: var(--sheet-accent);

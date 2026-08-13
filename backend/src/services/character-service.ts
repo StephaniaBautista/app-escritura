@@ -235,28 +235,33 @@ export const characterService = {
     }
 
     const parentIds = await sanitizeParentIds(source.projectId, changes.parentIds ?? source.parentIds)
+    const sent = (key: keyof CharacterInput): boolean => key in changes
     return prisma.character.create({
       data: {
         name: changes.name ?? source.name,
-        description: changes.description ?? source.description,
-        imageUrl: changes.imageUrl ?? source.imageUrl,
-        sheetBackgroundMode: normalizeSheetBackgroundMode(changes.sheetBackgroundMode ?? source.sheetBackgroundMode),
-        sheetBackgroundImages: sanitizeSheetBackgroundImages(changes.sheetBackgroundImages ?? source.sheetBackgroundImages),
+        description: sent('description') ? (changes.description ?? null) : source.description,
+        imageUrl: sent('imageUrl') ? (changes.imageUrl ?? null) : source.imageUrl,
+        sheetBackgroundMode: normalizeSheetBackgroundMode(
+          sent('sheetBackgroundMode') ? changes.sheetBackgroundMode : source.sheetBackgroundMode,
+        ),
+        sheetBackgroundImages: sanitizeSheetBackgroundImages(
+          sent('sheetBackgroundImages') ? changes.sheetBackgroundImages : source.sheetBackgroundImages,
+        ),
         nicknames: changes.nicknames ?? source.nicknames,
-        age: changes.age ?? source.age,
-        gender: changes.gender ?? source.gender,
-        heightCm: changes.heightCm ?? source.heightCm,
-        orientation: changes.orientation ?? source.orientation,
-        maritalStatus: changes.maritalStatus ?? source.maritalStatus,
-        species: changes.species ?? source.species,
-        birthPlace: changes.birthPlace ?? source.birthPlace,
-        birthDate: changes.birthDate ?? source.birthDate,
-        role: changes.role ?? source.role,
-        roleSpec: changes.roleSpec ?? source.roleSpec,
+        age: sent('age') ? (changes.age ?? null) : source.age,
+        gender: sent('gender') ? (changes.gender ?? null) : source.gender,
+        heightCm: sent('heightCm') ? (changes.heightCm ?? null) : source.heightCm,
+        orientation: sent('orientation') ? (changes.orientation ?? null) : source.orientation,
+        maritalStatus: sent('maritalStatus') ? (changes.maritalStatus ?? null) : source.maritalStatus,
+        species: sent('species') ? (changes.species ?? null) : source.species,
+        birthPlace: sent('birthPlace') ? (changes.birthPlace ?? null) : source.birthPlace,
+        birthDate: sent('birthDate') ? (changes.birthDate ?? null) : source.birthDate,
+        role: sent('role') ? (changes.role ?? null) : source.role,
+        roleSpec: sent('roleSpec') ? (changes.roleSpec ?? null) : source.roleSpec,
         isOC: changes.isOC ?? source.isOC,
         parentIds,
         storyPoint,
-        attributes: (changes.attributes ?? source.attributes) as Prisma.InputJsonValue,
+        attributes: (sent('attributes') ? (changes.attributes ?? {}) : source.attributes) as Prisma.InputJsonValue,
         evolvesFromId: source.id,
         evolutionReason: input.reason ?? null,
         projectId: source.projectId,

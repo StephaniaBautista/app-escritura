@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { CharacterForm } from '../CharacterForm'
+import { draftFromCharacter } from '../CharacterFormFields'
 import type { Character } from '@/types/character'
 import { getTestOptions } from './character-options-test-data'
 
@@ -28,6 +29,13 @@ vi.mock('@/stores/characters-store', () => ({
     update: mocks.update,
     uploadImage: mocks.uploadImage,
     syncBackgroundImages: mocks.syncBackgroundImages,
+  }),
+}))
+
+vi.mock('@/stores/relationships-store', () => ({
+  useRelationshipsStore: () => ({
+    relations: [],
+    remove: vi.fn(),
   }),
 }))
 
@@ -167,6 +175,38 @@ describe('CharacterForm', () => {
 
     expect(screen.getByText('Lyra Belacqua')).toBeInTheDocument()
     expect(screen.getByLabelText('characterApp.fieldName')).toHaveValue('Lyra Belacqua')
+  })
+
+  it('en modo edición el apartado Familia incluye el botón de añadir relación', () => {
+    const other: Character = { ...savedCharacter, id: 'char-2', name: 'Will' }
+    renderForm({ character: savedCharacter, allCharacters: [savedCharacter, other] })
+
+    expect(screen.getByRole('button', { name: 'characterApp.relAdd' })).toBeInTheDocument()
+  })
+
+  it('en creación no muestra el bloque de relaciones sin personaje', () => {
+    renderForm({ allCharacters: [savedCharacter] })
+
+    expect(screen.queryByRole('button', { name: 'characterApp.relAdd' })).not.toBeInTheDocument()
+  })
+
+  it('rellena los hijos al editar un personaje que los tiene', () => {
+    const parent: Character = { ...savedCharacter, id: 'char-1' }
+    const child: Character = { ...savedCharacter, id: 'char-2', name: 'Pan', parentIds: ['char-1'] }
+
+    const draft = draftFromCharacter(parent, [parent, child])
+
+    expect(draft.parents).toEqual([])
+    expect(draft.children).toEqual(['char-2'])
+  })
+
+  it('no marca hijos de otros personajes al editar', () => {
+    const parent: Character = { ...savedCharacter, id: 'char-1' }
+    const unrelated: Character = { ...savedCharacter, id: 'char-3', name: 'Will' }
+
+    const draft = draftFromCharacter(parent, [parent, unrelated])
+
+    expect(draft.children).toEqual([])
   })
 
   it('permite añadir una opción custom con el botón + y guardarla', () => {
