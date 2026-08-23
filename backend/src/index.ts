@@ -3,6 +3,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import rateLimit from '@fastify/rate-limit'
+import multipart from '@fastify/multipart'
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
 import { authRoutes } from './routes/auth.js'
@@ -27,6 +28,8 @@ import { storySectionsRoutes } from './routes/story-sections.js'
 import { timelineRoutes } from './routes/timeline.js'
 import { relationshipRoutes } from './routes/relationships.js'
 import { diagramRoutes } from './routes/diagrams.js'
+import { worldbuildingRoutes } from './routes/worldbuilding.js'
+import { ocrRoutes } from './routes/ocr.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
 import { storyBankService } from './services/story-bank-service.js'
@@ -84,6 +87,8 @@ await app.register(swagger, {
       { name: 'Character Options', description: 'Catálogo estático de opciones del formulario de personaje (M41)' },
       { name: 'Story Sections', description: 'Secciones estándar de estructura de historia (M41)' },
       { name: 'i18n', description: 'Traducciones por namespace (público, cacheado)' },
+      { name: 'Worldbuilding', description: 'Lore, razas, glosario, criaturas y mapa mundial (Fase 7)' },
+      { name: 'OCR', description: 'Extracción de texto de imágenes y PDFs escaneados (Fase 7)' },
     ],
   },
 })
@@ -111,6 +116,10 @@ await app.register(cors, {
 })
 
 await app.register(helmet)
+
+await app.register(multipart, {
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+})
 
 await app.register(rateLimit, {
   max: parseInt(process.env.RATE_MAX ?? '100', 10),
@@ -196,6 +205,12 @@ await app.register(storySectionsRoutes, { prefix: '/api' })
 await app.register(timelineRoutes, { prefix: '/api' })
 await app.register(relationshipRoutes, { prefix: '/api' })
 await app.register(diagramRoutes, { prefix: '/api' })
+
+// Fase 7: lore + worldbuilding
+await app.register(worldbuildingRoutes, { prefix: '/api' })
+
+// Fase 7: OCR de imágenes y PDFs escaneados
+await app.register(ocrRoutes, { prefix: '/api' })
 
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {

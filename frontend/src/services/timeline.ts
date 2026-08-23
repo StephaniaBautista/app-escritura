@@ -1,4 +1,4 @@
-import type { TimelineEvent, TimelineEventInput } from '@/types/timeline'
+import type { TimelineEra, TimelineEraInput, TimelineEvent, TimelineEventInput } from '@/types/timeline'
 
 const API = '/api'
 
@@ -38,6 +38,20 @@ export const timelineApi = {
 
   delete: (id: string) =>
     fetchJson<{ message: string }>(`${API}/timeline/${id}`, {
+      method: 'DELETE',
+    }),
+
+  listEras: (projectId: string) =>
+    fetchJson<TimelineEra[]>(`${API}/projects/${projectId}/timeline-eras`),
+
+  createEra: (projectId: string, data: TimelineEraInput) =>
+    fetchJson<TimelineEra>(`${API}/projects/${projectId}/timeline-eras`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  deleteEra: (id: string) =>
+    fetchJson<{ message: string }>(`${API}/timeline-eras/${id}`, {
       method: 'DELETE',
     }),
 }

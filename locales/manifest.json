@@ -60,6 +60,7 @@
     "admin",
     "characterApp",
     "timelineApp",
-    "diagramApp"
+    "diagramApp",
+    "worldApp"
   ]
 }

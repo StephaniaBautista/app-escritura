@@ -20,6 +20,7 @@
   "dependencies": {
     "@fastify/cors": "^11.3.0",
     "@fastify/helmet": "^13.1.0",
+    "@fastify/multipart": "^10.1.0",
     "@fastify/rate-limit": "^11.1.0",
     "@fastify/static": "^10.1.2",
     "@fastify/swagger": "^9.8.1",
@@ -31,8 +32,10 @@
     "dotenv": "^17.4.2",
     "fastify": "^5.10.0",
     "nodemailer": "^9.0.3",
+    "pdfjs-dist": "^6.2.108",
     "pg": "^8.22.0",
-    "prisma": "^7.9.0"
+    "prisma": "^7.9.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

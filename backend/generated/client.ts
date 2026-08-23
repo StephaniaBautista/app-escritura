@@ -112,10 +112,45 @@ export type Character = Prisma.CharacterModel
  */
 export type World = Prisma.WorldModel
 /**
+ * Model LoreEntry
+ * 
+ */
+export type LoreEntry = Prisma.LoreEntryModel
+/**
+ * Model Race
+ * 
+ */
+export type Race = Prisma.RaceModel
+/**
+ * Model GlossaryEntry
+ * 
+ */
+export type GlossaryEntry = Prisma.GlossaryEntryModel
+/**
+ * Model Creature
+ * 
+ */
+export type Creature = Prisma.CreatureModel
+/**
+ * Model Location
+ * 
+ */
+export type Location = Prisma.LocationModel
+/**
+ * Model WorldRoute
+ * 
+ */
+export type WorldRoute = Prisma.WorldRouteModel
+/**
  * Model Diagram
  * 
  */
 export type Diagram = Prisma.DiagramModel
+/**
+ * Model TimelineEra
+ * 
+ */
+export type TimelineEra = Prisma.TimelineEraModel
 /**
  * Model TimelineEvent
  * 

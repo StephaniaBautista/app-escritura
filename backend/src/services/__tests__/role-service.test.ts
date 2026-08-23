@@ -6,6 +6,7 @@ const { prismaMock } = vi.hoisted(() => ({
       findMany: vi.fn(),
       findUnique: vi.fn(),
       create: vi.fn(),
+      createMany: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
     },
@@ -28,6 +29,7 @@ const adminRole = { id: 'r2', name: 'superadmin', label: 'Superadministrador', p
 describe('roleService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    roleService.invalidate()
   })
 
   it('list: incluye el número de usuarios por rol', async () => {
@@ -88,11 +90,41 @@ describe('roleService', () => {
   })
 
   it('seedDefaults: crea user y superadmin si no existen', async () => {
-    prismaMock.role.findUnique.mockResolvedValue(null)
+    prismaMock.role.createMany.mockResolvedValue({ count: 2 })
 
     const created = await roleService.seedDefaults()
 
     expect(created).toBe(2)
-    expect(prismaMock.role.create).toHaveBeenCalledTimes(2)
+    expect(prismaMock.role.createMany).toHaveBeenCalledTimes(1)
+    expect(prismaMock.role.createMany).toHaveBeenCalledWith({
+      data: [
+        { name: 'user', label: 'Usuario', permissions: [], isSystem: true },
+        { name: 'superadmin', label: 'Superadministrador', permissions: [...ALL_PERMISSIONS], isSystem: true },
+      ],
+      skipDuplicates: true,
+    })
+  })
+
+  it('getPermissions: cachea la segunda consulta del mismo rol', async () => {
+    prismaMock.role.findUnique.mockResolvedValue({ ...userRole, permissions: ['moderate'] })
+
+    await roleService.getPermissions('user')
+    await roleService.getPermissions('user')
+
+    expect(prismaMock.role.findUnique).toHaveBeenCalledTimes(1)
+  })
+
+  it('update: invalida la caché de permisos', async () => {
+    prismaMock.role.findUnique
+      .mockResolvedValueOnce(userRole)
+      .mockResolvedValueOnce({ ...userRole, permissions: ['moderate'] })
+
+    await roleService.getPermissions('user')
+    prismaMock.role.update.mockResolvedValue({ ...userRole, permissions: ['moderate'] })
+    await roleService.update('r1', { permissions: ['moderate'] })
+    const result = await roleService.getPermissions('user')
+
+    expect(result).toEqual(['moderate'])
+    expect(prismaMock.role.findUnique).toHaveBeenCalledTimes(2)
   })
 })

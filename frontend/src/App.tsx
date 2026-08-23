@@ -27,7 +27,7 @@ const PRICING_NS = ['pricing', 'pricingPage', 'comparison', 'faq', 'cta', 'ai', 
 const AUTH_NS = ['auth', 'common']
 const SHELL_NS = ['sidebar', 'admin', 'settings', 'common']
 const DOCUMENTS_NS = ['projects', 'storySetup', 'common']
-const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'common']
+const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'worldApp', 'common']
 const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'common']
 
 function App() {
@@ -51,23 +51,23 @@ function App() {
   return (
     <Suspense fallback={null}>
       <Routes>
-        <Route path="/" element={<I18nBoundary namespaces={LANDING_NS}><Landing /></I18nBoundary>} />
-        <Route path="/pricing" element={<I18nBoundary namespaces={PRICING_NS}><PricingPage /></I18nBoundary>} />
-        <Route path="/login" element={<I18nBoundary namespaces={AUTH_NS}><Login /></I18nBoundary>} />
-        <Route path="/register" element={<I18nBoundary namespaces={AUTH_NS}><Register /></I18nBoundary>} />
-        <Route path="/forgot-password" element={<I18nBoundary namespaces={AUTH_NS}><ForgotPassword /></I18nBoundary>} />
-        <Route path="/reset-password" element={<I18nBoundary namespaces={AUTH_NS}><ResetPassword /></I18nBoundary>} />
+        <Route path="/" element={<I18nBoundary key="landing" namespaces={LANDING_NS}><Landing /></I18nBoundary>} />
+        <Route path="/pricing" element={<I18nBoundary key="pricing" namespaces={PRICING_NS}><PricingPage /></I18nBoundary>} />
+        <Route path="/login" element={<I18nBoundary key="login" namespaces={AUTH_NS}><Login /></I18nBoundary>} />
+        <Route path="/register" element={<I18nBoundary key="register" namespaces={AUTH_NS}><Register /></I18nBoundary>} />
+        <Route path="/forgot-password" element={<I18nBoundary key="forgot-password" namespaces={AUTH_NS}><ForgotPassword /></I18nBoundary>} />
+        <Route path="/reset-password" element={<I18nBoundary key="reset-password" namespaces={AUTH_NS}><ResetPassword /></I18nBoundary>} />
         <Route
           path="/app"
           element={
             <ProtectedRoute>
-              <I18nBoundary namespaces={SHELL_NS}><DashboardLayout /></I18nBoundary>
+              <I18nBoundary key="app-shell" namespaces={SHELL_NS}><DashboardLayout /></I18nBoundary>
             </ProtectedRoute>
           }
         >
           <Route index element={<DashboardHome />} />
-          <Route path="documents" element={<I18nBoundary namespaces={DOCUMENTS_NS}><DocumentsPage /></I18nBoundary>} />
-          <Route path="documents/:folderId" element={<I18nBoundary namespaces={FOLDER_NS}><FolderPage /></I18nBoundary>} />
+          <Route path="documents" element={<I18nBoundary key="documents" namespaces={DOCUMENTS_NS}><DocumentsPage /></I18nBoundary>} />
+          <Route path="documents/:folderId" element={<I18nBoundary key="folder" namespaces={FOLDER_NS}><FolderPage /></I18nBoundary>} />
           <Route path="recent" element={<RecentPage />} />
           <Route path="shared" element={<SharedPage />} />
           <Route path="settings" element={<SettingsPage />} />
@@ -84,13 +84,13 @@ function App() {
           path="/app/editor"
           element={
             <ProtectedRoute>
-              <I18nBoundary namespaces={SHELL_NS}><DashboardLayout /></I18nBoundary>
+              <I18nBoundary key="editor-shell" namespaces={SHELL_NS}><DashboardLayout /></I18nBoundary>
             </ProtectedRoute>
           }
         >
-          <Route index element={<I18nBoundary namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
-          <Route path=":projectId" element={<I18nBoundary namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
-          <Route path=":projectId/:documentId" element={<I18nBoundary namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
+          <Route index element={<I18nBoundary key="editor-index" namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
+          <Route path=":projectId" element={<I18nBoundary key="editor-project" namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
+          <Route path=":projectId/:documentId" element={<I18nBoundary key="editor-document" namespaces={EDITOR_NS}><EditorPage /></I18nBoundary>} />
         </Route>
       </Routes>
     </Suspense>

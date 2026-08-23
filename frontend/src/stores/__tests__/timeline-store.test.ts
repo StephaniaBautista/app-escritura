@@ -6,6 +6,9 @@ const { apiMock } = vi.hoisted(() => ({
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+    listEras: vi.fn(),
+    createEra: vi.fn(),
+    deleteEra: vi.fn(),
   },
 }))
 
@@ -30,7 +33,22 @@ const eventRow = {
   date: 'Año 3',
   description: null,
   order: 0,
+  eraId: null,
   characterIds: ['char-1'],
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+}
+
+const eraRow = {
+  id: 'era-1',
+  projectId: 'proj-1',
+  name: 'La Tercera Edad',
+  color: null,
+  precision: 'year',
+  startDate: null,
+  endDate: null,
+  rollover: 'newYear',
+  order: 0,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 }
@@ -38,7 +56,7 @@ const eventRow = {
 describe('useTimelineStore', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    useTimelineStore.setState({ events: [], isLoading: false, error: null })
+    useTimelineStore.setState({ events: [], eras: [], isLoading: false, error: null })
   })
 
   it('load: guarda eventos ordenados', async () => {
@@ -103,5 +121,54 @@ describe('useTimelineStore', () => {
     await useTimelineStore.getState().move('ev-1', 'down')
 
     expect(apiMock.update).not.toHaveBeenCalled()
+  })
+
+  it('loadEras: guarda las épocas', async () => {
+    apiMock.listEras.mockResolvedValue([eraRow])
+
+    await useTimelineStore.getState().loadEras('proj-1')
+
+    expect(apiMock.listEras).toHaveBeenCalledWith('proj-1')
+    expect(useTimelineStore.getState().eras).toEqual([eraRow])
+  })
+
+  it('loadEras: error deja eras vacío sin lanzar', async () => {
+    apiMock.listEras.mockRejectedValue(new Error('boom'))
+
+    await useTimelineStore.getState().loadEras('proj-1')
+
+    expect(useTimelineStore.getState().eras).toEqual([])
+  })
+
+  it('createEra: añade la época a la lista', async () => {
+    apiMock.createEra.mockResolvedValue(eraRow)
+    const eraData = { name: 'La Tercera Edad' }
+
+    const era = await useTimelineStore.getState().createEra('proj-1', eraData)
+
+    expect(apiMock.createEra).toHaveBeenCalledWith('proj-1', eraData)
+    expect(era).toEqual(eraRow)
+    expect(useTimelineStore.getState().eras).toHaveLength(1)
+  })
+
+  it('removeEra: elimina la época y desasigna sus eventos', async () => {
+    const assigned = { ...eventRow, id: 'ev-2', eraId: 'era-1' }
+    useTimelineStore.setState({ events: [eventRow, assigned], eras: [eraRow] })
+    apiMock.deleteEra.mockResolvedValue({ message: 'ok' })
+
+    await useTimelineStore.getState().removeEra('era-1')
+
+    expect(useTimelineStore.getState().eras).toHaveLength(0)
+    expect(useTimelineStore.getState().events.find((e) => e.id === 'ev-2')?.eraId).toBeNull()
+    expect(useTimelineStore.getState().events.find((e) => e.id === 'ev-1')?.eraId).toBeNull()
+  })
+
+  it('removeEra: restaura estado si la API falla', async () => {
+    useTimelineStore.setState({ eras: [eraRow] })
+    apiMock.deleteEra.mockRejectedValue(new Error('boom'))
+
+    await useTimelineStore.getState().removeEra('era-1')
+
+    expect(useTimelineStore.getState().eras).toEqual([eraRow])
   })
 })

@@ -1,7 +1,11 @@
 import { prisma } from '../lib/prisma.js'
+import { MemoryCache } from '../lib/cache.js'
 
 export const ALL_PERMISSIONS = ['admin', 'moderate'] as const
 export type Permission = (typeof ALL_PERMISSIONS)[number]
+
+const PERMISSIONS_CACHE_TTL_MS = 5 * 60 * 1000
+const permissionsCache = new MemoryCache<string[]>({ defaultTtlMs: PERMISSIONS_CACHE_TTL_MS })
 
 export interface RoleRow {
   id: string
@@ -37,7 +41,9 @@ export const roleService = {
   async update(id: string, data: { label?: string; permissions?: string[] }): Promise<RoleRow | null> {
     const role = await prisma.role.findUnique({ where: { id } })
     if (!role) return null
-    return prisma.role.update({ where: { id }, data })
+    const updated = await prisma.role.update({ where: { id }, data })
+    this.invalidate()
+    return updated
   },
 
   async delete(id: string): Promise<boolean> {
@@ -48,13 +54,22 @@ export const roleService = {
       prisma.user.updateMany({ where: { role: role.name }, data: { role: 'user' } }),
       prisma.role.delete({ where: { id } }),
     ])
+    this.invalidate()
     return true
   },
 
   async getPermissions(roleName: string): Promise<string[]> {
     if (roleName === 'superadmin') return [...ALL_PERMISSIONS]
+    const cached = permissionsCache.get(roleName)
+    if (cached) return cached
     const role = await prisma.role.findUnique({ where: { name: roleName } })
-    return role?.permissions ?? []
+    const permissions = role?.permissions ?? []
+    permissionsCache.set(roleName, permissions)
+    return permissions
+  },
+
+  invalidate(): void {
+    permissionsCache.clear()
   },
 
   async seedDefaults(): Promise<number> {
@@ -62,14 +77,11 @@ export const roleService = {
       { name: 'user', label: 'Usuario', permissions: [] },
       { name: 'superadmin', label: 'Superadministrador', permissions: [...ALL_PERMISSIONS] },
     ]
-    let created = 0
-    for (const d of defaults) {
-      const exists = await prisma.role.findUnique({ where: { name: d.name } })
-      if (!exists) {
-        await prisma.role.create({ data: { ...d, isSystem: true } })
-        created++
-      }
-    }
-    return created
+    const result = await prisma.role.createMany({
+      data: defaults.map((d) => ({ ...d, isSystem: true })),
+      skipDuplicates: true,
+    })
+    if (result.count > 0) this.invalidate()
+    return result.count
   },
 }

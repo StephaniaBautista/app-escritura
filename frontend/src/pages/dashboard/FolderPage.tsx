@@ -18,6 +18,7 @@ import { StoryWizard } from '@/components/story-setup/StoryWizard'
 import { CharactersPanel } from '@/components/characters/CharactersPanel'
 import { TimelinePanel } from '@/components/timeline/TimelinePanel'
 import { DiagramsPanel } from '@/components/diagrams/DiagramsPanel'
+import { WorldsPanel } from '@/components/worlds/WorldsPanel'
 import type { StoryMeta } from '@/types/story'
 import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, Network } from 'lucide-react'
 
@@ -79,7 +80,7 @@ export function FolderPage() {
     { id: 'characters', label: 'Personajes', icon: Users },
     { id: 'timeline', label: t('timelineApp.title'), icon: Clock },
     { id: 'diagrams', label: t('diagramApp.title'), icon: Network },
-    { id: 'worlds', label: 'Mundos', icon: Globe },
+    { id: 'worlds', label: t('worldApp.title'), icon: Globe },
     { id: 'notes', label: t('notes.title'), icon: StickyNote },
     { id: 'versions', label: t('versions.title'), icon: History },
   ]
@@ -243,12 +244,8 @@ export function FolderPage() {
           <DiagramsPanel projectId={folderId} />
         )}
 
-        {activeTab === 'worlds' && (
-          <div className="notebook-paper p-8 text-center">
-            <Globe className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-accent-violet)' }} />
-            <h2 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--color-ink)' }}>Mundos</h2>
-            <p style={{ color: 'var(--color-ink-light)' }}>Próximamente: gestión de mundos</p>
-          </div>
+        {activeTab === 'worlds' && folderId && (
+          <WorldsPanel projectId={folderId} />
         )}
 
         {activeTab === 'notes' && (

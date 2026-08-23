@@ -65,7 +65,14 @@ export const ModelName = {
   UserSettings: 'UserSettings',
   Character: 'Character',
   World: 'World',
+  LoreEntry: 'LoreEntry',
+  Race: 'Race',
+  GlossaryEntry: 'GlossaryEntry',
+  Creature: 'Creature',
+  Location: 'Location',
+  WorldRoute: 'WorldRoute',
   Diagram: 'Diagram',
+  TimelineEra: 'TimelineEra',
   TimelineEvent: 'TimelineEvent',
   CharacterRelationship: 'CharacterRelationship',
   StoryOption: 'StoryOption',
@@ -303,6 +310,96 @@ export const WorldScalarFieldEnum = {
 export type WorldScalarFieldEnum = (typeof WorldScalarFieldEnum)[keyof typeof WorldScalarFieldEnum]
 
 
+export const LoreEntryScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  limits: 'limits',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoreEntryScalarFieldEnum = (typeof LoreEntryScalarFieldEnum)[keyof typeof LoreEntryScalarFieldEnum]
+
+
+export const RaceScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  classification: 'classification',
+  description: 'description',
+  physicalTraits: 'physicalTraits',
+  hasMagic: 'hasMagic',
+  magicDescription: 'magicDescription',
+  lifeExpectancy: 'lifeExpectancy',
+  language: 'language',
+  culture: 'culture',
+  religion: 'religion',
+  origin: 'origin',
+  territory: 'territory',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RaceScalarFieldEnum = (typeof RaceScalarFieldEnum)[keyof typeof RaceScalarFieldEnum]
+
+
+export const GlossaryEntryScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  word: 'word',
+  pronunciation: 'pronunciation',
+  meaning: 'meaning',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GlossaryEntryScalarFieldEnum = (typeof GlossaryEntryScalarFieldEnum)[keyof typeof GlossaryEntryScalarFieldEnum]
+
+
+export const CreatureScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  species: 'species',
+  dangerType: 'dangerType',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CreatureScalarFieldEnum = (typeof CreatureScalarFieldEnum)[keyof typeof CreatureScalarFieldEnum]
+
+
+export const LocationScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  description: 'description',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
+export const WorldRouteScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  locationAId: 'locationAId',
+  locationBId: 'locationBId',
+  label: 'label',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorldRouteScalarFieldEnum = (typeof WorldRouteScalarFieldEnum)[keyof typeof WorldRouteScalarFieldEnum]
+
+
 export const DiagramScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -317,6 +414,23 @@ export const DiagramScalarFieldEnum = {
 export type DiagramScalarFieldEnum = (typeof DiagramScalarFieldEnum)[keyof typeof DiagramScalarFieldEnum]
 
 
+export const TimelineEraScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  color: 'color',
+  precision: 'precision',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  rollover: 'rollover',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimelineEraScalarFieldEnum = (typeof TimelineEraScalarFieldEnum)[keyof typeof TimelineEraScalarFieldEnum]
+
+
 export const TimelineEventScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -324,6 +438,7 @@ export const TimelineEventScalarFieldEnum = {
   date: 'date',
   description: 'description',
   order: 'order',
+  eraId: 'eraId',
   characterIds: 'characterIds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

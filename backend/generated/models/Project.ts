@@ -202,7 +202,14 @@ export type ProjectWhereInput = {
   diagrams?: Prisma.DiagramListRelationFilter
   notes?: Prisma.NoteListRelationFilter
   timelineEvents?: Prisma.TimelineEventListRelationFilter
+  timelineEras?: Prisma.TimelineEraListRelationFilter
   relationships?: Prisma.CharacterRelationshipListRelationFilter
+  loreEntries?: Prisma.LoreEntryListRelationFilter
+  races?: Prisma.RaceListRelationFilter
+  glossaryEntries?: Prisma.GlossaryEntryListRelationFilter
+  creatures?: Prisma.CreatureListRelationFilter
+  locations?: Prisma.LocationListRelationFilter
+  worldRoutes?: Prisma.WorldRouteListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -221,7 +228,14 @@ export type ProjectOrderByWithRelationInput = {
   diagrams?: Prisma.DiagramOrderByRelationAggregateInput
   notes?: Prisma.NoteOrderByRelationAggregateInput
   timelineEvents?: Prisma.TimelineEventOrderByRelationAggregateInput
+  timelineEras?: Prisma.TimelineEraOrderByRelationAggregateInput
   relationships?: Prisma.CharacterRelationshipOrderByRelationAggregateInput
+  loreEntries?: Prisma.LoreEntryOrderByRelationAggregateInput
+  races?: Prisma.RaceOrderByRelationAggregateInput
+  glossaryEntries?: Prisma.GlossaryEntryOrderByRelationAggregateInput
+  creatures?: Prisma.CreatureOrderByRelationAggregateInput
+  locations?: Prisma.LocationOrderByRelationAggregateInput
+  worldRoutes?: Prisma.WorldRouteOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -243,7 +257,14 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   diagrams?: Prisma.DiagramListRelationFilter
   notes?: Prisma.NoteListRelationFilter
   timelineEvents?: Prisma.TimelineEventListRelationFilter
+  timelineEras?: Prisma.TimelineEraListRelationFilter
   relationships?: Prisma.CharacterRelationshipListRelationFilter
+  loreEntries?: Prisma.LoreEntryListRelationFilter
+  races?: Prisma.RaceListRelationFilter
+  glossaryEntries?: Prisma.GlossaryEntryListRelationFilter
+  creatures?: Prisma.CreatureListRelationFilter
+  locations?: Prisma.LocationListRelationFilter
+  worldRoutes?: Prisma.WorldRouteListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -287,7 +308,14 @@ export type ProjectCreateInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -305,7 +333,14 @@ export type ProjectUncheckedCreateInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -323,7 +358,14 @@ export type ProjectUpdateInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -341,7 +383,14 @@ export type ProjectUncheckedUpdateInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -535,6 +584,90 @@ export type ProjectUpdateOneRequiredWithoutWorldsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutWorldsInput, Prisma.ProjectUpdateWithoutWorldsInput>, Prisma.ProjectUncheckedUpdateWithoutWorldsInput>
 }
 
+export type ProjectCreateNestedOneWithoutLoreEntriesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutLoreEntriesInput, Prisma.ProjectUncheckedCreateWithoutLoreEntriesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutLoreEntriesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutLoreEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutLoreEntriesInput, Prisma.ProjectUncheckedCreateWithoutLoreEntriesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutLoreEntriesInput
+  upsert?: Prisma.ProjectUpsertWithoutLoreEntriesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutLoreEntriesInput, Prisma.ProjectUpdateWithoutLoreEntriesInput>, Prisma.ProjectUncheckedUpdateWithoutLoreEntriesInput>
+}
+
+export type ProjectCreateNestedOneWithoutRacesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutRacesInput, Prisma.ProjectUncheckedCreateWithoutRacesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutRacesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutRacesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutRacesInput, Prisma.ProjectUncheckedCreateWithoutRacesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutRacesInput
+  upsert?: Prisma.ProjectUpsertWithoutRacesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutRacesInput, Prisma.ProjectUpdateWithoutRacesInput>, Prisma.ProjectUncheckedUpdateWithoutRacesInput>
+}
+
+export type ProjectCreateNestedOneWithoutGlossaryEntriesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedCreateWithoutGlossaryEntriesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutGlossaryEntriesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutGlossaryEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedCreateWithoutGlossaryEntriesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutGlossaryEntriesInput
+  upsert?: Prisma.ProjectUpsertWithoutGlossaryEntriesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutGlossaryEntriesInput, Prisma.ProjectUpdateWithoutGlossaryEntriesInput>, Prisma.ProjectUncheckedUpdateWithoutGlossaryEntriesInput>
+}
+
+export type ProjectCreateNestedOneWithoutCreaturesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutCreaturesInput, Prisma.ProjectUncheckedCreateWithoutCreaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutCreaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutCreaturesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutCreaturesInput, Prisma.ProjectUncheckedCreateWithoutCreaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutCreaturesInput
+  upsert?: Prisma.ProjectUpsertWithoutCreaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutCreaturesInput, Prisma.ProjectUpdateWithoutCreaturesInput>, Prisma.ProjectUncheckedUpdateWithoutCreaturesInput>
+}
+
+export type ProjectCreateNestedOneWithoutLocationsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutLocationsInput, Prisma.ProjectUncheckedCreateWithoutLocationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutLocationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutLocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutLocationsInput, Prisma.ProjectUncheckedCreateWithoutLocationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutLocationsInput
+  upsert?: Prisma.ProjectUpsertWithoutLocationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutLocationsInput, Prisma.ProjectUpdateWithoutLocationsInput>, Prisma.ProjectUncheckedUpdateWithoutLocationsInput>
+}
+
+export type ProjectCreateNestedOneWithoutWorldRoutesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutWorldRoutesInput, Prisma.ProjectUncheckedCreateWithoutWorldRoutesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutWorldRoutesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutWorldRoutesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutWorldRoutesInput, Prisma.ProjectUncheckedCreateWithoutWorldRoutesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutWorldRoutesInput
+  upsert?: Prisma.ProjectUpsertWithoutWorldRoutesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutWorldRoutesInput, Prisma.ProjectUpdateWithoutWorldRoutesInput>, Prisma.ProjectUncheckedUpdateWithoutWorldRoutesInput>
+}
+
 export type ProjectCreateNestedOneWithoutDiagramsInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutDiagramsInput, Prisma.ProjectUncheckedCreateWithoutDiagramsInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDiagramsInput
@@ -547,6 +680,20 @@ export type ProjectUpdateOneRequiredWithoutDiagramsNestedInput = {
   upsert?: Prisma.ProjectUpsertWithoutDiagramsInput
   connect?: Prisma.ProjectWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDiagramsInput, Prisma.ProjectUpdateWithoutDiagramsInput>, Prisma.ProjectUncheckedUpdateWithoutDiagramsInput>
+}
+
+export type ProjectCreateNestedOneWithoutTimelineErasInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutTimelineErasInput, Prisma.ProjectUncheckedCreateWithoutTimelineErasInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutTimelineErasInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutTimelineErasNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutTimelineErasInput, Prisma.ProjectUncheckedCreateWithoutTimelineErasInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutTimelineErasInput
+  upsert?: Prisma.ProjectUpsertWithoutTimelineErasInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutTimelineErasInput, Prisma.ProjectUpdateWithoutTimelineErasInput>, Prisma.ProjectUncheckedUpdateWithoutTimelineErasInput>
 }
 
 export type ProjectCreateNestedOneWithoutTimelineEventsInput = {
@@ -591,7 +738,14 @@ export type ProjectCreateWithoutUserInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -608,7 +762,14 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutUserInput = {
@@ -664,7 +825,14 @@ export type ProjectCreateWithoutFoldersInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFoldersInput = {
@@ -681,7 +849,14 @@ export type ProjectUncheckedCreateWithoutFoldersInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFoldersInput = {
@@ -714,7 +889,14 @@ export type ProjectUpdateWithoutFoldersInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFoldersInput = {
@@ -731,7 +913,14 @@ export type ProjectUncheckedUpdateWithoutFoldersInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDocumentsInput = {
@@ -748,7 +937,14 @@ export type ProjectCreateWithoutDocumentsInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -765,7 +961,14 @@ export type ProjectUncheckedCreateWithoutDocumentsInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -798,7 +1001,14 @@ export type ProjectUpdateWithoutDocumentsInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -815,7 +1025,14 @@ export type ProjectUncheckedUpdateWithoutDocumentsInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutNotesInput = {
@@ -832,7 +1049,14 @@ export type ProjectCreateWithoutNotesInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutNotesInput = {
@@ -849,7 +1073,14 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutNotesInput = {
@@ -882,7 +1113,14 @@ export type ProjectUpdateWithoutNotesInput = {
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutNotesInput = {
@@ -899,7 +1137,14 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCharactersInput = {
@@ -916,7 +1161,14 @@ export type ProjectCreateWithoutCharactersInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCharactersInput = {
@@ -933,7 +1185,14 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCharactersInput = {
@@ -966,7 +1225,14 @@ export type ProjectUpdateWithoutCharactersInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCharactersInput = {
@@ -983,7 +1249,14 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldsInput = {
@@ -1000,7 +1273,14 @@ export type ProjectCreateWithoutWorldsInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldsInput = {
@@ -1017,7 +1297,14 @@ export type ProjectUncheckedCreateWithoutWorldsInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldsInput = {
@@ -1050,7 +1337,14 @@ export type ProjectUpdateWithoutWorldsInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldsInput = {
@@ -1067,7 +1361,686 @@ export type ProjectUncheckedUpdateWithoutWorldsInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutLoreEntriesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutLoreEntriesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutLoreEntriesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutLoreEntriesInput, Prisma.ProjectUncheckedCreateWithoutLoreEntriesInput>
+}
+
+export type ProjectUpsertWithoutLoreEntriesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutLoreEntriesInput, Prisma.ProjectUncheckedUpdateWithoutLoreEntriesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutLoreEntriesInput, Prisma.ProjectUncheckedCreateWithoutLoreEntriesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutLoreEntriesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutLoreEntriesInput, Prisma.ProjectUncheckedUpdateWithoutLoreEntriesInput>
+}
+
+export type ProjectUpdateWithoutLoreEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutLoreEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutRacesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutRacesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutRacesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutRacesInput, Prisma.ProjectUncheckedCreateWithoutRacesInput>
+}
+
+export type ProjectUpsertWithoutRacesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutRacesInput, Prisma.ProjectUncheckedUpdateWithoutRacesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutRacesInput, Prisma.ProjectUncheckedCreateWithoutRacesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutRacesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutRacesInput, Prisma.ProjectUncheckedUpdateWithoutRacesInput>
+}
+
+export type ProjectUpdateWithoutRacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutRacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutGlossaryEntriesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutGlossaryEntriesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutGlossaryEntriesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedCreateWithoutGlossaryEntriesInput>
+}
+
+export type ProjectUpsertWithoutGlossaryEntriesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedUpdateWithoutGlossaryEntriesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedCreateWithoutGlossaryEntriesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutGlossaryEntriesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutGlossaryEntriesInput, Prisma.ProjectUncheckedUpdateWithoutGlossaryEntriesInput>
+}
+
+export type ProjectUpdateWithoutGlossaryEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutGlossaryEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutCreaturesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutCreaturesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutCreaturesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutCreaturesInput, Prisma.ProjectUncheckedCreateWithoutCreaturesInput>
+}
+
+export type ProjectUpsertWithoutCreaturesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutCreaturesInput, Prisma.ProjectUncheckedUpdateWithoutCreaturesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutCreaturesInput, Prisma.ProjectUncheckedCreateWithoutCreaturesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutCreaturesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutCreaturesInput, Prisma.ProjectUncheckedUpdateWithoutCreaturesInput>
+}
+
+export type ProjectUpdateWithoutCreaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutCreaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutLocationsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutLocationsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutLocationsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutLocationsInput, Prisma.ProjectUncheckedCreateWithoutLocationsInput>
+}
+
+export type ProjectUpsertWithoutLocationsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutLocationsInput, Prisma.ProjectUncheckedUpdateWithoutLocationsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutLocationsInput, Prisma.ProjectUncheckedCreateWithoutLocationsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutLocationsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutLocationsInput, Prisma.ProjectUncheckedUpdateWithoutLocationsInput>
+}
+
+export type ProjectUpdateWithoutLocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutLocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutWorldRoutesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutWorldRoutesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutWorldRoutesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutWorldRoutesInput, Prisma.ProjectUncheckedCreateWithoutWorldRoutesInput>
+}
+
+export type ProjectUpsertWithoutWorldRoutesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutWorldRoutesInput, Prisma.ProjectUncheckedUpdateWithoutWorldRoutesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutWorldRoutesInput, Prisma.ProjectUncheckedCreateWithoutWorldRoutesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutWorldRoutesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutWorldRoutesInput, Prisma.ProjectUncheckedUpdateWithoutWorldRoutesInput>
+}
+
+export type ProjectUpdateWithoutWorldRoutesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutWorldRoutesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDiagramsInput = {
@@ -1084,7 +2057,14 @@ export type ProjectCreateWithoutDiagramsInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDiagramsInput = {
@@ -1101,7 +2081,14 @@ export type ProjectUncheckedCreateWithoutDiagramsInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDiagramsInput = {
@@ -1134,7 +2121,14 @@ export type ProjectUpdateWithoutDiagramsInput = {
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDiagramsInput = {
@@ -1151,7 +2145,126 @@ export type ProjectUncheckedUpdateWithoutDiagramsInput = {
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutTimelineErasInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutTimelineErasInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutTimelineErasInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutTimelineErasInput, Prisma.ProjectUncheckedCreateWithoutTimelineErasInput>
+}
+
+export type ProjectUpsertWithoutTimelineErasInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutTimelineErasInput, Prisma.ProjectUncheckedUpdateWithoutTimelineErasInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutTimelineErasInput, Prisma.ProjectUncheckedCreateWithoutTimelineErasInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutTimelineErasInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutTimelineErasInput, Prisma.ProjectUncheckedUpdateWithoutTimelineErasInput>
+}
+
+export type ProjectUpdateWithoutTimelineErasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutTimelineErasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTimelineEventsInput = {
@@ -1168,7 +2281,14 @@ export type ProjectCreateWithoutTimelineEventsInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTimelineEventsInput = {
@@ -1185,7 +2305,14 @@ export type ProjectUncheckedCreateWithoutTimelineEventsInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
   relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTimelineEventsInput = {
@@ -1218,7 +2345,14 @@ export type ProjectUpdateWithoutTimelineEventsInput = {
   worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTimelineEventsInput = {
@@ -1235,7 +2369,14 @@ export type ProjectUncheckedUpdateWithoutTimelineEventsInput = {
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRelationshipsInput = {
@@ -1253,6 +2394,13 @@ export type ProjectCreateWithoutRelationshipsInput = {
   diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRelationshipsInput = {
@@ -1270,6 +2418,13 @@ export type ProjectUncheckedCreateWithoutRelationshipsInput = {
   diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
   timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRelationshipsInput = {
@@ -1303,6 +2458,13 @@ export type ProjectUpdateWithoutRelationshipsInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRelationshipsInput = {
@@ -1320,6 +2482,13 @@ export type ProjectUncheckedUpdateWithoutRelationshipsInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyUserInput = {
@@ -1345,7 +2514,14 @@ export type ProjectUpdateWithoutUserInput = {
   diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutUserInput = {
@@ -1362,7 +2538,14 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
   timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
   relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -1387,7 +2570,14 @@ export type ProjectCountOutputType = {
   diagrams: number
   notes: number
   timelineEvents: number
+  timelineEras: number
   relationships: number
+  loreEntries: number
+  races: number
+  glossaryEntries: number
+  creatures: number
+  locations: number
+  worldRoutes: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1398,7 +2588,14 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   diagrams?: boolean | ProjectCountOutputTypeCountDiagramsArgs
   notes?: boolean | ProjectCountOutputTypeCountNotesArgs
   timelineEvents?: boolean | ProjectCountOutputTypeCountTimelineEventsArgs
+  timelineEras?: boolean | ProjectCountOutputTypeCountTimelineErasArgs
   relationships?: boolean | ProjectCountOutputTypeCountRelationshipsArgs
+  loreEntries?: boolean | ProjectCountOutputTypeCountLoreEntriesArgs
+  races?: boolean | ProjectCountOutputTypeCountRacesArgs
+  glossaryEntries?: boolean | ProjectCountOutputTypeCountGlossaryEntriesArgs
+  creatures?: boolean | ProjectCountOutputTypeCountCreaturesArgs
+  locations?: boolean | ProjectCountOutputTypeCountLocationsArgs
+  worldRoutes?: boolean | ProjectCountOutputTypeCountWorldRoutesArgs
 }
 
 /**
@@ -1463,8 +2660,57 @@ export type ProjectCountOutputTypeCountTimelineEventsArgs<ExtArgs extends runtim
 /**
  * ProjectCountOutputType without action
  */
+export type ProjectCountOutputTypeCountTimelineErasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimelineEraWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
 export type ProjectCountOutputTypeCountRelationshipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CharacterRelationshipWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountLoreEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoreEntryWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountRacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RaceWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountGlossaryEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GlossaryEntryWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountCreaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CreatureWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountLocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LocationWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountWorldRoutesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorldRouteWhereInput
 }
 
 
@@ -1484,7 +2730,14 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   diagrams?: boolean | Prisma.Project$diagramsArgs<ExtArgs>
   notes?: boolean | Prisma.Project$notesArgs<ExtArgs>
   timelineEvents?: boolean | Prisma.Project$timelineEventsArgs<ExtArgs>
+  timelineEras?: boolean | Prisma.Project$timelineErasArgs<ExtArgs>
   relationships?: boolean | Prisma.Project$relationshipsArgs<ExtArgs>
+  loreEntries?: boolean | Prisma.Project$loreEntriesArgs<ExtArgs>
+  races?: boolean | Prisma.Project$racesArgs<ExtArgs>
+  glossaryEntries?: boolean | Prisma.Project$glossaryEntriesArgs<ExtArgs>
+  creatures?: boolean | Prisma.Project$creaturesArgs<ExtArgs>
+  locations?: boolean | Prisma.Project$locationsArgs<ExtArgs>
+  worldRoutes?: boolean | Prisma.Project$worldRoutesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1530,7 +2783,14 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   diagrams?: boolean | Prisma.Project$diagramsArgs<ExtArgs>
   notes?: boolean | Prisma.Project$notesArgs<ExtArgs>
   timelineEvents?: boolean | Prisma.Project$timelineEventsArgs<ExtArgs>
+  timelineEras?: boolean | Prisma.Project$timelineErasArgs<ExtArgs>
   relationships?: boolean | Prisma.Project$relationshipsArgs<ExtArgs>
+  loreEntries?: boolean | Prisma.Project$loreEntriesArgs<ExtArgs>
+  races?: boolean | Prisma.Project$racesArgs<ExtArgs>
+  glossaryEntries?: boolean | Prisma.Project$glossaryEntriesArgs<ExtArgs>
+  creatures?: boolean | Prisma.Project$creaturesArgs<ExtArgs>
+  locations?: boolean | Prisma.Project$locationsArgs<ExtArgs>
+  worldRoutes?: boolean | Prisma.Project$worldRoutesArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1551,7 +2811,14 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     diagrams: Prisma.$DiagramPayload<ExtArgs>[]
     notes: Prisma.$NotePayload<ExtArgs>[]
     timelineEvents: Prisma.$TimelineEventPayload<ExtArgs>[]
+    timelineEras: Prisma.$TimelineEraPayload<ExtArgs>[]
     relationships: Prisma.$CharacterRelationshipPayload<ExtArgs>[]
+    loreEntries: Prisma.$LoreEntryPayload<ExtArgs>[]
+    races: Prisma.$RacePayload<ExtArgs>[]
+    glossaryEntries: Prisma.$GlossaryEntryPayload<ExtArgs>[]
+    creatures: Prisma.$CreaturePayload<ExtArgs>[]
+    locations: Prisma.$LocationPayload<ExtArgs>[]
+    worldRoutes: Prisma.$WorldRoutePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1963,7 +3230,14 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   diagrams<T extends Prisma.Project$diagramsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$diagramsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiagramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.Project$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   timelineEvents<T extends Prisma.Project$timelineEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$timelineEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimelineEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  timelineEras<T extends Prisma.Project$timelineErasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$timelineErasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimelineEraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   relationships<T extends Prisma.Project$relationshipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$relationshipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterRelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loreEntries<T extends Prisma.Project$loreEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$loreEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoreEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  races<T extends Prisma.Project$racesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$racesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  glossaryEntries<T extends Prisma.Project$glossaryEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$glossaryEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GlossaryEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  creatures<T extends Prisma.Project$creaturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$creaturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  locations<T extends Prisma.Project$locationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  worldRoutes<T extends Prisma.Project$worldRoutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$worldRoutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldRoutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2569,6 +3843,30 @@ export type Project$timelineEventsArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * Project.timelineEras
+ */
+export type Project$timelineErasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimelineEra
+   */
+  select?: Prisma.TimelineEraSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimelineEra
+   */
+  omit?: Prisma.TimelineEraOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimelineEraInclude<ExtArgs> | null
+  where?: Prisma.TimelineEraWhereInput
+  orderBy?: Prisma.TimelineEraOrderByWithRelationInput | Prisma.TimelineEraOrderByWithRelationInput[]
+  cursor?: Prisma.TimelineEraWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimelineEraScalarFieldEnum | Prisma.TimelineEraScalarFieldEnum[]
+}
+
+/**
  * Project.relationships
  */
 export type Project$relationshipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2590,6 +3888,150 @@ export type Project$relationshipsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.CharacterRelationshipScalarFieldEnum | Prisma.CharacterRelationshipScalarFieldEnum[]
+}
+
+/**
+ * Project.loreEntries
+ */
+export type Project$loreEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoreEntry
+   */
+  select?: Prisma.LoreEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoreEntry
+   */
+  omit?: Prisma.LoreEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoreEntryInclude<ExtArgs> | null
+  where?: Prisma.LoreEntryWhereInput
+  orderBy?: Prisma.LoreEntryOrderByWithRelationInput | Prisma.LoreEntryOrderByWithRelationInput[]
+  cursor?: Prisma.LoreEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoreEntryScalarFieldEnum | Prisma.LoreEntryScalarFieldEnum[]
+}
+
+/**
+ * Project.races
+ */
+export type Project$racesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Race
+   */
+  select?: Prisma.RaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Race
+   */
+  omit?: Prisma.RaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RaceInclude<ExtArgs> | null
+  where?: Prisma.RaceWhereInput
+  orderBy?: Prisma.RaceOrderByWithRelationInput | Prisma.RaceOrderByWithRelationInput[]
+  cursor?: Prisma.RaceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RaceScalarFieldEnum | Prisma.RaceScalarFieldEnum[]
+}
+
+/**
+ * Project.glossaryEntries
+ */
+export type Project$glossaryEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GlossaryEntry
+   */
+  select?: Prisma.GlossaryEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GlossaryEntry
+   */
+  omit?: Prisma.GlossaryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GlossaryEntryInclude<ExtArgs> | null
+  where?: Prisma.GlossaryEntryWhereInput
+  orderBy?: Prisma.GlossaryEntryOrderByWithRelationInput | Prisma.GlossaryEntryOrderByWithRelationInput[]
+  cursor?: Prisma.GlossaryEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GlossaryEntryScalarFieldEnum | Prisma.GlossaryEntryScalarFieldEnum[]
+}
+
+/**
+ * Project.creatures
+ */
+export type Project$creaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Creature
+   */
+  select?: Prisma.CreatureSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Creature
+   */
+  omit?: Prisma.CreatureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CreatureInclude<ExtArgs> | null
+  where?: Prisma.CreatureWhereInput
+  orderBy?: Prisma.CreatureOrderByWithRelationInput | Prisma.CreatureOrderByWithRelationInput[]
+  cursor?: Prisma.CreatureWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CreatureScalarFieldEnum | Prisma.CreatureScalarFieldEnum[]
+}
+
+/**
+ * Project.locations
+ */
+export type Project$locationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Location
+   */
+  select?: Prisma.LocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Location
+   */
+  omit?: Prisma.LocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LocationInclude<ExtArgs> | null
+  where?: Prisma.LocationWhereInput
+  orderBy?: Prisma.LocationOrderByWithRelationInput | Prisma.LocationOrderByWithRelationInput[]
+  cursor?: Prisma.LocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LocationScalarFieldEnum | Prisma.LocationScalarFieldEnum[]
+}
+
+/**
+ * Project.worldRoutes
+ */
+export type Project$worldRoutesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldRoute
+   */
+  select?: Prisma.WorldRouteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorldRoute
+   */
+  omit?: Prisma.WorldRouteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldRouteInclude<ExtArgs> | null
+  where?: Prisma.WorldRouteWhereInput
+  orderBy?: Prisma.WorldRouteOrderByWithRelationInput | Prisma.WorldRouteOrderByWithRelationInput[]
+  cursor?: Prisma.WorldRouteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorldRouteScalarFieldEnum | Prisma.WorldRouteScalarFieldEnum[]
 }
 
 /**

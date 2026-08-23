@@ -105,7 +105,14 @@ model Project {
   diagrams    Diagram[]
   notes       Note[]
   timelineEvents  TimelineEvent[]
+  timelineEras    TimelineEra[]
   relationships   CharacterRelationship[]
+  loreEntries      LoreEntry[]
+  races            Race[]
+  glossaryEntries  GlossaryEntry[]
+  creatures        Creature[]
+  locations        Location[]
+  worldRoutes      WorldRoute[]
 
   @@map("projects")
 }
@@ -308,6 +315,120 @@ model World {
   @@map("worlds")
 }
 
+// Lore entry (Fase 7) — mundo: magia, facciones, religión, objetos, etc.
+// type: magic | faction | religion | location | item | custom
+model LoreEntry {
+  id          String   @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  type        String   @default("custom")
+  limits      String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("lore_entries")
+}
+
+// Race / people (Fase 7) — razas y pueblos del mundo
+model Race {
+  id               String   @id @default(cuid())
+  projectId        String
+  name             String
+  classification   String?
+  description      String?
+  physicalTraits   String?
+  hasMagic         Boolean  @default(false)
+  magicDescription String?
+  lifeExpectancy   Int?
+  language         String?
+  culture          String?
+  religion         String?
+  origin           String?
+  territory        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("races")
+}
+
+// Glossary entry (Fase 7) — palabra, pronunciación, significado
+model GlossaryEntry {
+  id            String   @id @default(cuid())
+  projectId     String
+  word          String
+  pronunciation String?
+  meaning       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("glossary_entries")
+}
+
+// Creature / beast (Fase 7) — bestias y criaturas
+model Creature {
+  id          String   @id @default(cuid())
+  projectId   String
+  name        String
+  species     String?
+  dangerType  String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("creatures")
+}
+
+// Location (Fase 7) — nodo del mapa mundial
+model Location {
+  id          String   @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  position    Json     @default("{}") // { x, y } en el lienzo del mapa
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  routesA   WorldRoute[] @relation("RouteA")
+  routesB   WorldRoute[] @relation("RouteB")
+
+  @@index([projectId])
+  @@map("locations")
+}
+
+// WorldRoute (Fase 7) — ruta/conexión entre dos ubicaciones (normalizado A < B)
+model WorldRoute {
+  id          String   @id @default(cuid())
+  projectId   String
+  locationAId String
+  locationBId String
+  label       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  locationA Location @relation("RouteA", fields: [locationAId], references: [id], onDelete: Cascade)
+  locationB Location @relation("RouteB", fields: [locationBId], references: [id], onDelete: Cascade)
+
+  @@unique([locationAId, locationBId])
+  @@index([projectId])
+  @@map("world_routes")
+}
+
 // Diagram model for plot diagrams
 // type: familyTree (auto-generado desde parentIds) | relationships (auto desde CharacterRelationship) | custom (manual)
 // layout: { nodes: [{ id: characterId, position }], notes: [{ id, position, text }] } — edges se derivan de los datos
@@ -327,6 +448,26 @@ model Diagram {
   @@map("diagrams")
 }
 
+// TimelineEra model — "épocas" que agrupan eventos en franjas del tablero
+model TimelineEra {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  color     String?
+  precision String   @default("year") // year | month | week | day | hour | minute
+  startDate String?
+  endDate   String?
+  rollover  String   @default("newYear") // newYear | afterYear
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("timeline_eras")
+}
+
 // TimelineEvent model for the story timeline (Fase 6)
 model TimelineEvent {
   id           String   @id @default(cuid())
@@ -335,6 +476,7 @@ model TimelineEvent {
   date         String?             // texto libre: "Año 3", "Era de los dragones"
   description  String?
   order        Int      @default(0)
+  eraId        String?             // época/franja a la que pertenece (null → General)
   characterIds String[] @default([])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

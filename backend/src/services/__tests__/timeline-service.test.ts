@@ -8,6 +8,15 @@ const { prismaMock } = vi.hoisted(() => ({
       findFirst: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
+      updateMany: vi.fn(),
+      delete: vi.fn(),
+      count: vi.fn(),
+    },
+    timelineEra: {
+      findMany: vi.fn(),
+      findFirst: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
       delete: vi.fn(),
       count: vi.fn(),
     },
@@ -28,7 +37,22 @@ const eventRow = {
   date: 'Año 3',
   description: null,
   order: 0,
+  eraId: null,
   characterIds: ['char-1'],
+  createdAt: new Date('2026-01-01'),
+  updatedAt: new Date('2026-01-01'),
+}
+
+const eraRow = {
+  id: 'era-1',
+  projectId: 'proj-1',
+  name: 'La Tercera Edad',
+  color: null,
+  precision: 'year',
+  startDate: null,
+  endDate: null,
+  rollover: 'newYear',
+  order: 0,
   createdAt: new Date('2026-01-01'),
   updatedAt: new Date('2026-01-01'),
 }
@@ -86,10 +110,24 @@ describe('timelineService', () => {
           date: 'Año 3',
           description: null,
           order: 2,
+          eraId: null,
           characterIds: ['char-1'],
         },
       })
       expect(event).toEqual(eventRow)
+    })
+
+    it('asigna eraId solo si la época pertenece al proyecto', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.timelineEra.findFirst.mockResolvedValue(null)
+      prismaMock.timelineEvent.count.mockResolvedValue(0)
+      prismaMock.timelineEvent.create.mockResolvedValue(eventRow)
+
+      await timelineService.create('proj-1', 'user-1', { title: 'X', eraId: 'era-ajena' })
+
+      expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ eraId: null }) }),
+      )
     })
 
     it('devuelve null sin ownership', async () => {
@@ -145,6 +183,106 @@ describe('timelineService', () => {
 
       expect(removed).toBe(false)
       expect(prismaMock.timelineEvent.delete).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('eras', () => {
+    it('listEras verifica ownership y ordena', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.timelineEra.findMany.mockResolvedValue([eraRow])
+
+      const eras = await timelineService.listEras('proj-1', 'user-1')
+
+      expect(prismaMock.timelineEra.findMany).toHaveBeenCalledWith({
+        where: { projectId: 'proj-1' },
+        orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      })
+      expect(eras).toEqual([eraRow])
+    })
+
+    it('createEra usa el contador como order y aplica defaults', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.timelineEra.count.mockResolvedValue(3)
+      prismaMock.timelineEra.create.mockResolvedValue({ ...eraRow, order: 3 })
+
+      await timelineService.createEra('proj-1', 'user-1', { name: 'La Tercera Edad' })
+
+      expect(prismaMock.timelineEra.create).toHaveBeenCalledWith({
+        data: {
+          projectId: 'proj-1',
+          name: 'La Tercera Edad',
+          color: null,
+          precision: 'year',
+          startDate: null,
+          endDate: null,
+          rollover: 'newYear',
+          order: 3,
+        },
+      })
+    })
+
+    it('createEra guarda color, precisión, rango y rollover', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.timelineEra.count.mockResolvedValue(0)
+      prismaMock.timelineEra.create.mockResolvedValue(eraRow)
+
+      await timelineService.createEra('proj-1', 'user-1', {
+        name: 'La Tercera Edad',
+        color: '#2d6b6b',
+        precision: 'month',
+        startDate: '-90 años',
+        endDate: '-84 años',
+        rollover: 'afterYear',
+      })
+
+      expect(prismaMock.timelineEra.create).toHaveBeenCalledWith({
+        data: {
+          projectId: 'proj-1',
+          name: 'La Tercera Edad',
+          color: '#2d6b6b',
+          precision: 'month',
+          startDate: '-90 años',
+          endDate: '-84 años',
+          rollover: 'afterYear',
+          order: 0,
+        },
+      })
+    })
+
+    it('updateEra renombra solo si es del usuario', async () => {
+      prismaMock.timelineEra.findFirst.mockResolvedValue(eraRow)
+      prismaMock.timelineEra.update.mockResolvedValue({ ...eraRow, name: 'Nuevo' })
+
+      const era = await timelineService.updateEra('era-1', 'user-1', 'Nuevo')
+
+      expect(era?.name).toBe('Nuevo')
+      expect(prismaMock.timelineEra.update).toHaveBeenCalledWith({
+        where: { id: 'era-1' },
+        data: { name: 'Nuevo' },
+      })
+    })
+
+    it('removeEra desasigna eventos y borra la época', async () => {
+      prismaMock.timelineEra.findFirst.mockResolvedValue(eraRow)
+      prismaMock.timelineEra.delete.mockResolvedValue(eraRow)
+
+      const removed = await timelineService.removeEra('era-1', 'user-1')
+
+      expect(prismaMock.timelineEvent.updateMany).toHaveBeenCalledWith({
+        where: { eraId: 'era-1' },
+        data: { eraId: null },
+      })
+      expect(prismaMock.timelineEra.delete).toHaveBeenCalledWith({ where: { id: 'era-1' } })
+      expect(removed).toBe(true)
+    })
+
+    it('removeEra devuelve false si no es del usuario', async () => {
+      prismaMock.timelineEra.findFirst.mockResolvedValue(null)
+
+      const removed = await timelineService.removeEra('era-1', 'user-1')
+
+      expect(removed).toBe(false)
+      expect(prismaMock.timelineEra.delete).not.toHaveBeenCalled()
     })
   })
 })

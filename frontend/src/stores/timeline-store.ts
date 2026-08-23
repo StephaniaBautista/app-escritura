@@ -1,15 +1,19 @@
 import { create } from 'zustand'
-import type { TimelineEvent, TimelineEventInput } from '@/types/timeline'
+import type { TimelineEra, TimelineEraInput, TimelineEvent, TimelineEventInput } from '@/types/timeline'
 import { timelineApi } from '@/services/timeline'
 import { useToastStore } from './toast-store'
 import i18n from '@/i18n'
 
 interface TimelineState {
   events: TimelineEvent[]
+  eras: TimelineEra[]
   isLoading: boolean
   error: string | null
 
   load: (projectId: string) => Promise<void>
+  loadEras: (projectId: string) => Promise<void>
+  createEra: (projectId: string, data: TimelineEraInput) => Promise<TimelineEra | null>
+  removeEra: (id: string) => Promise<void>
   create: (projectId: string, data: TimelineEventInput) => Promise<TimelineEvent | null>
   update: (id: string, data: TimelineEventInput) => Promise<TimelineEvent | null>
   move: (id: string, direction: 'up' | 'down') => Promise<void>
@@ -22,6 +26,7 @@ function getErrorMessage(error: unknown): string {
 
 export const useTimelineStore = create<TimelineState>()((set, get) => ({
   events: [],
+  eras: [],
   isLoading: false,
   error: null,
 
@@ -32,6 +37,40 @@ export const useTimelineStore = create<TimelineState>()((set, get) => ({
       set({ events, isLoading: false })
     } catch (err: unknown) {
       set({ error: getErrorMessage(err), isLoading: false })
+    }
+  },
+
+  async loadEras(projectId: string) {
+    try {
+      const eras = await timelineApi.listEras(projectId)
+      set({ eras })
+    } catch {
+      set({ eras: [] })
+    }
+  },
+
+  async createEra(projectId: string, data: TimelineEraInput) {
+    try {
+      const era = await timelineApi.createEra(projectId, data)
+      set({ eras: [...get().eras, era] })
+      return era
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+
+  async removeEra(id: string) {
+    const previous = get().eras
+    set({
+      eras: previous.filter((e) => e.id !== id),
+      events: get().events.map((e) => (e.eraId === id ? { ...e, eraId: null } : e)),
+    })
+    try {
+      await timelineApi.deleteEra(id)
+    } catch (err: unknown) {
+      set({ eras: previous })
+      useToastStore.getState().error(getErrorMessage(err))
     }
   },
 

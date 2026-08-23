@@ -5,6 +5,7 @@ export interface TimelineEventInput {
   date?: string | null
   description?: string | null
   order?: number
+  eraId?: string | null
   characterIds?: string[]
 }
 
@@ -22,7 +23,64 @@ async function sanitizeCharacterIds(projectId: string, characterIds: string[] | 
   return [...new Set(characterIds.filter((id) => valid.has(id)))]
 }
 
+async function sanitizeEraId(projectId: string, eraId: string | null | undefined): Promise<string | null | undefined> {
+  if (eraId === undefined) return undefined
+  if (eraId === null) return null
+  const era = await prisma.timelineEra.findFirst({ where: { id: eraId, projectId } })
+  return era ? era.id : null
+}
+
+export interface TimelineEraInput {
+  name: string
+  color?: string | null
+  precision?: string | null
+  startDate?: string | null
+  endDate?: string | null
+  rollover?: string | null
+}
+
 export const timelineService = {
+  async listEras(projectId: string, userId: string) {
+    const project = await isProjectOwner(projectId, userId)
+    if (!project) return null
+    return prisma.timelineEra.findMany({
+      where: { projectId },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+    })
+  },
+
+  async createEra(projectId: string, userId: string, data: TimelineEraInput) {
+    const project = await isProjectOwner(projectId, userId)
+    if (!project) return null
+    const order = await prisma.timelineEra.count({ where: { projectId } })
+    return prisma.timelineEra.create({
+      data: {
+        projectId,
+        name: data.name,
+        color: data.color ?? null,
+        precision: data.precision ?? 'year',
+        startDate: data.startDate ?? null,
+        endDate: data.endDate ?? null,
+        rollover: data.rollover ?? 'newYear',
+        order,
+      },
+    })
+  },
+
+  async updateEra(id: string, userId: string, name: string) {
+    const era = await prisma.timelineEra.findFirst({ where: { id, project: { userId } } })
+    if (!era) return null
+    return prisma.timelineEra.update({ where: { id }, data: { name } })
+  },
+
+  async removeEra(id: string, userId: string) {
+    const era = await prisma.timelineEra.findFirst({ where: { id, project: { userId } } })
+    if (!era) return false
+    await prisma.timelineEvent.updateMany({ where: { eraId: id }, data: { eraId: null } })
+    await prisma.timelineEra.delete({ where: { id } })
+    return true
+  },
+
   async listByProject(projectId: string, userId: string) {
     const project = await isProjectOwner(projectId, userId)
     if (!project) return null
@@ -42,6 +100,7 @@ export const timelineService = {
     const project = await isProjectOwner(projectId, userId)
     if (!project) return null
     const characterIds = await sanitizeCharacterIds(projectId, data.characterIds)
+    const eraId = await sanitizeEraId(projectId, data.eraId)
     const order = data.order ?? (await prisma.timelineEvent.count({ where: { projectId } }))
     return prisma.timelineEvent.create({
       data: {
@@ -50,6 +109,7 @@ export const timelineService = {
         date: data.date ?? null,
         description: data.description ?? null,
         order,
+        eraId: eraId ?? null,
         characterIds,
       },
     })
@@ -63,6 +123,7 @@ export const timelineService = {
     const characterIds = data.characterIds !== undefined
       ? await sanitizeCharacterIds(event.projectId, data.characterIds)
       : undefined
+    const eraId = await sanitizeEraId(event.projectId, data.eraId)
     return prisma.timelineEvent.update({
       where: { id },
       data: {
@@ -70,6 +131,7 @@ export const timelineService = {
         date: data.date,
         description: data.description,
         order: data.order,
+        eraId,
         characterIds,
       },
     })

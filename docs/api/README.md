@@ -230,9 +230,15 @@ Reglas:
 
 **Timeline:**
 - `GET /api/projects/:projectId/timeline` - Listar eventos (ordenados por `order` asc)
-- `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, characterIds? }` (fecha texto libre; `characterIds` saneados al proyecto; sin `order` usa el contador)
+- `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, eraId?, characterIds? }` (fecha texto libre; `characterIds` y `eraId` saneados al proyecto — `eraId` ajeno al proyecto se guarda como `null`; sin `order` usa el contador)
 - `PUT /api/timeline/:id` - Actualizar evento (mismos campos, todos opcionales)
 - `DELETE /api/timeline/:id` - Borrar evento (204)
+
+**Épocas / franjas (M60, extendido en M62):**
+- `GET /api/projects/:projectId/timeline-eras` - Listar épocas (ordenadas por `order` asc)
+- `POST /api/projects/:projectId/timeline-eras` - Crear época `{ name, color?, precision?, startDate?, endDate?, rollover? }` (`precision`: year|month|week|day|hour|minute; fechas texto libre ej. "-90 años"; `rollover`: newYear|afterYear; sin `order` usa el contador)
+- `PUT /api/timeline-eras/:id` - Renombrar época `{ name }`
+- `DELETE /api/timeline-eras/:id` - Borrar época (204); sus eventos quedan con `eraId = null` (franja General)
 
 **Relaciones (estructuradas):**
 - `GET /api/projects/:projectId/relationships?type=` - Listar relaciones `{ characterA, characterB, type, label?, description? }` (filtro opcional por tipo)
