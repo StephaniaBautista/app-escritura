@@ -241,27 +241,45 @@ const start = async () => {
     await app.listen({ port, host: '0.0.0.0' })
     console.log(`Server running on http://localhost:${port}`)
     console.log(`Swagger docs available at http://localhost:${port}/docs`)
-
-    const seeded = await optionsService.seedDefaults()
-    if (seeded > 0) console.log(`Seeded ${seeded} default story options`)
-
-    const seededRoles = await roleService.seedDefaults()
-    if (seededRoles > 0) console.log(`Seeded ${seededRoles} default roles`)
-
-    const seededBank = await storyBankService.seedDefaults()
-    if (seededBank.questions > 0 || seededBank.templates > 0) {
-      console.log(`Seeded ${seededBank.questions} questions and ${seededBank.templates} templates`)
-    }
-
-    const seededCharacterOptions = await characterOptionService.seedDefaults()
-    if (seededCharacterOptions > 0) console.log(`Seeded ${seededCharacterOptions} default character options`)
-
-    const seededSections = await storySectionService.seedDefaults()
-    if (seededSections > 0) console.log(`Seeded ${seededSections} default story sections`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)
   }
+
+  const safeSeed = async (label: string, run: () => Promise<unknown>) => {
+    try {
+      await run()
+    } catch (err) {
+      app.log.error(err, `Seed "${label}" failed, continuing without it`)
+    }
+  }
+
+  await safeSeed('story options', async () => {
+    const seeded = await optionsService.seedDefaults()
+    if (seeded > 0) console.log(`Seeded ${seeded} default story options`)
+  })
+
+  await safeSeed('roles', async () => {
+    const seeded = await roleService.seedDefaults()
+    if (seeded > 0) console.log(`Seeded ${seeded} default roles`)
+  })
+
+  await safeSeed('story bank', async () => {
+    const seededBank = await storyBankService.seedDefaults()
+    if (seededBank.questions > 0 || seededBank.templates > 0) {
+      console.log(`Seeded ${seededBank.questions} questions and ${seededBank.templates} templates`)
+    }
+  })
+
+  await safeSeed('character options', async () => {
+    const seeded = await characterOptionService.seedDefaults()
+    if (seeded > 0) console.log(`Seeded ${seeded} default character options`)
+  })
+
+  await safeSeed('story sections', async () => {
+    const seeded = await storySectionService.seedDefaults()
+    if (seeded > 0) console.log(`Seeded ${seeded} default story sections`)
+  })
 }
 
 start()
