@@ -20,18 +20,8 @@ export type RaceModel = runtime.Types.Result.DefaultSelection<Prisma.$RacePayloa
 
 export type AggregateRace = {
   _count: RaceCountAggregateOutputType | null
-  _avg: RaceAvgAggregateOutputType | null
-  _sum: RaceSumAggregateOutputType | null
   _min: RaceMinAggregateOutputType | null
   _max: RaceMaxAggregateOutputType | null
-}
-
-export type RaceAvgAggregateOutputType = {
-  lifeExpectancy: number | null
-}
-
-export type RaceSumAggregateOutputType = {
-  lifeExpectancy: number | null
 }
 
 export type RaceMinAggregateOutputType = {
@@ -43,12 +33,18 @@ export type RaceMinAggregateOutputType = {
   physicalTraits: string | null
   hasMagic: boolean | null
   magicDescription: string | null
-  lifeExpectancy: number | null
+  spiritualTraits: string | null
+  lifeExpectancy: string | null
   language: string | null
   culture: string | null
   religion: string | null
   origin: string | null
   territory: string | null
+  relationsWithOthers: string | null
+  importantNotes: string | null
+  imageUrl: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,12 +58,18 @@ export type RaceMaxAggregateOutputType = {
   physicalTraits: string | null
   hasMagic: boolean | null
   magicDescription: string | null
-  lifeExpectancy: number | null
+  spiritualTraits: string | null
+  lifeExpectancy: string | null
   language: string | null
   culture: string | null
   religion: string | null
   origin: string | null
   territory: string | null
+  relationsWithOthers: string | null
+  importantNotes: string | null
+  imageUrl: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -81,25 +83,23 @@ export type RaceCountAggregateOutputType = {
   physicalTraits: number
   hasMagic: number
   magicDescription: number
+  spiritualTraits: number
   lifeExpectancy: number
   language: number
   culture: number
   religion: number
   origin: number
   territory: number
+  relationsWithOthers: number
+  importantNotes: number
+  imageUrl: number
+  pdfUrl: number
+  pdfName: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
-
-export type RaceAvgAggregateInputType = {
-  lifeExpectancy?: true
-}
-
-export type RaceSumAggregateInputType = {
-  lifeExpectancy?: true
-}
 
 export type RaceMinAggregateInputType = {
   id?: true
@@ -110,12 +110,18 @@ export type RaceMinAggregateInputType = {
   physicalTraits?: true
   hasMagic?: true
   magicDescription?: true
+  spiritualTraits?: true
   lifeExpectancy?: true
   language?: true
   culture?: true
   religion?: true
   origin?: true
   territory?: true
+  relationsWithOthers?: true
+  importantNotes?: true
+  imageUrl?: true
+  pdfUrl?: true
+  pdfName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -129,12 +135,18 @@ export type RaceMaxAggregateInputType = {
   physicalTraits?: true
   hasMagic?: true
   magicDescription?: true
+  spiritualTraits?: true
   lifeExpectancy?: true
   language?: true
   culture?: true
   religion?: true
   origin?: true
   territory?: true
+  relationsWithOthers?: true
+  importantNotes?: true
+  imageUrl?: true
+  pdfUrl?: true
+  pdfName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -148,12 +160,18 @@ export type RaceCountAggregateInputType = {
   physicalTraits?: true
   hasMagic?: true
   magicDescription?: true
+  spiritualTraits?: true
   lifeExpectancy?: true
   language?: true
   culture?: true
   religion?: true
   origin?: true
   territory?: true
+  relationsWithOthers?: true
+  importantNotes?: true
+  imageUrl?: true
+  pdfUrl?: true
+  pdfName?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,18 +215,6 @@ export type RaceAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: RaceAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: RaceSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: RaceMinAggregateInputType
@@ -239,8 +245,6 @@ export type RaceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: RaceCountAggregateInputType | true
-  _avg?: RaceAvgAggregateInputType
-  _sum?: RaceSumAggregateInputType
   _min?: RaceMinAggregateInputType
   _max?: RaceMaxAggregateInputType
 }
@@ -254,17 +258,21 @@ export type RaceGroupByOutputType = {
   physicalTraits: string | null
   hasMagic: boolean
   magicDescription: string | null
-  lifeExpectancy: number | null
+  spiritualTraits: string | null
+  lifeExpectancy: string | null
   language: string | null
   culture: string | null
   religion: string | null
   origin: string | null
   territory: string | null
+  relationsWithOthers: string | null
+  importantNotes: string | null
+  imageUrl: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   createdAt: Date
   updatedAt: Date
   _count: RaceCountAggregateOutputType | null
-  _avg: RaceAvgAggregateOutputType | null
-  _sum: RaceSumAggregateOutputType | null
   _min: RaceMinAggregateOutputType | null
   _max: RaceMaxAggregateOutputType | null
 }
@@ -296,12 +304,18 @@ export type RaceWhereInput = {
   physicalTraits?: Prisma.StringNullableFilter<"Race"> | string | null
   hasMagic?: Prisma.BoolFilter<"Race"> | boolean
   magicDescription?: Prisma.StringNullableFilter<"Race"> | string | null
-  lifeExpectancy?: Prisma.IntNullableFilter<"Race"> | number | null
+  spiritualTraits?: Prisma.StringNullableFilter<"Race"> | string | null
+  lifeExpectancy?: Prisma.StringNullableFilter<"Race"> | string | null
   language?: Prisma.StringNullableFilter<"Race"> | string | null
   culture?: Prisma.StringNullableFilter<"Race"> | string | null
   religion?: Prisma.StringNullableFilter<"Race"> | string | null
   origin?: Prisma.StringNullableFilter<"Race"> | string | null
   territory?: Prisma.StringNullableFilter<"Race"> | string | null
+  relationsWithOthers?: Prisma.StringNullableFilter<"Race"> | string | null
+  importantNotes?: Prisma.StringNullableFilter<"Race"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"Race"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Race"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Race"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -316,12 +330,18 @@ export type RaceOrderByWithRelationInput = {
   physicalTraits?: Prisma.SortOrderInput | Prisma.SortOrder
   hasMagic?: Prisma.SortOrder
   magicDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  spiritualTraits?: Prisma.SortOrderInput | Prisma.SortOrder
   lifeExpectancy?: Prisma.SortOrderInput | Prisma.SortOrder
   language?: Prisma.SortOrderInput | Prisma.SortOrder
   culture?: Prisma.SortOrderInput | Prisma.SortOrder
   religion?: Prisma.SortOrderInput | Prisma.SortOrder
   origin?: Prisma.SortOrderInput | Prisma.SortOrder
   territory?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationsWithOthers?: Prisma.SortOrderInput | Prisma.SortOrder
+  importantNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
@@ -339,12 +359,18 @@ export type RaceWhereUniqueInput = Prisma.AtLeast<{
   physicalTraits?: Prisma.StringNullableFilter<"Race"> | string | null
   hasMagic?: Prisma.BoolFilter<"Race"> | boolean
   magicDescription?: Prisma.StringNullableFilter<"Race"> | string | null
-  lifeExpectancy?: Prisma.IntNullableFilter<"Race"> | number | null
+  spiritualTraits?: Prisma.StringNullableFilter<"Race"> | string | null
+  lifeExpectancy?: Prisma.StringNullableFilter<"Race"> | string | null
   language?: Prisma.StringNullableFilter<"Race"> | string | null
   culture?: Prisma.StringNullableFilter<"Race"> | string | null
   religion?: Prisma.StringNullableFilter<"Race"> | string | null
   origin?: Prisma.StringNullableFilter<"Race"> | string | null
   territory?: Prisma.StringNullableFilter<"Race"> | string | null
+  relationsWithOthers?: Prisma.StringNullableFilter<"Race"> | string | null
+  importantNotes?: Prisma.StringNullableFilter<"Race"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"Race"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Race"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Race"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -359,19 +385,23 @@ export type RaceOrderByWithAggregationInput = {
   physicalTraits?: Prisma.SortOrderInput | Prisma.SortOrder
   hasMagic?: Prisma.SortOrder
   magicDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  spiritualTraits?: Prisma.SortOrderInput | Prisma.SortOrder
   lifeExpectancy?: Prisma.SortOrderInput | Prisma.SortOrder
   language?: Prisma.SortOrderInput | Prisma.SortOrder
   culture?: Prisma.SortOrderInput | Prisma.SortOrder
   religion?: Prisma.SortOrderInput | Prisma.SortOrder
   origin?: Prisma.SortOrderInput | Prisma.SortOrder
   territory?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationsWithOthers?: Prisma.SortOrderInput | Prisma.SortOrder
+  importantNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RaceCountOrderByAggregateInput
-  _avg?: Prisma.RaceAvgOrderByAggregateInput
   _max?: Prisma.RaceMaxOrderByAggregateInput
   _min?: Prisma.RaceMinOrderByAggregateInput
-  _sum?: Prisma.RaceSumOrderByAggregateInput
 }
 
 export type RaceScalarWhereWithAggregatesInput = {
@@ -386,12 +416,18 @@ export type RaceScalarWhereWithAggregatesInput = {
   physicalTraits?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   hasMagic?: Prisma.BoolWithAggregatesFilter<"Race"> | boolean
   magicDescription?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
-  lifeExpectancy?: Prisma.IntNullableWithAggregatesFilter<"Race"> | number | null
+  spiritualTraits?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  lifeExpectancy?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   language?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   culture?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   religion?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   origin?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   territory?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  relationsWithOthers?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  importantNotes?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  pdfUrl?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
+  pdfName?: Prisma.StringNullableWithAggregatesFilter<"Race"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Race"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Race"> | Date | string
 }
@@ -404,12 +440,18 @@ export type RaceCreateInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutRacesInput
@@ -424,12 +466,18 @@ export type RaceUncheckedCreateInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -442,12 +490,18 @@ export type RaceUpdateInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutRacesNestedInput
@@ -462,12 +516,18 @@ export type RaceUncheckedUpdateInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -481,12 +541,18 @@ export type RaceCreateManyInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -499,12 +565,18 @@ export type RaceUpdateManyMutationInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -518,12 +590,18 @@ export type RaceUncheckedUpdateManyInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,18 +625,20 @@ export type RaceCountOrderByAggregateInput = {
   physicalTraits?: Prisma.SortOrder
   hasMagic?: Prisma.SortOrder
   magicDescription?: Prisma.SortOrder
+  spiritualTraits?: Prisma.SortOrder
   lifeExpectancy?: Prisma.SortOrder
   language?: Prisma.SortOrder
   culture?: Prisma.SortOrder
   religion?: Prisma.SortOrder
   origin?: Prisma.SortOrder
   territory?: Prisma.SortOrder
+  relationsWithOthers?: Prisma.SortOrder
+  importantNotes?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type RaceAvgOrderByAggregateInput = {
-  lifeExpectancy?: Prisma.SortOrder
 }
 
 export type RaceMaxOrderByAggregateInput = {
@@ -570,12 +650,18 @@ export type RaceMaxOrderByAggregateInput = {
   physicalTraits?: Prisma.SortOrder
   hasMagic?: Prisma.SortOrder
   magicDescription?: Prisma.SortOrder
+  spiritualTraits?: Prisma.SortOrder
   lifeExpectancy?: Prisma.SortOrder
   language?: Prisma.SortOrder
   culture?: Prisma.SortOrder
   religion?: Prisma.SortOrder
   origin?: Prisma.SortOrder
   territory?: Prisma.SortOrder
+  relationsWithOthers?: Prisma.SortOrder
+  importantNotes?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -589,18 +675,20 @@ export type RaceMinOrderByAggregateInput = {
   physicalTraits?: Prisma.SortOrder
   hasMagic?: Prisma.SortOrder
   magicDescription?: Prisma.SortOrder
+  spiritualTraits?: Prisma.SortOrder
   lifeExpectancy?: Prisma.SortOrder
   language?: Prisma.SortOrder
   culture?: Prisma.SortOrder
   religion?: Prisma.SortOrder
   origin?: Prisma.SortOrder
   territory?: Prisma.SortOrder
+  relationsWithOthers?: Prisma.SortOrder
+  importantNotes?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type RaceSumOrderByAggregateInput = {
-  lifeExpectancy?: Prisma.SortOrder
 }
 
 export type RaceCreateNestedManyWithoutProjectInput = {
@@ -653,12 +741,18 @@ export type RaceCreateWithoutProjectInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -671,12 +765,18 @@ export type RaceUncheckedCreateWithoutProjectInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -719,12 +819,18 @@ export type RaceScalarWhereInput = {
   physicalTraits?: Prisma.StringNullableFilter<"Race"> | string | null
   hasMagic?: Prisma.BoolFilter<"Race"> | boolean
   magicDescription?: Prisma.StringNullableFilter<"Race"> | string | null
-  lifeExpectancy?: Prisma.IntNullableFilter<"Race"> | number | null
+  spiritualTraits?: Prisma.StringNullableFilter<"Race"> | string | null
+  lifeExpectancy?: Prisma.StringNullableFilter<"Race"> | string | null
   language?: Prisma.StringNullableFilter<"Race"> | string | null
   culture?: Prisma.StringNullableFilter<"Race"> | string | null
   religion?: Prisma.StringNullableFilter<"Race"> | string | null
   origin?: Prisma.StringNullableFilter<"Race"> | string | null
   territory?: Prisma.StringNullableFilter<"Race"> | string | null
+  relationsWithOthers?: Prisma.StringNullableFilter<"Race"> | string | null
+  importantNotes?: Prisma.StringNullableFilter<"Race"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"Race"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"Race"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Race"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Race"> | Date | string
 }
@@ -737,12 +843,18 @@ export type RaceCreateManyProjectInput = {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
+  imageUrl?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -755,12 +867,18 @@ export type RaceUpdateWithoutProjectInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -773,12 +891,18 @@ export type RaceUncheckedUpdateWithoutProjectInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -791,12 +915,18 @@ export type RaceUncheckedUpdateManyWithoutProjectInput = {
   physicalTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasMagic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   magicDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lifeExpectancy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  spiritualTraits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lifeExpectancy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   culture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   religion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   territory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationsWithOthers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importantNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -812,12 +942,18 @@ export type RaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   physicalTraits?: boolean
   hasMagic?: boolean
   magicDescription?: boolean
+  spiritualTraits?: boolean
   lifeExpectancy?: boolean
   language?: boolean
   culture?: boolean
   religion?: boolean
   origin?: boolean
   territory?: boolean
+  relationsWithOthers?: boolean
+  importantNotes?: boolean
+  imageUrl?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -832,12 +968,18 @@ export type RaceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   physicalTraits?: boolean
   hasMagic?: boolean
   magicDescription?: boolean
+  spiritualTraits?: boolean
   lifeExpectancy?: boolean
   language?: boolean
   culture?: boolean
   religion?: boolean
   origin?: boolean
   territory?: boolean
+  relationsWithOthers?: boolean
+  importantNotes?: boolean
+  imageUrl?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -852,12 +994,18 @@ export type RaceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   physicalTraits?: boolean
   hasMagic?: boolean
   magicDescription?: boolean
+  spiritualTraits?: boolean
   lifeExpectancy?: boolean
   language?: boolean
   culture?: boolean
   religion?: boolean
   origin?: boolean
   territory?: boolean
+  relationsWithOthers?: boolean
+  importantNotes?: boolean
+  imageUrl?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -872,17 +1020,23 @@ export type RaceSelectScalar = {
   physicalTraits?: boolean
   hasMagic?: boolean
   magicDescription?: boolean
+  spiritualTraits?: boolean
   lifeExpectancy?: boolean
   language?: boolean
   culture?: boolean
   religion?: boolean
   origin?: boolean
   territory?: boolean
+  relationsWithOthers?: boolean
+  importantNotes?: boolean
+  imageUrl?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "classification" | "description" | "physicalTraits" | "hasMagic" | "magicDescription" | "lifeExpectancy" | "language" | "culture" | "religion" | "origin" | "territory" | "createdAt" | "updatedAt", ExtArgs["result"]["race"]>
+export type RaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "classification" | "description" | "physicalTraits" | "hasMagic" | "magicDescription" | "spiritualTraits" | "lifeExpectancy" | "language" | "culture" | "religion" | "origin" | "territory" | "relationsWithOthers" | "importantNotes" | "imageUrl" | "pdfUrl" | "pdfName" | "createdAt" | "updatedAt", ExtArgs["result"]["race"]>
 export type RaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -907,12 +1061,18 @@ export type $RacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     physicalTraits: string | null
     hasMagic: boolean
     magicDescription: string | null
-    lifeExpectancy: number | null
+    spiritualTraits: string | null
+    lifeExpectancy: string | null
     language: string | null
     culture: string | null
     religion: string | null
     origin: string | null
     territory: string | null
+    relationsWithOthers: string | null
+    importantNotes: string | null
+    imageUrl: string | null
+    pdfUrl: string | null
+    pdfName: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["race"]>
@@ -1347,12 +1507,18 @@ export interface RaceFieldRefs {
   readonly physicalTraits: Prisma.FieldRef<"Race", 'String'>
   readonly hasMagic: Prisma.FieldRef<"Race", 'Boolean'>
   readonly magicDescription: Prisma.FieldRef<"Race", 'String'>
-  readonly lifeExpectancy: Prisma.FieldRef<"Race", 'Int'>
+  readonly spiritualTraits: Prisma.FieldRef<"Race", 'String'>
+  readonly lifeExpectancy: Prisma.FieldRef<"Race", 'String'>
   readonly language: Prisma.FieldRef<"Race", 'String'>
   readonly culture: Prisma.FieldRef<"Race", 'String'>
   readonly religion: Prisma.FieldRef<"Race", 'String'>
   readonly origin: Prisma.FieldRef<"Race", 'String'>
   readonly territory: Prisma.FieldRef<"Race", 'String'>
+  readonly relationsWithOthers: Prisma.FieldRef<"Race", 'String'>
+  readonly importantNotes: Prisma.FieldRef<"Race", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"Race", 'String'>
+  readonly pdfUrl: Prisma.FieldRef<"Race", 'String'>
+  readonly pdfName: Prisma.FieldRef<"Race", 'String'>
   readonly createdAt: Prisma.FieldRef<"Race", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Race", 'DateTime'>
 }

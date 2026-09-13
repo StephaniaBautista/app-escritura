@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen, ShieldCheck
+  Home, FileText, Clock, Users2, LogOut, Sparkles, PanelLeftClose, PanelLeftOpen, ShieldCheck, ChartNoAxesCombined
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 
@@ -19,6 +19,7 @@ export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarPro
   const mainNav = [
     { path: '/app', label: t('sidebar.home'), icon: Home },
     { path: '/app/documents', label: t('sidebar.myProjects'), icon: FileText },
+    { path: '/app/stats', label: t('sidebar.statistics'), icon: ChartNoAxesCombined },
   ]
 
   const secondaryNav = [

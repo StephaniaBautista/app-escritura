@@ -7,21 +7,28 @@ import { useRelationshipsStore } from '@/stores/relationships-store'
 import { useToastStore } from '@/stores/toast-store'
 import { CharacterFormFields, draftFromCharacter, draftToInput, emptyDraft } from './CharacterFormFields'
 import { RelationshipDialog } from './RelationshipDialog'
+import { CharacterAiButton } from './CharacterAiButton'
+import { applyCharacterFill, fillToDraft } from './character-ai'
+import type { AiCharacterFill } from '@/types/ai'
 
 interface CharacterFormProps {
   projectId: string
   allCharacters: Character[]
   character: Character | null
+  seedFill?: AiCharacterFill | null
   onClose: () => void
   onSaved: (character: Character) => void
 }
 
-export function CharacterForm({ projectId, allCharacters, character, onClose, onSaved }: CharacterFormProps) {
+export function CharacterForm({ projectId, allCharacters, character, seedFill, onClose, onSaved }: CharacterFormProps) {
   const { t } = useTranslation()
   const toast = useToastStore()
   const charactersStore = useCharactersStore()
   const relationshipsStore = useRelationshipsStore()
-  const [draft, setDraft] = useState(() => character ? draftFromCharacter(character, allCharacters) : emptyDraft())
+  const [draft, setDraft] = useState(() => {
+    if (character) return draftFromCharacter(character, allCharacters)
+    return seedFill ? fillToDraft(seedFill) : emptyDraft()
+  })
   const [backgroundImageDataUrls, setBackgroundImageDataUrls] = useState<string[]>([])
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -99,9 +106,20 @@ export function CharacterForm({ projectId, allCharacters, character, onClose, on
               <p className="character-form__eyebrow">{t('characterApp.sheetLabel')}</p>
               <h2 className="character-form__title">{character ? character.name : t('characterApp.newCharacter')}</h2>
             </div>
-            <button type="button" onClick={onClose} disabled={isSaving} aria-label={t('characterApp.cancel')} className="character-form__close">
-              <X className="h-5 w-5" />
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              <CharacterAiButton
+                projectId={projectId}
+                characterId={character?.id}
+                name={draft.name}
+                onFilled={(fills) => {
+                  const fill = fills[0]
+                  if (fill) setDraft((current) => applyCharacterFill(current, fill))
+                }}
+              />
+              <button type="button" onClick={onClose} disabled={isSaving} aria-label={t('characterApp.cancel')} className="character-form__close">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </header>
 

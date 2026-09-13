@@ -130,7 +130,7 @@ describe('versionService', () => {
   })
 
   it('restore: reescribe título y contenido del documento', async () => {
-    const oldVersion = { ...versionRow(1), title: 'Título viejo', content: { type: 'doc', content: [{ type: 'paragraph' }] } }
+    const oldVersion = { ...versionRow(1), title: 'Título viejo', content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Texto restaurado' }] }] } }
     prismaMock.documentVersion.findFirst.mockResolvedValue(oldVersion)
     prismaMock.document.findFirst.mockResolvedValue(docRow)
     prismaMock.document.update.mockResolvedValue({ ...docRow, title: 'Título viejo', content: oldVersion.content })
@@ -139,7 +139,7 @@ describe('versionService', () => {
 
     expect(prismaMock.document.update).toHaveBeenCalledWith({
       where: { id: 'doc-1' },
-      data: { title: 'Título viejo', content: oldVersion.content },
+      data: { title: 'Título viejo', content: oldVersion.content, wordCount: 2 },
     })
     expect(restored?.title).toBe('Título viejo')
   })

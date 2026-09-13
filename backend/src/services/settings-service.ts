@@ -19,6 +19,12 @@ export const DEFAULT_AUTO_VERSION_CONFIG: AutoVersionConfig = {
   monthly: { enabled: true, intervalMs: 30 * 24 * 60 * 60 * 1000 },
 }
 
+export interface UiPrefs {
+  dismissAiStructureWarning?: boolean
+}
+
+export const DEFAULT_UI_PREFS: UiPrefs = {}
+
 export const settingsService = {
   async get(userId: string) {
     const settings = await prisma.userSettings.findUnique({ where: { userId } })
@@ -35,11 +41,12 @@ export const settingsService = {
         theme: 'system',
         language: 'es',
         autoVersion: DEFAULT_AUTO_VERSION_CONFIG as unknown as Prisma.InputJsonValue,
+        uiPrefs: DEFAULT_UI_PREFS as unknown as Prisma.InputJsonValue,
       },
     })
   },
 
-  async update(userId: string, data: { theme?: string; language?: string; autoVersion?: Partial<AutoVersionConfig> }) {
+  async update(userId: string, data: { theme?: string; language?: string; autoVersion?: Partial<AutoVersionConfig>; uiPrefs?: Partial<UiPrefs> }) {
     const existing = await prisma.userSettings.findUnique({ where: { userId } })
 
     if (!existing) {
@@ -49,12 +56,16 @@ export const settingsService = {
           theme: data.theme ?? 'system',
           language: data.language ?? 'es',
           autoVersion: (data.autoVersion ?? DEFAULT_AUTO_VERSION_CONFIG) as unknown as Prisma.InputJsonValue,
+          uiPrefs: (data.uiPrefs ?? DEFAULT_UI_PREFS) as unknown as Prisma.InputJsonValue,
         },
       })
     }
 
     const mergedAutoVersion = data.autoVersion
       ? { ...(existing.autoVersion as Record<string, unknown>), ...data.autoVersion }
+      : undefined
+    const mergedUiPrefs = data.uiPrefs
+      ? { ...(existing.uiPrefs as Record<string, unknown>), ...data.uiPrefs }
       : undefined
 
     return prisma.userSettings.update({
@@ -63,8 +74,14 @@ export const settingsService = {
         ...(data.theme !== undefined && { theme: data.theme }),
         ...(data.language !== undefined && { language: data.language }),
         ...(mergedAutoVersion && { autoVersion: mergedAutoVersion as Prisma.InputJsonValue }),
+        ...(mergedUiPrefs && { uiPrefs: mergedUiPrefs as Prisma.InputJsonValue }),
       },
     })
+  },
+
+  async getUiPrefs(userId: string): Promise<UiPrefs> {
+    const settings = await this.get(userId)
+    return { ...DEFAULT_UI_PREFS, ...(settings.uiPrefs as Record<string, unknown>) } as UiPrefs
   },
 
   async getAutoVersionConfig(userId: string): Promise<AutoVersionConfig> {

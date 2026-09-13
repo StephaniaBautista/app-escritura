@@ -40,6 +40,7 @@ export type CharacterMinAggregateOutputType = {
   name: string | null
   description: string | null
   imageUrl: string | null
+  heightMapImageUrl: string | null
   sheetBackgroundMode: string | null
   age: string | null
   gender: string | null
@@ -65,6 +66,7 @@ export type CharacterMaxAggregateOutputType = {
   name: string | null
   description: string | null
   imageUrl: string | null
+  heightMapImageUrl: string | null
   sheetBackgroundMode: string | null
   age: string | null
   gender: string | null
@@ -90,6 +92,7 @@ export type CharacterCountAggregateOutputType = {
   name: number
   description: number
   imageUrl: number
+  heightMapImageUrl: number
   sheetBackgroundMode: number
   sheetBackgroundImages: number
   nicknames: number
@@ -129,6 +132,7 @@ export type CharacterMinAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
+  heightMapImageUrl?: true
   sheetBackgroundMode?: true
   age?: true
   gender?: true
@@ -154,6 +158,7 @@ export type CharacterMaxAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
+  heightMapImageUrl?: true
   sheetBackgroundMode?: true
   age?: true
   gender?: true
@@ -179,6 +184,7 @@ export type CharacterCountAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
+  heightMapImageUrl?: true
   sheetBackgroundMode?: true
   sheetBackgroundImages?: true
   nicknames?: true
@@ -295,6 +301,7 @@ export type CharacterGroupByOutputType = {
   name: string
   description: string | null
   imageUrl: string | null
+  heightMapImageUrl: string | null
   sheetBackgroundMode: string
   sheetBackgroundImages: string[]
   nicknames: string[]
@@ -347,6 +354,7 @@ export type CharacterWhereInput = {
   name?: Prisma.StringFilter<"Character"> | string
   description?: Prisma.StringNullableFilter<"Character"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
+  heightMapImageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
   sheetBackgroundMode?: Prisma.StringFilter<"Character"> | string
   sheetBackgroundImages?: Prisma.StringNullableListFilter<"Character">
   nicknames?: Prisma.StringNullableListFilter<"Character">
@@ -373,6 +381,7 @@ export type CharacterWhereInput = {
   evolutions?: Prisma.CharacterListRelationFilter
   relationshipsA?: Prisma.CharacterRelationshipListRelationFilter
   relationshipsB?: Prisma.CharacterRelationshipListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
 }
 
 export type CharacterOrderByWithRelationInput = {
@@ -381,6 +390,7 @@ export type CharacterOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  heightMapImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   sheetBackgroundMode?: Prisma.SortOrder
   sheetBackgroundImages?: Prisma.SortOrder
   nicknames?: Prisma.SortOrder
@@ -407,6 +417,7 @@ export type CharacterOrderByWithRelationInput = {
   evolutions?: Prisma.CharacterOrderByRelationAggregateInput
   relationshipsA?: Prisma.CharacterRelationshipOrderByRelationAggregateInput
   relationshipsB?: Prisma.CharacterRelationshipOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
 }
 
 export type CharacterWhereUniqueInput = Prisma.AtLeast<{
@@ -418,6 +429,7 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Character"> | string
   description?: Prisma.StringNullableFilter<"Character"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
+  heightMapImageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
   sheetBackgroundMode?: Prisma.StringFilter<"Character"> | string
   sheetBackgroundImages?: Prisma.StringNullableListFilter<"Character">
   nicknames?: Prisma.StringNullableListFilter<"Character">
@@ -444,6 +456,7 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   evolutions?: Prisma.CharacterListRelationFilter
   relationshipsA?: Prisma.CharacterRelationshipListRelationFilter
   relationshipsB?: Prisma.CharacterRelationshipListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
 }, "id">
 
 export type CharacterOrderByWithAggregationInput = {
@@ -452,6 +465,7 @@ export type CharacterOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  heightMapImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   sheetBackgroundMode?: Prisma.SortOrder
   sheetBackgroundImages?: Prisma.SortOrder
   nicknames?: Prisma.SortOrder
@@ -489,6 +503,7 @@ export type CharacterScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Character"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  heightMapImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   sheetBackgroundMode?: Prisma.StringWithAggregatesFilter<"Character"> | string
   sheetBackgroundImages?: Prisma.StringNullableListFilter<"Character">
   nicknames?: Prisma.StringNullableListFilter<"Character">
@@ -517,6 +532,7 @@ export type CharacterCreateInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -542,6 +558,7 @@ export type CharacterCreateInput = {
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateInput = {
@@ -550,6 +567,7 @@ export type CharacterUncheckedCreateInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -574,6 +592,7 @@ export type CharacterUncheckedCreateInput = {
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUpdateInput = {
@@ -581,6 +600,7 @@ export type CharacterUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -606,6 +626,7 @@ export type CharacterUpdateInput = {
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateInput = {
@@ -614,6 +635,7 @@ export type CharacterUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -638,6 +660,7 @@ export type CharacterUncheckedUpdateInput = {
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterCreateManyInput = {
@@ -646,6 +669,7 @@ export type CharacterCreateManyInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -674,6 +698,7 @@ export type CharacterUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -702,6 +727,7 @@ export type CharacterUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -754,6 +780,7 @@ export type CharacterCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  heightMapImageUrl?: Prisma.SortOrder
   sheetBackgroundMode?: Prisma.SortOrder
   sheetBackgroundImages?: Prisma.SortOrder
   nicknames?: Prisma.SortOrder
@@ -787,6 +814,7 @@ export type CharacterMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  heightMapImageUrl?: Prisma.SortOrder
   sheetBackgroundMode?: Prisma.SortOrder
   age?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -812,6 +840,7 @@ export type CharacterMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  heightMapImageUrl?: Prisma.SortOrder
   sheetBackgroundMode?: Prisma.SortOrder
   age?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -924,14 +953,6 @@ export type CharacterUpdatenicknamesInput = {
   push?: string | string[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CharacterUpdateparentIdsInput = {
   set?: string[]
   push?: string | string[]
@@ -1003,11 +1024,28 @@ export type CharacterUpdateOneRequiredWithoutRelationshipsBNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutRelationshipsBInput, Prisma.CharacterUpdateWithoutRelationshipsBInput>, Prisma.CharacterUncheckedUpdateWithoutRelationshipsBInput>
 }
 
+export type CharacterCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutAiConversationsInput, Prisma.CharacterUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.CharacterWhereUniqueInput
+}
+
+export type CharacterUpdateOneWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutAiConversationsInput, Prisma.CharacterUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.CharacterUpsertWithoutAiConversationsInput
+  disconnect?: Prisma.CharacterWhereInput | boolean
+  delete?: Prisma.CharacterWhereInput | boolean
+  connect?: Prisma.CharacterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.CharacterUpdateWithoutAiConversationsInput>, Prisma.CharacterUncheckedUpdateWithoutAiConversationsInput>
+}
+
 export type CharacterCreateWithoutProjectInput = {
   id?: string
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1032,6 +1070,7 @@ export type CharacterCreateWithoutProjectInput = {
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutProjectInput = {
@@ -1039,6 +1078,7 @@ export type CharacterUncheckedCreateWithoutProjectInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1063,6 +1103,7 @@ export type CharacterUncheckedCreateWithoutProjectInput = {
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutProjectInput = {
@@ -1100,6 +1141,7 @@ export type CharacterScalarWhereInput = {
   name?: Prisma.StringFilter<"Character"> | string
   description?: Prisma.StringNullableFilter<"Character"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
+  heightMapImageUrl?: Prisma.StringNullableFilter<"Character"> | string | null
   sheetBackgroundMode?: Prisma.StringFilter<"Character"> | string
   sheetBackgroundImages?: Prisma.StringNullableListFilter<"Character">
   nicknames?: Prisma.StringNullableListFilter<"Character">
@@ -1128,6 +1170,7 @@ export type CharacterCreateWithoutEvolutionsInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1152,6 +1195,7 @@ export type CharacterCreateWithoutEvolutionsInput = {
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
   relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutEvolutionsInput = {
@@ -1160,6 +1204,7 @@ export type CharacterUncheckedCreateWithoutEvolutionsInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1183,6 +1228,7 @@ export type CharacterUncheckedCreateWithoutEvolutionsInput = {
   updatedAt?: Date | string
   relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutEvolutionsInput = {
@@ -1195,6 +1241,7 @@ export type CharacterCreateWithoutEvolvesFromInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1219,6 +1266,7 @@ export type CharacterCreateWithoutEvolvesFromInput = {
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutEvolvesFromInput = {
@@ -1227,6 +1275,7 @@ export type CharacterUncheckedCreateWithoutEvolvesFromInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1250,6 +1299,7 @@ export type CharacterUncheckedCreateWithoutEvolvesFromInput = {
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutEvolvesFromInput = {
@@ -1278,6 +1328,7 @@ export type CharacterUpdateWithoutEvolutionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1302,6 +1353,7 @@ export type CharacterUpdateWithoutEvolutionsInput = {
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutEvolutionsInput = {
@@ -1310,6 +1362,7 @@ export type CharacterUncheckedUpdateWithoutEvolutionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1333,6 +1386,7 @@ export type CharacterUncheckedUpdateWithoutEvolutionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUpsertWithWhereUniqueWithoutEvolvesFromInput = {
@@ -1356,6 +1410,7 @@ export type CharacterCreateWithoutRelationshipsAInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1380,6 +1435,7 @@ export type CharacterCreateWithoutRelationshipsAInput = {
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
   relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutRelationshipsAInput = {
@@ -1388,6 +1444,7 @@ export type CharacterUncheckedCreateWithoutRelationshipsAInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1411,6 +1468,7 @@ export type CharacterUncheckedCreateWithoutRelationshipsAInput = {
   updatedAt?: Date | string
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutRelationshipsAInput = {
@@ -1423,6 +1481,7 @@ export type CharacterCreateWithoutRelationshipsBInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1447,6 +1506,7 @@ export type CharacterCreateWithoutRelationshipsBInput = {
   evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
   evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutRelationshipsBInput = {
@@ -1455,6 +1515,7 @@ export type CharacterUncheckedCreateWithoutRelationshipsBInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1478,6 +1539,7 @@ export type CharacterUncheckedCreateWithoutRelationshipsBInput = {
   updatedAt?: Date | string
   evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutRelationshipsBInput = {
@@ -1501,6 +1563,7 @@ export type CharacterUpdateWithoutRelationshipsAInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1525,6 +1588,7 @@ export type CharacterUpdateWithoutRelationshipsAInput = {
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
   relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutRelationshipsAInput = {
@@ -1533,6 +1597,7 @@ export type CharacterUncheckedUpdateWithoutRelationshipsAInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1556,6 +1621,7 @@ export type CharacterUncheckedUpdateWithoutRelationshipsAInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUpsertWithoutRelationshipsBInput = {
@@ -1574,6 +1640,7 @@ export type CharacterUpdateWithoutRelationshipsBInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1598,6 +1665,7 @@ export type CharacterUpdateWithoutRelationshipsBInput = {
   evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutRelationshipsBInput = {
@@ -1606,6 +1674,7 @@ export type CharacterUncheckedUpdateWithoutRelationshipsBInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1629,6 +1698,155 @@ export type CharacterUncheckedUpdateWithoutRelationshipsBInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
+}
+
+export type CharacterCreateWithoutAiConversationsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  heightMapImageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
+  evolvesFrom?: Prisma.CharacterCreateNestedOneWithoutEvolutionsInput
+  evolutions?: Prisma.CharacterCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipCreateNestedManyWithoutCharacterBInput
+}
+
+export type CharacterUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  projectId: string
+  name: string
+  description?: string | null
+  imageUrl?: string | null
+  heightMapImageUrl?: string | null
+  sheetBackgroundMode?: string
+  sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
+  age?: string | null
+  gender?: string | null
+  heightCm?: number | null
+  orientation?: string | null
+  maritalStatus?: string | null
+  species?: string | null
+  birthPlace?: string | null
+  birthDate?: string | null
+  role?: string | null
+  roleSpec?: string | null
+  isOC?: boolean
+  parentIds?: Prisma.CharacterCreateparentIdsInput | string[]
+  evolvesFromId?: string | null
+  evolutionReason?: string | null
+  storyPoint?: string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  evolutions?: Prisma.CharacterUncheckedCreateNestedManyWithoutEvolvesFromInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterAInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutCharacterBInput
+}
+
+export type CharacterCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutAiConversationsInput, Prisma.CharacterUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type CharacterUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutAiConversationsInput, Prisma.CharacterUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutAiConversationsInput, Prisma.CharacterUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.CharacterWhereInput
+}
+
+export type CharacterUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.CharacterWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutAiConversationsInput, Prisma.CharacterUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type CharacterUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
+  evolvesFrom?: Prisma.CharacterUpdateOneWithoutEvolutionsNestedInput
+  evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+}
+
+export type CharacterUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
+  sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
+  nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
+  age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightCm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  orientation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthPlace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleSpec?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentIds?: Prisma.CharacterUpdateparentIdsInput | string[]
+  evolvesFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storyPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
+  relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
+  relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
 }
 
 export type CharacterCreateManyProjectInput = {
@@ -1636,6 +1854,7 @@ export type CharacterCreateManyProjectInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1664,6 +1883,7 @@ export type CharacterUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1688,6 +1908,7 @@ export type CharacterUpdateWithoutProjectInput = {
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutProjectInput = {
@@ -1695,6 +1916,7 @@ export type CharacterUncheckedUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1719,6 +1941,7 @@ export type CharacterUncheckedUpdateWithoutProjectInput = {
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutProjectInput = {
@@ -1726,6 +1949,7 @@ export type CharacterUncheckedUpdateManyWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1755,6 +1979,7 @@ export type CharacterCreateManyEvolvesFromInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: string
   sheetBackgroundImages?: Prisma.CharacterCreatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterCreatenicknamesInput | string[]
@@ -1782,6 +2007,7 @@ export type CharacterUpdateWithoutEvolvesFromInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1806,6 +2032,7 @@ export type CharacterUpdateWithoutEvolvesFromInput = {
   evolutions?: Prisma.CharacterUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutEvolvesFromInput = {
@@ -1814,6 +2041,7 @@ export type CharacterUncheckedUpdateWithoutEvolvesFromInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1837,6 +2065,7 @@ export type CharacterUncheckedUpdateWithoutEvolvesFromInput = {
   evolutions?: Prisma.CharacterUncheckedUpdateManyWithoutEvolvesFromNestedInput
   relationshipsA?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterANestedInput
   relationshipsB?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutCharacterBNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutEvolvesFromInput = {
@@ -1845,6 +2074,7 @@ export type CharacterUncheckedUpdateManyWithoutEvolvesFromInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heightMapImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sheetBackgroundMode?: Prisma.StringFieldUpdateOperationsInput | string
   sheetBackgroundImages?: Prisma.CharacterUpdatesheetBackgroundImagesInput | string[]
   nicknames?: Prisma.CharacterUpdatenicknamesInput | string[]
@@ -1876,12 +2106,14 @@ export type CharacterCountOutputType = {
   evolutions: number
   relationshipsA: number
   relationshipsB: number
+  aiConversations: number
 }
 
 export type CharacterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   evolutions?: boolean | CharacterCountOutputTypeCountEvolutionsArgs
   relationshipsA?: boolean | CharacterCountOutputTypeCountRelationshipsAArgs
   relationshipsB?: boolean | CharacterCountOutputTypeCountRelationshipsBArgs
+  aiConversations?: boolean | CharacterCountOutputTypeCountAiConversationsArgs
 }
 
 /**
@@ -1915,6 +2147,13 @@ export type CharacterCountOutputTypeCountRelationshipsBArgs<ExtArgs extends runt
   where?: Prisma.CharacterRelationshipWhereInput
 }
 
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
 
 export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1922,6 +2161,7 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   name?: boolean
   description?: boolean
   imageUrl?: boolean
+  heightMapImageUrl?: boolean
   sheetBackgroundMode?: boolean
   sheetBackgroundImages?: boolean
   nicknames?: boolean
@@ -1948,6 +2188,7 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   evolutions?: boolean | Prisma.Character$evolutionsArgs<ExtArgs>
   relationshipsA?: boolean | Prisma.Character$relationshipsAArgs<ExtArgs>
   relationshipsB?: boolean | Prisma.Character$relationshipsBArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Character$aiConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["character"]>
 
@@ -1957,6 +2198,7 @@ export type CharacterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   description?: boolean
   imageUrl?: boolean
+  heightMapImageUrl?: boolean
   sheetBackgroundMode?: boolean
   sheetBackgroundImages?: boolean
   nicknames?: boolean
@@ -1988,6 +2230,7 @@ export type CharacterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   name?: boolean
   description?: boolean
   imageUrl?: boolean
+  heightMapImageUrl?: boolean
   sheetBackgroundMode?: boolean
   sheetBackgroundImages?: boolean
   nicknames?: boolean
@@ -2019,6 +2262,7 @@ export type CharacterSelectScalar = {
   name?: boolean
   description?: boolean
   imageUrl?: boolean
+  heightMapImageUrl?: boolean
   sheetBackgroundMode?: boolean
   sheetBackgroundImages?: boolean
   nicknames?: boolean
@@ -2042,13 +2286,14 @@ export type CharacterSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "imageUrl" | "sheetBackgroundMode" | "sheetBackgroundImages" | "nicknames" | "age" | "gender" | "heightCm" | "orientation" | "maritalStatus" | "species" | "birthPlace" | "birthDate" | "role" | "roleSpec" | "isOC" | "parentIds" | "evolvesFromId" | "evolutionReason" | "storyPoint" | "attributes" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
+export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "imageUrl" | "heightMapImageUrl" | "sheetBackgroundMode" | "sheetBackgroundImages" | "nicknames" | "age" | "gender" | "heightCm" | "orientation" | "maritalStatus" | "species" | "birthPlace" | "birthDate" | "role" | "roleSpec" | "isOC" | "parentIds" | "evolvesFromId" | "evolutionReason" | "storyPoint" | "attributes" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
 export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   evolvesFrom?: boolean | Prisma.Character$evolvesFromArgs<ExtArgs>
   evolutions?: boolean | Prisma.Character$evolutionsArgs<ExtArgs>
   relationshipsA?: boolean | Prisma.Character$relationshipsAArgs<ExtArgs>
   relationshipsB?: boolean | Prisma.Character$relationshipsBArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Character$aiConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CharacterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2068,6 +2313,7 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     evolutions: Prisma.$CharacterPayload<ExtArgs>[]
     relationshipsA: Prisma.$CharacterRelationshipPayload<ExtArgs>[]
     relationshipsB: Prisma.$CharacterRelationshipPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2075,6 +2321,7 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     name: string
     description: string | null
     imageUrl: string | null
+    heightMapImageUrl: string | null
     sheetBackgroundMode: string
     sheetBackgroundImages: string[]
     nicknames: string[]
@@ -2495,6 +2742,7 @@ export interface Prisma__CharacterClient<T, Null = never, ExtArgs extends runtim
   evolutions<T extends Prisma.Character$evolutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$evolutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   relationshipsA<T extends Prisma.Character$relationshipsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$relationshipsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterRelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   relationshipsB<T extends Prisma.Character$relationshipsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$relationshipsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterRelationshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.Character$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2529,6 +2777,7 @@ export interface CharacterFieldRefs {
   readonly name: Prisma.FieldRef<"Character", 'String'>
   readonly description: Prisma.FieldRef<"Character", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Character", 'String'>
+  readonly heightMapImageUrl: Prisma.FieldRef<"Character", 'String'>
   readonly sheetBackgroundMode: Prisma.FieldRef<"Character", 'String'>
   readonly sheetBackgroundImages: Prisma.FieldRef<"Character", 'String[]'>
   readonly nicknames: Prisma.FieldRef<"Character", 'String[]'>
@@ -3039,6 +3288,30 @@ export type Character$relationshipsBArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.CharacterRelationshipScalarFieldEnum | Prisma.CharacterRelationshipScalarFieldEnum[]
+}
+
+/**
+ * Character.aiConversations
+ */
+export type Character$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
 }
 
 /**

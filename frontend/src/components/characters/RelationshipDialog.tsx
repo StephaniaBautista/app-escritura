@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Plus, X } from 'lucide-react'
 import type { Character } from '@/types/character'
 import { RELATIONSHIP_TYPES, type RelationshipType } from '@/types/relationship'
+import { characterOptionLabel } from '@/lib/character-labels'
 import { useRelationshipsStore } from '@/stores/relationships-store'
 import { useToastStore } from '@/stores/toast-store'
 
@@ -31,28 +32,7 @@ export function RelationshipDialog({ character, allCharacters, onClose, onCreate
 
   const others = allCharacters.filter((c) => c.id !== character.id)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-
-  const nameCounts = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const candidate of allCharacters) {
-      counts.set(candidate.name, (counts.get(candidate.name) ?? 0) + 1)
-    }
-    return counts
-  }, [allCharacters])
-
-  const optionLabel = (candidate: Character): string => {
-    if (candidate.evolvesFromId) {
-      const source = allCharacters.find((item) => item.id === candidate.evolvesFromId)
-      const suffix = source
-        ? t('characterApp.relEvolutionOf', { name: source.name })
-        : t('characterApp.evolutions')
-      return `${candidate.name} (${suffix})`
-    }
-    if ((nameCounts.get(candidate.name) ?? 0) > 1) {
-      return `${candidate.name} (${t('characterApp.relVersionOriginal')})`
-    }
-    return candidate.name
-  }
+  const optionLabel = (candidate: Character) => characterOptionLabel(candidate, allCharacters, t)
 
   const toggleSelected = (id: string) => {
     setSelectedIds((prev) =>

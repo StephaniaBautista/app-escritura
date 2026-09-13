@@ -50,6 +50,7 @@ export interface Character {
   name: string
   description: string | null
   imageUrl: string | null
+  heightMapImageUrl: string | null
   sheetBackgroundMode: SheetBackgroundMode
   sheetBackgroundImages: string[]
   nicknames: string[]

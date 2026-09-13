@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { Routes, Route } from 'react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { settingsApi } from '@/services/settings'
@@ -22,13 +22,16 @@ import { SharedPage } from '@/pages/dashboard/SharedPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { AdminPage } from '@/pages/admin/AdminPage'
 
+const StatsDashboard = lazy(() => import('@/components/stats/StatsDashboard').then((module) => ({ default: module.StatsDashboard })))
+const STATS_NS = ['statsApp', 'common']
+
 const LANDING_NS = ['nav', 'hero', 'features', 'editor', 'characters', 'timeline', 'worldbuilding', 'ai', 'structure', 'stats', 'exportSection', 'pricing', 'cta', 'footer', 'comparison', 'faq', 'common']
 const PRICING_NS = ['pricing', 'pricingPage', 'comparison', 'faq', 'cta', 'ai', 'nav', 'footer', 'common']
 const AUTH_NS = ['auth', 'common']
 const SHELL_NS = ['sidebar', 'admin', 'settings', 'common']
 const DOCUMENTS_NS = ['projects', 'storySetup', 'common']
-const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'worldApp', 'common']
-const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'common']
+const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'worldApp', 'structureApp', 'aiApp', 'common']
+const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'aiApp', 'common']
 
 function App() {
   const { checkSession, isInitialized, isAuthenticated } = useAuthStore()
@@ -68,6 +71,7 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="documents" element={<I18nBoundary key="documents" namespaces={DOCUMENTS_NS}><DocumentsPage /></I18nBoundary>} />
           <Route path="documents/:folderId" element={<I18nBoundary key="folder" namespaces={FOLDER_NS}><FolderPage /></I18nBoundary>} />
+          <Route path="stats" element={<I18nBoundary key="stats" namespaces={STATS_NS}><StatsDashboard /></I18nBoundary>} />
           <Route path="recent" element={<RecentPage />} />
           <Route path="shared" element={<SharedPage />} />
           <Route path="settings" element={<SettingsPage />} />

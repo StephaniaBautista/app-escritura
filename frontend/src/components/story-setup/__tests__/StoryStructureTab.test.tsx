@@ -66,6 +66,31 @@ describe('StoryStructureTab', () => {
     expect(screen.getByText('Un secreto')).toBeInTheDocument()
   })
 
+  it('muestra las preguntas fijas de estructura y escenas como capítulo o nota', () => {
+    render(
+      <StoryStructureTab
+        projectId="p-1"
+        storyMeta={{
+          structure: {
+            sections: [{
+              id: 'desarrollo',
+              answers: {
+                'wizard:desarrollo:inciting': 'La noticia se filtra',
+                'wizard:desarrollo:scenes': 'capítulo: El rumor\nnota: Archivo del periódico',
+              },
+            }],
+          },
+        }}
+      />,
+    )
+
+    expect(screen.getByText('storySetup.structurePromptDesarrolloInciting')).toBeInTheDocument()
+    expect(screen.getByText('La noticia se filtra')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structureSceneChapter')).toBeInTheDocument()
+    expect(screen.getByText('El rumor')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structureSceneNote')).toBeInTheDocument()
+  })
+
   it('muestra los nuevos campos guiados y estados por personaje', () => {
     render(
       <StoryStructureTab

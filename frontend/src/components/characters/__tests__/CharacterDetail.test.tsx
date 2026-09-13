@@ -54,6 +54,7 @@ const baseCharacter: Character = {
   name: 'Lyra Belacqua',
   description: null,
   imageUrl: null,
+  heightMapImageUrl: null,
   sheetBackgroundMode: 'default',
   sheetBackgroundImages: [],
   nicknames: [],

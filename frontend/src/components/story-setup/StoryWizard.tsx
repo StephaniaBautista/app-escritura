@@ -8,6 +8,10 @@ import { StoryPeople } from './StoryPeople'
 import { StoryCharacters } from './StoryCharacters'
 import { StoryTags } from './StoryTags'
 import { StoryStructure } from './StoryStructure'
+import { WizardAiButton } from './WizardAiButton'
+import { WizardStageSuggestions } from './WizardStageSuggestions'
+import { applyStageValue } from './wizard-stage-apply'
+import type { AiWizardStage, AiWizardSuggestion } from '@/types/ai'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryWizardProps {
@@ -56,6 +60,7 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
   const [meta, setMeta] = useState<StoryMeta>({})
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [suggestions, setSuggestions] = useState<AiWizardSuggestion[]>([])
   const wasOpenRef = useRef(false)
 
   const steps = buildSteps(meta)
@@ -66,6 +71,7 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
       setDescription(initialDescription ?? '')
       setMeta(initialMeta ?? {})
       setError(null)
+      setSuggestions([])
     }
     wasOpenRef.current = isOpen
   }, [isOpen, initialDescription, initialMeta])
@@ -140,7 +146,10 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
             <button
               key={s.id}
               type="button"
-              onClick={() => setCurrent(i)}
+              onClick={() => {
+                setCurrent(i)
+                setSuggestions([])
+              }}
               className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors hover:opacity-80"
               style={{
                 color: i === current ? 'var(--color-accent)' : i < current ? 'var(--color-ink-light)' : 'var(--color-ink-faint)',
@@ -164,27 +173,56 @@ export function StoryWizard({ projectId, isOpen, initialDescription, initialMeta
         </div>
 
         <div className="p-5 max-h-[60vh] overflow-y-auto">
+          <div className="flex justify-end mb-3">
+            <WizardAiButton
+              projectId={projectId}
+              stage={step.id as AiWizardStage}
+              description={description}
+              meta={meta}
+              onApplied={(nextDescription, nextMeta) => {
+                setDescription(nextDescription)
+                setMeta(nextMeta)
+              }}
+              onSuggestions={setSuggestions}
+            />
+          </div>
           {step.id === 'description' && <DirectMode value={description} onChange={setDescription} />}
           {step.id === 'basics' && <StoryBasics meta={meta} update={update} />}
           {step.id === 'couples' && <StoryPeople meta={meta} update={update} />}
           {step.id === 'characters' && <StoryCharacters meta={meta} update={update} />}
-          {step.id === 'tags' && <StoryTags meta={meta} update={update} />}
+          {step.id === 'tags' && <StoryTags projectId={projectId} meta={meta} update={update} />}
           {step.id === 'structure' && <StoryStructure meta={meta} update={update} />}
+          <WizardStageSuggestions
+            suggestions={suggestions}
+            onApply={(suggestion) => {
+              const next = applyStageValue(description, meta, suggestion.field, suggestion.value)
+              setDescription(next.description)
+              setMeta(next.meta)
+              setSuggestions((items) => items.filter((item) => item !== suggestion))
+              if (suggestion.field === 'description') {
+                void updateProject(projectId, { description: next.description.trim() })
+              } else {
+                void updateStoryMeta(projectId, next.meta as Record<string, unknown>)
+              }
+            }}
+          />
         </div>
 
         {error && (
           <p className="px-5 pb-2 text-sm" style={{ color: 'var(--color-accent)' }}>{error}</p>
         )}
 
-        <div className="flex items-center justify-between gap-2 px-5 py-4 border-t" style={{ borderColor: 'var(--color-paper-lines)' }}>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg text-sm font-medium border hover:opacity-80 transition-colors"
-            style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-light)' }}
-          >
-            {t('storySetup.skip')}
-          </button>
+        <div className="flex items-center justify-between gap-2 px-5 py-4 border-t flex-wrap" style={{ borderColor: 'var(--color-paper-lines)' }}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg text-sm font-medium border hover:opacity-80 transition-colors"
+              style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink-light)' }}
+            >
+              {t('storySetup.skip')}
+            </button>
+          </div>
 
           <div className="flex items-center gap-2">
             {current > 0 && (

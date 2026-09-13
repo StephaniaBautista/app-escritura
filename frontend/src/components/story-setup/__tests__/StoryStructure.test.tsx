@@ -120,13 +120,55 @@ describe('StoryStructure — modo libre', () => {
     expect(update).toHaveBeenCalledWith({ structure: { sections: [{ id: 'inicio', content: 'x' }] } })
   })
 
-  it('edita el contenido de una sección', () => {
+  it('edita las preguntas de una sección', () => {
     const update = vi.fn()
     renderFree({ structure: { sections: [{ id: 'inicio', content: '' }] } }, update)
 
-    const textarea = screen.getAllByRole('textbox')[1]
-    fireEvent.change(textarea, { target: { value: 'La primera escena' } })
-    expect(update).toHaveBeenCalledWith({ structure: { sections: [{ id: 'inicio', content: 'La primera escena' }] } })
+    fireEvent.change(screen.getByPlaceholderText('storySetup.structurePromptInicioStatusPh'), {
+      target: { value: 'La primera escena' },
+    })
+    expect(update).toHaveBeenCalledWith({
+      structure: {
+        sections: [
+          expect.objectContaining({
+            id: 'inicio',
+            answers: { 'wizard:inicio:status': 'La primera escena' },
+          }),
+        ],
+      },
+    })
+  })
+
+  it('muestra las preguntas de inicio, desarrollo, clímax y final', () => {
+    renderFree({
+      structure: {
+        sections: [
+          { id: 'inicio', content: '' },
+          { id: 'desarrollo', content: '' },
+          { id: 'climax', content: '' },
+          { id: 'final', content: '' },
+        ],
+      },
+    })
+
+    expect(screen.getByText('storySetup.structurePromptInicioStatus')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structurePromptDesarrolloInciting')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structurePromptClimaxPeak')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structurePromptFinalArrive')).toBeInTheDocument()
+  })
+
+  it('previsualiza escenas de desarrollo como capítulo o nota', () => {
+    renderFree({
+      structure: {
+        sections: [{
+          id: 'desarrollo',
+          answers: { 'wizard:desarrollo:scenes': 'capítulo: El rumor\nnota: Archivo' },
+        }],
+      },
+    })
+    expect(screen.getByText('storySetup.structureSceneChapter')).toBeInTheDocument()
+    expect(screen.getByText('El rumor')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structureSceneNote')).toBeInTheDocument()
   })
 })
 
@@ -177,9 +219,11 @@ describe('StoryStructure — modo guiado', () => {
     )
 
     expect(await screen.findByText('¿Qué evento del pasado marca al protagonista?')).toBeInTheDocument()
+    expect(screen.getByText('storySetup.structurePromptInicioStatus')).toBeInTheDocument()
 
-    const textareas = screen.getAllByRole('textbox')
-    fireEvent.change(textareas[1], { target: { value: 'Perdió a su familia' } })
+    fireEvent.change(screen.getByLabelText('¿Qué evento del pasado marca al protagonista?'), {
+      target: { value: 'Perdió a su familia' },
+    })
     expect(update).toHaveBeenCalledWith(
       expect.objectContaining({
         structure: expect.objectContaining({

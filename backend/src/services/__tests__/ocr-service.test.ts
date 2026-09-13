@@ -21,7 +21,7 @@ vi.mock('pdfjs-dist/legacy/build/pdf.mjs', () => ({
   OPS: { paintImageXObject: 85 },
 }))
 
-import { extractTextFromImage, extractTextFromPdf, resetWorkerForTests } from '../ocr-service.js'
+import { extractTextFromImage, extractTextFromPdf, maxOcrBytesForMime, resetWorkerForTests } from '../ocr-service.js'
 
 describe('ocr-service', () => {
   beforeEach(() => {
@@ -67,5 +67,10 @@ describe('ocr-service', () => {
 
     expect(mocks.objs.get).toHaveBeenCalledWith('img0')
     expect(text).toBe('texto escaneado')
+  })
+
+  it('maxOcrBytesForMime: 10 MB imagen y 32 MB PDF', () => {
+    expect(maxOcrBytesForMime('image/png')).toBe(10 * 1024 * 1024)
+    expect(maxOcrBytesForMime('application/pdf')).toBe(32 * 1024 * 1024)
   })
 })

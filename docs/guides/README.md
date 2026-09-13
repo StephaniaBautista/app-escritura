@@ -5,9 +5,9 @@ Documentacion de guias para desarrolladores.
 ## Inicio Rapido
 
 ### Requisitos
-- Node.js >= 20
+- Node.js 22 LTS (`nvm use` desde la raíz)
 - pnpm >= 9
-- Cuenta de Supabase
+- Docker Desktop o una base PostgreSQL/Supabase existente
 
 ### Instalacion
 
@@ -16,28 +16,21 @@ Documentacion de guias para desarrolladores.
 git clone https://github.com/StephaniaBautista/app-escritura.git
 cd app-escritura
 
-# Instalar dependencias
-pnpm install
-
-# Configurar variables de entorno
-cp backend/.env.example backend/.env
-# Editar backend/.env con tus credenciales
-
-# Ejecutar migraciones
-cd backend
-pnpm prisma migrate dev
+# Instalar dependencias, levantar PostgreSQL y aplicar el schema
+pnpm setup:local
 
 # Iniciar desarrollo
-cd ..
 pnpm dev
 ```
+
+El setup local crea `backend/.env` solo si no existe, conserva configuraciones previas y usa PostgreSQL en `127.0.0.1:54329`.
 
 ### Variables de Entorno
 
 | Variable | Descripcion | Requerida |
 |----------|-------------|-----------|
-| DATABASE_URL | URL de conexion a PostgreSQL | Si |
-| BETTER_AUTH_SECRET | Secret para JWT | Si |
+| DATABASE_URL | URL de conexion a PostgreSQL | Si; el ejemplo apunta al contenedor local |
+| BETTER_AUTH_SECRET | Secret de BetterAuth | Si; cambiar en produccion |
 | BETTER_AUTH_URL | URL del backend | Si |
 | SMTP_HOST | Servidor SMTP | No |
 | SMTP_USER | Usuario SMTP | No |

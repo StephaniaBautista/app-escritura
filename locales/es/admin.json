@@ -79,7 +79,10 @@
   },
   "permissions": {
     "admin": "Panel admin",
-    "moderate": "Moderación"
+    "moderate": "Moderación",
+    "ai_chat": "IA: asesor y subtramas",
+    "ai_characters": "IA: personajes",
+    "ai_suggestions": "IA: revisión"
   },
   "roles": {
     "title": "Roles",

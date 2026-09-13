@@ -55,5 +55,9 @@
   "duplicate": "Duplicar",
   "duplicated": "Pestaña duplicada",
   "delete": "Eliminar",
-  "panelClose": "Cerrar panel"
+  "panelClose": "Cerrar panel",
+  "saveSaving": "Guardando…",
+  "saveSaved": "Guardado",
+  "writingPlaceholder": "Empieza a escribir tu historia…",
+  "textCounts": "{{characters}} caracteres · {{words}} palabras"
 }

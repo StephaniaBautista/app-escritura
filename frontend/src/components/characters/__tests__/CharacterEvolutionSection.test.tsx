@@ -47,6 +47,7 @@ const sourceCharacter: Character = {
   name: 'Lyra Belacqua',
   description: 'Una protagonista curiosa.',
   imageUrl: null,
+  heightMapImageUrl: null,
   sheetBackgroundMode: 'default',
   sheetBackgroundImages: [],
   nicknames: ['Ly'],

@@ -36,7 +36,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
     }
 
     request.session = session
-  } catch (error) {
+  } catch {
     return reply.status(401).send({
       error: {
         code: 'UNAUTHORIZED',
@@ -88,49 +88,6 @@ async function forwardWebResponse(webResponse: Response, reply: FastifyReply, ur
     const text = await webResponse.text()
     reply.status(webResponse.status).send(text)
   }
-}
-
-// Swagger schema definitions
-const errorSchema = {
-  type: 'object',
-  properties: {
-    error: {
-      type: 'object',
-      properties: {
-        code: { type: 'string' },
-        message: { type: 'string' },
-      },
-    },
-  },
-}
-
-const sessionUserSchema = {
-  type: 'object',
-  properties: {
-    user: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        email: { type: 'string' },
-        name: { type: 'string' },
-      },
-    },
-    session: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        token: { type: 'string' },
-        expiresAt: { type: 'string', format: 'date-time' },
-      },
-    },
-  },
-}
-
-const messageSchema = {
-  type: 'object',
-  properties: {
-    message: { type: 'string' },
-  },
 }
 
 // Auth routes plugin

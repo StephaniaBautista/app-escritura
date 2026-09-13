@@ -18,6 +18,12 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'es' } }),
 }))
 
+vi.mock('@/components/ai/useAiCapabilities', () => ({
+  useAiCapabilities: () => ({ capabilities: null, loading: false, error: null, retry: vi.fn() }),
+}))
+
+vi.mock('../CharacterAiButton', () => ({ CharacterAiButton: () => null }))
+
 vi.mock('@/stores/toast-store', () => ({
   useToastStore: () => ({ error: mocks.toastError, success: mocks.toastSuccess }),
 }))
@@ -53,6 +59,7 @@ const savedCharacter: Character = {
   name: 'Lyra Belacqua',
   description: 'Una protagonista curiosa.',
   imageUrl: null,
+  heightMapImageUrl: null,
   sheetBackgroundMode: 'default',
   sheetBackgroundImages: [],
   nicknames: ['Ly'],

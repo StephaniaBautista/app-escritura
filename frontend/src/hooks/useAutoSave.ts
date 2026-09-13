@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
+import { browserTimeZone } from '@/services/stats'
 import { documentsApi } from '@/services/documents'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
@@ -35,7 +36,7 @@ export function useAutoSave({ documentId, getContent, debounceMs = 500, enabled 
       isSavingRef.current = true
       setStatus('saving')
       try {
-        await documentsApi.update(documentId, { content })
+        await documentsApi.update(documentId, { content, timeZone: browserTimeZone() })
         setStatus('saved')
       } catch (error) {
         console.error('Auto-save failed:', error)
@@ -46,7 +47,7 @@ export function useAutoSave({ documentId, getContent, debounceMs = 500, enabled 
           const next = pendingContentRef.current
           pendingContentRef.current = null
           setStatus('saving')
-          documentsApi.update(documentId, { content: next })
+          documentsApi.update(documentId, { content: next, timeZone: browserTimeZone() })
             .then(() => setStatus('saved'))
             .catch(() => setStatus('error'))
         }

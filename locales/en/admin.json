@@ -79,7 +79,10 @@
   },
   "permissions": {
     "admin": "Admin panel",
-    "moderate": "Moderation"
+    "moderate": "Moderation",
+    "ai_chat": "AI: adviser and subplots",
+    "ai_characters": "AI: characters",
+    "ai_suggestions": "AI: review"
   },
   "roles": {
     "title": "Roles",

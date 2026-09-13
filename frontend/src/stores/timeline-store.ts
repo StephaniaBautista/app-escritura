@@ -1,21 +1,30 @@
 import { create } from 'zustand'
-import type { TimelineEra, TimelineEraInput, TimelineEvent, TimelineEventInput } from '@/types/timeline'
+import type { TimelineConfig, TimelineEra, TimelineEraInput, TimelineEvent, TimelineEventInput } from '@/types/timeline'
+import { DEFAULT_TIMELINE_CONFIG } from '@/types/timeline'
+import { normalizeTimelineConfig } from '@/lib/timeline-date'
 import { timelineApi } from '@/services/timeline'
+import { projectsApi } from '@/services/documents'
 import { useToastStore } from './toast-store'
 import i18n from '@/i18n'
 
 interface TimelineState {
   events: TimelineEvent[]
   eras: TimelineEra[]
+  timelineConfig: TimelineConfig
   isLoading: boolean
+  isSavingTimelineConfig: boolean
   error: string | null
 
   load: (projectId: string) => Promise<void>
+  loadConfig: (projectId: string) => Promise<void>
+  updateTimelineConfig: (projectId: string, config: TimelineConfig) => Promise<void>
   loadEras: (projectId: string) => Promise<void>
   createEra: (projectId: string, data: TimelineEraInput) => Promise<TimelineEra | null>
+  updateEra: (id: string, data: TimelineEraInput) => Promise<TimelineEra | null>
   removeEra: (id: string) => Promise<void>
   create: (projectId: string, data: TimelineEventInput) => Promise<TimelineEvent | null>
   update: (id: string, data: TimelineEventInput) => Promise<TimelineEvent | null>
+  uploadImage: (id: string, dataUrl: string) => Promise<TimelineEvent | null>
   move: (id: string, direction: 'up' | 'down') => Promise<void>
   remove: (id: string) => Promise<void>
 }
@@ -27,8 +36,30 @@ function getErrorMessage(error: unknown): string {
 export const useTimelineStore = create<TimelineState>()((set, get) => ({
   events: [],
   eras: [],
+  timelineConfig: DEFAULT_TIMELINE_CONFIG,
   isLoading: false,
+  isSavingTimelineConfig: false,
   error: null,
+
+  async loadConfig(projectId: string) {
+    try {
+      const project = await projectsApi.getById(projectId)
+      set({ timelineConfig: normalizeTimelineConfig(project.timelineConfig) })
+    } catch {
+      set({ timelineConfig: DEFAULT_TIMELINE_CONFIG })
+    }
+  },
+
+  async updateTimelineConfig(projectId: string, config: TimelineConfig) {
+    set({ isSavingTimelineConfig: true })
+    try {
+      const project = await projectsApi.updateTimelineConfig(projectId, config)
+      set({ timelineConfig: normalizeTimelineConfig(project.timelineConfig), isSavingTimelineConfig: false })
+    } catch (err: unknown) {
+      set({ isSavingTimelineConfig: false })
+      useToastStore.getState().error(getErrorMessage(err))
+    }
+  },
 
   async load(projectId: string) {
     set({ isLoading: true, error: null })
@@ -53,6 +84,17 @@ export const useTimelineStore = create<TimelineState>()((set, get) => ({
     try {
       const era = await timelineApi.createEra(projectId, data)
       set({ eras: [...get().eras, era] })
+      return era
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+
+  async updateEra(id: string, data: TimelineEraInput) {
+    try {
+      const era = await timelineApi.updateEra(id, data)
+      set({ eras: get().eras.map((e) => (e.id === id ? era : e)) })
       return era
     } catch (err: unknown) {
       useToastStore.getState().error(getErrorMessage(err))
@@ -88,6 +130,17 @@ export const useTimelineStore = create<TimelineState>()((set, get) => ({
   async update(id: string, data: TimelineEventInput) {
     try {
       const updated = await timelineApi.update(id, data)
+      set({ events: get().events.map((e) => (e.id === id ? updated : e)) })
+      return updated
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+
+  async uploadImage(id: string, dataUrl: string) {
+    try {
+      const updated = await timelineApi.uploadImage(id, dataUrl)
       set({ events: get().events.map((e) => (e.id === id ? updated : e)) })
       return updated
     } catch (err: unknown) {

@@ -1,4 +1,5 @@
 import type { Project, Document, CreateProjectInput, CreateDocumentInput, UpdateDocumentInput, DocumentNode, Note, DocumentVersion } from '@/types/document'
+import type { TimelineConfig } from '@/types/timeline'
 
 const API = '/api'
 
@@ -40,6 +41,12 @@ export const projectsApi = {
     fetchJson<Project>(`${API}/projects/${id}/story-meta`, {
       method: 'PATCH',
       body: JSON.stringify(storyMeta),
+    }),
+
+  updateTimelineConfig: (id: string, timelineConfig: TimelineConfig) =>
+    fetchJson<Project>(`${API}/projects/${id}/timeline-config`, {
+      method: 'PATCH',
+      body: JSON.stringify(timelineConfig),
     }),
 
   delete: (id: string) =>

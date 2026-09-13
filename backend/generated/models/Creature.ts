@@ -31,6 +31,7 @@ export type CreatureMinAggregateOutputType = {
   species: string | null
   dangerType: string | null
   description: string | null
+  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type CreatureMaxAggregateOutputType = {
   species: string | null
   dangerType: string | null
   description: string | null
+  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type CreatureCountAggregateOutputType = {
   species: number
   dangerType: number
   description: number
+  imageUrl: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type CreatureMinAggregateInputType = {
   species?: true
   dangerType?: true
   description?: true
+  imageUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type CreatureMaxAggregateInputType = {
   species?: true
   dangerType?: true
   description?: true
+  imageUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type CreatureCountAggregateInputType = {
   species?: true
   dangerType?: true
   description?: true
+  imageUrl?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type CreatureGroupByOutputType = {
   species: string | null
   dangerType: string | null
   description: string | null
+  imageUrl: string | null
   createdAt: Date
   updatedAt: Date
   _count: CreatureCountAggregateOutputType | null
@@ -204,6 +211,7 @@ export type CreatureWhereInput = {
   species?: Prisma.StringNullableFilter<"Creature"> | string | null
   dangerType?: Prisma.StringNullableFilter<"Creature"> | string | null
   description?: Prisma.StringNullableFilter<"Creature"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Creature"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -216,6 +224,7 @@ export type CreatureOrderByWithRelationInput = {
   species?: Prisma.SortOrderInput | Prisma.SortOrder
   dangerType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
@@ -231,6 +240,7 @@ export type CreatureWhereUniqueInput = Prisma.AtLeast<{
   species?: Prisma.StringNullableFilter<"Creature"> | string | null
   dangerType?: Prisma.StringNullableFilter<"Creature"> | string | null
   description?: Prisma.StringNullableFilter<"Creature"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Creature"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -243,6 +253,7 @@ export type CreatureOrderByWithAggregationInput = {
   species?: Prisma.SortOrderInput | Prisma.SortOrder
   dangerType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CreatureCountOrderByAggregateInput
@@ -260,6 +271,7 @@ export type CreatureScalarWhereWithAggregatesInput = {
   species?: Prisma.StringNullableWithAggregatesFilter<"Creature"> | string | null
   dangerType?: Prisma.StringNullableWithAggregatesFilter<"Creature"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Creature"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Creature"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Creature"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Creature"> | Date | string
 }
@@ -270,6 +282,7 @@ export type CreatureCreateInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCreaturesInput
@@ -282,6 +295,7 @@ export type CreatureUncheckedCreateInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -292,6 +306,7 @@ export type CreatureUpdateInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCreaturesNestedInput
@@ -304,6 +319,7 @@ export type CreatureUncheckedUpdateInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,6 +331,7 @@ export type CreatureCreateManyInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -325,6 +342,7 @@ export type CreatureUpdateManyMutationInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -336,6 +354,7 @@ export type CreatureUncheckedUpdateManyInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -357,6 +376,7 @@ export type CreatureCountOrderByAggregateInput = {
   species?: Prisma.SortOrder
   dangerType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -368,6 +388,7 @@ export type CreatureMaxOrderByAggregateInput = {
   species?: Prisma.SortOrder
   dangerType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -379,6 +400,7 @@ export type CreatureMinOrderByAggregateInput = {
   species?: Prisma.SortOrder
   dangerType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,6 +453,7 @@ export type CreatureCreateWithoutProjectInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -441,6 +464,7 @@ export type CreatureUncheckedCreateWithoutProjectInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -481,6 +505,7 @@ export type CreatureScalarWhereInput = {
   species?: Prisma.StringNullableFilter<"Creature"> | string | null
   dangerType?: Prisma.StringNullableFilter<"Creature"> | string | null
   description?: Prisma.StringNullableFilter<"Creature"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Creature"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Creature"> | Date | string
 }
@@ -491,6 +516,7 @@ export type CreatureCreateManyProjectInput = {
   species?: string | null
   dangerType?: string | null
   description?: string | null
+  imageUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -501,6 +527,7 @@ export type CreatureUpdateWithoutProjectInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -511,6 +538,7 @@ export type CreatureUncheckedUpdateWithoutProjectInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -521,6 +549,7 @@ export type CreatureUncheckedUpdateManyWithoutProjectInput = {
   species?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dangerType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -534,6 +563,7 @@ export type CreatureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   species?: boolean
   dangerType?: boolean
   description?: boolean
+  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -546,6 +576,7 @@ export type CreatureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   species?: boolean
   dangerType?: boolean
   description?: boolean
+  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -558,6 +589,7 @@ export type CreatureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   species?: boolean
   dangerType?: boolean
   description?: boolean
+  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -570,11 +602,12 @@ export type CreatureSelectScalar = {
   species?: boolean
   dangerType?: boolean
   description?: boolean
+  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CreatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "species" | "dangerType" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["creature"]>
+export type CreatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "species" | "dangerType" | "description" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["creature"]>
 export type CreatureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -597,6 +630,7 @@ export type $CreaturePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     species: string | null
     dangerType: string | null
     description: string | null
+    imageUrl: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["creature"]>
@@ -1029,6 +1063,7 @@ export interface CreatureFieldRefs {
   readonly species: Prisma.FieldRef<"Creature", 'String'>
   readonly dangerType: Prisma.FieldRef<"Creature", 'String'>
   readonly description: Prisma.FieldRef<"Creature", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"Creature", 'String'>
   readonly createdAt: Prisma.FieldRef<"Creature", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Creature", 'DateTime'>
 }

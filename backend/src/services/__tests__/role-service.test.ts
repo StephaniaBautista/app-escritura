@@ -117,14 +117,14 @@ describe('roleService', () => {
   it('update: invalida la caché de permisos', async () => {
     prismaMock.role.findUnique
       .mockResolvedValueOnce(userRole)
-      .mockResolvedValueOnce({ ...userRole, permissions: ['moderate'] })
+      .mockResolvedValueOnce(userRole)
+      .mockResolvedValueOnce({ ...userRole, permissions: ['ai_chat'] })
 
-    await roleService.getPermissions('user')
-    prismaMock.role.update.mockResolvedValue({ ...userRole, permissions: ['moderate'] })
-    await roleService.update('r1', { permissions: ['moderate'] })
-    const result = await roleService.getPermissions('user')
-
-    expect(result).toEqual(['moderate'])
-    expect(prismaMock.role.findUnique).toHaveBeenCalledTimes(2)
+    expect(await roleService.getPermissions('user')).toEqual([])
+    prismaMock.role.update.mockResolvedValue({ ...userRole, permissions: ['ai_chat'] })
+    await roleService.update('r1', { permissions: ['ai_chat'] })
+    expect(await roleService.getPermissions('user')).toEqual(['ai_chat'])
+    expect(await roleService.getPermissions('user')).toEqual(['ai_chat'])
+    expect(prismaMock.role.findUnique).toHaveBeenCalledTimes(3)
   })
 })

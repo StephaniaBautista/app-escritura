@@ -1,36 +1,46 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Trash2, ScrollText } from 'lucide-react'
+import { Plus, Pencil, Trash2, ScrollText, FileText } from 'lucide-react'
 import type { LoreEntry, LoreEntryInput, LoreType } from '@/types/worldbuilding'
 import { useWorldbuildingStore } from '@/stores/worldbuilding-store'
 import { useToastStore } from '@/stores/toast-store'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { SectionModal } from './SectionModal'
+import { WorldFormSheet } from './WorldFormSheet'
+import { EMPTY_LORE_FORM, LoreFormFields, type LoreFormState } from './LoreFormFields'
 
-const LORE_TYPES: LoreType[] = ['magic', 'faction', 'religion', 'location', 'item', 'custom']
-
-interface LoreFormState {
-  id: string | null
-  name: string
-  type: LoreType
-  description: string
-  limits: string
+function toForm(entry: LoreEntry): LoreFormState {
+  return {
+    id: entry.id,
+    name: entry.name,
+    type: entry.type as LoreType,
+    description: entry.description ?? '',
+    limits: entry.limits ?? '',
+    powerSource: entry.powerSource ?? '',
+    cost: entry.cost ?? '',
+    usedBy: entry.usedBy ?? '',
+    pdfUrl: entry.pdfUrl,
+    pdfName: entry.pdfName,
+  }
 }
 
-const EMPTY: LoreFormState = { id: null, name: '', type: 'custom', description: '', limits: '' }
+function optional(value: string): string | null {
+  return value.trim() || null
+}
 
-const inputStyle = {
-  background: 'var(--color-background)',
-  borderColor: 'var(--color-paper-lines)',
-  color: 'var(--color-ink)',
-} as const
-
-export function LoreSection({ projectId }: { projectId: string }) {
+export function LoreSection({
+  projectId,
+  importDraft,
+}: {
+  projectId: string
+  importDraft?: { text: string; nonce: number } | null
+}) {
   const { t } = useTranslation()
   const toast = useToastStore()
-  const { lore, loadLore, createLore, updateLore, removeLore } = useWorldbuildingStore()
+  const { lore, loadLore, createLore, updateLore, uploadLorePdf, removeLorePdf, removeLore } = useWorldbuildingStore()
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<LoreFormState>(EMPTY)
+  const [form, setForm] = useState<LoreFormState>(EMPTY_LORE_FORM)
+  const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [clearPdf, setClearPdf] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<LoreEntry | null>(null)
 
@@ -38,21 +48,47 @@ export function LoreSection({ projectId }: { projectId: string }) {
     loadLore(projectId)
   }, [projectId, loadLore])
 
+  useEffect(() => {
+    if (!importDraft?.text) return
+    setForm({ ...EMPTY_LORE_FORM, description: importDraft.text })
+    setPdfFile(null)
+    setClearPdf(false)
+    setOpen(true)
+  }, [importDraft])
+
+  const patchForm = (patch: Partial<LoreFormState>) => setForm((current) => ({ ...current, ...patch }))
+
   const handleSave = async () => {
     if (!form.name.trim()) {
-      toast.error(t('worldApp.nameRequired'))
+      toast.error(t('worldApp.titleRequired'))
+      return
+    }
+    if (!form.type) {
+      toast.error(t('worldApp.loreTypeRequired'))
       return
     }
     setIsSaving(true)
     const data: LoreEntryInput = {
       name: form.name.trim(),
       type: form.type,
-      description: form.description.trim() || null,
-      limits: form.limits.trim() || null,
+      description: optional(form.description),
+      limits: optional(form.limits),
+      powerSource: optional(form.powerSource),
+      cost: optional(form.cost),
+      usedBy: optional(form.usedBy),
     }
     try {
-      if (form.id) await updateLore(form.id, data)
-      else await createLore(projectId, data)
+      const saved = form.id
+        ? await updateLore(form.id, data)
+        : await createLore(projectId, data)
+      if (!saved) return
+      if (pdfFile) {
+        const withPdf = await uploadLorePdf(saved.id, pdfFile)
+        if (!withPdf) return
+      } else if (clearPdf && saved.pdfUrl) {
+        const cleared = await removeLorePdf(saved.id)
+        if (!cleared) return
+      }
       toast.success(t('common.save'))
       setOpen(false)
     } finally {
@@ -67,7 +103,12 @@ export function LoreSection({ projectId }: { projectId: string }) {
           {t('worldApp.loreSubtitle')} · {lore.length}
         </p>
         <button
-          onClick={() => { setForm(EMPTY); setOpen(true) }}
+          onClick={() => {
+            setForm(EMPTY_LORE_FORM)
+            setPdfFile(null)
+            setClearPdf(false)
+            setOpen(true)
+          }}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
           style={{ background: 'var(--color-accent)' }}
         >
@@ -96,12 +137,28 @@ export function LoreSection({ projectId }: { projectId: string }) {
                   )}
                   {entry.limits && (
                     <p className="text-xs mt-1.5" style={{ color: 'var(--color-ink-faint)' }}>
-                      {t('worldApp.limits')}: {entry.limits}
+                      {t('worldApp.rulesLimits')}: {entry.limits}
+                    </p>
+                  )}
+                  {entry.pdfName && (
+                    <p className="mt-1.5 inline-flex items-center gap-1 text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+                      <FileText className="h-3 w-3" />
+                      {entry.pdfName}
                     </p>
                   )}
                 </div>
                 <div className="flex shrink-0 gap-0.5">
-                  <button onClick={() => { setForm({ id: entry.id, name: entry.name, type: entry.type as LoreType, description: entry.description ?? '', limits: entry.limits ?? '' }); setOpen(true) }} aria-label={t('common.edit')} className="rounded p-1 hover:opacity-70" style={{ color: 'var(--color-ink-light)' }}>
+                  <button
+                    onClick={() => {
+                      setForm(toForm(entry))
+                      setPdfFile(null)
+                      setClearPdf(false)
+                      setOpen(true)
+                    }}
+                    aria-label={t('common.edit')}
+                    className="rounded p-1 hover:opacity-70"
+                    style={{ color: 'var(--color-ink-light)' }}
+                  >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button onClick={() => setDeleteTarget(entry)} aria-label={t('common.delete')} className="rounded p-1 hover:opacity-70" style={{ color: 'var(--color-danger, #dc2626)' }}>
@@ -115,28 +172,23 @@ export function LoreSection({ projectId }: { projectId: string }) {
       )}
 
       {open && (
-        <SectionModal title={form.id ? t('common.edit') : t('worldApp.newLore')} isSaving={isSaving} onClose={() => setOpen(false)} onSave={handleSave}>
-          <div>
-            <label htmlFor="lore-name" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.name')}</label>
-            <input id="lore-name" type="text" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm" style={inputStyle} />
-          </div>
-          <div>
-            <label htmlFor="lore-type" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.loreTypeLabel')}</label>
-            <select id="lore-type" value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as LoreType }))} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm" style={inputStyle}>
-              {LORE_TYPES.map((type) => (
-                <option key={type} value={type}>{t(`worldApp.loreType.${type}`)}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="lore-description" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.description')}</label>
-            <textarea id="lore-description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm resize-y" style={inputStyle} />
-          </div>
-          <div>
-            <label htmlFor="lore-limits" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.limits')}</label>
-            <textarea id="lore-limits" value={form.limits} onChange={(e) => setForm((f) => ({ ...f, limits: e.target.value }))} rows={2} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm resize-y" style={inputStyle} />
-          </div>
-        </SectionModal>
+        <WorldFormSheet
+          variant="lore"
+          eyebrow={t('worldApp.loreSheetLabel')}
+          title={form.id ? form.name.trim() || t('common.edit') : t('worldApp.newLore')}
+          isSaving={isSaving}
+          onClose={() => setOpen(false)}
+          onSave={() => void handleSave()}
+        >
+          <LoreFormFields
+            form={form}
+            onChange={patchForm}
+            pdfFile={pdfFile}
+            onPdfFile={(file) => { setPdfFile(file); if (file) setClearPdf(false) }}
+            onRemovePdf={() => { setPdfFile(null); if (form.pdfUrl) setClearPdf(true); patchForm({ pdfName: null, pdfUrl: null }) }}
+            isSaving={isSaving}
+          />
+        </WorldFormSheet>
       )}
 
       <ConfirmDialog

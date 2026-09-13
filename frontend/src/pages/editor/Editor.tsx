@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { Plus, FileText, BookOpen, FolderOpen, History } from 'lucide-react'
+import { Plus, FileText, BookOpen, FolderOpen, History, MessageSquare } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
 import { useActivityStore } from '@/stores/activity-store'
@@ -14,6 +14,8 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
 import { LoadingState } from '@/components/ui/LoadingState'
+import { AiWorkspace } from '@/components/ai/AiWorkspace'
+import type { AiSuggestion } from '@/types/ai'
 import { useAutoVersion } from '@/hooks/useAutoVersion'
 
 export function EditorPage() {
@@ -32,6 +34,13 @@ export function EditorPage() {
     updateDocument,
   } = useDocumentStore()
 
+  const [showAi, setShowAi] = useState(false)
+  const [aiDraft, setAiDraft] = useState<{ documentId: string; text: string } | null>(null)
+  const [aiSuggestions, setAiSuggestions] = useState<AiSuggestion[]>([])
+  const [aiReveal, setAiReveal] = useState<{ suggestion: AiSuggestion; sequence: number } | null>(null)
+  const onDraftChange = useCallback((text: string) => {
+    if (documentId) setAiDraft({ documentId, text })
+  }, [documentId])
   const [showNewDoc, setShowNewDoc] = useState(false)
   const [showPanel, setShowPanel] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -228,6 +237,7 @@ export function EditorPage() {
               </p>
             )}
           </div>
+          <button type="button" className="ai-panel__button" aria-label={t('aiApp.open')} aria-expanded={showAi} onClick={() => setShowAi((visible) => !visible)}><MessageSquare className="h-4 w-4" /><span className="hidden sm:inline">{t('aiApp.title')}</span></button>
           <button
             type="button"
             onClick={() => setShowPanel(true)}
@@ -242,9 +252,13 @@ export function EditorPage() {
         </div>
 
         <div className="flex-1 flex overflow-hidden">
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 min-w-0 overflow-hidden">
             <DocumentEditor
+              key={currentDocument.id}
               documentId={currentDocument.id}
+              onContentChange={onDraftChange}
+              suggestions={aiSuggestions}
+              revealSuggestion={aiReveal}
               initialContent={currentDocument.content as Record<string, unknown>}
               onKeystroke={() => {
                 hasChangesRef.current = true
@@ -253,11 +267,11 @@ export function EditorPage() {
               }}
             />
           </div>
-          <PostItWall
+          {showAi ? <aside className="ai-editor-panel w-full lg:w-96 shrink-0 overflow-y-auto" aria-label={t('aiApp.title')}><AiWorkspace key={projectId} projectId={projectId} documentId={currentDocument.id} draftContent={aiDraft?.documentId === currentDocument.id ? aiDraft.text : undefined} onClose={() => setShowAi(false)} onSuggestionsChange={setAiSuggestions} onReveal={(suggestion) => setAiReveal((previous) => ({ suggestion, sequence: (previous?.sequence ?? 0) + 1 }))} /></aside> : <PostItWall
             documentId={currentDocument.id}
             rootDocumentId={getDocumentRootId(documentTree, currentDocument.id) ?? currentDocument.id}
             projectId={projectId}
-          />
+          />}
         </div>
 
         {showPanel && (

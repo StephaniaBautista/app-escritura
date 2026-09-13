@@ -16,14 +16,19 @@ interface TestResult {
 
 const results: TestResult[] = []
 
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
+}
+
 async function test(name: string, fn: () => Promise<void>) {
   try {
     await fn()
     results.push({ name, passed: true })
     console.log(`  ✅ ${name}`)
-  } catch (error: any) {
-    results.push({ name, passed: false, error: error.message })
-    console.log(`  ❌ ${name}: ${error.message}`)
+  } catch (error: unknown) {
+    const message = getErrorMessage(error)
+    results.push({ name, passed: false, error: message })
+    console.log(`  ❌ ${name}: ${message}`)
   }
 }
 

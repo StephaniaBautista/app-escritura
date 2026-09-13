@@ -38,6 +38,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     if (path.startsWith('/app/documents/')) return 'Carpeta'
     if (path === '/app/recent') return 'Recientes'
     if (path === '/app/shared') return 'Compartidos'
+    if (path === '/app/stats') return t('sidebar.statistics')
     if (path === '/app/settings') return t('settings.title')
     return 'Archivum'
   }

@@ -1,0 +1,17 @@
+.ai-panel { color: var(--color-ink); min-width: 0; }
+.ai-panel__muted { color: var(--color-ink-light); }
+.ai-panel__button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border: 1px solid var(--color-paper-lines); border-radius: var(--radius); padding: .5rem .75rem; font-size: .875rem; color: var(--color-ink); background: var(--color-paper); cursor: pointer; white-space: nowrap; }
+.ai-panel__button:hover:not(:disabled) { background: var(--color-accent-light); }
+.ai-panel__button:active:not(:disabled) { transform: translateY(1px); }
+.ai-panel__button:disabled { opacity: .5; cursor: not-allowed; }
+.ai-panel__button:focus-visible, .ai-panel__control:focus-visible, .ai-panel__link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.ai-panel__button[aria-pressed="true"], .ai-panel__button--primary { background: var(--color-accent-light); border-color: var(--color-accent); }
+.ai-panel__control { display: block; width: 100%; min-width: 0; padding: .5rem .75rem; border: 1px solid var(--color-paper-lines); border-radius: var(--radius); background: var(--color-background); color: var(--color-ink); font-size: .875rem; }
+.ai-panel__message { padding: .75rem 0; border-bottom: 1px solid var(--color-paper-lines); overflow-wrap: anywhere; }
+.ai-panel__assistant { border-left: 2px solid var(--color-accent); padding-left: .75rem; }
+.ai-panel__protected { user-select: none; -webkit-user-select: none; }
+.ai-panel__error { color: var(--color-accent); border-left: 2px solid currentColor; padding: .5rem .75rem; font-size: .875rem; }
+.ai-panel__link { text-decoration: underline; text-underline-offset: .2em; color: var(--color-accent); }
+.ai-editor-highlight { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-color: var(--color-accent); text-underline-offset: .2em; }
+.ai-editor-panel { background: var(--color-paper); border-left: 1px solid var(--color-paper-lines); }
+@media (max-width: 1023px) { .ai-editor-panel { position: fixed; inset: 0; z-index: 40; overflow-y: auto; } }

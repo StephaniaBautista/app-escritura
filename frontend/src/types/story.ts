@@ -9,11 +9,19 @@ export interface StoryCharacter {
   initialPhysicalState?: string
 }
 
+export type StructureSceneForm = 'chapter' | 'note'
+
+export interface StructureSceneSuggestion {
+  title: string
+  form: StructureSceneForm
+}
+
 export interface StoryStructureSection {
   id: string
   title?: string
   content?: string
   answers?: Record<string, string>
+  scenes?: StructureSceneSuggestion[]
 }
 
 export interface StoryStructure {

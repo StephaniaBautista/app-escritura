@@ -1,0 +1,20 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: archivum
+      POSTGRES_USER: archivum
+      POSTGRES_PASSWORD: archivum-local
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - archivum-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U archivum -d archivum"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  archivum-postgres:
+

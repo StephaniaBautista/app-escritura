@@ -1,3 +1,4 @@
+import { CharacterSuggestions } from '@/components/ai/CharacterSuggestions'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, Pencil, GitFork, History, Trash2, Check, Loader2, ArrowLeft } from 'lucide-react'
@@ -130,6 +131,8 @@ export function CharacterDetail({ character, characters, relations = [], onClose
                 onAddRelation={() => setRelDialogOpen(true)}
                 onRemoveRelation={setRelRemoveTarget}
               />
+
+              <CharacterSuggestions key={character.id} character={character} />
 
           {source && (
             <section className="rounded-lg border p-3" style={{ borderColor: 'var(--color-paper-lines)' }}>

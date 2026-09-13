@@ -43,6 +43,7 @@ export interface CharacterInput {
   name?: string
   description?: string | null
   imageUrl?: string | null
+  heightMapImageUrl?: string | null
   sheetBackgroundMode?: SheetBackgroundMode
   sheetBackgroundImages?: string[]
   nicknames?: string[]
@@ -127,6 +128,7 @@ export const characterService = {
         name: data.name ?? '',
         description: data.description ?? null,
         imageUrl: data.imageUrl ?? null,
+        heightMapImageUrl: data.heightMapImageUrl ?? null,
         sheetBackgroundMode: normalizeSheetBackgroundMode(data.sheetBackgroundMode),
         sheetBackgroundImages: sanitizeSheetBackgroundImages(data.sheetBackgroundImages),
         nicknames: data.nicknames ?? [],
@@ -160,6 +162,7 @@ export const characterService = {
         name: data.name,
         description: data.description,
         imageUrl: data.imageUrl,
+        heightMapImageUrl: data.heightMapImageUrl,
         sheetBackgroundMode: data.sheetBackgroundMode,
         sheetBackgroundImages: data.sheetBackgroundImages === undefined
           ? undefined
@@ -241,6 +244,7 @@ export const characterService = {
         name: changes.name ?? source.name,
         description: sent('description') ? (changes.description ?? null) : source.description,
         imageUrl: sent('imageUrl') ? (changes.imageUrl ?? null) : source.imageUrl,
+        heightMapImageUrl: sent('heightMapImageUrl') ? (changes.heightMapImageUrl ?? null) : source.heightMapImageUrl,
         sheetBackgroundMode: normalizeSheetBackgroundMode(
           sent('sheetBackgroundMode') ? changes.sheetBackgroundMode : source.sheetBackgroundMode,
         ),

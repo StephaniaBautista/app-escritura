@@ -55,6 +55,30 @@ describe('worldbuildingService', () => {
         data: expect.objectContaining({ name: 'Magia', type: 'custom', order: 3 }),
       })
     })
+
+    it('createLore persiste fuente, coste y usuarios', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.loreEntry.count.mockResolvedValue(0)
+      prismaMock.loreEntry.create.mockResolvedValue({ id: 'lore-1' })
+
+      await worldbuildingService.createLore('proj-1', 'user-1', {
+        name: 'Runas',
+        type: 'magic',
+        powerSource: 'Sangre',
+        cost: 'Un recuerdo',
+        usedBy: 'Círculo norte',
+      })
+
+      expect(prismaMock.loreEntry.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Runas',
+          type: 'magic',
+          powerSource: 'Sangre',
+          cost: 'Un recuerdo',
+          usedBy: 'Círculo norte',
+        }),
+      })
+    })
   })
 
   describe('race', () => {
@@ -66,6 +90,47 @@ describe('worldbuildingService', () => {
 
       expect(prismaMock.race.create).toHaveBeenCalledWith({
         data: expect.objectContaining({ name: 'Elfos', hasMagic: false }),
+      })
+    })
+
+    it('createRace marca hasMagic si hay magia propia y guarda ficha extendida', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.race.create.mockResolvedValue({ id: 'race-1' })
+
+      await worldbuildingService.createRace('proj-1', 'user-1', {
+        name: 'Elfos',
+        magicDescription: 'Runas lunares',
+        spiritualTraits: 'Vínculo con el bosque',
+        lifeExpectancy: '400 años',
+        relationsWithOthers: 'Alianza con humanos',
+        importantNotes: 'No cortar robles',
+      })
+
+      expect(prismaMock.race.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          name: 'Elfos',
+          hasMagic: true,
+          magicDescription: 'Runas lunares',
+          spiritualTraits: 'Vínculo con el bosque',
+          lifeExpectancy: '400 años',
+          relationsWithOthers: 'Alianza con humanos',
+          importantNotes: 'No cortar robles',
+        }),
+      })
+    })
+
+    it('attachRacePdf guarda url y nombre', async () => {
+      prismaMock.race.findFirst.mockResolvedValue({ id: 'race-1' })
+      prismaMock.race.update.mockResolvedValue({ id: 'race-1', pdfUrl: 'https://x/a.pdf', pdfName: 'ficha.pdf' })
+
+      await worldbuildingService.attachRacePdf('race-1', 'user-1', {
+        url: 'https://x/a.pdf',
+        name: 'ficha.pdf',
+      })
+
+      expect(prismaMock.race.update).toHaveBeenCalledWith({
+        where: { id: 'race-1' },
+        data: { pdfUrl: 'https://x/a.pdf', pdfName: 'ficha.pdf' },
       })
     })
   })
@@ -107,6 +172,22 @@ describe('worldbuildingService', () => {
 
       expect(route).toEqual({ id: 'route-existing' })
       expect(prismaMock.worldRoute.create).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('creature', () => {
+    it('createCreature descarta un dangerType inválido', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.creature.create.mockResolvedValue({ id: 'c-1' })
+
+      await worldbuildingService.createCreature('proj-1', 'user-1', {
+        name: 'Wyvern',
+        dangerType: 'apocalyptic',
+      })
+
+      expect(prismaMock.creature.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ name: 'Wyvern', dangerType: null }),
+      })
     })
   })
 

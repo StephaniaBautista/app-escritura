@@ -44,6 +44,7 @@ export type UserSettingsCountAggregateOutputType = {
   theme: number
   language: number
   autoVersion: number
+  uiPrefs: number
   _all: number
 }
 
@@ -68,6 +69,7 @@ export type UserSettingsCountAggregateInputType = {
   theme?: true
   language?: true
   autoVersion?: true
+  uiPrefs?: true
   _all?: true
 }
 
@@ -149,6 +151,7 @@ export type UserSettingsGroupByOutputType = {
   theme: string
   language: string
   autoVersion: runtime.JsonValue
+  uiPrefs: runtime.JsonValue
   _count: UserSettingsCountAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
   _max: UserSettingsMaxAggregateOutputType | null
@@ -178,6 +181,7 @@ export type UserSettingsWhereInput = {
   theme?: Prisma.StringFilter<"UserSettings"> | string
   language?: Prisma.StringFilter<"UserSettings"> | string
   autoVersion?: Prisma.JsonFilter<"UserSettings">
+  uiPrefs?: Prisma.JsonFilter<"UserSettings">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -187,6 +191,7 @@ export type UserSettingsOrderByWithRelationInput = {
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
   autoVersion?: Prisma.SortOrder
+  uiPrefs?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -199,6 +204,7 @@ export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
   theme?: Prisma.StringFilter<"UserSettings"> | string
   language?: Prisma.StringFilter<"UserSettings"> | string
   autoVersion?: Prisma.JsonFilter<"UserSettings">
+  uiPrefs?: Prisma.JsonFilter<"UserSettings">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
 
@@ -208,6 +214,7 @@ export type UserSettingsOrderByWithAggregationInput = {
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
   autoVersion?: Prisma.SortOrder
+  uiPrefs?: Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
   _max?: Prisma.UserSettingsMaxOrderByAggregateInput
   _min?: Prisma.UserSettingsMinOrderByAggregateInput
@@ -222,6 +229,7 @@ export type UserSettingsScalarWhereWithAggregatesInput = {
   theme?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   language?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   autoVersion?: Prisma.JsonWithAggregatesFilter<"UserSettings">
+  uiPrefs?: Prisma.JsonWithAggregatesFilter<"UserSettings">
 }
 
 export type UserSettingsCreateInput = {
@@ -229,6 +237,7 @@ export type UserSettingsCreateInput = {
   theme?: string
   language?: string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutSettingsInput
 }
 
@@ -238,6 +247,7 @@ export type UserSettingsUncheckedCreateInput = {
   theme?: string
   language?: string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsUpdateInput = {
@@ -245,6 +255,7 @@ export type UserSettingsUpdateInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutSettingsNestedInput
 }
 
@@ -254,6 +265,7 @@ export type UserSettingsUncheckedUpdateInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsCreateManyInput = {
@@ -262,6 +274,7 @@ export type UserSettingsCreateManyInput = {
   theme?: string
   language?: string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsUpdateManyMutationInput = {
@@ -269,6 +282,7 @@ export type UserSettingsUpdateManyMutationInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsUncheckedUpdateManyInput = {
@@ -277,6 +291,7 @@ export type UserSettingsUncheckedUpdateManyInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsNullableScalarRelationFilter = {
@@ -290,6 +305,7 @@ export type UserSettingsCountOrderByAggregateInput = {
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
   autoVersion?: Prisma.SortOrder
+  uiPrefs?: Prisma.SortOrder
 }
 
 export type UserSettingsMaxOrderByAggregateInput = {
@@ -343,6 +359,7 @@ export type UserSettingsCreateWithoutUserInput = {
   theme?: string
   language?: string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsUncheckedCreateWithoutUserInput = {
@@ -350,6 +367,7 @@ export type UserSettingsUncheckedCreateWithoutUserInput = {
   theme?: string
   language?: string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsCreateOrConnectWithoutUserInput = {
@@ -373,6 +391,7 @@ export type UserSettingsUpdateWithoutUserInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserSettingsUncheckedUpdateWithoutUserInput = {
@@ -380,6 +399,7 @@ export type UserSettingsUncheckedUpdateWithoutUserInput = {
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   autoVersion?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  uiPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -390,6 +410,7 @@ export type UserSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   theme?: boolean
   language?: boolean
   autoVersion?: boolean
+  uiPrefs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -399,6 +420,7 @@ export type UserSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   theme?: boolean
   language?: boolean
   autoVersion?: boolean
+  uiPrefs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -408,6 +430,7 @@ export type UserSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   theme?: boolean
   language?: boolean
   autoVersion?: boolean
+  uiPrefs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -417,9 +440,10 @@ export type UserSettingsSelectScalar = {
   theme?: boolean
   language?: boolean
   autoVersion?: boolean
+  uiPrefs?: boolean
 }
 
-export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "theme" | "language" | "autoVersion", ExtArgs["result"]["userSettings"]>
+export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "theme" | "language" | "autoVersion" | "uiPrefs", ExtArgs["result"]["userSettings"]>
 export type UserSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -441,6 +465,7 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     theme: string
     language: string
     autoVersion: runtime.JsonValue
+    uiPrefs: runtime.JsonValue
   }, ExtArgs["result"]["userSettings"]>
   composites: {}
 }
@@ -870,6 +895,7 @@ export interface UserSettingsFieldRefs {
   readonly theme: Prisma.FieldRef<"UserSettings", 'String'>
   readonly language: Prisma.FieldRef<"UserSettings", 'String'>
   readonly autoVersion: Prisma.FieldRef<"UserSettings", 'Json'>
+  readonly uiPrefs: Prisma.FieldRef<"UserSettings", 'Json'>
 }
     
 

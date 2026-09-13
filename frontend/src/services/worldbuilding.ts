@@ -11,7 +11,7 @@ const API = '/api'
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {}
-  if (options?.body) {
+  if (options?.body && !(options.body instanceof FormData)) {
     headers['Content-Type'] = 'application/json'
   }
   const res = await fetch(url, {
@@ -20,8 +20,11 @@ async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
     headers: { ...headers, ...(options?.headers as Record<string, string>) },
   })
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: { message: 'Error de red' } }))
-    throw new Error(error.error?.message || `Error ${res.status}`)
+    const payload = await res.json().catch(() => ({ error: { message: 'Error de red' } }))
+    const message = typeof payload.error === 'string'
+      ? payload.error
+      : payload.error?.message || `Error ${res.status}`
+    throw new Error(message)
   }
   if (res.status === 204) return undefined as T
   return res.json()
@@ -36,6 +39,13 @@ export const worldbuildingApi = {
     fetchJson<LoreEntry>(`${API}/lore/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteLore: (id: string) =>
     fetchJson<{ message: string }>(`${API}/lore/${id}`, { method: 'DELETE' }),
+  uploadLorePdf: (id: string, file: File) => {
+    const body = new FormData()
+    body.append('file', file)
+    return fetchJson<LoreEntry>(`${API}/lore/${id}/pdf`, { method: 'PUT', body })
+  },
+  deleteLorePdf: (id: string) =>
+    fetchJson<LoreEntry>(`${API}/lore/${id}/pdf`, { method: 'DELETE' }),
 
   listRaces: (projectId: string) =>
     fetchJson<Race[]>(`${API}/projects/${projectId}/races`),
@@ -45,6 +55,17 @@ export const worldbuildingApi = {
     fetchJson<Race>(`${API}/races/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteRace: (id: string) =>
     fetchJson<{ message: string }>(`${API}/races/${id}`, { method: 'DELETE' }),
+  uploadRaceImage: (id: string, dataUrl: string) =>
+    fetchJson<Race>(`${API}/races/${id}/image`, { method: 'PUT', body: JSON.stringify({ dataUrl }) }),
+  deleteRaceImage: (id: string) =>
+    fetchJson<Race>(`${API}/races/${id}/image`, { method: 'DELETE' }),
+  uploadRacePdf: (id: string, file: File) => {
+    const body = new FormData()
+    body.append('file', file)
+    return fetchJson<Race>(`${API}/races/${id}/pdf`, { method: 'PUT', body })
+  },
+  deleteRacePdf: (id: string) =>
+    fetchJson<Race>(`${API}/races/${id}/pdf`, { method: 'DELETE' }),
 
   listGlossary: (projectId: string) =>
     fetchJson<GlossaryEntry[]>(`${API}/projects/${projectId}/glossary`),
@@ -63,6 +84,10 @@ export const worldbuildingApi = {
     fetchJson<Creature>(`${API}/creatures/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteCreature: (id: string) =>
     fetchJson<{ message: string }>(`${API}/creatures/${id}`, { method: 'DELETE' }),
+  uploadCreatureImage: (id: string, dataUrl: string) =>
+    fetchJson<Creature>(`${API}/creatures/${id}/image`, { method: 'PUT', body: JSON.stringify({ dataUrl }) }),
+  deleteCreatureImage: (id: string) =>
+    fetchJson<Creature>(`${API}/creatures/${id}/image`, { method: 'DELETE' }),
 
   listLocations: (projectId: string) =>
     fetchJson<Location[]>(`${API}/projects/${projectId}/locations`),

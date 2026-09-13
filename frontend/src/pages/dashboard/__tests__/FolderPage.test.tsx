@@ -75,11 +75,13 @@ vi.mock('@/stores/toast-store', () => ({
 const baseStore = {
   currentProject: { id: 'folder-1', name: 'Mi novela', description: null, storyMeta: {}, createdAt: '', updatedAt: '' },
   documentTree: [],
+  currentDocument: null,
   isLoading: false,
   error: null,
   selectProject: vi.fn(),
   createDocument: vi.fn(),
   updateProject: vi.fn(),
+  updateStoryMeta: vi.fn(),
   deleteDocument: vi.fn(),
 }
 

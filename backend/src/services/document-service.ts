@@ -1,6 +1,10 @@
+import { countDocumentWords } from '../lib/document-words.js'
+import { updateWrittenDocument } from './stats-document-service.js'
+import { normalizeTimeZone } from '../lib/stats-time.js'
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
 import { branchService } from './branch-service.js'
+import { normalizeTimelineConfig, type TimelineConfig } from '../lib/timeline-config.js'
 
 export interface CreateProjectInput {
   name: string
@@ -12,6 +16,7 @@ export interface UpdateProjectInput {
   name?: string
   description?: string
   storyMeta?: Prisma.InputJsonValue
+  timelineConfig?: Prisma.InputJsonValue
 }
 
 export interface CreateDocumentInput {
@@ -25,6 +30,7 @@ export interface CreateDocumentInput {
 }
 
 export interface UpdateDocumentInput {
+  timeZone?: string
   title?: string
   content?: Prisma.InputJsonValue
   folderId?: string | null
@@ -86,7 +92,19 @@ export const projectService = {
         name: data.name,
         description: data.description,
         storyMeta: data.storyMeta,
+        timelineConfig: data.timelineConfig,
       },
+    })
+  },
+
+  async updateTimelineConfig(id: string, userId: string, raw: unknown) {
+    const project = await prisma.project.findFirst({ where: { id, userId } })
+    if (!project) return null
+
+    const timelineConfig = normalizeTimelineConfig(raw) satisfies TimelineConfig
+    return prisma.project.update({
+      where: { id },
+      data: { timelineConfig: timelineConfig as unknown as Prisma.InputJsonValue },
     })
   },
 
@@ -162,6 +180,7 @@ export const documentService = {
       data: {
         title: data.title,
         content: data.content ?? Prisma.JsonNull,
+        wordCount: countDocumentWords(data.content),
         type: data.type ?? 'document',
         order: data.order ?? 0,
         userId,
@@ -177,6 +196,8 @@ export const documentService = {
   },
 
   async update(id: string, userId: string, data: UpdateDocumentInput) {
+    if (data.content !== undefined) return updateWrittenDocument(id, userId, data)
+    if (data.timeZone !== undefined) normalizeTimeZone(data.timeZone)
     const doc = await prisma.document.findFirst({ where: { id, userId } })
     if (!doc) return null
 
@@ -297,6 +318,7 @@ export const documentService = {
         data: {
           title: newParentId === null ? `${node.title} (Copia)` : node.title,
           content: node.content ?? Prisma.JsonNull,
+          wordCount: countDocumentWords(node.content),
           type: node.type,
           order: node.order + 1,
           userId,

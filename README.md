@@ -63,7 +63,8 @@ Archivum es un editor profesional que combina un editor de texto enriquecido con
 - Socket.io
 
 ### Infraestructura
-- Supabase (PostgreSQL + Storage)
+- PostgreSQL local con Docker o Supabase
+- Supabase Storage
 - Vercel (frontend)
 - Railway (backend)
 - Expo EAS (movil)
@@ -75,16 +76,16 @@ Archivum es un editor profesional que combina un editor de texto enriquecido con
 git clone https://github.com/StephaniaBautista/app-escritura.git
 cd app-escritura
 
-# Instalar dependencias
-pnpm install
-
-# Configurar variables de entorno
-cp backend/.env.example backend/.env
-# Editar backend/.env con tus credenciales
+# Preparar dependencias, PostgreSQL local y Prisma
+pnpm setup:local
 
 # Iniciar desarrollo
 pnpm dev
 ```
+
+Requisitos para desarrollo local: Node.js 22 LTS (`nvm use` respeta `.nvmrc`), pnpm 9 o superior y Docker Desktop en ejecución. La aplicación queda disponible en `http://localhost:5173`; la API y Swagger usan `http://localhost:3001` y `http://localhost:3001/docs`.
+
+`pnpm setup:local` conserva un `backend/.env` existente. Para usar Supabase en vez de Docker, copia `backend/.env.example`, reemplaza `DATABASE_URL` y ejecuta `pnpm db:push && pnpm prisma:generate`.
 
 ### Comandos
 
@@ -107,11 +108,14 @@ pnpm prisma generate
 pnpm prisma studio
 
 # Ambos (raiz)
+pnpm setup:local # primera instalación local
 pnpm dev
 pnpm build
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm db:up       # iniciar PostgreSQL local
+pnpm db:down     # detener PostgreSQL local sin borrar datos
 ```
 
 ## Estructura

@@ -22,11 +22,17 @@ interface WorldbuildingState {
   loadLore: (projectId: string) => Promise<void>
   createLore: (projectId: string, data: LoreEntryInput) => Promise<LoreEntry | null>
   updateLore: (id: string, data: LoreEntryInput) => Promise<LoreEntry | null>
+  uploadLorePdf: (id: string, file: File) => Promise<LoreEntry | null>
+  removeLorePdf: (id: string) => Promise<LoreEntry | null>
   removeLore: (id: string) => Promise<void>
 
   loadRaces: (projectId: string) => Promise<void>
   createRace: (projectId: string, data: RaceInput) => Promise<Race | null>
   updateRace: (id: string, data: RaceInput) => Promise<Race | null>
+  uploadRaceImage: (id: string, dataUrl: string) => Promise<Race | null>
+  removeRaceImage: (id: string) => Promise<Race | null>
+  uploadRacePdf: (id: string, file: File) => Promise<Race | null>
+  removeRacePdf: (id: string) => Promise<Race | null>
   removeRace: (id: string) => Promise<void>
 
   loadGlossary: (projectId: string) => Promise<void>
@@ -37,6 +43,7 @@ interface WorldbuildingState {
   loadCreatures: (projectId: string) => Promise<void>
   createCreature: (projectId: string, data: CreatureInput) => Promise<Creature | null>
   updateCreature: (id: string, data: CreatureInput) => Promise<Creature | null>
+  uploadCreatureImage: (id: string, dataUrl: string) => Promise<Creature | null>
   removeCreature: (id: string) => Promise<void>
 
   loadLocations: (projectId: string) => Promise<void>
@@ -85,6 +92,26 @@ export const useWorldbuildingStore = create<WorldbuildingState>()((set, get) => 
       return null
     }
   },
+  async uploadLorePdf(id, file) {
+    try {
+      const entry = await worldbuildingApi.uploadLorePdf(id, file)
+      set({ lore: get().lore.map((e) => (e.id === id ? entry : e)) })
+      return entry
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async removeLorePdf(id) {
+    try {
+      const entry = await worldbuildingApi.deleteLorePdf(id)
+      set({ lore: get().lore.map((e) => (e.id === id ? entry : e)) })
+      return entry
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
   async removeLore(id) {
     try {
       await worldbuildingApi.deleteLore(id)
@@ -110,6 +137,46 @@ export const useWorldbuildingStore = create<WorldbuildingState>()((set, get) => 
   async updateRace(id, data) {
     try {
       const race = await worldbuildingApi.updateRace(id, data)
+      set({ races: get().races.map((r) => (r.id === id ? race : r)) })
+      return race
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async uploadRaceImage(id, dataUrl) {
+    try {
+      const race = await worldbuildingApi.uploadRaceImage(id, dataUrl)
+      set({ races: get().races.map((r) => (r.id === id ? race : r)) })
+      return race
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async removeRaceImage(id) {
+    try {
+      const race = await worldbuildingApi.deleteRaceImage(id)
+      set({ races: get().races.map((r) => (r.id === id ? race : r)) })
+      return race
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async uploadRacePdf(id, file) {
+    try {
+      const race = await worldbuildingApi.uploadRacePdf(id, file)
+      set({ races: get().races.map((r) => (r.id === id ? race : r)) })
+      return race
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async removeRacePdf(id) {
+    try {
+      const race = await worldbuildingApi.deleteRacePdf(id)
       set({ races: get().races.map((r) => (r.id === id ? race : r)) })
       return race
     } catch (err: unknown) {
@@ -174,6 +241,16 @@ export const useWorldbuildingStore = create<WorldbuildingState>()((set, get) => 
   async updateCreature(id, data) {
     try {
       const creature = await worldbuildingApi.updateCreature(id, data)
+      set({ creatures: get().creatures.map((c) => (c.id === id ? creature : c)) })
+      return creature
+    } catch (err: unknown) {
+      useToastStore.getState().error(getErrorMessage(err))
+      return null
+    }
+  },
+  async uploadCreatureImage(id, dataUrl) {
+    try {
+      const creature = await worldbuildingApi.uploadCreatureImage(id, dataUrl)
       set({ creatures: get().creatures.map((c) => (c.id === id ? creature : c)) })
       return creature
     } catch (err: unknown) {

@@ -22,6 +22,7 @@ export interface Project {
   name: string
   description: string | null
   storyMeta: Record<string, unknown>
+  timelineConfig?: Record<string, unknown>
   createdAt: string
   updatedAt: string
   _count?: { documents: number; folders: number }
@@ -45,6 +46,7 @@ export interface CreateDocumentInput {
 }
 
 export interface UpdateDocumentInput {
+  timeZone?: string
   title?: string
   content?: Record<string, unknown>
   folderId?: string | null

@@ -9,7 +9,7 @@
   "wordsCount": "{{count}} words",
   "saving": "Saving...",
   "saved": "Saved",
-  "saveError": "Save error",
+  "saveError": "Save failed",
   "bold": "Bold",
   "italic": "Italic",
   "strike": "Strikethrough",
@@ -55,5 +55,9 @@
   "duplicate": "Duplicate",
   "duplicated": "Tab duplicated",
   "delete": "Delete",
-  "panelClose": "Close panel"
+  "panelClose": "Close panel",
+  "saveSaving": "Saving…",
+  "saveSaved": "Saved",
+  "writingPlaceholder": "Start writing your story…",
+  "textCounts": "{{characters}} characters · {{words}} words"
 }

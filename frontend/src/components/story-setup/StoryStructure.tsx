@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Loader2, Plus, RefreshCw, RotateCcw, X } from 'lucide-react'
 import { storyBankApi, type StoryQuestion, type StoryTemplate, type TemplateSection } from '@/services/story-bank'
 import { isStandardSection, sectionLabelKey, STANDARD_SECTION_IDS } from '@/lib/story-structure'
+import { StructureSectionPrompts } from './StructureSectionPrompts'
 import type { StoryMeta, StoryStructureSection } from '@/types/story'
 
 interface StoryStructureProps {
@@ -11,11 +12,13 @@ interface StoryStructureProps {
 }
 
 function TextArea({
+  id,
   value,
   onChange,
   placeholder,
   rows = 3,
 }: {
+  id?: string
   value: string
   onChange: (value: string) => void
   placeholder?: string
@@ -23,6 +26,7 @@ function TextArea({
 }) {
   return (
     <textarea
+      id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
@@ -105,17 +109,17 @@ export function StoryStructure({ meta, update }: StoryStructureProps) {
     setStructure({ sections: sections.map((s) => (s.id === id ? { ...s, content: value } : s)) })
   }
 
-  const setAnswer = (sectionId: string, questionId: string, value: string) => {
+  const setAnswer = (sectionId: string, questionId: string, value: string, options?: { clearContent?: boolean }) => {
     setStructure({
-      sections: sections.map((s) =>
-        s.id === sectionId ? { ...s, answers: { ...(s.answers ?? {}), [questionId]: value } } : s,
-      ),
+      sections: sections.map((s) => {
+        if (s.id !== sectionId) return s
+        return {
+          ...s,
+          answers: { ...(s.answers ?? {}), [questionId]: value },
+          content: options?.clearContent ? '' : s.content,
+        }
+      }),
     })
-  }
-
-  const sectionHint = (id: string): string | undefined => {
-    if (!isStandardSection(id)) return undefined
-    return t(`storySetup.structure${capitalize(id)}Hint`)
   }
 
   const applyTemplate = (template: StoryTemplate) => {
@@ -229,22 +233,28 @@ export function StoryStructure({ meta, update }: StoryStructureProps) {
             <p className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>
               {index + 1}. {sectionTitle(section, t)}
             </p>
-            <TextArea
-              value={section.content ?? ''}
-              onChange={(v) => setContent(section.id, v)}
-              placeholder={sectionHint(section.id)}
-              rows={2}
+            <StructureSectionPrompts
+              section={section}
+              onAnswer={(questionId, value, options) => setAnswer(section.id, questionId, value, options)}
             />
+            {!isStandardSection(section.id) && (
+              <TextArea
+                value={section.content ?? ''}
+                onChange={(v) => setContent(section.id, v)}
+                rows={2}
+              />
+            )}
             <div className="space-y-2 pl-3 border-l-2" style={{ borderColor: 'var(--color-paper-lines)' }}>
               {(templateById.sections.find((ts) => ts.id === section.id)?.questionIds ?? []).map((qid) => {
                 const question = questionById.get(qid)
                 if (!question) return null
                 return (
                   <div key={qid}>
-                    <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-ink-faint)' }}>
+                    <label htmlFor={`bank-${qid}`} className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-ink-faint)' }}>
                       {qText(question)}
-                    </p>
+                    </label>
                     <TextArea
+                      id={`bank-${qid}`}
                       value={(section.answers ?? {})[qid] ?? ''}
                       onChange={(v) => setAnswer(section.id, qid, v)}
                       rows={2}
@@ -329,11 +339,16 @@ export function StoryStructure({ meta, update }: StoryStructureProps) {
               </button>
             )}
           </div>
-          <TextArea
-            value={section.content ?? ''}
-            onChange={(v) => setContent(section.id, v)}
-            placeholder={sectionHint(section.id)}
+          <StructureSectionPrompts
+            section={section}
+            onAnswer={(questionId, value, options) => setAnswer(section.id, questionId, value, options)}
           />
+          {!isStandardSection(section.id) && (
+            <TextArea
+              value={section.content ?? ''}
+              onChange={(v) => setContent(section.id, v)}
+            />
+          )}
         </div>
       ))}
 
@@ -344,8 +359,4 @@ export function StoryStructure({ meta, update }: StoryStructureProps) {
       )}
     </div>
   )
-}
-
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1)
 }

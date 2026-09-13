@@ -157,6 +157,50 @@ describe('projectService.storyMeta', () => {
   })
 })
 
+describe('projectService.timelineConfig', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('updateTimelineConfig: guarda el sistema de tiempo normalizado', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'folder-1' })
+    prismaMock.project.update.mockResolvedValue({
+      id: 'folder-1',
+      timelineConfig: { timeSystem: 'era', beforeLabel: 'AC', afterLabel: 'DC' },
+    })
+
+    const updated = await projectService.updateTimelineConfig('folder-1', 'user-1', {
+      timeSystem: 'era',
+      beforeLabel: '  AC  ',
+      afterLabel: 'DC',
+    })
+
+    expect(prismaMock.project.update).toHaveBeenCalledWith({
+      where: { id: 'folder-1' },
+      data: { timelineConfig: { timeSystem: 'era', beforeLabel: 'AC', afterLabel: 'DC' } },
+    })
+    expect(updated?.timelineConfig).toEqual({ timeSystem: 'era', beforeLabel: 'AC', afterLabel: 'DC' })
+  })
+
+  it('updateTimelineConfig: rechaza timeSystem inválido', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'folder-1' })
+
+    await expect(
+      projectService.updateTimelineConfig('folder-1', 'user-1', { timeSystem: 'julian' }),
+    ).rejects.toThrow('timeSystem debe ser "relative" o "era"')
+    expect(prismaMock.project.update).not.toHaveBeenCalled()
+  })
+
+  it('updateTimelineConfig: devuelve null si no pertenece al usuario', async () => {
+    prismaMock.project.findFirst.mockResolvedValue(null)
+
+    const updated = await projectService.updateTimelineConfig('folder-1', 'user-1', { timeSystem: 'relative' })
+
+    expect(updated).toBeNull()
+    expect(prismaMock.project.update).not.toHaveBeenCalled()
+  })
+})
+
 describe('documentService.create — ownership (anti-IDOR)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -175,6 +219,15 @@ describe('documentService.create — ownership (anti-IDOR)', () => {
     })
     expect(prismaMock.document.create).toHaveBeenCalled()
     expect(doc).toEqual({ id: 'doc-1', title: 'Capítulo 1' })
+  })
+
+  it('inicializa el conteo de contenido importado sin registrar actividad', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'proj-1' })
+    prismaMock.document.create.mockResolvedValue({ id: 'doc-1' })
+    prismaMock.branch.findFirst.mockResolvedValue({ id: 'branch-1' })
+    const content = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Texto importado' }] }] }
+    await documentService.create('user-1', { title: 'Importado', projectId: 'proj-1', content })
+    expect(prismaMock.document.create).toHaveBeenCalledWith({ data: expect.objectContaining({ content, wordCount: 2 }) })
   })
 
   it('rechaza crear en un proyecto ajeno (null, sin insert)', async () => {
@@ -315,7 +368,7 @@ describe('documentService.update — ownership (anti-IDOR)', () => {
     })
     prismaMock.document.update.mockResolvedValue({ id: 'doc-1', parentId: null })
 
-    const doc = await documentService.update('doc-1', 'user-1', { parentId: null })
+    await documentService.update('doc-1', 'user-1', { parentId: null })
 
     expect(prismaMock.document.findFirst).toHaveBeenCalledTimes(1)
     expect(prismaMock.document.update).toHaveBeenCalled()
@@ -371,6 +424,7 @@ describe('documentService.duplicate — sin N+1', () => {
     expect(duplicated).toEqual({ id: 'new-Capítulo 1 (Copia)' })
     expect(prismaMock.document.findMany).toHaveBeenCalledTimes(1)
     expect(prismaMock.document.create).toHaveBeenCalledTimes(3)
+    expect(prismaMock.document.create.mock.calls.map(([args]) => args.data.wordCount)).toEqual([0, 0, 0])
 
     const parentIds = prismaMock.document.create.mock.calls.map(([args]) => args.data.parentId)
     expect(parentIds).toContain('new-Capítulo 1 (Copia)')

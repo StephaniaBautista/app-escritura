@@ -6,12 +6,15 @@ import { RacesSection } from './RacesSection'
 import { GlossarySection } from './GlossarySection'
 import { CreaturesSection } from './CreaturesSection'
 import { WorldMap } from './WorldMap'
+import { OcrImport } from './OcrImport'
 
 type WorldTab = 'lore' | 'races' | 'glossary' | 'creatures' | 'map'
 
 export function WorldsPanel({ projectId }: { projectId: string }) {
   const { t } = useTranslation()
   const [tab, setTab] = useState<WorldTab>('lore')
+  const [loreDraft, setLoreDraft] = useState<{ text: string; nonce: number } | null>(null)
+  const [glossaryDraft, setGlossaryDraft] = useState<{ text: string; nonce: number } | null>(null)
 
   const tabs: { id: WorldTab; label: string; icon: typeof Globe }[] = [
     { id: 'lore', label: t('worldApp.tabLore'), icon: ScrollText },
@@ -54,9 +57,20 @@ export function WorldsPanel({ projectId }: { projectId: string }) {
         })}
       </div>
 
-      {tab === 'lore' && <LoreSection projectId={projectId} />}
+      <OcrImport
+        onUseInLore={(text) => {
+          setLoreDraft({ text, nonce: Date.now() })
+          setTab('lore')
+        }}
+        onUseInGlossary={(text) => {
+          setGlossaryDraft({ text, nonce: Date.now() })
+          setTab('glossary')
+        }}
+      />
+
+      {tab === 'lore' && <LoreSection projectId={projectId} importDraft={loreDraft} />}
       {tab === 'races' && <RacesSection projectId={projectId} />}
-      {tab === 'glossary' && <GlossarySection projectId={projectId} />}
+      {tab === 'glossary' && <GlossarySection projectId={projectId} importDraft={glossaryDraft} />}
       {tab === 'creatures' && <CreaturesSection projectId={projectId} />}
       {tab === 'map' && <WorldMap projectId={projectId} />}
     </div>

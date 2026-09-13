@@ -29,7 +29,13 @@ import { timelineRoutes } from './routes/timeline.js'
 import { relationshipRoutes } from './routes/relationships.js'
 import { diagramRoutes } from './routes/diagrams.js'
 import { worldbuildingRoutes } from './routes/worldbuilding.js'
+import { mapRoutes } from './routes/maps.js'
 import { ocrRoutes } from './routes/ocr.js'
+import { structureRoutes } from './routes/structure.js'
+import { subplotsRoutes } from './routes/subplots.js'
+import { statsRoutes } from './routes/stats.js'
+import { aiRoutes } from './routes/ai.js'
+import { MAX_OCR_UPLOAD_BYTES } from './services/ocr-service.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
 import { storyBankService } from './services/story-bank-service.js'
@@ -82,13 +88,16 @@ await app.register(swagger, {
       { name: 'Branches', description: 'Ramas de versionado (Git-like)' },
       { name: 'Settings', description: 'Configuración de usuario' },
       { name: 'Characters', description: 'Gestión de personajes' },
+      { name: 'Statistics', description: 'Writing totals, active time and historical streaks' },
       { name: 'AI', description: 'Integración con IA' },
       { name: 'Story Options', description: 'Opciones reutilizables del wizard de creación' },
       { name: 'Character Options', description: 'Catálogo estático de opciones del formulario de personaje (M41)' },
       { name: 'Story Sections', description: 'Secciones estándar de estructura de historia (M41)' },
       { name: 'i18n', description: 'Traducciones por namespace (público, cacheado)' },
-      { name: 'Worldbuilding', description: 'Lore, razas, glosario, criaturas y mapa mundial (Fase 7)' },
+      { name: 'Worldbuilding', description: 'Lore, razas, glosario, criaturas y mapas (Fase 7, M70)' },
       { name: 'OCR', description: 'Extracción de texto de imágenes y PDFs escaneados (Fase 7)' },
+      { name: 'Structure', description: 'Tablero de estructura por columnas y tarjetas (Fase 8)' },
+      { name: 'Subplots', description: 'Gestión de subtramas del proyecto (Fase 8)' },
     ],
   },
 })
@@ -118,7 +127,7 @@ await app.register(cors, {
 await app.register(helmet)
 
 await app.register(multipart, {
-  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+  limits: { fileSize: MAX_OCR_UPLOAD_BYTES, files: 1 },
 })
 
 await app.register(rateLimit, {
@@ -208,9 +217,16 @@ await app.register(diagramRoutes, { prefix: '/api' })
 
 // Fase 7: lore + worldbuilding
 await app.register(worldbuildingRoutes, { prefix: '/api' })
+await app.register(mapRoutes, { prefix: '/api' })
 
 // Fase 7: OCR de imágenes y PDFs escaneados
 await app.register(ocrRoutes, { prefix: '/api' })
+
+// Fase 8: estructura (tablero) + subtramas
+await app.register(structureRoutes, { prefix: '/api' })
+await app.register(subplotsRoutes, { prefix: '/api' })
+await app.register(aiRoutes, { prefix: '/api' })
+await app.register(statsRoutes, { prefix: '/api' })
 
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {

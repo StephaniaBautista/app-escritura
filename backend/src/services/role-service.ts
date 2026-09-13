@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma.js'
 import { MemoryCache } from '../lib/cache.js'
 
-export const ALL_PERMISSIONS = ['admin', 'moderate'] as const
+export const ALL_PERMISSIONS = ['admin', 'moderate', 'ai_chat', 'ai_characters', 'ai_suggestions'] as const
 export type Permission = (typeof ALL_PERMISSIONS)[number]
 
 const PERMISSIONS_CACHE_TTL_MS = 5 * 60 * 1000

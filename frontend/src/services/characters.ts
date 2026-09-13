@@ -66,6 +66,17 @@ export const charactersApi = {
       method: 'DELETE',
     }),
 
+  uploadHeightMapImage: (id: string, dataUrl: string) =>
+    fetchJson<Character>(`${API}/characters/${id}/height-map-image`, {
+      method: 'PUT',
+      body: JSON.stringify({ dataUrl }),
+    }),
+
+  deleteHeightMapImage: (id: string) =>
+    fetchJson<Character>(`${API}/characters/${id}/height-map-image`, {
+      method: 'DELETE',
+    }),
+
   syncBackgroundImages: (id: string, keepUrls: string[], dataUrls: string[]) =>
     fetchJson<Character>(`${API}/characters/${id}/background-images`, {
       method: 'PUT',

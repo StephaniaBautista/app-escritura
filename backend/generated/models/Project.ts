@@ -50,6 +50,7 @@ export type ProjectCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   storyMeta: number
+  timelineConfig: number
   _all: number
 }
 
@@ -80,6 +81,7 @@ export type ProjectCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   storyMeta?: true
+  timelineConfig?: true
   _all?: true
 }
 
@@ -163,6 +165,7 @@ export type ProjectGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   storyMeta: runtime.JsonValue
+  timelineConfig: runtime.JsonValue
   _count: ProjectCountAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
   _max: ProjectMaxAggregateOutputType | null
@@ -194,6 +197,7 @@ export type ProjectWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   storyMeta?: Prisma.JsonFilter<"Project">
+  timelineConfig?: Prisma.JsonFilter<"Project">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   documents?: Prisma.DocumentListRelationFilter
   folders?: Prisma.FolderListRelationFilter
@@ -210,6 +214,10 @@ export type ProjectWhereInput = {
   creatures?: Prisma.CreatureListRelationFilter
   locations?: Prisma.LocationListRelationFilter
   worldRoutes?: Prisma.WorldRouteListRelationFilter
+  mapBoards?: Prisma.MapBoardListRelationFilter
+  structureBoards?: Prisma.StructureBoardListRelationFilter
+  subplots?: Prisma.SubplotListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -220,6 +228,7 @@ export type ProjectOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   storyMeta?: Prisma.SortOrder
+  timelineConfig?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   folders?: Prisma.FolderOrderByRelationAggregateInput
@@ -236,6 +245,10 @@ export type ProjectOrderByWithRelationInput = {
   creatures?: Prisma.CreatureOrderByRelationAggregateInput
   locations?: Prisma.LocationOrderByRelationAggregateInput
   worldRoutes?: Prisma.WorldRouteOrderByRelationAggregateInput
+  mapBoards?: Prisma.MapBoardOrderByRelationAggregateInput
+  structureBoards?: Prisma.StructureBoardOrderByRelationAggregateInput
+  subplots?: Prisma.SubplotOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -249,6 +262,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   storyMeta?: Prisma.JsonFilter<"Project">
+  timelineConfig?: Prisma.JsonFilter<"Project">
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   documents?: Prisma.DocumentListRelationFilter
   folders?: Prisma.FolderListRelationFilter
@@ -265,6 +279,10 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   creatures?: Prisma.CreatureListRelationFilter
   locations?: Prisma.LocationListRelationFilter
   worldRoutes?: Prisma.WorldRouteListRelationFilter
+  mapBoards?: Prisma.MapBoardListRelationFilter
+  structureBoards?: Prisma.StructureBoardListRelationFilter
+  subplots?: Prisma.SubplotListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -275,6 +293,7 @@ export type ProjectOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   storyMeta?: Prisma.SortOrder
+  timelineConfig?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
   _min?: Prisma.ProjectMinOrderByAggregateInput
@@ -291,6 +310,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   storyMeta?: Prisma.JsonWithAggregatesFilter<"Project">
+  timelineConfig?: Prisma.JsonWithAggregatesFilter<"Project">
 }
 
 export type ProjectCreateInput = {
@@ -300,6 +320,7 @@ export type ProjectCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -316,6 +337,10 @@ export type ProjectCreateInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -326,6 +351,7 @@ export type ProjectUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -341,6 +367,10 @@ export type ProjectUncheckedCreateInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -350,6 +380,7 @@ export type ProjectUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -366,6 +397,10 @@ export type ProjectUpdateInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -376,6 +411,7 @@ export type ProjectUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -391,6 +427,10 @@ export type ProjectUncheckedUpdateInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -401,6 +441,7 @@ export type ProjectCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectUpdateManyMutationInput = {
@@ -410,6 +451,7 @@ export type ProjectUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectUncheckedUpdateManyInput = {
@@ -420,6 +462,7 @@ export type ProjectUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ProjectListRelationFilter = {
@@ -440,6 +483,7 @@ export type ProjectCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   storyMeta?: Prisma.SortOrder
+  timelineConfig?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
@@ -668,6 +712,20 @@ export type ProjectUpdateOneRequiredWithoutWorldRoutesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutWorldRoutesInput, Prisma.ProjectUpdateWithoutWorldRoutesInput>, Prisma.ProjectUncheckedUpdateWithoutWorldRoutesInput>
 }
 
+export type ProjectCreateNestedOneWithoutMapBoardsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMapBoardsInput, Prisma.ProjectUncheckedCreateWithoutMapBoardsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMapBoardsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutMapBoardsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMapBoardsInput, Prisma.ProjectUncheckedCreateWithoutMapBoardsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMapBoardsInput
+  upsert?: Prisma.ProjectUpsertWithoutMapBoardsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutMapBoardsInput, Prisma.ProjectUpdateWithoutMapBoardsInput>, Prisma.ProjectUncheckedUpdateWithoutMapBoardsInput>
+}
+
 export type ProjectCreateNestedOneWithoutDiagramsInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutDiagramsInput, Prisma.ProjectUncheckedCreateWithoutDiagramsInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDiagramsInput
@@ -724,6 +782,48 @@ export type ProjectUpdateOneRequiredWithoutRelationshipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutRelationshipsInput, Prisma.ProjectUpdateWithoutRelationshipsInput>, Prisma.ProjectUncheckedUpdateWithoutRelationshipsInput>
 }
 
+export type ProjectCreateNestedOneWithoutStructureBoardsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutStructureBoardsInput, Prisma.ProjectUncheckedCreateWithoutStructureBoardsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutStructureBoardsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutStructureBoardsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutStructureBoardsInput, Prisma.ProjectUncheckedCreateWithoutStructureBoardsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutStructureBoardsInput
+  upsert?: Prisma.ProjectUpsertWithoutStructureBoardsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutStructureBoardsInput, Prisma.ProjectUpdateWithoutStructureBoardsInput>, Prisma.ProjectUncheckedUpdateWithoutStructureBoardsInput>
+}
+
+export type ProjectCreateNestedOneWithoutSubplotsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutSubplotsInput, Prisma.ProjectUncheckedCreateWithoutSubplotsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutSubplotsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutSubplotsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutSubplotsInput, Prisma.ProjectUncheckedCreateWithoutSubplotsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutSubplotsInput
+  upsert?: Prisma.ProjectUpsertWithoutSubplotsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutSubplotsInput, Prisma.ProjectUpdateWithoutSubplotsInput>, Prisma.ProjectUncheckedUpdateWithoutSubplotsInput>
+}
+
+export type ProjectCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutAiConversationsInput, Prisma.ProjectUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutAiConversationsInput, Prisma.ProjectUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.ProjectUpsertWithoutAiConversationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.ProjectUpdateWithoutAiConversationsInput>, Prisma.ProjectUncheckedUpdateWithoutAiConversationsInput>
+}
+
 export type ProjectCreateWithoutUserInput = {
   id?: string
   name: string
@@ -731,6 +831,7 @@ export type ProjectCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -746,6 +847,10 @@ export type ProjectCreateWithoutUserInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -755,6 +860,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -770,6 +876,10 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutUserInput = {
@@ -809,6 +919,7 @@ export type ProjectScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   storyMeta?: Prisma.JsonFilter<"Project">
+  timelineConfig?: Prisma.JsonFilter<"Project">
 }
 
 export type ProjectCreateWithoutFoldersInput = {
@@ -818,6 +929,7 @@ export type ProjectCreateWithoutFoldersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -833,6 +945,10 @@ export type ProjectCreateWithoutFoldersInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFoldersInput = {
@@ -843,6 +959,7 @@ export type ProjectUncheckedCreateWithoutFoldersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -857,6 +974,10 @@ export type ProjectUncheckedCreateWithoutFoldersInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFoldersInput = {
@@ -882,6 +1003,7 @@ export type ProjectUpdateWithoutFoldersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -897,6 +1019,10 @@ export type ProjectUpdateWithoutFoldersInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFoldersInput = {
@@ -907,6 +1033,7 @@ export type ProjectUncheckedUpdateWithoutFoldersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -921,6 +1048,10 @@ export type ProjectUncheckedUpdateWithoutFoldersInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDocumentsInput = {
@@ -930,6 +1061,7 @@ export type ProjectCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
@@ -945,6 +1077,10 @@ export type ProjectCreateWithoutDocumentsInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -955,6 +1091,7 @@ export type ProjectUncheckedCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -969,6 +1106,10 @@ export type ProjectUncheckedCreateWithoutDocumentsInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -994,6 +1135,7 @@ export type ProjectUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -1009,6 +1151,10 @@ export type ProjectUpdateWithoutDocumentsInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -1019,6 +1165,7 @@ export type ProjectUncheckedUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -1033,6 +1180,10 @@ export type ProjectUncheckedUpdateWithoutDocumentsInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutNotesInput = {
@@ -1042,6 +1193,7 @@ export type ProjectCreateWithoutNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1057,6 +1209,10 @@ export type ProjectCreateWithoutNotesInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutNotesInput = {
@@ -1067,6 +1223,7 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1081,6 +1238,10 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutNotesInput = {
@@ -1106,6 +1267,7 @@ export type ProjectUpdateWithoutNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1121,6 +1283,10 @@ export type ProjectUpdateWithoutNotesInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutNotesInput = {
@@ -1131,6 +1297,7 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1145,6 +1312,10 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCharactersInput = {
@@ -1154,6 +1325,7 @@ export type ProjectCreateWithoutCharactersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1169,6 +1341,10 @@ export type ProjectCreateWithoutCharactersInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCharactersInput = {
@@ -1179,6 +1355,7 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
@@ -1193,6 +1370,10 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCharactersInput = {
@@ -1218,6 +1399,7 @@ export type ProjectUpdateWithoutCharactersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1233,6 +1415,10 @@ export type ProjectUpdateWithoutCharactersInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCharactersInput = {
@@ -1243,6 +1429,7 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
@@ -1257,6 +1444,10 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldsInput = {
@@ -1266,6 +1457,7 @@ export type ProjectCreateWithoutWorldsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1281,6 +1473,10 @@ export type ProjectCreateWithoutWorldsInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldsInput = {
@@ -1291,6 +1487,7 @@ export type ProjectUncheckedCreateWithoutWorldsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1305,6 +1502,10 @@ export type ProjectUncheckedCreateWithoutWorldsInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldsInput = {
@@ -1330,6 +1531,7 @@ export type ProjectUpdateWithoutWorldsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1345,6 +1547,10 @@ export type ProjectUpdateWithoutWorldsInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldsInput = {
@@ -1355,6 +1561,7 @@ export type ProjectUncheckedUpdateWithoutWorldsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1369,6 +1576,10 @@ export type ProjectUncheckedUpdateWithoutWorldsInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutLoreEntriesInput = {
@@ -1378,6 +1589,7 @@ export type ProjectCreateWithoutLoreEntriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1393,6 +1605,10 @@ export type ProjectCreateWithoutLoreEntriesInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLoreEntriesInput = {
@@ -1403,6 +1619,7 @@ export type ProjectUncheckedCreateWithoutLoreEntriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1417,6 +1634,10 @@ export type ProjectUncheckedCreateWithoutLoreEntriesInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLoreEntriesInput = {
@@ -1442,6 +1663,7 @@ export type ProjectUpdateWithoutLoreEntriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1457,6 +1679,10 @@ export type ProjectUpdateWithoutLoreEntriesInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLoreEntriesInput = {
@@ -1467,6 +1693,7 @@ export type ProjectUncheckedUpdateWithoutLoreEntriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1481,6 +1708,10 @@ export type ProjectUncheckedUpdateWithoutLoreEntriesInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRacesInput = {
@@ -1490,6 +1721,7 @@ export type ProjectCreateWithoutRacesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1505,6 +1737,10 @@ export type ProjectCreateWithoutRacesInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRacesInput = {
@@ -1515,6 +1751,7 @@ export type ProjectUncheckedCreateWithoutRacesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1529,6 +1766,10 @@ export type ProjectUncheckedCreateWithoutRacesInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRacesInput = {
@@ -1554,6 +1795,7 @@ export type ProjectUpdateWithoutRacesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1569,6 +1811,10 @@ export type ProjectUpdateWithoutRacesInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRacesInput = {
@@ -1579,6 +1825,7 @@ export type ProjectUncheckedUpdateWithoutRacesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1593,6 +1840,10 @@ export type ProjectUncheckedUpdateWithoutRacesInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutGlossaryEntriesInput = {
@@ -1602,6 +1853,7 @@ export type ProjectCreateWithoutGlossaryEntriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1617,6 +1869,10 @@ export type ProjectCreateWithoutGlossaryEntriesInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutGlossaryEntriesInput = {
@@ -1627,6 +1883,7 @@ export type ProjectUncheckedCreateWithoutGlossaryEntriesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1641,6 +1898,10 @@ export type ProjectUncheckedCreateWithoutGlossaryEntriesInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutGlossaryEntriesInput = {
@@ -1666,6 +1927,7 @@ export type ProjectUpdateWithoutGlossaryEntriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1681,6 +1943,10 @@ export type ProjectUpdateWithoutGlossaryEntriesInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutGlossaryEntriesInput = {
@@ -1691,6 +1957,7 @@ export type ProjectUncheckedUpdateWithoutGlossaryEntriesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1705,6 +1972,10 @@ export type ProjectUncheckedUpdateWithoutGlossaryEntriesInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCreaturesInput = {
@@ -1714,6 +1985,7 @@ export type ProjectCreateWithoutCreaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1729,6 +2001,10 @@ export type ProjectCreateWithoutCreaturesInput = {
   glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCreaturesInput = {
@@ -1739,6 +2015,7 @@ export type ProjectUncheckedCreateWithoutCreaturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1753,6 +2030,10 @@ export type ProjectUncheckedCreateWithoutCreaturesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCreaturesInput = {
@@ -1778,6 +2059,7 @@ export type ProjectUpdateWithoutCreaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1793,6 +2075,10 @@ export type ProjectUpdateWithoutCreaturesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCreaturesInput = {
@@ -1803,6 +2089,7 @@ export type ProjectUncheckedUpdateWithoutCreaturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1817,6 +2104,10 @@ export type ProjectUncheckedUpdateWithoutCreaturesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutLocationsInput = {
@@ -1826,6 +2117,7 @@ export type ProjectCreateWithoutLocationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1841,6 +2133,10 @@ export type ProjectCreateWithoutLocationsInput = {
   glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLocationsInput = {
@@ -1851,6 +2147,7 @@ export type ProjectUncheckedCreateWithoutLocationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1865,6 +2162,10 @@ export type ProjectUncheckedCreateWithoutLocationsInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLocationsInput = {
@@ -1890,6 +2191,7 @@ export type ProjectUpdateWithoutLocationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -1905,6 +2207,10 @@ export type ProjectUpdateWithoutLocationsInput = {
   glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLocationsInput = {
@@ -1915,6 +2221,7 @@ export type ProjectUncheckedUpdateWithoutLocationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -1929,6 +2236,10 @@ export type ProjectUncheckedUpdateWithoutLocationsInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldRoutesInput = {
@@ -1938,6 +2249,7 @@ export type ProjectCreateWithoutWorldRoutesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -1953,6 +2265,10 @@ export type ProjectCreateWithoutWorldRoutesInput = {
   glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldRoutesInput = {
@@ -1963,6 +2279,7 @@ export type ProjectUncheckedCreateWithoutWorldRoutesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -1977,6 +2294,10 @@ export type ProjectUncheckedCreateWithoutWorldRoutesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldRoutesInput = {
@@ -2002,6 +2323,7 @@ export type ProjectUpdateWithoutWorldRoutesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -2017,6 +2339,10 @@ export type ProjectUpdateWithoutWorldRoutesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldRoutesInput = {
@@ -2027,6 +2353,7 @@ export type ProjectUncheckedUpdateWithoutWorldRoutesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2041,6 +2368,142 @@ export type ProjectUncheckedUpdateWithoutWorldRoutesInput = {
   glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutMapBoardsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutMapBoardsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutMapBoardsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMapBoardsInput, Prisma.ProjectUncheckedCreateWithoutMapBoardsInput>
+}
+
+export type ProjectUpsertWithoutMapBoardsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutMapBoardsInput, Prisma.ProjectUncheckedUpdateWithoutMapBoardsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMapBoardsInput, Prisma.ProjectUncheckedCreateWithoutMapBoardsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutMapBoardsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutMapBoardsInput, Prisma.ProjectUncheckedUpdateWithoutMapBoardsInput>
+}
+
+export type ProjectUpdateWithoutMapBoardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutMapBoardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDiagramsInput = {
@@ -2050,6 +2513,7 @@ export type ProjectCreateWithoutDiagramsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -2065,6 +2529,10 @@ export type ProjectCreateWithoutDiagramsInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDiagramsInput = {
@@ -2075,6 +2543,7 @@ export type ProjectUncheckedCreateWithoutDiagramsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -2089,6 +2558,10 @@ export type ProjectUncheckedCreateWithoutDiagramsInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDiagramsInput = {
@@ -2114,6 +2587,7 @@ export type ProjectUpdateWithoutDiagramsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -2129,6 +2603,10 @@ export type ProjectUpdateWithoutDiagramsInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDiagramsInput = {
@@ -2139,6 +2617,7 @@ export type ProjectUncheckedUpdateWithoutDiagramsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2153,6 +2632,10 @@ export type ProjectUncheckedUpdateWithoutDiagramsInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTimelineErasInput = {
@@ -2162,6 +2645,7 @@ export type ProjectCreateWithoutTimelineErasInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -2177,6 +2661,10 @@ export type ProjectCreateWithoutTimelineErasInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTimelineErasInput = {
@@ -2187,6 +2675,7 @@ export type ProjectUncheckedCreateWithoutTimelineErasInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -2201,6 +2690,10 @@ export type ProjectUncheckedCreateWithoutTimelineErasInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTimelineErasInput = {
@@ -2226,6 +2719,7 @@ export type ProjectUpdateWithoutTimelineErasInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -2241,6 +2735,10 @@ export type ProjectUpdateWithoutTimelineErasInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTimelineErasInput = {
@@ -2251,6 +2749,7 @@ export type ProjectUncheckedUpdateWithoutTimelineErasInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2265,6 +2764,10 @@ export type ProjectUncheckedUpdateWithoutTimelineErasInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTimelineEventsInput = {
@@ -2274,6 +2777,7 @@ export type ProjectCreateWithoutTimelineEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -2289,6 +2793,10 @@ export type ProjectCreateWithoutTimelineEventsInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTimelineEventsInput = {
@@ -2299,6 +2807,7 @@ export type ProjectUncheckedCreateWithoutTimelineEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -2313,6 +2822,10 @@ export type ProjectUncheckedCreateWithoutTimelineEventsInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTimelineEventsInput = {
@@ -2338,6 +2851,7 @@ export type ProjectUpdateWithoutTimelineEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -2353,6 +2867,10 @@ export type ProjectUpdateWithoutTimelineEventsInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTimelineEventsInput = {
@@ -2363,6 +2881,7 @@ export type ProjectUncheckedUpdateWithoutTimelineEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2377,6 +2896,10 @@ export type ProjectUncheckedUpdateWithoutTimelineEventsInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRelationshipsInput = {
@@ -2386,6 +2909,7 @@ export type ProjectCreateWithoutRelationshipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
   documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
@@ -2401,6 +2925,10 @@ export type ProjectCreateWithoutRelationshipsInput = {
   creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRelationshipsInput = {
@@ -2411,6 +2939,7 @@ export type ProjectUncheckedCreateWithoutRelationshipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
   folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
@@ -2425,6 +2954,10 @@ export type ProjectUncheckedCreateWithoutRelationshipsInput = {
   creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
   locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
   worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRelationshipsInput = {
@@ -2450,6 +2983,7 @@ export type ProjectUpdateWithoutRelationshipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
@@ -2465,6 +2999,10 @@ export type ProjectUpdateWithoutRelationshipsInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRelationshipsInput = {
@@ -2475,6 +3013,7 @@ export type ProjectUncheckedUpdateWithoutRelationshipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2489,24 +3028,95 @@ export type ProjectUncheckedUpdateWithoutRelationshipsInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectCreateManyUserInput = {
+export type ProjectCreateWithoutStructureBoardsInput = {
   id?: string
   name: string
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
 }
 
-export type ProjectUpdateWithoutUserInput = {
+export type ProjectUncheckedCreateWithoutStructureBoardsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutStructureBoardsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutStructureBoardsInput, Prisma.ProjectUncheckedCreateWithoutStructureBoardsInput>
+}
+
+export type ProjectUpsertWithoutStructureBoardsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutStructureBoardsInput, Prisma.ProjectUncheckedUpdateWithoutStructureBoardsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutStructureBoardsInput, Prisma.ProjectUncheckedCreateWithoutStructureBoardsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutStructureBoardsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutStructureBoardsInput, Prisma.ProjectUncheckedUpdateWithoutStructureBoardsInput>
+}
+
+export type ProjectUpdateWithoutStructureBoardsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
@@ -2522,15 +3132,20 @@ export type ProjectUpdateWithoutUserInput = {
   creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectUncheckedUpdateWithoutUserInput = {
+export type ProjectUncheckedUpdateWithoutStructureBoardsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
   folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
@@ -2546,6 +3161,341 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
   locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
   worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutSubplotsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutSubplotsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutSubplotsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutSubplotsInput, Prisma.ProjectUncheckedCreateWithoutSubplotsInput>
+}
+
+export type ProjectUpsertWithoutSubplotsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutSubplotsInput, Prisma.ProjectUncheckedUpdateWithoutSubplotsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutSubplotsInput, Prisma.ProjectUncheckedCreateWithoutSubplotsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutSubplotsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutSubplotsInput, Prisma.ProjectUncheckedUpdateWithoutSubplotsInput>
+}
+
+export type ProjectUpdateWithoutSubplotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutSubplotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutAiConversationsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutProjectInput
+  diagrams?: Prisma.DiagramUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutProjectInput
+  timelineEvents?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutProjectInput
+  timelineEras?: Prisma.TimelineEraUncheckedCreateNestedManyWithoutProjectInput
+  relationships?: Prisma.CharacterRelationshipUncheckedCreateNestedManyWithoutProjectInput
+  loreEntries?: Prisma.LoreEntryUncheckedCreateNestedManyWithoutProjectInput
+  races?: Prisma.RaceUncheckedCreateNestedManyWithoutProjectInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedCreateNestedManyWithoutProjectInput
+  creatures?: Prisma.CreatureUncheckedCreateNestedManyWithoutProjectInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutProjectInput
+  worldRoutes?: Prisma.WorldRouteUncheckedCreateNestedManyWithoutProjectInput
+  mapBoards?: Prisma.MapBoardUncheckedCreateNestedManyWithoutProjectInput
+  structureBoards?: Prisma.StructureBoardUncheckedCreateNestedManyWithoutProjectInput
+  subplots?: Prisma.SubplotUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutAiConversationsInput, Prisma.ProjectUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type ProjectUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutAiConversationsInput, Prisma.ProjectUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutAiConversationsInput, Prisma.ProjectUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutAiConversationsInput, Prisma.ProjectUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type ProjectUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateManyUserInput = {
+  id?: string
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+}
+
+export type ProjectUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutProjectNestedInput
+  diagrams?: Prisma.DiagramUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEvents?: Prisma.TimelineEventUncheckedUpdateManyWithoutProjectNestedInput
+  timelineEras?: Prisma.TimelineEraUncheckedUpdateManyWithoutProjectNestedInput
+  relationships?: Prisma.CharacterRelationshipUncheckedUpdateManyWithoutProjectNestedInput
+  loreEntries?: Prisma.LoreEntryUncheckedUpdateManyWithoutProjectNestedInput
+  races?: Prisma.RaceUncheckedUpdateManyWithoutProjectNestedInput
+  glossaryEntries?: Prisma.GlossaryEntryUncheckedUpdateManyWithoutProjectNestedInput
+  creatures?: Prisma.CreatureUncheckedUpdateManyWithoutProjectNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutProjectNestedInput
+  worldRoutes?: Prisma.WorldRouteUncheckedUpdateManyWithoutProjectNestedInput
+  mapBoards?: Prisma.MapBoardUncheckedUpdateManyWithoutProjectNestedInput
+  structureBoards?: Prisma.StructureBoardUncheckedUpdateManyWithoutProjectNestedInput
+  subplots?: Prisma.SubplotUncheckedUpdateManyWithoutProjectNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -2555,6 +3505,7 @@ export type ProjectUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storyMeta?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  timelineConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -2578,6 +3529,10 @@ export type ProjectCountOutputType = {
   creatures: number
   locations: number
   worldRoutes: number
+  mapBoards: number
+  structureBoards: number
+  subplots: number
+  aiConversations: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2596,6 +3551,10 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   creatures?: boolean | ProjectCountOutputTypeCountCreaturesArgs
   locations?: boolean | ProjectCountOutputTypeCountLocationsArgs
   worldRoutes?: boolean | ProjectCountOutputTypeCountWorldRoutesArgs
+  mapBoards?: boolean | ProjectCountOutputTypeCountMapBoardsArgs
+  structureBoards?: boolean | ProjectCountOutputTypeCountStructureBoardsArgs
+  subplots?: boolean | ProjectCountOutputTypeCountSubplotsArgs
+  aiConversations?: boolean | ProjectCountOutputTypeCountAiConversationsArgs
 }
 
 /**
@@ -2713,6 +3672,34 @@ export type ProjectCountOutputTypeCountWorldRoutesArgs<ExtArgs extends runtime.T
   where?: Prisma.WorldRouteWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountMapBoardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MapBoardWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountStructureBoardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StructureBoardWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountSubplotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SubplotWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2722,6 +3709,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   storyMeta?: boolean
+  timelineConfig?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
   folders?: boolean | Prisma.Project$foldersArgs<ExtArgs>
@@ -2738,6 +3726,10 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   creatures?: boolean | Prisma.Project$creaturesArgs<ExtArgs>
   locations?: boolean | Prisma.Project$locationsArgs<ExtArgs>
   worldRoutes?: boolean | Prisma.Project$worldRoutesArgs<ExtArgs>
+  mapBoards?: boolean | Prisma.Project$mapBoardsArgs<ExtArgs>
+  structureBoards?: boolean | Prisma.Project$structureBoardsArgs<ExtArgs>
+  subplots?: boolean | Prisma.Project$subplotsArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Project$aiConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -2749,6 +3741,7 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   storyMeta?: boolean
+  timelineConfig?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -2760,6 +3753,7 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   storyMeta?: boolean
+  timelineConfig?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -2771,9 +3765,10 @@ export type ProjectSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   storyMeta?: boolean
+  timelineConfig?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt" | "storyMeta", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt" | "storyMeta" | "timelineConfig", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
@@ -2791,6 +3786,10 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   creatures?: boolean | Prisma.Project$creaturesArgs<ExtArgs>
   locations?: boolean | Prisma.Project$locationsArgs<ExtArgs>
   worldRoutes?: boolean | Prisma.Project$worldRoutesArgs<ExtArgs>
+  mapBoards?: boolean | Prisma.Project$mapBoardsArgs<ExtArgs>
+  structureBoards?: boolean | Prisma.Project$structureBoardsArgs<ExtArgs>
+  subplots?: boolean | Prisma.Project$subplotsArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Project$aiConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2819,6 +3818,10 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     creatures: Prisma.$CreaturePayload<ExtArgs>[]
     locations: Prisma.$LocationPayload<ExtArgs>[]
     worldRoutes: Prisma.$WorldRoutePayload<ExtArgs>[]
+    mapBoards: Prisma.$MapBoardPayload<ExtArgs>[]
+    structureBoards: Prisma.$StructureBoardPayload<ExtArgs>[]
+    subplots: Prisma.$SubplotPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2828,6 +3831,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     createdAt: Date
     updatedAt: Date
     storyMeta: runtime.JsonValue
+    timelineConfig: runtime.JsonValue
   }, ExtArgs["result"]["project"]>
   composites: {}
 }
@@ -3238,6 +4242,10 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   creatures<T extends Prisma.Project$creaturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$creaturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locations<T extends Prisma.Project$locationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   worldRoutes<T extends Prisma.Project$worldRoutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$worldRoutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldRoutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mapBoards<T extends Prisma.Project$mapBoardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$mapBoardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  structureBoards<T extends Prisma.Project$structureBoardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$structureBoardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StructureBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subplots<T extends Prisma.Project$subplotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$subplotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubplotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.Project$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3274,6 +4282,7 @@ export interface ProjectFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly storyMeta: Prisma.FieldRef<"Project", 'Json'>
+  readonly timelineConfig: Prisma.FieldRef<"Project", 'Json'>
 }
     
 
@@ -4032,6 +5041,102 @@ export type Project$worldRoutesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.WorldRouteScalarFieldEnum | Prisma.WorldRouteScalarFieldEnum[]
+}
+
+/**
+ * Project.mapBoards
+ */
+export type Project$mapBoardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MapBoard
+   */
+  select?: Prisma.MapBoardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MapBoard
+   */
+  omit?: Prisma.MapBoardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MapBoardInclude<ExtArgs> | null
+  where?: Prisma.MapBoardWhereInput
+  orderBy?: Prisma.MapBoardOrderByWithRelationInput | Prisma.MapBoardOrderByWithRelationInput[]
+  cursor?: Prisma.MapBoardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MapBoardScalarFieldEnum | Prisma.MapBoardScalarFieldEnum[]
+}
+
+/**
+ * Project.structureBoards
+ */
+export type Project$structureBoardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StructureBoard
+   */
+  select?: Prisma.StructureBoardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StructureBoard
+   */
+  omit?: Prisma.StructureBoardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StructureBoardInclude<ExtArgs> | null
+  where?: Prisma.StructureBoardWhereInput
+  orderBy?: Prisma.StructureBoardOrderByWithRelationInput | Prisma.StructureBoardOrderByWithRelationInput[]
+  cursor?: Prisma.StructureBoardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StructureBoardScalarFieldEnum | Prisma.StructureBoardScalarFieldEnum[]
+}
+
+/**
+ * Project.subplots
+ */
+export type Project$subplotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subplot
+   */
+  select?: Prisma.SubplotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subplot
+   */
+  omit?: Prisma.SubplotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubplotInclude<ExtArgs> | null
+  where?: Prisma.SubplotWhereInput
+  orderBy?: Prisma.SubplotOrderByWithRelationInput | Prisma.SubplotOrderByWithRelationInput[]
+  cursor?: Prisma.SubplotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SubplotScalarFieldEnum | Prisma.SubplotScalarFieldEnum[]
+}
+
+/**
+ * Project.aiConversations
+ */
+export type Project$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
 }
 
 /**

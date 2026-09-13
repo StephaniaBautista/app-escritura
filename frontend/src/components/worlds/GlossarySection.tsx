@@ -5,35 +5,44 @@ import type { GlossaryEntry, GlossaryEntryInput } from '@/types/worldbuilding'
 import { useWorldbuildingStore } from '@/stores/worldbuilding-store'
 import { useToastStore } from '@/stores/toast-store'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { SectionModal } from './SectionModal'
+import { WorldFormSheet } from './WorldFormSheet'
+import { EMPTY_GLOSSARY_FORM, GlossaryFormFields, type GlossaryFormState } from './GlossaryFormFields'
 
-interface FormState {
-  id: string | null
-  word: string
-  pronunciation: string
-  meaning: string
+function toForm(entry: GlossaryEntry): GlossaryFormState {
+  return {
+    id: entry.id,
+    word: entry.word,
+    pronunciation: entry.pronunciation ?? '',
+    meaning: entry.meaning ?? '',
+  }
 }
 
-const EMPTY: FormState = { id: null, word: '', pronunciation: '', meaning: '' }
-
-const inputStyle = {
-  background: 'var(--color-background)',
-  borderColor: 'var(--color-paper-lines)',
-  color: 'var(--color-ink)',
-} as const
-
-export function GlossarySection({ projectId }: { projectId: string }) {
+export function GlossarySection({
+  projectId,
+  importDraft,
+}: {
+  projectId: string
+  importDraft?: { text: string; nonce: number } | null
+}) {
   const { t } = useTranslation()
   const toast = useToastStore()
   const { glossary, loadGlossary, createGlossary, updateGlossary, removeGlossary } = useWorldbuildingStore()
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<FormState>(EMPTY)
+  const [form, setForm] = useState<GlossaryFormState>(EMPTY_GLOSSARY_FORM)
   const [isSaving, setIsSaving] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<GlossaryEntry | null>(null)
 
   useEffect(() => {
     loadGlossary(projectId)
   }, [projectId, loadGlossary])
+
+  useEffect(() => {
+    if (!importDraft?.text) return
+    setForm({ ...EMPTY_GLOSSARY_FORM, meaning: importDraft.text })
+    setOpen(true)
+  }, [importDraft])
+
+  const patchForm = (patch: Partial<GlossaryFormState>) => setForm((current) => ({ ...current, ...patch }))
 
   const handleSave = async () => {
     if (!form.word.trim()) {
@@ -63,7 +72,7 @@ export function GlossarySection({ projectId }: { projectId: string }) {
           {t('worldApp.glossarySubtitle')} · {glossary.length}
         </p>
         <button
-          onClick={() => { setForm(EMPTY); setOpen(true) }}
+          onClick={() => { setForm(EMPTY_GLOSSARY_FORM); setOpen(true) }}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
           style={{ background: 'var(--color-accent)' }}
         >
@@ -94,7 +103,12 @@ export function GlossarySection({ projectId }: { projectId: string }) {
                   )}
                 </div>
                 <div className="flex shrink-0 gap-0.5">
-                  <button onClick={() => { setForm({ id: entry.id, word: entry.word, pronunciation: entry.pronunciation ?? '', meaning: entry.meaning ?? '' }); setOpen(true) }} aria-label={t('common.edit')} className="rounded p-1 hover:opacity-70" style={{ color: 'var(--color-ink-light)' }}>
+                  <button
+                    onClick={() => { setForm(toForm(entry)); setOpen(true) }}
+                    aria-label={t('common.edit')}
+                    className="rounded p-1 hover:opacity-70"
+                    style={{ color: 'var(--color-ink-light)' }}
+                  >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button onClick={() => setDeleteTarget(entry)} aria-label={t('common.delete')} className="rounded p-1 hover:opacity-70" style={{ color: 'var(--color-danger, #dc2626)' }}>
@@ -108,20 +122,15 @@ export function GlossarySection({ projectId }: { projectId: string }) {
       )}
 
       {open && (
-        <SectionModal title={form.id ? t('common.edit') : t('worldApp.newGlossary')} isSaving={isSaving} onClose={() => setOpen(false)} onSave={handleSave}>
-          <div>
-            <label htmlFor="gl-word" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.word')}</label>
-            <input id="gl-word" type="text" value={form.word} onChange={(e) => setForm((f) => ({ ...f, word: e.target.value }))} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm" style={inputStyle} />
-          </div>
-          <div>
-            <label htmlFor="gl-pronunciation" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.pronunciation')}</label>
-            <input id="gl-pronunciation" type="text" value={form.pronunciation} onChange={(e) => setForm((f) => ({ ...f, pronunciation: e.target.value }))} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm" style={inputStyle} />
-          </div>
-          <div>
-            <label htmlFor="gl-meaning" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>{t('worldApp.meaning')}</label>
-            <textarea id="gl-meaning" value={form.meaning} onChange={(e) => setForm((f) => ({ ...f, meaning: e.target.value }))} rows={3} disabled={isSaving} className="w-full rounded-lg border px-3 py-2 text-sm resize-y" style={inputStyle} />
-          </div>
-        </SectionModal>
+        <WorldFormSheet
+          variant="glossary"
+          eyebrow={t('worldApp.glossarySheetLabel')}
+          isSaving={isSaving}
+          onClose={() => setOpen(false)}
+          onSave={() => void handleSave()}
+        >
+          <GlossaryFormFields form={form} onChange={patchForm} isSaving={isSaving} />
+        </WorldFormSheet>
       )}
 
       <ConfirmDialog

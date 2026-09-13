@@ -20,6 +20,7 @@ describe('getTrustedHost', () => {
   it('acepta localhost de dev (backend y frontend)', () => {
     expect(getTrustedHost('localhost:3001')).toBe('localhost:3001')
     expect(getTrustedHost('localhost:5173')).toBe('localhost:5173')
+    expect(getTrustedHost('localhost:5175')).toBe('localhost:5175')
   })
 
   it('rechaza un Host malicioso y cae al host de confianza', () => {

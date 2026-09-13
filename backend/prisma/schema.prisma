@@ -36,6 +36,11 @@ model User {
   branches      Branch[]
   settings      UserSettings?
   activities    Activity[]
+  aiConversations AiConversation[]
+  aiUsage       AiUsage?
+  writingStats  WritingStats[]
+  writingSessions WritingSession[]
+  writingActivityClock WritingActivityClock?
   @@map("users")
 }
 
@@ -96,6 +101,9 @@ model Project {
   // Se guarda en el proyecto como datos extra. NUNCA como documento.
   storyMeta Json @default("{}")
 
+  // Línea temporal: sistema de presentación de años (relative | era + siglas)
+  timelineConfig Json @default("{}")
+
   // Relations
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   documents   Document[]
@@ -113,6 +121,10 @@ model Project {
   creatures        Creature[]
   locations        Location[]
   worldRoutes      WorldRoute[]
+  mapBoards        MapBoard[]
+  structureBoards  StructureBoard[]
+  subplots         Subplot[]
+  aiConversations  AiConversation[]
 
   @@map("projects")
 }
@@ -150,6 +162,7 @@ model Document {
   updatedAt DateTime @updatedAt
 
   autoVersionState Json @default("{}")
+  wordCount Int?
 
   // Relations
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -160,10 +173,13 @@ model Document {
   notes     Note[]
   versions  DocumentVersion[]
   branches  Branch[]
+  aiConversations AiConversation[]
+  writingSessions WritingSession[]
 
   @@index([projectId])
   @@index([parentId])
   @@index([userId])
+  @@index([userId, wordCount])
   @@map("documents")
 }
 
@@ -253,6 +269,7 @@ model UserSettings {
   theme      String @default("system")
   language   String @default("es")
   autoVersion Json  @default("{}")
+  uiPrefs    Json   @default("{}")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -266,6 +283,7 @@ model Character {
   name            String
   description     String?
   imageUrl        String?
+  heightMapImageUrl String?
   sheetBackgroundMode   String    @default("default")
   sheetBackgroundImages String[]  @default([])
   nicknames       String[]  @default([])
@@ -294,6 +312,7 @@ model Character {
   evolutions  Character[] @relation("CharacterEvolution")
   relationshipsA CharacterRelationship[] @relation("RelA")
   relationshipsB CharacterRelationship[] @relation("RelB")
+  aiConversations AiConversation[]
 
   @@index([projectId])
   @@map("characters")
@@ -324,6 +343,11 @@ model LoreEntry {
   description String?
   type        String   @default("custom")
   limits      String?
+  powerSource String?
+  cost        String?
+  usedBy      String?
+  pdfUrl      String?
+  pdfName     String?
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -336,22 +360,28 @@ model LoreEntry {
 
 // Race / people (Fase 7) — razas y pueblos del mundo
 model Race {
-  id               String   @id @default(cuid())
-  projectId        String
-  name             String
-  classification   String?
-  description      String?
-  physicalTraits   String?
-  hasMagic         Boolean  @default(false)
-  magicDescription String?
-  lifeExpectancy   Int?
-  language         String?
-  culture          String?
-  religion         String?
-  origin           String?
-  territory        String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  projectId           String
+  name                String
+  classification      String?
+  description         String?
+  physicalTraits      String?
+  hasMagic            Boolean  @default(false)
+  magicDescription    String?
+  spiritualTraits     String?
+  lifeExpectancy      String?
+  language            String?
+  culture             String?
+  religion            String?
+  origin              String?
+  territory           String?
+  relationsWithOthers String?
+  importantNotes      String?
+  imageUrl            String?
+  pdfUrl              String?
+  pdfName             String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
@@ -383,6 +413,7 @@ model Creature {
   species     String?
   dangerType  String?
   description String?
+  imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -427,6 +458,22 @@ model WorldRoute {
   @@unique([locationAId, locationBId])
   @@index([projectId])
   @@map("world_routes")
+}
+
+model MapBoard {
+  id            String   @id @default(cuid())
+  projectId     String
+  name          String
+  backgroundUrl String?
+  canvas        Json     @default("{}")
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, order])
+  @@map("map_boards")
 }
 
 // Diagram model for plot diagrams
@@ -478,6 +525,16 @@ model TimelineEvent {
   order        Int      @default(0)
   eraId        String?             // época/franja a la que pertenece (null → General)
   characterIds String[] @default([])
+  icon            String?
+  color           String?
+  groupName       String?
+  precision       String   @default("year") // year | month | day | minute
+  endDate         String?
+  label           String?
+  labelColor      String?
+  imageUrl            String?
+  relatedEventIds     String[] @default([])
+  relatedDocumentIds  String[] @default([])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -613,4 +670,183 @@ model StorySection {
   createdAt DateTime @default(now())
 
   @@map("story_sections")
+}
+
+// StructureBoard (Fase 8) — tablero tipo Trello por proyecto
+model StructureBoard {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  columns StructureColumn[]
+
+  @@index([projectId])
+  @@map("structure_boards")
+}
+
+// StructureColumn (Fase 8) — columna customizable del tablero
+model StructureColumn {
+  id        String   @id @default(cuid())
+  boardId   String
+  name      String
+  color     String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board StructureBoard  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards StructureCard[]
+
+  @@index([boardId])
+  @@map("structure_columns")
+}
+
+// StructureCard (Fase 8) — tarjeta del tablero
+// cardType: scene | chapter | character | document | note (string validado por JSON Schema)
+// referenceId: link opcional a Document/Character sin FK (targets en tablas distintas)
+model StructureCard {
+  id          String   @id @default(cuid())
+  columnId    String
+  title       String
+  description String?
+  cardType    String   @default("scene")
+  referenceId String?
+  color       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  column StructureColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+
+  @@index([columnId])
+  @@map("structure_cards")
+}
+
+// Subplot (Fase 8) — subtrama: historia paralela del universo principal
+// status: active | resolved | dropped (string validado por JSON Schema)
+model Subplot {
+  id          String   @id @default(cuid())
+  projectId   String
+  title       String
+  description String?
+  status      String   @default("active")
+  color       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("subplots")
+}
+
+model AiConversation {
+  id          String   @id @default(cuid())
+  projectId   String
+  userId      String
+  mode        String
+  title       String
+  characterId String?
+  chapterId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiresAt   DateTime
+
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character Character? @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  chapter   Document?  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  messages  AiMessage[]
+
+  @@index([userId, projectId, updatedAt])
+  @@index([projectId])
+  @@index([characterId])
+  @@index([chapterId])
+  @@index([expiresAt])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String
+  content        String
+  sources        Json     @default("[]")
+  provider       String?
+  model          String?
+  requestId      String
+  requestHash    String
+  createdAt      DateTime @default(now())
+
+  conversation AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, requestId, role])
+  @@index([conversationId, createdAt])
+  @@map("ai_messages")
+}
+
+model AiUsage {
+  userId          String   @id
+  windowStartedAt DateTime @default(now())
+  requestCount    Int      @default(0)
+  leaseUntil      DateTime?
+  leaseToken      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_usage")
+}
+
+model WritingStats {
+  id                 String   @id @default(cuid())
+  userId             String
+  projectId          String
+  documentId         String
+  day                String   @db.VarChar(10)
+  wordsAdded         Int      @default(0)
+  activeMilliseconds Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, documentId, day])
+  @@index([userId, day])
+  @@index([userId, projectId, day])
+  @@map("writing_stats")
+}
+
+model WritingSession {
+  id                   String   @id
+  userId               String
+  documentId           String
+  projectId            String
+  timeZone             String
+  reportedMilliseconds Int      @default(0)
+  creditedMilliseconds Int      @default(0)
+  createdAt            DateTime @default(now())
+  lastReceivedAt       DateTime @default(now())
+  expiresAt            DateTime
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([documentId])
+  @@index([expiresAt])
+  @@map("writing_sessions")
+}
+
+model WritingActivityClock {
+  userId         String   @id
+  lastCreditedAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("writing_activity_clocks")
 }

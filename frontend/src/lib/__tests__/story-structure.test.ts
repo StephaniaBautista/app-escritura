@@ -36,7 +36,26 @@ describe('migrateStructure', () => {
     })
     expect(result.templateId).toBe('t-1')
     expect(result.sections[0].answers).toEqual({ 'q-1': 'respuesta' })
+    expect(result.sections[0].scenes).toBeUndefined()
     expect(result.sections[1].title).toBe('Epílogo')
+  })
+
+  it('conserva escenas sugeridas como capítulo o nota', () => {
+    const result = migrateStructure({
+      sections: [{
+        id: 'desarrollo',
+        content: '',
+        scenes: [
+          { title: 'La noticia', form: 'chapter' },
+          { title: 'Vecinos', form: 'note' },
+          { title: 'Ignorar', form: 'other' },
+        ],
+      }],
+    })
+    expect(result.sections[0].scenes).toEqual([
+      { title: 'La noticia', form: 'chapter' },
+      { title: 'Vecinos', form: 'note' },
+    ])
   })
 
   it('descarta secciones inválidas del formato nuevo', () => {

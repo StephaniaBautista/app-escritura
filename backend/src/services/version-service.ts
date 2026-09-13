@@ -1,3 +1,4 @@
+import { countDocumentWords } from '../lib/document-words.js'
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
 import { getMaxVersions, type Tier, Tier as TierEnum } from '../config/tiers.js'
@@ -70,6 +71,7 @@ export const versionService = {
       data: {
         title: version.title,
         content: version.content as Prisma.InputJsonValue,
+        wordCount: countDocumentWords(version.content),
       },
     })
   },

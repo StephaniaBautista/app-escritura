@@ -9,8 +9,22 @@ const mocks = vi.hoisted(() => ({
   characters: [] as Character[],
 }))
 
+vi.mock('react-router', () => ({
+  useSearchParams: () => [new URLSearchParams(), vi.fn()],
+}))
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'es' } }),
+}))
+
+vi.mock('@/components/ai/useAiCapabilities', () => ({
+  useAiCapabilities: () => ({ capabilities: null, loading: false, error: null, retry: vi.fn() }),
+}))
+
+vi.mock('../CharacterAiButton', () => ({ CharacterAiButton: () => null }))
+vi.mock('../CharacterAiProposals', () => ({ CharacterAiProposals: () => null }))
+vi.mock('@/stores/document-store', () => ({
+  useDocumentStore: () => ({ documentTree: [], currentDocument: null }),
 }))
 
 vi.mock('@/stores/characters-store', () => ({
@@ -20,9 +34,14 @@ vi.mock('@/stores/characters-store', () => ({
       isLoading: false,
       load: mocks.load,
       remove: vi.fn(),
+      createMany: vi.fn(),
     }
     return selector ? selector(state) : state
   },
+}))
+
+vi.mock('@/stores/toast-store', () => ({
+  useToastStore: () => ({ error: vi.fn(), success: vi.fn() }),
 }))
 
 vi.mock('@/stores/relationships-store', () => ({
@@ -42,6 +61,7 @@ const original: Character = {
   name: 'Lyra Belacqua',
   description: null,
   imageUrl: null,
+  heightMapImageUrl: null,
   sheetBackgroundMode: 'default',
   sheetBackgroundImages: [],
   nicknames: [],

@@ -30,6 +30,7 @@ const lyra: Character = {
   name: 'Lyra',
   description: null,
   imageUrl: null,
+  heightMapImageUrl: null,
   sheetBackgroundMode: 'default',
   sheetBackgroundImages: [],
   nicknames: [],

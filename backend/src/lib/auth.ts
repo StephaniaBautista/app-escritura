@@ -4,18 +4,11 @@ import { prisma } from './prisma.js'
 import { sendEmail } from './email.js'
 
 const baseURL = process.env.BETTER_AUTH_URL || 'http://localhost:3001'
-
-// Build social providers dynamically
-const socialProviders: Record<string, any> = {}
-
-if (process.env.GOOGLE_CLIENT_ID && 
-    process.env.GOOGLE_CLIENT_SECRET && 
-    process.env.GOOGLE_CLIENT_ID !== 'your-google-client-id') {
-  socialProviders.google = {
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  }
-}
+const googleClientId = process.env.GOOGLE_CLIENT_ID
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+const socialProviders = googleClientId && googleClientSecret && googleClientId !== 'your-google-client-id'
+  ? { google: { clientId: googleClientId, clientSecret: googleClientSecret } }
+  : undefined
 
 export const auth = betterAuth({
   baseURL,
@@ -25,7 +18,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: process.env.NODE_ENV === 'production',
-    sendResetPassword: async ({ user, url, token }, request) => {
+    sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
         subject: 'Recupera tu contraseña - Archivum',
@@ -57,7 +50,7 @@ export const auth = betterAuth({
       },
     },
   },
-  ...(Object.keys(socialProviders).length > 0 && { socialProviders }),
+  ...(socialProviders && { socialProviders }),
   session: {
     expiresIn: 60 * 60 * 24 * 365, // 1 year (effectively indefinite)
     updateAge: 60 * 60 * 24, // 1 day
@@ -74,6 +67,7 @@ export const auth = betterAuth({
   },
   trustedOrigins: [
     'http://localhost:5173',
+    'http://localhost:5175',
     'http://localhost:3001',
     process.env.FRONTEND_URL || 'https://app-escritura.vercel.app',
   ],

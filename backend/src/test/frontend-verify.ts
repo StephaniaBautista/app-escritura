@@ -22,14 +22,19 @@ interface TestResult {
 
 const results: TestResult[] = []
 
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
+}
+
 function test(name: string, fn: () => void) {
   try {
     fn()
     results.push({ name, passed: true })
     console.log(`  ✅ ${name}`)
-  } catch (error: any) {
-    results.push({ name, passed: false, error: error.message })
-    console.log(`  ❌ ${name}: ${error.message}`)
+  } catch (error: unknown) {
+    const message = getErrorMessage(error)
+    results.push({ name, passed: false, error: message })
+    console.log(`  ❌ ${name}: ${message}`)
   }
 }
 

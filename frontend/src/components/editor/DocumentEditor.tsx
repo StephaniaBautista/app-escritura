@@ -1,13 +1,19 @@
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, useEditorState, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextAlign from '@tiptap/extension-text-align'
 import { TextStyleKit } from '@tiptap/extension-text-style'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useWritingActivity } from '@/hooks/useWritingActivity'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import type { SaveStatus } from '@/hooks/useAutoSave'
+import { countWritingWords } from './word-count'
 import { Toolbar } from './Toolbar'
+import type { AiSuggestion } from '@/types/ai'
+import { AiHighlights, aiHighlightsKey, findQuoteRanges } from '@/components/ai/AiHighlights'
+import '@/components/ai/ai.css'
 import { ParagraphSpacing } from './extensions/ParagraphSpacing'
 import { Check, Loader2, AlertCircle } from 'lucide-react'
 
@@ -15,21 +21,19 @@ interface DocumentEditorProps {
   documentId: string
   initialContent?: Record<string, unknown>
   onKeystroke?: () => void
-}
-
-function getWordCount(text: string): number {
-  const trimmed = text.trim()
-  if (!trimmed) return 0
-  return trimmed.split(/\s+/).length
+  onContentChange?: (text: string) => void
+  suggestions?: AiSuggestion[]
+  revealSuggestion?: { suggestion: AiSuggestion; sequence: number } | null
 }
 
 function StatusIndicator({ status }: { status: SaveStatus }) {
+  const { t } = useTranslation()
   if (status === 'idle') return null
 
   const config = {
-    saving: { icon: Loader2, text: 'Guardando...', color: 'var(--color-ink-faint)', spin: true },
-    saved: { icon: Check, text: 'Guardado', color: 'var(--color-accent-teal)', spin: false },
-    error: { icon: AlertCircle, text: 'Error al guardar', color: 'var(--color-accent)', spin: false },
+    saving: { icon: Loader2, text: t('editorApp.saveSaving'), color: 'var(--color-ink-faint)', spin: true },
+    saved: { icon: Check, text: t('editorApp.saveSaved'), color: 'var(--color-accent-teal)', spin: false },
+    error: { icon: AlertCircle, text: t('editorApp.saveError'), color: 'var(--color-accent)', spin: false },
   } as const
 
   const { icon: Icon, text, color, spin } = config[status]
@@ -42,10 +46,10 @@ function StatusIndicator({ status }: { status: SaveStatus }) {
   )
 }
 
-export function DocumentEditor({ documentId, initialContent, onKeystroke }: DocumentEditorProps) {
+export function DocumentEditor({ documentId, initialContent, onKeystroke, onContentChange, suggestions, revealSuggestion }: DocumentEditorProps) {
+  const { t } = useTranslation()
+  const recordWritingInput = useWritingActivity(documentId)
   const contentRef = useRef<Record<string, unknown> | null>(null)
-  const [wordCount, setWordCount] = useState(0)
-  const skipNextUpdate = useRef(false)
 
   const editor = useEditor({
     extensions: [
@@ -54,6 +58,7 @@ export function DocumentEditor({ documentId, initialContent, onKeystroke }: Docu
         paragraph: false,
       }),
       ParagraphSpacing,
+      AiHighlights,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyleKit.configure({
         color: false,
@@ -61,28 +66,32 @@ export function DocumentEditor({ documentId, initialContent, onKeystroke }: Docu
         fontSize: false,
       }),
       Placeholder.configure({
-        placeholder: 'Empieza a escribir tu historia...',
+        placeholder: t('editorApp.writingPlaceholder'),
       }),
       CharacterCount,
     ],
     content: initialContent || { type: 'doc', content: [{ type: 'paragraph' }] },
     onUpdate: ({ editor }) => {
-      if (skipNextUpdate.current) {
-        skipNextUpdate.current = false
-        return
-      }
       const json = editor.getJSON()
       contentRef.current = json
-      const text = editor.state.doc.textContent
-      setWordCount(getWordCount(text))
       triggerSaveRef.current?.()
       onKeystroke?.()
+      recordWritingInput()
+      onContentChange?.(editor.getText({ blockSeparator: '\n' }))
     },
     editorProps: {
       attributes: {
         class: 'prose prose-lg max-w-none focus:outline-none min-h-[500px] px-8 py-6',
       },
     },
+  })
+
+  const counts = useEditorState({
+    editor,
+    selector: ({ editor: current }) => ({
+      words: current ? countWritingWords(current.getText({ blockSeparator: '\n' })) : 0,
+      characters: current?.storage.characterCount?.characters?.() ?? 0,
+    }),
   })
 
   const getContent = useCallback(() => contentRef.current, [])
@@ -94,17 +103,30 @@ export function DocumentEditor({ documentId, initialContent, onKeystroke }: Docu
   })
 
   const triggerSaveRef = useRef<(() => void) | null>(null)
-  triggerSaveRef.current = triggerSave
+  useLayoutEffect(() => { triggerSaveRef.current = triggerSave }, [triggerSave])
 
   useEffect(() => {
     if (editor && initialContent && JSON.stringify(editor.getJSON()) !== JSON.stringify(initialContent)) {
-      skipNextUpdate.current = true
-      editor.commands.setContent(initialContent)
+      editor.commands.setContent(initialContent, { emitUpdate: false })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId, initialContent])
 
-  const charCount = editor?.storage.characterCount?.characters?.() ?? 0
+  useEffect(() => {
+    if (!editor) return
+    const text = editor.getText({ blockSeparator: '\n' })
+    onContentChange?.(text)
+  }, [editor, documentId, initialContent, onContentChange])
+
+  useEffect(() => {
+    if (editor) editor.view.dispatch(editor.state.tr.setMeta(aiHighlightsKey, (suggestions ?? []).filter((suggestion) => suggestion.documentId === documentId)))
+  }, [editor, documentId, suggestions])
+
+  useEffect(() => {
+    if (!editor || !revealSuggestion || revealSuggestion.suggestion.documentId !== documentId) return
+    const range = findQuoteRanges(editor.state.doc, revealSuggestion.suggestion.quote ?? '')[0]
+    if (range) editor.chain().focus().setTextSelection(range).scrollIntoView().run()
+  }, [editor, documentId, revealSuggestion])
 
   return (
     <div className="flex flex-col h-full">
@@ -118,7 +140,7 @@ export function DocumentEditor({ documentId, initialContent, onKeystroke }: Docu
           style={{ color: 'var(--color-ink-faint)', borderColor: 'var(--color-paper-lines)' }}
         >
           <span>
-            {charCount} caracteres · {wordCount} palabras
+            {t('editorApp.textCounts', { characters: counts?.characters ?? 0, words: counts?.words ?? 0 })}
           </span>
           <StatusIndicator status={status} />
         </div>

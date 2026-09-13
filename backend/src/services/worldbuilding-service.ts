@@ -9,6 +9,9 @@ export interface LoreEntryInput {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
   order?: number
 }
 
@@ -19,12 +22,15 @@ export interface RaceInput {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
 }
 
 export interface GlossaryEntryInput {
@@ -32,6 +38,9 @@ export interface GlossaryEntryInput {
   pronunciation?: string | null
   meaning?: string | null
 }
+
+export const CREATURE_DANGER_TYPES = ['none', 'low', 'medium', 'high', 'lethal'] as const
+export type CreatureDangerType = typeof CREATURE_DANGER_TYPES[number]
 
 export interface CreatureInput {
   name?: string
@@ -60,6 +69,11 @@ function normalizeLoreType(type: string | undefined): LoreType {
   return LORE_TYPES.includes(type as LoreType) ? type as LoreType : 'custom'
 }
 
+function normalizeDangerType(type: string | null | undefined): CreatureDangerType | null {
+  if (!type) return null
+  return CREATURE_DANGER_TYPES.includes(type as CreatureDangerType) ? type as CreatureDangerType : null
+}
+
 export const worldbuildingService = {
   // --- Lore ---
   async listLore(projectId: string, userId: string) {
@@ -69,6 +83,10 @@ export const worldbuildingService = {
       where: { projectId },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     })
+  },
+
+  async getLore(id: string, userId: string) {
+    return prisma.loreEntry.findFirst({ where: { id, project: { userId } } })
   },
 
   async createLore(projectId: string, userId: string, data: LoreEntryInput) {
@@ -82,6 +100,9 @@ export const worldbuildingService = {
         description: data.description ?? null,
         type: normalizeLoreType(data.type),
         limits: data.limits ?? null,
+        powerSource: data.powerSource ?? null,
+        cost: data.cost ?? null,
+        usedBy: data.usedBy ?? null,
         order,
       },
     })
@@ -97,16 +118,37 @@ export const worldbuildingService = {
         description: data.description,
         type: data.type === undefined ? undefined : normalizeLoreType(data.type),
         limits: data.limits,
+        powerSource: data.powerSource,
+        cost: data.cost,
+        usedBy: data.usedBy,
         order: data.order,
       },
     })
   },
 
+  async attachLorePdf(id: string, userId: string, pdf: { url: string; name: string }) {
+    const entry = await prisma.loreEntry.findFirst({ where: { id, project: { userId } } })
+    if (!entry) return null
+    return prisma.loreEntry.update({
+      where: { id },
+      data: { pdfUrl: pdf.url, pdfName: pdf.name },
+    })
+  },
+
+  async clearLorePdf(id: string, userId: string) {
+    const entry = await prisma.loreEntry.findFirst({ where: { id, project: { userId } } })
+    if (!entry) return null
+    return prisma.loreEntry.update({
+      where: { id },
+      data: { pdfUrl: null, pdfName: null },
+    })
+  },
+
   async removeLore(id: string, userId: string) {
     const entry = await prisma.loreEntry.findFirst({ where: { id, project: { userId } } })
-    if (!entry) return false
+    if (!entry) return null
     await prisma.loreEntry.delete({ where: { id } })
-    return true
+    return entry
   },
 
   // --- Razas ---
@@ -116,9 +158,14 @@ export const worldbuildingService = {
     return prisma.race.findMany({ where: { projectId }, orderBy: { name: 'asc' } })
   },
 
+  async getRace(id: string, userId: string) {
+    return prisma.race.findFirst({ where: { id, project: { userId } } })
+  },
+
   async createRace(projectId: string, userId: string, data: RaceInput) {
     const project = await isProjectOwner(projectId, userId)
     if (!project) return null
+    const magicDescription = data.magicDescription?.trim() || null
     return prisma.race.create({
       data: {
         projectId,
@@ -126,14 +173,17 @@ export const worldbuildingService = {
         classification: data.classification ?? null,
         description: data.description ?? null,
         physicalTraits: data.physicalTraits ?? null,
-        hasMagic: data.hasMagic ?? false,
-        magicDescription: data.magicDescription ?? null,
+        hasMagic: Boolean(magicDescription) || (data.hasMagic ?? false),
+        magicDescription,
+        spiritualTraits: data.spiritualTraits ?? null,
         lifeExpectancy: data.lifeExpectancy ?? null,
         language: data.language ?? null,
         culture: data.culture ?? null,
         religion: data.religion ?? null,
         origin: data.origin ?? null,
         territory: data.territory ?? null,
+        relationsWithOthers: data.relationsWithOthers ?? null,
+        importantNotes: data.importantNotes ?? null,
       },
     })
   },
@@ -141,6 +191,9 @@ export const worldbuildingService = {
   async updateRace(id: string, userId: string, data: RaceInput) {
     const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
     if (!race) return null
+    const magicDescription = data.magicDescription === undefined
+      ? undefined
+      : (data.magicDescription?.trim() || null)
     return prisma.race.update({
       where: { id },
       data: {
@@ -148,23 +201,56 @@ export const worldbuildingService = {
         classification: data.classification,
         description: data.description,
         physicalTraits: data.physicalTraits,
-        hasMagic: data.hasMagic,
-        magicDescription: data.magicDescription,
+        hasMagic: magicDescription === undefined ? data.hasMagic : Boolean(magicDescription),
+        magicDescription,
+        spiritualTraits: data.spiritualTraits,
         lifeExpectancy: data.lifeExpectancy,
         language: data.language,
         culture: data.culture,
         religion: data.religion,
         origin: data.origin,
         territory: data.territory,
+        relationsWithOthers: data.relationsWithOthers,
+        importantNotes: data.importantNotes,
       },
     })
   },
 
+  async attachRacePdf(id: string, userId: string, pdf: { url: string; name: string }) {
+    const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
+    if (!race) return null
+    return prisma.race.update({
+      where: { id },
+      data: { pdfUrl: pdf.url, pdfName: pdf.name },
+    })
+  },
+
+  async clearRacePdf(id: string, userId: string) {
+    const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
+    if (!race) return null
+    return prisma.race.update({
+      where: { id },
+      data: { pdfUrl: null, pdfName: null },
+    })
+  },
+
+  async attachRaceImage(id: string, userId: string, imageUrl: string) {
+    const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
+    if (!race) return null
+    return prisma.race.update({ where: { id }, data: { imageUrl } })
+  },
+
+  async clearRaceImage(id: string, userId: string) {
+    const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
+    if (!race) return null
+    return prisma.race.update({ where: { id }, data: { imageUrl: null } })
+  },
+
   async removeRace(id: string, userId: string) {
     const race = await prisma.race.findFirst({ where: { id, project: { userId } } })
-    if (!race) return false
+    if (!race) return null
     await prisma.race.delete({ where: { id } })
-    return true
+    return race
   },
 
   // --- Glosario ---
@@ -214,6 +300,10 @@ export const worldbuildingService = {
     return prisma.creature.findMany({ where: { projectId }, orderBy: { name: 'asc' } })
   },
 
+  async getCreature(id: string, userId: string) {
+    return prisma.creature.findFirst({ where: { id, project: { userId } } })
+  },
+
   async createCreature(projectId: string, userId: string, data: CreatureInput) {
     const project = await isProjectOwner(projectId, userId)
     if (!project) return null
@@ -222,7 +312,7 @@ export const worldbuildingService = {
         projectId,
         name: data.name ?? '',
         species: data.species ?? null,
-        dangerType: data.dangerType ?? null,
+        dangerType: normalizeDangerType(data.dangerType),
         description: data.description ?? null,
       },
     })
@@ -236,10 +326,22 @@ export const worldbuildingService = {
       data: {
         name: data.name,
         species: data.species,
-        dangerType: data.dangerType,
+        dangerType: data.dangerType === undefined ? undefined : normalizeDangerType(data.dangerType),
         description: data.description,
       },
     })
+  },
+
+  async attachCreatureImage(id: string, userId: string, imageUrl: string) {
+    const creature = await prisma.creature.findFirst({ where: { id, project: { userId } } })
+    if (!creature) return null
+    return prisma.creature.update({ where: { id }, data: { imageUrl } })
+  },
+
+  async clearCreatureImage(id: string, userId: string) {
+    const creature = await prisma.creature.findFirst({ where: { id, project: { userId } } })
+    if (!creature) return null
+    return prisma.creature.update({ where: { id }, data: { imageUrl: null } })
   },
 
   async removeCreature(id: string, userId: string) {

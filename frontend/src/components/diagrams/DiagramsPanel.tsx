@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { GitBranch, Network, Plus, Pencil, Trash2, Users } from 'lucide-react'
+import { ArrowLeft, GitBranch, Network, Plus, Pencil, Trash2, Users } from 'lucide-react'
 import type { Diagram } from '@/types/diagram'
 import { useDiagramsStore } from '@/stores/diagrams-store'
 import { useCharactersStore } from '@/stores/characters-store'
@@ -16,6 +17,7 @@ interface DiagramsPanelProps {
 
 export function DiagramsPanel({ projectId }: DiagramsPanelProps) {
   const { t } = useTranslation()
+  const [, setSearchParams] = useSearchParams()
   const { diagrams, isLoading, load, create, generate, rename, remove } = useDiagramsStore()
   const { characters, load: loadCharacters } = useCharactersStore()
   const { relations, load: loadRelations } = useRelationshipsStore()
@@ -85,14 +87,26 @@ export function DiagramsPanel({ projectId }: DiagramsPanelProps) {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h2 className="font-display text-xl sm:text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
-          <Network className="w-6 h-6" style={{ color: 'var(--color-accent-teal)' }} />
-          {t('diagramApp.title')}
-        </h2>
-        <p className="text-sm mt-0.5" style={{ color: 'var(--color-ink-faint)' }}>
-          {t('diagramApp.subtitle')} · {diagrams.length}
-        </p>
+      <div className="flex items-start gap-2">
+        <button
+          type="button"
+          onClick={() => setSearchParams({ tab: 'characters' })}
+          aria-label={t('diagramApp.backToCharacters')}
+          data-testid="diagrams-back-characters"
+          className="mt-1 rounded-lg p-2 hover:opacity-70"
+          style={{ color: 'var(--color-ink-light)' }}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <div>
+          <h2 className="font-display text-xl sm:text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
+            <Network className="w-6 h-6" style={{ color: 'var(--color-accent-teal)' }} />
+            {t('diagramApp.title')}
+          </h2>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--color-ink-faint)' }}>
+            {t('diagramApp.subtitle')} · {diagrams.length}
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

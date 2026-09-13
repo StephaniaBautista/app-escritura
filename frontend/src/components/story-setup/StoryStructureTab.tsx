@@ -4,6 +4,7 @@ import { Layers, Pencil } from 'lucide-react'
 import { StructureDialog } from './StructureDialog'
 import { storyBankApi, type StoryQuestion } from '@/services/story-bank'
 import { isStandardSection, migrateStructure, sectionLabelKey } from '@/lib/story-structure'
+import { hasStructurePromptAnswers, parseSceneSuggestions, structurePromptLabelKey } from '@/lib/structure-prompts'
 import type { StoryMeta } from '@/types/story'
 
 interface StoryStructureTabProps {
@@ -69,8 +70,11 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
 
   const lang = i18n.language
   const questionById = new Map(questions.map((q) => [q.id, q]))
-  const qText = (q: StoryQuestion | undefined, id: string): string =>
-    q ? (lang === 'en' && q.textEn ? q.textEn : q.text) : id
+  const qText = (q: StoryQuestion | undefined, id: string): string => {
+    const promptKey = structurePromptLabelKey(id)
+    if (promptKey) return t(promptKey)
+    return q ? (lang === 'en' && q.textEn ? q.textEn : q.text) : id
+  }
 
   const sectionTitle = (id: string, customTitle?: string): string => {
     if (isStandardSection(id)) return t(sectionLabelKey(id))
@@ -125,7 +129,7 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
                     <h4 className="text-xs font-medium uppercase tracking-wide mb-2" style={{ color: 'var(--color-accent)' }}>
                       {sectionTitle(section.id, section.title)}
                     </h4>
-                    {section.content && (
+                    {section.content && !hasStructurePromptAnswers(section) && (
                       <p className="text-sm whitespace-pre-wrap leading-relaxed mb-2" style={{ color: 'var(--color-ink-light)' }}>
                         {section.content}
                       </p>
@@ -134,7 +138,9 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
                       <div className="space-y-1.5 mt-2 pt-2 border-t" style={{ borderColor: 'var(--color-paper-lines)' }}>
                         {Object.entries(section.answers)
                           .filter(([, value]) => value.trim())
-                          .map(([questionId, answer]) => (
+                          .map(([questionId, answer]) => {
+                            const scenes = questionId === 'wizard:desarrollo:scenes' ? parseSceneSuggestions(answer) : []
+                            return (
                             <div key={questionId}>
                               <p className="text-[11px] font-medium mb-0.5" style={{ color: 'var(--color-ink-faint)' }}>
                                 {qText(questionById.get(questionId), questionId)}
@@ -142,8 +148,25 @@ export function StoryStructureTab({ projectId, storyMeta }: StoryStructureTabPro
                               <p className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--color-ink)' }}>
                                 {answer}
                               </p>
+                              {scenes.length > 0 && (
+                                <ul className="flex flex-wrap gap-1.5 mt-2">
+                                  {scenes.map((scene) => (
+                                    <li
+                                      key={`${scene.form}-${scene.title}`}
+                                      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
+                                      style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
+                                    >
+                                      <span style={{ color: 'var(--color-accent)' }}>
+                                        {scene.form === 'note' ? t('storySetup.structureSceneNote') : t('storySetup.structureSceneChapter')}
+                                      </span>
+                                      {scene.title}
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
-                          ))}
+                            )
+                          })}
                       </div>
                     )}
                   </div>

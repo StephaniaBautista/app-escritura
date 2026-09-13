@@ -41,7 +41,7 @@ export interface FandomTree {
   children: Record<string, FandomChildren>
 }
 
-export const ALL_PERMISSIONS = ['admin', 'moderate'] as const
+export const ALL_PERMISSIONS = ['admin', 'moderate', 'ai_chat', 'ai_characters', 'ai_suggestions'] as const
 
 const API = '/api'
 

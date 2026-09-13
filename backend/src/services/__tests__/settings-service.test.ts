@@ -16,6 +16,7 @@ const settingsRow = (overrides?: Record<string, unknown>) => ({
   theme: 'system',
   language: 'es',
   autoVersion: DEFAULT_AUTO_VERSION_CONFIG,
+  uiPrefs: {},
   ...overrides,
 })
 
@@ -84,5 +85,25 @@ describe('settingsService', () => {
 
     expect(config.inactivity.enabled).toBe(true)
     expect(config.hourly.enabled).toBe(true)
+  })
+
+  it('update: merge de uiPrefs', async () => {
+    prismaMock.userSettings.findUnique.mockResolvedValue(settingsRow())
+    prismaMock.userSettings.update.mockResolvedValue(settingsRow())
+
+    await settingsService.update('user-1', {
+      uiPrefs: { dismissAiStructureWarning: true },
+    })
+
+    const updateCall = prismaMock.userSettings.update.mock.calls[0][0]
+    expect(updateCall.data.uiPrefs.dismissAiStructureWarning).toBe(true)
+  })
+
+  it('getUiPrefs: retorna prefs mergidas con defaults', async () => {
+    prismaMock.userSettings.findUnique.mockResolvedValue(settingsRow({ uiPrefs: { dismissAiStructureWarning: true } }))
+
+    const prefs = await settingsService.getUiPrefs('user-1')
+
+    expect(prefs.dismissAiStructureWarning).toBe(true)
   })
 })

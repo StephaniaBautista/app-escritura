@@ -28,10 +28,12 @@ export type AggregateDocument = {
 
 export type DocumentAvgAggregateOutputType = {
   order: number | null
+  wordCount: number | null
 }
 
 export type DocumentSumAggregateOutputType = {
   order: number | null
+  wordCount: number | null
 }
 
 export type DocumentMinAggregateOutputType = {
@@ -45,6 +47,7 @@ export type DocumentMinAggregateOutputType = {
   parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  wordCount: number | null
 }
 
 export type DocumentMaxAggregateOutputType = {
@@ -58,6 +61,7 @@ export type DocumentMaxAggregateOutputType = {
   parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  wordCount: number | null
 }
 
 export type DocumentCountAggregateOutputType = {
@@ -73,16 +77,19 @@ export type DocumentCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   autoVersionState: number
+  wordCount: number
   _all: number
 }
 
 
 export type DocumentAvgAggregateInputType = {
   order?: true
+  wordCount?: true
 }
 
 export type DocumentSumAggregateInputType = {
   order?: true
+  wordCount?: true
 }
 
 export type DocumentMinAggregateInputType = {
@@ -96,6 +103,7 @@ export type DocumentMinAggregateInputType = {
   parentId?: true
   createdAt?: true
   updatedAt?: true
+  wordCount?: true
 }
 
 export type DocumentMaxAggregateInputType = {
@@ -109,6 +117,7 @@ export type DocumentMaxAggregateInputType = {
   parentId?: true
   createdAt?: true
   updatedAt?: true
+  wordCount?: true
 }
 
 export type DocumentCountAggregateInputType = {
@@ -124,6 +133,7 @@ export type DocumentCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   autoVersionState?: true
+  wordCount?: true
   _all?: true
 }
 
@@ -226,6 +236,7 @@ export type DocumentGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   autoVersionState: runtime.JsonValue
+  wordCount: number | null
   _count: DocumentCountAggregateOutputType | null
   _avg: DocumentAvgAggregateOutputType | null
   _sum: DocumentSumAggregateOutputType | null
@@ -264,6 +275,7 @@ export type DocumentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   autoVersionState?: Prisma.JsonFilter<"Document">
+  wordCount?: Prisma.IntNullableFilter<"Document"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
@@ -272,6 +284,8 @@ export type DocumentWhereInput = {
   notes?: Prisma.NoteListRelationFilter
   versions?: Prisma.DocumentVersionListRelationFilter
   branches?: Prisma.BranchListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  writingSessions?: Prisma.WritingSessionListRelationFilter
 }
 
 export type DocumentOrderByWithRelationInput = {
@@ -287,6 +301,7 @@ export type DocumentOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   autoVersionState?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
   folder?: Prisma.FolderOrderByWithRelationInput
@@ -295,6 +310,8 @@ export type DocumentOrderByWithRelationInput = {
   notes?: Prisma.NoteOrderByRelationAggregateInput
   versions?: Prisma.DocumentVersionOrderByRelationAggregateInput
   branches?: Prisma.BranchOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
+  writingSessions?: Prisma.WritingSessionOrderByRelationAggregateInput
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -313,6 +330,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   autoVersionState?: Prisma.JsonFilter<"Document">
+  wordCount?: Prisma.IntNullableFilter<"Document"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
@@ -321,6 +339,8 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.NoteListRelationFilter
   versions?: Prisma.DocumentVersionListRelationFilter
   branches?: Prisma.BranchListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  writingSessions?: Prisma.WritingSessionListRelationFilter
 }, "id">
 
 export type DocumentOrderByWithAggregationInput = {
@@ -336,6 +356,7 @@ export type DocumentOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   autoVersionState?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
   _avg?: Prisma.DocumentAvgOrderByAggregateInput
   _max?: Prisma.DocumentMaxOrderByAggregateInput
@@ -359,6 +380,7 @@ export type DocumentScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   autoVersionState?: Prisma.JsonWithAggregatesFilter<"Document">
+  wordCount?: Prisma.IntNullableWithAggregatesFilter<"Document"> | number | null
 }
 
 export type DocumentCreateInput = {
@@ -370,6 +392,7 @@ export type DocumentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -378,6 +401,8 @@ export type DocumentCreateInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateInput = {
@@ -393,10 +418,13 @@ export type DocumentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUpdateInput = {
@@ -408,6 +436,7 @@ export type DocumentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -416,6 +445,8 @@ export type DocumentUpdateInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateInput = {
@@ -431,10 +462,13 @@ export type DocumentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateManyInput = {
@@ -450,6 +484,7 @@ export type DocumentCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
 }
 
 export type DocumentUpdateManyMutationInput = {
@@ -461,6 +496,7 @@ export type DocumentUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DocumentUncheckedUpdateManyInput = {
@@ -476,6 +512,7 @@ export type DocumentUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DocumentListRelationFilter = {
@@ -506,10 +543,12 @@ export type DocumentCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   autoVersionState?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DocumentAvgOrderByAggregateInput = {
   order?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DocumentMaxOrderByAggregateInput = {
@@ -523,6 +562,7 @@ export type DocumentMaxOrderByAggregateInput = {
   parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DocumentMinOrderByAggregateInput = {
@@ -536,10 +576,12 @@ export type DocumentMinOrderByAggregateInput = {
   parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DocumentSumOrderByAggregateInput = {
   order?: Prisma.SortOrder
+  wordCount?: Prisma.SortOrder
 }
 
 export type DocumentScalarRelationFilter = {
@@ -701,6 +743,14 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DocumentUpdateOneWithoutChildrenNestedInput = {
   create?: Prisma.XOR<Prisma.DocumentCreateWithoutChildrenInput, Prisma.DocumentUncheckedCreateWithoutChildrenInput>
   connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutChildrenInput
@@ -783,6 +833,36 @@ export type DocumentUpdateOneRequiredWithoutBranchesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutBranchesInput, Prisma.DocumentUpdateWithoutBranchesInput>, Prisma.DocumentUncheckedUpdateWithoutBranchesInput>
 }
 
+export type DocumentCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutAiConversationsInput, Prisma.DocumentUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutAiConversationsInput, Prisma.DocumentUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.DocumentUpsertWithoutAiConversationsInput
+  disconnect?: Prisma.DocumentWhereInput | boolean
+  delete?: Prisma.DocumentWhereInput | boolean
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.DocumentUpdateWithoutAiConversationsInput>, Prisma.DocumentUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type DocumentCreateNestedOneWithoutWritingSessionsInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutWritingSessionsInput, Prisma.DocumentUncheckedCreateWithoutWritingSessionsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWritingSessionsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneRequiredWithoutWritingSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutWritingSessionsInput, Prisma.DocumentUncheckedCreateWithoutWritingSessionsInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWritingSessionsInput
+  upsert?: Prisma.DocumentUpsertWithoutWritingSessionsInput
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutWritingSessionsInput, Prisma.DocumentUpdateWithoutWritingSessionsInput>, Prisma.DocumentUncheckedUpdateWithoutWritingSessionsInput>
+}
+
 export type DocumentCreateWithoutUserInput = {
   id?: string
   title: string
@@ -792,6 +872,7 @@ export type DocumentCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
   parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
@@ -799,6 +880,8 @@ export type DocumentCreateWithoutUserInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutUserInput = {
@@ -813,10 +896,13 @@ export type DocumentUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutUserInput = {
@@ -861,6 +947,7 @@ export type DocumentScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   autoVersionState?: Prisma.JsonFilter<"Document">
+  wordCount?: Prisma.IntNullableFilter<"Document"> | number | null
 }
 
 export type DocumentCreateWithoutProjectInput = {
@@ -872,6 +959,7 @@ export type DocumentCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
   parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
@@ -879,6 +967,8 @@ export type DocumentCreateWithoutProjectInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutProjectInput = {
@@ -893,10 +983,13 @@ export type DocumentUncheckedCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutProjectInput = {
@@ -934,6 +1027,7 @@ export type DocumentCreateWithoutFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
@@ -941,6 +1035,8 @@ export type DocumentCreateWithoutFolderInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutFolderInput = {
@@ -955,10 +1051,13 @@ export type DocumentUncheckedCreateWithoutFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutFolderInput = {
@@ -996,6 +1095,7 @@ export type DocumentCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -1003,6 +1103,8 @@ export type DocumentCreateWithoutChildrenInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutChildrenInput = {
@@ -1018,9 +1120,12 @@ export type DocumentUncheckedCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutChildrenInput = {
@@ -1037,6 +1142,7 @@ export type DocumentCreateWithoutParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -1044,6 +1150,8 @@ export type DocumentCreateWithoutParentInput = {
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutParentInput = {
@@ -1058,10 +1166,13 @@ export type DocumentUncheckedCreateWithoutParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutParentInput = {
@@ -1094,6 +1205,7 @@ export type DocumentUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -1101,6 +1213,8 @@ export type DocumentUpdateWithoutChildrenInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutChildrenInput = {
@@ -1116,9 +1230,12 @@ export type DocumentUncheckedUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUpsertWithWhereUniqueWithoutParentInput = {
@@ -1146,6 +1263,7 @@ export type DocumentCreateWithoutNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -1153,6 +1271,8 @@ export type DocumentCreateWithoutNotesInput = {
   children?: Prisma.DocumentCreateNestedManyWithoutParentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutNotesInput = {
@@ -1168,9 +1288,12 @@ export type DocumentUncheckedCreateWithoutNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutNotesInput = {
@@ -1198,6 +1321,7 @@ export type DocumentUpdateWithoutNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -1205,6 +1329,8 @@ export type DocumentUpdateWithoutNotesInput = {
   children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutNotesInput = {
@@ -1220,9 +1346,12 @@ export type DocumentUncheckedUpdateWithoutNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutVersionsInput = {
@@ -1234,6 +1363,7 @@ export type DocumentCreateWithoutVersionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -1241,6 +1371,8 @@ export type DocumentCreateWithoutVersionsInput = {
   children?: Prisma.DocumentCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutVersionsInput = {
@@ -1256,9 +1388,12 @@ export type DocumentUncheckedCreateWithoutVersionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutVersionsInput = {
@@ -1286,6 +1421,7 @@ export type DocumentUpdateWithoutVersionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -1293,6 +1429,8 @@ export type DocumentUpdateWithoutVersionsInput = {
   children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutVersionsInput = {
@@ -1308,9 +1446,12 @@ export type DocumentUncheckedUpdateWithoutVersionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutBranchesInput = {
@@ -1322,6 +1463,7 @@ export type DocumentCreateWithoutBranchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
   folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
@@ -1329,6 +1471,8 @@ export type DocumentCreateWithoutBranchesInput = {
   children?: Prisma.DocumentCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutBranchesInput = {
@@ -1344,9 +1488,12 @@ export type DocumentUncheckedCreateWithoutBranchesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
   children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutBranchesInput = {
@@ -1374,6 +1521,7 @@ export type DocumentUpdateWithoutBranchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -1381,6 +1529,8 @@ export type DocumentUpdateWithoutBranchesInput = {
   children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutBranchesInput = {
@@ -1396,9 +1546,212 @@ export type DocumentUncheckedUpdateWithoutBranchesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentCreateWithoutAiConversationsInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutAiConversationsInput, Prisma.DocumentUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type DocumentUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutAiConversationsInput, Prisma.DocumentUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutAiConversationsInput, Prisma.DocumentUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutAiConversationsInput, Prisma.DocumentUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type DocumentUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentCreateWithoutWritingSessionsInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+}
+
+export type DocumentUncheckedCreateWithoutWritingSessionsInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+}
+
+export type DocumentCreateOrConnectWithoutWritingSessionsInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutWritingSessionsInput, Prisma.DocumentUncheckedCreateWithoutWritingSessionsInput>
+}
+
+export type DocumentUpsertWithoutWritingSessionsInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutWritingSessionsInput, Prisma.DocumentUncheckedUpdateWithoutWritingSessionsInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutWritingSessionsInput, Prisma.DocumentUncheckedCreateWithoutWritingSessionsInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutWritingSessionsInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutWritingSessionsInput, Prisma.DocumentUncheckedUpdateWithoutWritingSessionsInput>
+}
+
+export type DocumentUpdateWithoutWritingSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutWritingSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
 }
 
 export type DocumentCreateManyUserInput = {
@@ -1413,6 +1766,7 @@ export type DocumentCreateManyUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
 }
 
 export type DocumentUpdateWithoutUserInput = {
@@ -1424,6 +1778,7 @@ export type DocumentUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
   parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
@@ -1431,6 +1786,8 @@ export type DocumentUpdateWithoutUserInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutUserInput = {
@@ -1445,10 +1802,13 @@ export type DocumentUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutUserInput = {
@@ -1463,6 +1823,7 @@ export type DocumentUncheckedUpdateManyWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DocumentCreateManyProjectInput = {
@@ -1477,6 +1838,7 @@ export type DocumentCreateManyProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
 }
 
 export type DocumentUpdateWithoutProjectInput = {
@@ -1488,6 +1850,7 @@ export type DocumentUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
   parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
@@ -1495,6 +1858,8 @@ export type DocumentUpdateWithoutProjectInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutProjectInput = {
@@ -1509,10 +1874,13 @@ export type DocumentUncheckedUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutProjectInput = {
@@ -1527,6 +1895,7 @@ export type DocumentUncheckedUpdateManyWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DocumentCreateManyFolderInput = {
@@ -1541,6 +1910,7 @@ export type DocumentCreateManyFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
 }
 
 export type DocumentUpdateWithoutFolderInput = {
@@ -1552,6 +1922,7 @@ export type DocumentUpdateWithoutFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
@@ -1559,6 +1930,8 @@ export type DocumentUpdateWithoutFolderInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutFolderInput = {
@@ -1573,10 +1946,13 @@ export type DocumentUncheckedUpdateWithoutFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutFolderInput = {
@@ -1591,6 +1967,7 @@ export type DocumentUncheckedUpdateManyWithoutFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DocumentCreateManyParentInput = {
@@ -1605,6 +1982,7 @@ export type DocumentCreateManyParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
 }
 
 export type DocumentUpdateWithoutParentInput = {
@@ -1616,6 +1994,7 @@ export type DocumentUpdateWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
@@ -1623,6 +2002,8 @@ export type DocumentUpdateWithoutParentInput = {
   notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutParentInput = {
@@ -1637,10 +2018,13 @@ export type DocumentUncheckedUpdateWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutParentInput = {
@@ -1655,6 +2039,7 @@ export type DocumentUncheckedUpdateManyWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -1667,6 +2052,8 @@ export type DocumentCountOutputType = {
   notes: number
   versions: number
   branches: number
+  aiConversations: number
+  writingSessions: number
 }
 
 export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1674,6 +2061,8 @@ export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   notes?: boolean | DocumentCountOutputTypeCountNotesArgs
   versions?: boolean | DocumentCountOutputTypeCountVersionsArgs
   branches?: boolean | DocumentCountOutputTypeCountBranchesArgs
+  aiConversations?: boolean | DocumentCountOutputTypeCountAiConversationsArgs
+  writingSessions?: boolean | DocumentCountOutputTypeCountWritingSessionsArgs
 }
 
 /**
@@ -1714,6 +2103,20 @@ export type DocumentCountOutputTypeCountBranchesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.BranchWhereInput
 }
 
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountWritingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WritingSessionWhereInput
+}
+
 
 export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1728,6 +2131,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   autoVersionState?: boolean
+  wordCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
@@ -1736,6 +2140,8 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   notes?: boolean | Prisma.Document$notesArgs<ExtArgs>
   versions?: boolean | Prisma.Document$versionsArgs<ExtArgs>
   branches?: boolean | Prisma.Document$branchesArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Document$aiConversationsArgs<ExtArgs>
+  writingSessions?: boolean | Prisma.Document$writingSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -1752,6 +2158,7 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   autoVersionState?: boolean
+  wordCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
@@ -1771,6 +2178,7 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   autoVersionState?: boolean
+  wordCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Document$folderArgs<ExtArgs>
@@ -1790,9 +2198,10 @@ export type DocumentSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   autoVersionState?: boolean
+  wordCount?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "type" | "order" | "userId" | "projectId" | "folderId" | "parentId" | "createdAt" | "updatedAt" | "autoVersionState", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "type" | "order" | "userId" | "projectId" | "folderId" | "parentId" | "createdAt" | "updatedAt" | "autoVersionState" | "wordCount", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -1802,6 +2211,8 @@ export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   notes?: boolean | Prisma.Document$notesArgs<ExtArgs>
   versions?: boolean | Prisma.Document$versionsArgs<ExtArgs>
   branches?: boolean | Prisma.Document$branchesArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Document$aiConversationsArgs<ExtArgs>
+  writingSessions?: boolean | Prisma.Document$writingSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1828,6 +2239,8 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     notes: Prisma.$NotePayload<ExtArgs>[]
     versions: Prisma.$DocumentVersionPayload<ExtArgs>[]
     branches: Prisma.$BranchPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
+    writingSessions: Prisma.$WritingSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1842,6 +2255,7 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     updatedAt: Date
     autoVersionState: runtime.JsonValue
+    wordCount: number | null
   }, ExtArgs["result"]["document"]>
   composites: {}
 }
@@ -2244,6 +2658,8 @@ export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime
   notes<T extends Prisma.Document$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   versions<T extends Prisma.Document$versionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   branches<T extends Prisma.Document$branchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.Document$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  writingSessions<T extends Prisma.Document$writingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$writingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2285,6 +2701,7 @@ export interface DocumentFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly autoVersionState: Prisma.FieldRef<"Document", 'Json'>
+  readonly wordCount: Prisma.FieldRef<"Document", 'Int'>
 }
     
 
@@ -2817,6 +3234,54 @@ export type Document$branchesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.BranchScalarFieldEnum | Prisma.BranchScalarFieldEnum[]
+}
+
+/**
+ * Document.aiConversations
+ */
+export type Document$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
+}
+
+/**
+ * Document.writingSessions
+ */
+export type Document$writingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WritingSession
+   */
+  select?: Prisma.WritingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WritingSession
+   */
+  omit?: Prisma.WritingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WritingSessionInclude<ExtArgs> | null
+  where?: Prisma.WritingSessionWhereInput
+  orderBy?: Prisma.WritingSessionOrderByWithRelationInput | Prisma.WritingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.WritingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WritingSessionScalarFieldEnum | Prisma.WritingSessionScalarFieldEnum[]
 }
 
 /**

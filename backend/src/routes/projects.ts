@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import type { FastifyInstance, FastifyRequest } from 'fastify'
 import { Prisma } from '@generated/client'
 import { auth } from '../lib/auth.js'
 import { projectService } from '../services/document-service.js'
@@ -43,6 +43,7 @@ export async function projectRoutes(app: FastifyInstance) {
             name: { type: 'string' },
             description: { type: 'string', nullable: true },
             storyMeta: { description: 'Metadata del wizard de creación' },
+            timelineConfig: { description: 'Configuración de la línea temporal (sistema de años)' },
             createdAt: { type: 'string' },
             updatedAt: { type: 'string' },
             folders: { type: 'array', items: { type: 'object' } },
@@ -144,6 +145,7 @@ export async function projectRoutes(app: FastifyInstance) {
           name: { type: 'string', minLength: 1, maxLength: 255 },
           description: { type: 'string' },
           storyMeta: { description: 'Metadata del wizard de creación (datos extra del proyecto)' },
+          timelineConfig: { description: 'Configuración de la línea temporal (sistema de años)' },
         },
       },
     },
@@ -152,11 +154,12 @@ export async function projectRoutes(app: FastifyInstance) {
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
 
     const { id } = request.params as { id: string }
-    const body = request.body as { name?: string; description?: string; storyMeta?: Record<string, unknown> }
+    const body = request.body as { name?: string; description?: string; storyMeta?: Record<string, unknown>; timelineConfig?: Record<string, unknown> }
     const project = await projectService.update(id, user.id, {
       name: body.name,
       description: body.description,
       storyMeta: body.storyMeta as Prisma.InputJsonValue | undefined,
+      timelineConfig: body.timelineConfig as Prisma.InputJsonValue | undefined,
     })
     if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
 
@@ -188,6 +191,40 @@ export async function projectRoutes(app: FastifyInstance) {
     if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
 
     return project
+  })
+
+  app.patch('/projects/:id/timeline-config', {
+    schema: {
+      description: 'Save timeline time-system settings for a project',
+      tags: ['Projects'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+      },
+      body: {
+        type: 'object',
+        properties: {
+          timeSystem: { type: 'string', enum: ['relative', 'era'] },
+          beforeLabel: { type: 'string', maxLength: 10 },
+          afterLabel: { type: 'string', maxLength: 10 },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { id } = request.params as { id: string }
+    try {
+      const project = await projectService.updateTimelineConfig(id, user.id, request.body)
+      if (!project) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Proyecto no encontrado' } })
+      return project
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Configuración inválida'
+      return reply.status(400).send({ error: { code: 'VALIDATION_ERROR', message } })
+    }
   })
 
   app.delete('/projects/:id', {

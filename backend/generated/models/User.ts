@@ -239,6 +239,11 @@ export type UserWhereInput = {
   branches?: Prisma.BranchListRelationFilter
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   activities?: Prisma.ActivityListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiUsage?: Prisma.XOR<Prisma.AiUsageNullableScalarRelationFilter, Prisma.AiUsageWhereInput> | null
+  writingStats?: Prisma.WritingStatsListRelationFilter
+  writingSessions?: Prisma.WritingSessionListRelationFilter
+  writingActivityClock?: Prisma.XOR<Prisma.WritingActivityClockNullableScalarRelationFilter, Prisma.WritingActivityClockWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -262,6 +267,11 @@ export type UserOrderByWithRelationInput = {
   branches?: Prisma.BranchOrderByRelationAggregateInput
   settings?: Prisma.UserSettingsOrderByWithRelationInput
   activities?: Prisma.ActivityOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
+  aiUsage?: Prisma.AiUsageOrderByWithRelationInput
+  writingStats?: Prisma.WritingStatsOrderByRelationAggregateInput
+  writingSessions?: Prisma.WritingSessionOrderByRelationAggregateInput
+  writingActivityClock?: Prisma.WritingActivityClockOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -288,6 +298,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   branches?: Prisma.BranchListRelationFilter
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   activities?: Prisma.ActivityListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiUsage?: Prisma.XOR<Prisma.AiUsageNullableScalarRelationFilter, Prisma.AiUsageWhereInput> | null
+  writingStats?: Prisma.WritingStatsListRelationFilter
+  writingSessions?: Prisma.WritingSessionListRelationFilter
+  writingActivityClock?: Prisma.XOR<Prisma.WritingActivityClockNullableScalarRelationFilter, Prisma.WritingActivityClockWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -345,6 +360,11 @@ export type UserCreateInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -368,6 +388,11 @@ export type UserUncheckedCreateInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -391,6 +416,11 @@ export type UserUpdateInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -414,6 +444,11 @@ export type UserUncheckedUpdateInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -651,6 +686,76 @@ export type UserUpdateOneRequiredWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivitiesInput, Prisma.UserUpdateWithoutActivitiesInput>, Prisma.UserUncheckedUpdateWithoutActivitiesInput>
 }
 
+export type UserCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.UserUpsertWithoutAiConversationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.UserUpdateWithoutAiConversationsInput>, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type UserCreateNestedOneWithoutAiUsageInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiUsageInput, Prisma.UserUncheckedCreateWithoutAiUsageInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiUsageInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiUsageNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiUsageInput, Prisma.UserUncheckedCreateWithoutAiUsageInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiUsageInput
+  upsert?: Prisma.UserUpsertWithoutAiUsageInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiUsageInput, Prisma.UserUpdateWithoutAiUsageInput>, Prisma.UserUncheckedUpdateWithoutAiUsageInput>
+}
+
+export type UserCreateNestedOneWithoutWritingStatsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingStatsInput, Prisma.UserUncheckedCreateWithoutWritingStatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingStatsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWritingStatsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingStatsInput, Prisma.UserUncheckedCreateWithoutWritingStatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingStatsInput
+  upsert?: Prisma.UserUpsertWithoutWritingStatsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWritingStatsInput, Prisma.UserUpdateWithoutWritingStatsInput>, Prisma.UserUncheckedUpdateWithoutWritingStatsInput>
+}
+
+export type UserCreateNestedOneWithoutWritingSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingSessionsInput, Prisma.UserUncheckedCreateWithoutWritingSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWritingSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingSessionsInput, Prisma.UserUncheckedCreateWithoutWritingSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingSessionsInput
+  upsert?: Prisma.UserUpsertWithoutWritingSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWritingSessionsInput, Prisma.UserUpdateWithoutWritingSessionsInput>, Prisma.UserUncheckedUpdateWithoutWritingSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutWritingActivityClockInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingActivityClockInput, Prisma.UserUncheckedCreateWithoutWritingActivityClockInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingActivityClockInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWritingActivityClockNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWritingActivityClockInput, Prisma.UserUncheckedCreateWithoutWritingActivityClockInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingActivityClockInput
+  upsert?: Prisma.UserUpsertWithoutWritingActivityClockInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWritingActivityClockInput, Prisma.UserUpdateWithoutWritingActivityClockInput>, Prisma.UserUncheckedUpdateWithoutWritingActivityClockInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -671,6 +776,11 @@ export type UserCreateWithoutSessionsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -693,6 +803,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -731,6 +846,11 @@ export type UserUpdateWithoutSessionsInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -753,6 +873,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -775,6 +900,11 @@ export type UserCreateWithoutAccountsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -797,6 +927,11 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -835,6 +970,11 @@ export type UserUpdateWithoutAccountsInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -857,6 +997,11 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -879,6 +1024,11 @@ export type UserCreateWithoutProjectsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -901,6 +1051,11 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -939,6 +1094,11 @@ export type UserUpdateWithoutProjectsInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -961,6 +1121,11 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentsInput = {
@@ -983,6 +1148,11 @@ export type UserCreateWithoutDocumentsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -1005,6 +1175,11 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -1043,6 +1218,11 @@ export type UserUpdateWithoutDocumentsInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -1065,6 +1245,11 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotesInput = {
@@ -1087,6 +1272,11 @@ export type UserCreateWithoutNotesInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotesInput = {
@@ -1109,6 +1299,11 @@ export type UserUncheckedCreateWithoutNotesInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotesInput = {
@@ -1147,6 +1342,11 @@ export type UserUpdateWithoutNotesInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotesInput = {
@@ -1169,6 +1369,11 @@ export type UserUncheckedUpdateWithoutNotesInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVersionsInput = {
@@ -1191,6 +1396,11 @@ export type UserCreateWithoutVersionsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVersionsInput = {
@@ -1213,6 +1423,11 @@ export type UserUncheckedCreateWithoutVersionsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVersionsInput = {
@@ -1251,6 +1466,11 @@ export type UserUpdateWithoutVersionsInput = {
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVersionsInput = {
@@ -1273,6 +1493,11 @@ export type UserUncheckedUpdateWithoutVersionsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBranchesInput = {
@@ -1295,6 +1520,11 @@ export type UserCreateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBranchesInput = {
@@ -1317,6 +1547,11 @@ export type UserUncheckedCreateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBranchesInput = {
@@ -1355,6 +1590,11 @@ export type UserUpdateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchesInput = {
@@ -1377,6 +1617,11 @@ export type UserUncheckedUpdateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -1399,6 +1644,11 @@ export type UserCreateWithoutSettingsInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -1421,6 +1671,11 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -1459,6 +1714,11 @@ export type UserUpdateWithoutSettingsInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -1481,6 +1741,11 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivitiesInput = {
@@ -1503,6 +1768,11 @@ export type UserCreateWithoutActivitiesInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
   branches?: Prisma.BranchCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -1525,6 +1795,11 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -1563,6 +1838,11 @@ export type UserUpdateWithoutActivitiesInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
   branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -1585,6 +1865,631 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiConversationsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type UserUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiConversationsInput, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiConversationsInput, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type UserUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiUsageInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiUsageInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiUsageInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiUsageInput, Prisma.UserUncheckedCreateWithoutAiUsageInput>
+}
+
+export type UserUpsertWithoutAiUsageInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiUsageInput, Prisma.UserUncheckedUpdateWithoutAiUsageInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiUsageInput, Prisma.UserUncheckedCreateWithoutAiUsageInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiUsageInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiUsageInput, Prisma.UserUncheckedUpdateWithoutAiUsageInput>
+}
+
+export type UserUpdateWithoutAiUsageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiUsageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWritingStatsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWritingStatsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWritingStatsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingStatsInput, Prisma.UserUncheckedCreateWithoutWritingStatsInput>
+}
+
+export type UserUpsertWithoutWritingStatsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWritingStatsInput, Prisma.UserUncheckedUpdateWithoutWritingStatsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingStatsInput, Prisma.UserUncheckedCreateWithoutWritingStatsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWritingStatsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWritingStatsInput, Prisma.UserUncheckedUpdateWithoutWritingStatsInput>
+}
+
+export type UserUpdateWithoutWritingStatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWritingStatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWritingSessionsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWritingSessionsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWritingSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingSessionsInput, Prisma.UserUncheckedCreateWithoutWritingSessionsInput>
+}
+
+export type UserUpsertWithoutWritingSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWritingSessionsInput, Prisma.UserUncheckedUpdateWithoutWritingSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingSessionsInput, Prisma.UserUncheckedCreateWithoutWritingSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWritingSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWritingSessionsInput, Prisma.UserUncheckedUpdateWithoutWritingSessionsInput>
+}
+
+export type UserUpdateWithoutWritingSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWritingSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWritingActivityClockInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWritingActivityClockInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWritingActivityClockInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingActivityClockInput, Prisma.UserUncheckedCreateWithoutWritingActivityClockInput>
+}
+
+export type UserUpsertWithoutWritingActivityClockInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWritingActivityClockInput, Prisma.UserUncheckedUpdateWithoutWritingActivityClockInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWritingActivityClockInput, Prisma.UserUncheckedCreateWithoutWritingActivityClockInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWritingActivityClockInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWritingActivityClockInput, Prisma.UserUncheckedUpdateWithoutWritingActivityClockInput>
+}
+
+export type UserUpdateWithoutWritingActivityClockInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWritingActivityClockInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1601,6 +2506,9 @@ export type UserCountOutputType = {
   versions: number
   branches: number
   activities: number
+  aiConversations: number
+  writingStats: number
+  writingSessions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1612,6 +2520,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   versions?: boolean | UserCountOutputTypeCountVersionsArgs
   branches?: boolean | UserCountOutputTypeCountBranchesArgs
   activities?: boolean | UserCountOutputTypeCountActivitiesArgs
+  aiConversations?: boolean | UserCountOutputTypeCountAiConversationsArgs
+  writingStats?: boolean | UserCountOutputTypeCountWritingStatsArgs
+  writingSessions?: boolean | UserCountOutputTypeCountWritingSessionsArgs
 }
 
 /**
@@ -1680,6 +2591,27 @@ export type UserCountOutputTypeCountActivitiesArgs<ExtArgs extends runtime.Types
   where?: Prisma.ActivityWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWritingStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WritingStatsWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWritingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WritingSessionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1702,6 +2634,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   branches?: boolean | Prisma.User$branchesArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
+  aiUsage?: boolean | Prisma.User$aiUsageArgs<ExtArgs>
+  writingStats?: boolean | Prisma.User$writingStatsArgs<ExtArgs>
+  writingSessions?: boolean | Prisma.User$writingSessionsArgs<ExtArgs>
+  writingActivityClock?: boolean | Prisma.User$writingActivityClockArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1758,6 +2695,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   branches?: boolean | Prisma.User$branchesArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
+  aiUsage?: boolean | Prisma.User$aiUsageArgs<ExtArgs>
+  writingStats?: boolean | Prisma.User$writingStatsArgs<ExtArgs>
+  writingSessions?: boolean | Prisma.User$writingSessionsArgs<ExtArgs>
+  writingActivityClock?: boolean | Prisma.User$writingActivityClockArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1775,6 +2717,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     branches: Prisma.$BranchPayload<ExtArgs>[]
     settings: Prisma.$UserSettingsPayload<ExtArgs> | null
     activities: Prisma.$ActivityPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
+    aiUsage: Prisma.$AiUsagePayload<ExtArgs> | null
+    writingStats: Prisma.$WritingStatsPayload<ExtArgs>[]
+    writingSessions: Prisma.$WritingSessionPayload<ExtArgs>[]
+    writingActivityClock: Prisma.$WritingActivityClockPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2191,6 +3138,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   branches<T extends Prisma.User$branchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   activities<T extends Prisma.User$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.User$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiUsage<T extends Prisma.User$aiUsageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiUsageArgs<ExtArgs>>): Prisma.Prisma__AiUsageClient<runtime.Types.Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  writingStats<T extends Prisma.User$writingStatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingStatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  writingSessions<T extends Prisma.User$writingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  writingActivityClock<T extends Prisma.User$writingActivityClockArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingActivityClockArgs<ExtArgs>>): Prisma.Prisma__WritingActivityClockClient<runtime.Types.Result.GetResult<Prisma.$WritingActivityClockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2832,6 +3784,116 @@ export type User$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ActivityScalarFieldEnum | Prisma.ActivityScalarFieldEnum[]
+}
+
+/**
+ * User.aiConversations
+ */
+export type User$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
+}
+
+/**
+ * User.aiUsage
+ */
+export type User$aiUsageArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiUsage
+   */
+  select?: Prisma.AiUsageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiUsage
+   */
+  omit?: Prisma.AiUsageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiUsageInclude<ExtArgs> | null
+  where?: Prisma.AiUsageWhereInput
+}
+
+/**
+ * User.writingStats
+ */
+export type User$writingStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WritingStats
+   */
+  select?: Prisma.WritingStatsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WritingStats
+   */
+  omit?: Prisma.WritingStatsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WritingStatsInclude<ExtArgs> | null
+  where?: Prisma.WritingStatsWhereInput
+  orderBy?: Prisma.WritingStatsOrderByWithRelationInput | Prisma.WritingStatsOrderByWithRelationInput[]
+  cursor?: Prisma.WritingStatsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WritingStatsScalarFieldEnum | Prisma.WritingStatsScalarFieldEnum[]
+}
+
+/**
+ * User.writingSessions
+ */
+export type User$writingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WritingSession
+   */
+  select?: Prisma.WritingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WritingSession
+   */
+  omit?: Prisma.WritingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WritingSessionInclude<ExtArgs> | null
+  where?: Prisma.WritingSessionWhereInput
+  orderBy?: Prisma.WritingSessionOrderByWithRelationInput | Prisma.WritingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.WritingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WritingSessionScalarFieldEnum | Prisma.WritingSessionScalarFieldEnum[]
+}
+
+/**
+ * User.writingActivityClock
+ */
+export type User$writingActivityClockArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WritingActivityClock
+   */
+  select?: Prisma.WritingActivityClockSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WritingActivityClock
+   */
+  omit?: Prisma.WritingActivityClockOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WritingActivityClockInclude<ExtArgs> | null
+  where?: Prisma.WritingActivityClockWhereInput
 }
 
 /**

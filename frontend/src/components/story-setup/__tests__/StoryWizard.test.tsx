@@ -11,6 +11,10 @@ vi.mock('@/stores/document-store', () => ({
   useDocumentStore: useDocumentStoreMock,
 }))
 
+vi.mock('@/stores/toast-store', () => ({
+  useToastStore: () => ({ success: vi.fn(), error: vi.fn(), toasts: [], remove: vi.fn() }),
+}))
+
 vi.mock('@/stores/options-store', async (importOriginal) => {
   const mod = await importOriginal<typeof import('@/stores/options-store')>()
   return { ...mod, useOptionsStore: useOptionsStoreMock }
@@ -25,6 +29,8 @@ vi.mock('react-i18next', () => ({
 const baseStore = {
   updateProject: vi.fn().mockResolvedValue(undefined),
   updateStoryMeta: vi.fn().mockResolvedValue(undefined),
+  documentTree: [] as { id: string }[],
+  currentDocument: null,
 }
 
 const ratingOptions = [
@@ -174,5 +180,54 @@ describe('StoryWizard', () => {
       />,
     )
     expect(screen.getByLabelText('storySetup.descriptionLabel')).toHaveValue('Descripción ya guardada')
+  })
+
+  it('muestra Generar con IA si el wizard está incompleto', () => {
+    render(<StoryWizard projectId="folder-1" isOpen onClose={vi.fn()} onSaved={vi.fn()} />)
+    expect(screen.getByRole('button', { name: 'storySetup.generateWithAi' })).toBeInTheDocument()
+  })
+
+  it('sigue mostrando Generar con IA si la información del wizard está completa', () => {
+    render(
+      <StoryWizard
+        projectId="folder-1"
+        isOpen
+        initialDescription="Ada llega de noche a Madrid."
+        initialMeta={{
+          rating: 'teen',
+          type: ['Drama'],
+          isFanfic: false,
+          characters: [{ name: 'Ada', isOC: true }],
+          tags: ['intriga'],
+          narrator: 'tercera',
+          ending: 'abierto',
+          worldContext: 'ciudad',
+          initialSituation: 'llega',
+          centralTheme: 'memoria',
+          problems: 'olvido',
+          protagonistLife: 'calma',
+          protagonistEvolution: 'acepta',
+          structure: {
+            sections: [
+              { id: 'inicio', title: 'Inicio', answers: { 'wizard:inicio:status': 'mundo', 'wizard:inicio:crack': 'grieta' } },
+              {
+                id: 'desarrollo',
+                title: 'Desarrollo',
+                answers: {
+                  'wizard:desarrollo:inciting': 'incidente',
+                  'wizard:desarrollo:effect': 'efecto',
+                  'wizard:desarrollo:scenes': 'escenas',
+                },
+              },
+              { id: 'climax', title: 'Clímax', answers: { 'wizard:climax:peak': 'pico', 'wizard:climax:now': 'ahora' } },
+              { id: 'final', title: 'Final', answers: { 'wizard:final:arrive': 'llega', 'wizard:final:change': 'cambia' } },
+            ],
+          },
+        }}
+        onClose={vi.fn()}
+        onSaved={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'storySetup.generateWithAi' })).toBeInTheDocument()
   })
 })

@@ -1,7 +1,12 @@
+import 'dotenv/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { defineConfig } from 'prisma/config'
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:4422SwSIDaR1105!@db.mgluvgwpvpuxzjdbnpxw.supabase.co:5432/postgres'
+const connectionString = process.env.DATABASE_URL
+
+if (!connectionString) {
+  throw new Error('DATABASE_URL is not set. Run pnpm setup:local or configure backend/.env')
+}
 
 export default defineConfig({
   earlyAccess: true,

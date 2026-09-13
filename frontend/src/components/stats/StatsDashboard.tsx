@@ -1,0 +1,54 @@
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { RefreshCw } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
+import { useStatsStore } from '@/stores/stats-store'
+import { browserTimeZone } from '@/services/stats'
+import type { StatsQuery } from '@/types/stats'
+import { ContributionGraph } from './ContributionGraph'
+import { MotivationalQuotes } from './MotivationalQuotes'
+import { StatsFilters } from './StatsFilters'
+import { calendarDate } from './stats-calendar'
+import './stats.css'
+
+export function StatsDashboard() {
+  const userId = useAuthStore((state) => state.user?.id)
+  return <StatsDashboardContent key={userId ?? 'anonymous'} userId={userId} />
+}
+
+function StatsDashboardContent({ userId }: { userId: string | undefined }) {
+  const { t, i18n } = useTranslation()
+  const { report, loading, error, load } = useStatsStore()
+  const [query, setQuery] = useState<StatsQuery>({ days: 365, timeZone: browserTimeZone() })
+  useEffect(() => { void load(query) }, [query, userId, load])
+  const number = new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 1 })
+  const date = new Intl.DateTimeFormat(i18n.language, { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' })
+  const metrics = report ? [
+    { key: 'currentWords', value: number.format(report.summary.totalWords), hint: 'currentWordsHint' },
+    { key: 'wordsAdded', value: number.format(report.summary.wordsAdded), hint: 'periodHint' },
+    { key: 'activeTime', value: t('statsApp.duration', { hours: Math.floor(report.summary.activeSeconds / 3600), minutes: Math.floor(report.summary.activeSeconds % 3600 / 60) }), hint: 'activeTimeHint' },
+    { key: 'currentStreak', value: t('statsApp.dayCount', { count: report.summary.currentStreak }), hint: 'streakHint' },
+    { key: 'todayWords', value: number.format(report.summary.todayWords), hint: 'todayHint' },
+    { key: 'dailyAverage', value: number.format(report.summary.dailyAverage), hint: 'averageHint' },
+    { key: 'activeDays', value: number.format(report.summary.activeDays), hint: 'periodHint' },
+    { key: 'longestStreak', value: t('statsApp.dayCount', { count: report.summary.longestStreak }), hint: 'allTimeHint' },
+  ] : []
+
+  return <div className="stats-page p-4 sm:p-6 md:p-8 space-y-6" data-testid="stats-dashboard">
+    <div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><h1 className="font-display text-3xl sm:text-4xl font-bold break-words">{t('statsApp.title')}</h1><p className="stats-muted text-sm mt-1">{t('statsApp.subtitle')}</p></div><button type="button" className="stats-button" disabled={loading} onClick={() => { void load(query) }}><RefreshCw className="w-4 h-4" />{t('statsApp.refresh')}</button></div>
+    <StatsFilters query={query} report={report} onChange={setQuery} />
+    <p className="text-xs stats-muted">{t('statsApp.timeZone', { timeZone: report?.timeZone ?? query.timeZone })}</p>
+    {loading && <div role="status" className="notebook-paper p-6 stats-muted" aria-busy="true">{t('statsApp.loading')}</div>}
+    {error && <div role="alert" className="notebook-paper p-4 space-y-3"><p>{t(error)}</p><button type="button" className="stats-button" onClick={() => { void load(query) }}>{t('statsApp.retry')}</button></div>}
+    {report && !loading && !error && <>
+      <section aria-label={t('statsApp.summary')} className="notebook-paper stats-metrics">
+        {metrics.map((metric) => <div key={metric.key} className="stats-metric"><h2 className="text-sm stats-muted">{t(`statsApp.${metric.key}`)}</h2><p className="font-mono text-2xl sm:text-3xl mt-2 break-words" data-metric={metric.key}>{metric.value}</p><p className="text-xs stats-muted mt-1">{t(`statsApp.${metric.hint}`)}</p></div>)}
+      </section>
+      <div className="space-y-2 text-sm stats-muted"><p>{t('statsApp.growthExplanation')}</p><p>{report.trackedSince ? t('statsApp.trackedSince', { date: date.format(new Date(report.trackedSince)) }) : t('statsApp.notTrackedYet')}</p></div>
+      {!report.summary.wordsAdded && !report.summary.activeSeconds && <div role="status" className="notebook-paper p-5"><h2 className="font-display text-xl font-bold">{t('statsApp.emptyTitle')}</h2><p className="text-sm stats-muted mt-1">{t('statsApp.emptyHint')}</p></div>}
+      <div className="notebook-paper p-4 sm:p-6 min-w-0"><ContributionGraph days={report.days} from={report.range.from} to={report.range.to} /></div>
+      <details className="notebook-paper p-4 sm:p-6"><summary className="cursor-pointer font-medium">{t('statsApp.dailyTable')}</summary><table className="stats-table mt-3"><caption className="sr-only">{t('statsApp.dailyTable')}</caption><thead><tr><th scope="col">{t('statsApp.date')}</th><th scope="col">{t('statsApp.wordsAdded')}</th><th scope="col">{t('statsApp.activeTime')}</th></tr></thead><tbody>{[...report.days].reverse().map((day) => <tr key={day.date}><th scope="row" className="font-normal">{date.format(calendarDate(day.date))}</th><td>{number.format(day.wordsAdded)}</td><td>{t('statsApp.minutes', { count: Math.floor(day.activeSeconds / 60) })}</td></tr>)}</tbody></table></details>
+      <MotivationalQuotes date={report.today} />
+    </>}
+  </div>
+}

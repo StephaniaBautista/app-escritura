@@ -31,6 +31,13 @@ describe('parseDateValue', () => {
     expect(parseDateValue('30 minutos')).toBe(30 * MINUTE)
   })
 
+  it('entiende el formato canónico Y, Y-M, Y-M-D y Y-M-D hh:mm', () => {
+    expect(parseDateValue('-99')).toBe(-99 * YEAR)
+    expect(parseDateValue('-20-03')).toBe(-20 * YEAR + 2 * MONTH)
+    expect(parseDateValue('5-01-15')).toBe(5 * YEAR + 14 * DAY)
+    expect(parseDateValue('0-02-01 13:30')).toBe(MONTH + 13 * HOUR + 30 * MINUTE)
+  })
+
   it('devuelve null sin número', () => {
     expect(parseDateValue('Era de los dragones')).toBeNull()
     expect(parseDateValue(null)).toBeNull()

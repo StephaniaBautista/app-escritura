@@ -3,7 +3,13 @@ import type { Worker } from 'tesseract.js'
 import { getDocument, OPS } from 'pdfjs-dist/legacy/build/pdf.mjs'
 
 const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp'])
-export const MAX_OCR_BYTES = 10 * 1024 * 1024
+export const MAX_OCR_IMAGE_BYTES = 10 * 1024 * 1024
+export const MAX_OCR_PDF_BYTES = 32 * 1024 * 1024
+export const MAX_OCR_UPLOAD_BYTES = MAX_OCR_PDF_BYTES
+
+export function maxOcrBytesForMime(mime: string): number {
+  return mime === 'application/pdf' ? MAX_OCR_PDF_BYTES : MAX_OCR_IMAGE_BYTES
+}
 
 let workerPromise: Promise<Worker> | null = null
 

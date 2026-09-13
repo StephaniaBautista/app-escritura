@@ -1,5 +1,4 @@
 import { prisma } from '../lib/prisma.js'
-import { Prisma } from '@generated/client'
 
 export interface BranchNode {
   id: string

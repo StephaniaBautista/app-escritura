@@ -8,16 +8,17 @@ interface SectionModalProps {
   onClose: () => void
   onSave: () => void
   children: ReactNode
+  wide?: boolean
 }
 
-export function SectionModal({ title, isSaving, onClose, onSave, children }: SectionModalProps) {
+export function SectionModal({ title, isSaving, onClose, onSave, children, wide }: SectionModalProps) {
   const { t } = useTranslation()
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/50" onClick={isSaving ? undefined : onClose} />
       <div
-        className="relative w-full max-w-lg rounded-2xl border shadow-2xl max-h-[90vh] overflow-y-auto"
+        className={`relative w-full rounded-2xl border shadow-2xl max-h-[90vh] overflow-y-auto ${wide ? 'max-w-2xl' : 'max-w-lg'}`}
         style={{ background: 'var(--color-paper)', borderColor: 'var(--color-paper-lines)' }}
       >
         <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: 'var(--color-paper-lines)' }}>

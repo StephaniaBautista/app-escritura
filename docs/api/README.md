@@ -4,6 +4,22 @@ Documentacion de la API de Archivum.
 
 ## Endpoints
 
+### Mapas (M70)
+
+Varios lienzos por proyecto, JSON de objetos (iconos, trazos, formas, texto) e imagen de fondo: [contrato](./maps.md). Tag Swagger `Worldbuilding`.
+
+### Estadísticas de escritura (Fase 10)
+
+Palabras actuales y añadidas, tiempo activo, rachas y calendario por cuenta, proyecto o escrito: [contrato y metodología](./stats.md). `GET /api/stats` y `POST /api/stats/activity`; el guardado de documentos admite `timeZone`.
+
+### Asistencia de IA (Fase 9)
+
+Chat contextual, conversación con personajes, análisis de coherencia, autocompletado de fichas, creación de personajes desde el manuscrito, autocompletado de la línea de tiempo, sugerencias de subtramas, orden de capítulos, autocompletado del wizard de historia y sugerencias de etiquetas: [contrato, permisos y configuración](./ai.md). Rutas bajo `/api/projects/:projectId/ai`, tag Swagger `AI`.
+
+### Estructura / tablero de capítulos (Fase 8)
+
+Tablero kanban por proyecto, sincronización de capítulos y movimiento de tarjetas: [contrato](./structure.md). Tag Swagger `Structure`.
+
 ### Auth
 - `POST /api/auth/register` - Registrar usuario
 - `POST /api/auth/login` - Iniciar sesion
@@ -26,6 +42,7 @@ Documentacion de la API de Archivum.
 - `POST /api/projects` - Crear proyecto
 - `GET /api/projects/:id` - Obtener proyecto (endpoint combinado, ver abajo)
 - `PATCH /api/projects/:id` - Actualizar proyecto
+- `PATCH /api/projects/:id/timeline-config` - Guardar sistema de tiempo de la línea temporal `{ timeSystem: "relative"|"era", beforeLabel?, afterLabel? }` (siglas máx. 10 caracteres; default relative)
 - `DELETE /api/projects/:id` - Eliminar proyecto
 
 ### `GET /api/projects/:id` — Endpoint combinado (2026-07-31)
@@ -230,15 +247,17 @@ Reglas:
 
 **Timeline:**
 - `GET /api/projects/:projectId/timeline` - Listar eventos (ordenados por `order` asc)
-- `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, eraId?, characterIds? }` (fecha texto libre; `characterIds` y `eraId` saneados al proyecto — `eraId` ajeno al proyecto se guarda como `null`; sin `order` usa el contador)
-- `PUT /api/timeline/:id` - Actualizar evento (mismos campos, todos opcionales)
-- `DELETE /api/timeline/:id` - Borrar evento (204)
+- `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, eraId?, characterIds?, icon?, color?, groupName?, precision?, endDate?, label?, labelColor?, relatedEventIds?, relatedDocumentIds? }` (M46: `precision`: year|month|day|minute; `color`/`labelColor` hex `#rrggbb`; `date`/`endDate` texto — los formularios guardan el formato canónico `Y`, `Y-M`, `Y-M-D` o `Y-M-D hh:mm`, y se sigue aceptando texto libre legado; `characterIds`, `relatedEventIds` (sin el propio evento), `relatedDocumentIds` (docs y subpáginas del proyecto) y `eraId` saneados al proyecto — `eraId` ajeno se guarda como `null`; las **evoluciones** de personaje se descartan si el original no aparece en un evento **anterior**; sin `order` usa el contador)
+- `PUT /api/timeline/:id` - Actualizar evento (mismos campos, todos opcionales; `imageUrl` solo acepta `null` para quitar la imagen, que se borra del storage). Si cambian `date` o `characterIds`, se vuelve a aplicar la regla de evoluciones (el original debe aparecer en un evento anterior).
+- `PUT /api/timeline/:id/image` - Subir imagen del evento `{ dataUrl }` (base64 `data:image/{jpeg,png,webp,gif}`, máx 3 MB) a Supabase Storage (`timeline/<eventId>/<uuid>`); reemplaza y borra la anterior. Errores: `400 INVALID_IMAGE|IMAGE_TOO_LARGE`, `503 STORAGE_UNAVAILABLE`
+- `DELETE /api/timeline/:id` - Borrar evento (204); borra también su imagen del storage
 
-**Épocas / franjas (M60, extendido en M62):**
+**Épocas / franjas (M60, extendido en M62 y M46):**
 - `GET /api/projects/:projectId/timeline-eras` - Listar épocas (ordenadas por `order` asc)
-- `POST /api/projects/:projectId/timeline-eras` - Crear época `{ name, color?, precision?, startDate?, endDate?, rollover? }` (`precision`: year|month|week|day|hour|minute; fechas texto libre ej. "-90 años"; `rollover`: newYear|afterYear; sin `order` usa el contador)
-- `PUT /api/timeline-eras/:id` - Renombrar época `{ name }`
+- `POST /api/projects/:projectId/timeline-eras` - Crear época `{ name, color?, precision?, startDate?, endDate?, rollover? }` (`precision`: year|month|week|day|hour|minute; `color` hex `#rrggbb`; fechas en formato canónico `Y[-M[-D]]` (texto libre legado sigue aceptado); `rollover`: newYear|afterYear; sin `order` usa el contador)
+- `PUT /api/timeline-eras/:id` - Actualizar época (mismos campos, todos opcionales)
 - `DELETE /api/timeline-eras/:id` - Borrar época (204); sus eventos quedan con `eraId = null` (franja General)
+- Autocompletado IA: `POST /api/projects/:projectId/ai/timeline-fill` — extrae épocas/eventos del manuscrito (techo 50/50); no persiste; el cliente aplica el CRUD de arriba. Ver [ai.md](./ai.md).
 
 **Relaciones (estructuradas):**
 - `GET /api/projects/:projectId/relationships?type=` - Listar relaciones `{ characterA, characterB, type, label?, description? }` (filtro opcional por tipo)
@@ -259,6 +278,42 @@ Tipos: `romance | friendship | enemity | family | custom` (custom/family requier
 Reglas:
 - El layout guarda **solo posiciones** de nodos y notas; los edges se derivan: `familyTree` → `parentIds`, `relationships|custom` → `CharacterRelationship`.
 - Las conexiones dibujadas en la pizarra crean/borran **relaciones estructuradas reales** (no dibujo muerto); las relaciones se pueden filtrar por tipo y se ven también en la ficha de personaje (Fase 5).
+
+### Lore (Fase 7, M64)
+- `GET /api/projects/:projectId/lore` - Listar entradas (orden `order`, `createdAt`)
+- `POST /api/projects/:projectId/lore` - Crear `{ name, type?, description?, limits?, powerSource?, cost?, usedBy?, order? }` (`type`: magic|faction|religion|location|item|custom; inválido → `custom`)
+- `PUT /api/lore/:id` - Actualizar los mismos campos (todos opcionales). No acepta `pdfUrl`/`pdfName`
+- `PUT /api/lore/:id/pdf` - Adjuntar PDF (`multipart/form-data`, campo `file`, mime `application/pdf`, cabecera `%PDF-`, máx. 10 MB) → Supabase `lore/<id>/<uuid>.pdf`. Reemplaza y borra el anterior
+- `DELETE /api/lore/:id/pdf` - Quitar el PDF (storage + campos)
+- `DELETE /api/lore/:id` - Borrar la entrada (204) y su PDF
+
+### Razas (Fase 7, M65)
+- `GET /api/projects/:projectId/races` - Listar razas (orden por nombre)
+- `POST /api/projects/:projectId/races` - Crear `{ name, classification?, description?, physicalTraits?, magicDescription?, spiritualTraits?, lifeExpectancy?, language?, culture?, religion?, origin?, territory?, relationsWithOthers?, importantNotes? }`. `hasMagic` se deriva de `magicDescription`. `lifeExpectancy` es texto libre. No acepta `imageUrl`
+- `PUT /api/races/:id` - Actualizar los mismos campos
+- `PUT /api/races/:id/image` - Subir imagen `{ dataUrl }` (jpeg|png|webp|gif, máx. 3 MB) al bucket **separado** `race-images` (`races/<id>/<uuid>`). Si el bucket no existe, el backend lo crea (público). No usa `character-images`.
+- `DELETE /api/races/:id/image` - Quitar la imagen
+- `PUT /api/races/:id/pdf` - Adjuntar PDF (`multipart/form-data`, campo `file`, mime `application/pdf`, cabecera `%PDF-`, máx. 10 MB) → Supabase `character-images` `races/<id>/<uuid>.pdf`. Reemplaza y borra el anterior. No acepta `pdfUrl`/`pdfName` en create/update
+- `DELETE /api/races/:id/pdf` - Quitar el PDF (storage + campos)
+- `DELETE /api/races/:id` - Borrar la raza (204), su imagen y su PDF
+
+### Criaturas (Fase 7, M69)
+- `GET /api/projects/:projectId/creatures` - Listar criaturas (orden por nombre)
+- `POST /api/projects/:projectId/creatures` - Crear `{ name, species?, dangerType?, description? }` (`dangerType`: none|low|medium|high|lethal; inválido → null). No acepta `imageUrl`
+- `PUT /api/creatures/:id` - Actualizar los mismos campos
+- `PUT /api/creatures/:id/image` - Subir imagen `{ dataUrl }` (jpeg|png|webp|gif, máx. 3 MB) al bucket **separado** `creature-images` (`creatures/<id>/<uuid>`). Si el bucket no existe, el backend lo crea (público)
+- `DELETE /api/creatures/:id/image` - Quitar la imagen
+- `DELETE /api/creatures/:id` - Borrar la criatura (204) y su imagen
+
+### OCR (Fase 7, T47–T48)
+- `POST /api/ocr` - Extraer texto de una imagen o PDF (`multipart/form-data`, campo `file`).
+  - Tipos: `image/jpeg`, `image/png`, `image/webp`, `application/pdf`.
+  - Tamaño máximo: 10 MB (imágenes) / 32 MB (PDF). El límite de `multipart` es 32 MB.
+  - Idiomas: Tesseract.js `spa+eng`.
+  - PDF con capa de texto: extrae con pdf.js; PDF escaneado: OCR de las imágenes embebidas.
+  - Respuesta: `{ text: string }`.
+  - Errores: `401 UNAUTHORIZED`, `400 NO_FILE`, `415 UNSUPPORTED_TYPE`, `413 FILE_TOO_LARGE`.
+  - Auth: cookie de sesión. El texto no se persiste; el cliente puede copiarlo o volcarlo a lore/glosario.
 
 ### Cache en memoria (2026-08-08, M31 T7)
 

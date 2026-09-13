@@ -37,6 +37,7 @@ export function migrateStructure(raw: unknown): StoryStructure {
             section.answers && typeof section.answers === 'object'
               ? (section.answers as Record<string, string>)
               : undefined,
+          scenes: parseScenes(section.scenes),
         },
       ]
     })
@@ -54,6 +55,22 @@ export function migrateStructure(raw: unknown): StoryStructure {
     }
   }
   return { sections }
+}
+
+function parseScenes(raw: unknown): StoryStructureSection['scenes'] {
+  if (!Array.isArray(raw)) return undefined
+  const scenes: NonNullable<StoryStructureSection['scenes']> = []
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue
+    const row = item as Record<string, unknown>
+    const title = typeof row.title === 'string' ? row.title.trim().slice(0, 80) : ''
+    if (!title) continue
+    const form = row.form === 'note' ? 'note' : row.form === 'chapter' ? 'chapter' : null
+    if (!form) continue
+    scenes.push({ title, form })
+    if (scenes.length >= 6) break
+  }
+  return scenes.length > 0 ? scenes : undefined
 }
 
 export function storyMetaSections(meta: StoryMeta): StoryStructureSection[] {

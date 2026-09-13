@@ -1,7 +1,7 @@
 {
   "tag": "Estructura tu historia",
   "title": "Línea del tiempo",
-  "description": "Eventos con fecha, personajes involucrados. Se auto-genera con el modo guiado.",
+  "description": "Épocas, eventos en la escala y fichas de detalle. Se auto-genera con el modo guiado.",
   "morning": "Mañana",
   "morningEvent": "María descubre la carta",
   "noon": "Mediodía",
@@ -9,5 +9,15 @@
   "afternoon": "Tarde",
   "afternoonEvent": "La revelación cambia todo",
   "night": "Noche",
-  "nightEvent": "Decisión irreversible"
+  "nightEvent": "Decisión irreversible",
+  "bandsTitle": "Franjas temporales",
+  "laneOther": "Otros eventos",
+  "eraName": "Sucesos de María",
+  "unitYears": "años",
+  "prev": "Evento anterior",
+  "next": "Evento siguiente",
+  "event1Desc": "Encuentra la carta entre los papeles de su padre.",
+  "event2Desc": "Un desconocido le entrega la segunda pista.",
+  "event3Desc": "Elena confirma lo que María temía.",
+  "event4Desc": "Elige un camino del que no hay retorno."
 }

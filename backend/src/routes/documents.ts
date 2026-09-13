@@ -1,6 +1,7 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import type { FastifyInstance, FastifyRequest } from 'fastify'
 import { auth } from '../lib/auth.js'
 import { documentService } from '../services/document-service.js'
+import { StatsError } from '../services/stats-types.js'
 import { Prisma } from '@generated/client'
 
 // Upper bound for the serialized TipTap JSON content of a document.
@@ -109,7 +110,7 @@ export async function documentRoutes(app: FastifyInstance) {
 
   app.patch('/documents/:id', {
     schema: {
-      description: 'Update document content, title, or metadata',
+      description: 'Update document content, title, or metadata. Real content additions atomically record writing statistics in timeZone (UTC by default); formatting and retries do not add words.',
       tags: ['Documents'],
       security: [{ cookieAuth: [] }],
       params: {
@@ -122,6 +123,7 @@ export async function documentRoutes(app: FastifyInstance) {
         properties: {
           title: { type: 'string', minLength: 1, maxLength: 500 },
           content: { type: 'object', description: 'TipTap JSON content' },
+          timeZone: { type: 'string', minLength: 1, maxLength: 100, description: 'IANA time zone for the immutable writing day; defaults to UTC' },
           folderId: { type: 'string', nullable: true },
           parentId: { type: 'string', nullable: true },
           order: { type: 'number' },
@@ -136,6 +138,7 @@ export async function documentRoutes(app: FastifyInstance) {
     const body = request.body as {
       title?: string
       content?: Record<string, unknown>
+      timeZone?: string
       folderId?: string | null
       parentId?: string | null
       order?: number
@@ -148,7 +151,11 @@ export async function documentRoutes(app: FastifyInstance) {
     const doc = await documentService.update(id, user.id, {
       ...body,
       content: body.content as Prisma.InputJsonValue | undefined,
+    }).catch((error: unknown) => {
+      if (error instanceof StatsError) return reply.code(error.statusCode).send({ error: { code: error.code, message: error.code } })
+      throw error
     })
+    if (reply.sent) return
     if (!doc) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Documento no encontrado' } })
 
     return doc
@@ -198,4 +205,3 @@ export async function documentRoutes(app: FastifyInstance) {
     return reply.status(201).send(duplicated)
   })
 }
-

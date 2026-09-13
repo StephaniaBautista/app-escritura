@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { settingsApi } from '@/services/settings'
-import type { UserSettings, UpdateSettingsInput, AutoVersionConfig } from '@/types/settings'
+import type { UserSettings, UpdateSettingsInput, AutoVersionConfig, UiPrefs } from '@/types/settings'
 
 const DEFAULT_AUTO_VERSION: AutoVersionConfig = {
   inactivity: { enabled: true, intervalMs: 5 * 60 * 1000 },
@@ -11,6 +11,8 @@ const DEFAULT_AUTO_VERSION: AutoVersionConfig = {
   monthly: { enabled: true, intervalMs: 30 * 24 * 60 * 60 * 1000 },
 }
 
+const DEFAULT_UI_PREFS: UiPrefs = {}
+
 interface SettingsState {
   settings: UserSettings | null
   loading: boolean
@@ -18,6 +20,8 @@ interface SettingsState {
   loadSettings: () => Promise<void>
   updateSettings: (data: UpdateSettingsInput) => Promise<void>
   getAutoVersionConfig: () => AutoVersionConfig
+  getUiPrefs: () => UiPrefs
+  dismissAiStructureWarning: () => Promise<void>
 }
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
@@ -52,5 +56,15 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
     const { settings } = get()
     if (!settings?.autoVersion) return DEFAULT_AUTO_VERSION
     return { ...DEFAULT_AUTO_VERSION, ...settings.autoVersion }
+  },
+
+  getUiPrefs: () => {
+    const { settings } = get()
+    if (!settings?.uiPrefs) return DEFAULT_UI_PREFS
+    return { ...DEFAULT_UI_PREFS, ...settings.uiPrefs }
+  },
+
+  dismissAiStructureWarning: async () => {
+    await get().updateSettings({ uiPrefs: { dismissAiStructureWarning: true } })
   },
 }))

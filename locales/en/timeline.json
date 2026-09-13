@@ -1,7 +1,7 @@
 {
   "tag": "Structure your story",
   "title": "Timeline",
-  "description": "Events with dates, involved characters. Auto-generates with guided mode.",
+  "description": "Eras, events on a scale, and detail cards. Auto-generates with guided mode.",
   "morning": "Morning",
   "morningEvent": "Maria discovers the letter",
   "noon": "Noon",
@@ -9,5 +9,15 @@
   "afternoon": "Afternoon",
   "afternoonEvent": "The revelation changes everything",
   "night": "Night",
-  "nightEvent": "Irreversible decision"
+  "nightEvent": "Irreversible decision",
+  "bandsTitle": "Time bands",
+  "laneOther": "Other events",
+  "eraName": "Maria's events",
+  "unitYears": "years",
+  "prev": "Previous event",
+  "next": "Next event",
+  "event1Desc": "She finds the letter among her father's papers.",
+  "event2Desc": "A stranger hands her the second clue.",
+  "event3Desc": "Elena confirms what Maria feared.",
+  "event4Desc": "She chooses a path with no way back."
 }

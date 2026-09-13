@@ -42,6 +42,14 @@ export type TimelineEventMinAggregateOutputType = {
   description: string | null
   order: number | null
   eraId: string | null
+  icon: string | null
+  color: string | null
+  groupName: string | null
+  precision: string | null
+  endDate: string | null
+  label: string | null
+  labelColor: string | null
+  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +62,14 @@ export type TimelineEventMaxAggregateOutputType = {
   description: string | null
   order: number | null
   eraId: string | null
+  icon: string | null
+  color: string | null
+  groupName: string | null
+  precision: string | null
+  endDate: string | null
+  label: string | null
+  labelColor: string | null
+  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -67,6 +83,16 @@ export type TimelineEventCountAggregateOutputType = {
   order: number
   eraId: number
   characterIds: number
+  icon: number
+  color: number
+  groupName: number
+  precision: number
+  endDate: number
+  label: number
+  labelColor: number
+  imageUrl: number
+  relatedEventIds: number
+  relatedDocumentIds: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -89,6 +115,14 @@ export type TimelineEventMinAggregateInputType = {
   description?: true
   order?: true
   eraId?: true
+  icon?: true
+  color?: true
+  groupName?: true
+  precision?: true
+  endDate?: true
+  label?: true
+  labelColor?: true
+  imageUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -101,6 +135,14 @@ export type TimelineEventMaxAggregateInputType = {
   description?: true
   order?: true
   eraId?: true
+  icon?: true
+  color?: true
+  groupName?: true
+  precision?: true
+  endDate?: true
+  label?: true
+  labelColor?: true
+  imageUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -114,6 +156,16 @@ export type TimelineEventCountAggregateInputType = {
   order?: true
   eraId?: true
   characterIds?: true
+  icon?: true
+  color?: true
+  groupName?: true
+  precision?: true
+  endDate?: true
+  label?: true
+  labelColor?: true
+  imageUrl?: true
+  relatedEventIds?: true
+  relatedDocumentIds?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -214,6 +266,16 @@ export type TimelineEventGroupByOutputType = {
   order: number
   eraId: string | null
   characterIds: string[]
+  icon: string | null
+  color: string | null
+  groupName: string | null
+  precision: string
+  endDate: string | null
+  label: string | null
+  labelColor: string | null
+  imageUrl: string | null
+  relatedEventIds: string[]
+  relatedDocumentIds: string[]
   createdAt: Date
   updatedAt: Date
   _count: TimelineEventCountAggregateOutputType | null
@@ -250,6 +312,16 @@ export type TimelineEventWhereInput = {
   order?: Prisma.IntFilter<"TimelineEvent"> | number
   eraId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   characterIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  icon?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  color?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  groupName?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  precision?: Prisma.StringFilter<"TimelineEvent"> | string
+  endDate?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  label?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  labelColor?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -264,6 +336,16 @@ export type TimelineEventOrderByWithRelationInput = {
   order?: Prisma.SortOrder
   eraId?: Prisma.SortOrderInput | Prisma.SortOrder
   characterIds?: Prisma.SortOrder
+  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
+  groupName?: Prisma.SortOrderInput | Prisma.SortOrder
+  precision?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  label?: Prisma.SortOrderInput | Prisma.SortOrder
+  labelColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  relatedEventIds?: Prisma.SortOrder
+  relatedDocumentIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
@@ -281,6 +363,16 @@ export type TimelineEventWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.IntFilter<"TimelineEvent"> | number
   eraId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   characterIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  icon?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  color?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  groupName?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  precision?: Prisma.StringFilter<"TimelineEvent"> | string
+  endDate?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  label?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  labelColor?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
@@ -295,6 +387,16 @@ export type TimelineEventOrderByWithAggregationInput = {
   order?: Prisma.SortOrder
   eraId?: Prisma.SortOrderInput | Prisma.SortOrder
   characterIds?: Prisma.SortOrder
+  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
+  groupName?: Prisma.SortOrderInput | Prisma.SortOrder
+  precision?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  label?: Prisma.SortOrderInput | Prisma.SortOrder
+  labelColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  relatedEventIds?: Prisma.SortOrder
+  relatedDocumentIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TimelineEventCountOrderByAggregateInput
@@ -316,6 +418,16 @@ export type TimelineEventScalarWhereWithAggregatesInput = {
   order?: Prisma.IntWithAggregatesFilter<"TimelineEvent"> | number
   eraId?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
   characterIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  icon?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  color?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  groupName?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  precision?: Prisma.StringWithAggregatesFilter<"TimelineEvent"> | string
+  endDate?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  label?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  labelColor?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
+  relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TimelineEvent"> | Date | string
 }
@@ -328,6 +440,16 @@ export type TimelineEventCreateInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutTimelineEventsInput
@@ -342,6 +464,16 @@ export type TimelineEventUncheckedCreateInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -354,6 +486,16 @@ export type TimelineEventUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimelineEventsNestedInput
@@ -368,6 +510,16 @@ export type TimelineEventUncheckedUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,6 +533,16 @@ export type TimelineEventCreateManyInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -393,6 +555,16 @@ export type TimelineEventUpdateManyMutationInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -406,6 +578,16 @@ export type TimelineEventUncheckedUpdateManyInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -429,6 +611,16 @@ export type TimelineEventCountOrderByAggregateInput = {
   order?: Prisma.SortOrder
   eraId?: Prisma.SortOrder
   characterIds?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  groupName?: Prisma.SortOrder
+  precision?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  label?: Prisma.SortOrder
+  labelColor?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  relatedEventIds?: Prisma.SortOrder
+  relatedDocumentIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -445,6 +637,14 @@ export type TimelineEventMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   order?: Prisma.SortOrder
   eraId?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  groupName?: Prisma.SortOrder
+  precision?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  label?: Prisma.SortOrder
+  labelColor?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -457,6 +657,14 @@ export type TimelineEventMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   order?: Prisma.SortOrder
   eraId?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  groupName?: Prisma.SortOrder
+  precision?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  label?: Prisma.SortOrder
+  labelColor?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -511,7 +719,25 @@ export type TimelineEventCreatecharacterIdsInput = {
   set: string[]
 }
 
+export type TimelineEventCreaterelatedEventIdsInput = {
+  set: string[]
+}
+
+export type TimelineEventCreaterelatedDocumentIdsInput = {
+  set: string[]
+}
+
 export type TimelineEventUpdatecharacterIdsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type TimelineEventUpdaterelatedEventIdsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type TimelineEventUpdaterelatedDocumentIdsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -524,6 +750,16 @@ export type TimelineEventCreateWithoutProjectInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -536,6 +772,16 @@ export type TimelineEventUncheckedCreateWithoutProjectInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -578,6 +824,16 @@ export type TimelineEventScalarWhereInput = {
   order?: Prisma.IntFilter<"TimelineEvent"> | number
   eraId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   characterIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  icon?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  color?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  groupName?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  precision?: Prisma.StringFilter<"TimelineEvent"> | string
+  endDate?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  label?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  labelColor?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
+  relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
 }
@@ -590,6 +846,16 @@ export type TimelineEventCreateManyProjectInput = {
   order?: number
   eraId?: string | null
   characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -602,6 +868,16 @@ export type TimelineEventUpdateWithoutProjectInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -614,6 +890,16 @@ export type TimelineEventUncheckedUpdateWithoutProjectInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -626,6 +912,16 @@ export type TimelineEventUncheckedUpdateManyWithoutProjectInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -641,6 +937,16 @@ export type TimelineEventSelect<ExtArgs extends runtime.Types.Extensions.Interna
   order?: boolean
   eraId?: boolean
   characterIds?: boolean
+  icon?: boolean
+  color?: boolean
+  groupName?: boolean
+  precision?: boolean
+  endDate?: boolean
+  label?: boolean
+  labelColor?: boolean
+  imageUrl?: boolean
+  relatedEventIds?: boolean
+  relatedDocumentIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -655,6 +961,16 @@ export type TimelineEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   order?: boolean
   eraId?: boolean
   characterIds?: boolean
+  icon?: boolean
+  color?: boolean
+  groupName?: boolean
+  precision?: boolean
+  endDate?: boolean
+  label?: boolean
+  labelColor?: boolean
+  imageUrl?: boolean
+  relatedEventIds?: boolean
+  relatedDocumentIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -669,6 +985,16 @@ export type TimelineEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   order?: boolean
   eraId?: boolean
   characterIds?: boolean
+  icon?: boolean
+  color?: boolean
+  groupName?: boolean
+  precision?: boolean
+  endDate?: boolean
+  label?: boolean
+  labelColor?: boolean
+  imageUrl?: boolean
+  relatedEventIds?: boolean
+  relatedDocumentIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -683,11 +1009,21 @@ export type TimelineEventSelectScalar = {
   order?: boolean
   eraId?: boolean
   characterIds?: boolean
+  icon?: boolean
+  color?: boolean
+  groupName?: boolean
+  precision?: boolean
+  endDate?: boolean
+  label?: boolean
+  labelColor?: boolean
+  imageUrl?: boolean
+  relatedEventIds?: boolean
+  relatedDocumentIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TimelineEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "date" | "description" | "order" | "eraId" | "characterIds" | "createdAt" | "updatedAt", ExtArgs["result"]["timelineEvent"]>
+export type TimelineEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "date" | "description" | "order" | "eraId" | "characterIds" | "icon" | "color" | "groupName" | "precision" | "endDate" | "label" | "labelColor" | "imageUrl" | "relatedEventIds" | "relatedDocumentIds" | "createdAt" | "updatedAt", ExtArgs["result"]["timelineEvent"]>
 export type TimelineEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -712,6 +1048,16 @@ export type $TimelineEventPayload<ExtArgs extends runtime.Types.Extensions.Inter
     order: number
     eraId: string | null
     characterIds: string[]
+    icon: string | null
+    color: string | null
+    groupName: string | null
+    precision: string
+    endDate: string | null
+    label: string | null
+    labelColor: string | null
+    imageUrl: string | null
+    relatedEventIds: string[]
+    relatedDocumentIds: string[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["timelineEvent"]>
@@ -1146,6 +1492,16 @@ export interface TimelineEventFieldRefs {
   readonly order: Prisma.FieldRef<"TimelineEvent", 'Int'>
   readonly eraId: Prisma.FieldRef<"TimelineEvent", 'String'>
   readonly characterIds: Prisma.FieldRef<"TimelineEvent", 'String[]'>
+  readonly icon: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly color: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly groupName: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly precision: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly endDate: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly label: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly labelColor: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"TimelineEvent", 'String'>
+  readonly relatedEventIds: Prisma.FieldRef<"TimelineEvent", 'String[]'>
+  readonly relatedDocumentIds: Prisma.FieldRef<"TimelineEvent", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"TimelineEvent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TimelineEvent", 'DateTime'>
 }

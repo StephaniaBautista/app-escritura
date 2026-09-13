@@ -13,6 +13,6 @@ export async function settingsRoutes(app: FastifyInstance) {
     const user = await getSessionUser(request)
     if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
     const body = request.body as Record<string, unknown>
-    return settingsService.update(user.id, body as { theme?: string; language?: string; autoVersion?: Record<string, unknown> })
+    return settingsService.update(user.id, body as { theme?: string; language?: string; autoVersion?: Record<string, unknown>; uiPrefs?: Record<string, unknown> })
   })
 }

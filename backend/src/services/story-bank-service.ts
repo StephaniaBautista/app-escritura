@@ -47,7 +47,6 @@ const bankCache = new MemoryCache<unknown>({ defaultTtlMs: BANK_CACHE_TTL_MS })
 
 const MAX_SECTIONS = 12
 const MAX_SECTION_TITLE = 100
-const MAX_QUESTION_TEXT = 500
 
 export async function validateSections(sections: unknown): Promise<TemplateSection[]> {
   if (!Array.isArray(sections)) {

@@ -7,6 +7,11 @@ export interface LoreEntry {
   description: string | null
   type: string
   limits: string | null
+  powerSource: string | null
+  cost: string | null
+  usedBy: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   order: number
   createdAt: string
   updatedAt: string
@@ -17,6 +22,9 @@ export interface LoreEntryInput {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
   order?: number
 }
 
@@ -29,12 +37,18 @@ export interface Race {
   physicalTraits: string | null
   hasMagic: boolean
   magicDescription: string | null
-  lifeExpectancy: number | null
+  spiritualTraits: string | null
+  lifeExpectancy: string | null
   language: string | null
   culture: string | null
   religion: string | null
   origin: string | null
   territory: string | null
+  relationsWithOthers: string | null
+  importantNotes: string | null
+  imageUrl: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   createdAt: string
   updatedAt: string
 }
@@ -46,12 +60,15 @@ export interface RaceInput {
   physicalTraits?: string | null
   hasMagic?: boolean
   magicDescription?: string | null
-  lifeExpectancy?: number | null
+  spiritualTraits?: string | null
+  lifeExpectancy?: string | null
   language?: string | null
   culture?: string | null
   religion?: string | null
   origin?: string | null
   territory?: string | null
+  relationsWithOthers?: string | null
+  importantNotes?: string | null
 }
 
 export interface GlossaryEntry {
@@ -77,6 +94,7 @@ export interface Creature {
   species: string | null
   dangerType: string | null
   description: string | null
+  imageUrl: string | null
   createdAt: string
   updatedAt: string
 }

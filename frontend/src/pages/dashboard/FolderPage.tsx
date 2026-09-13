@@ -1,3 +1,5 @@
+import { AiWorkspace } from '@/components/ai/AiWorkspace'
+import { MessageSquare } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
@@ -13,14 +15,15 @@ import { LoadingState } from '@/components/ui/LoadingState'
 import { NotesList } from '@/components/notes/NotesList'
 import { VersionsList } from '@/components/versions/VersionsList'
 import { StoryDescriptionSection } from '@/components/story-setup/StoryDescriptionSection'
-import { StoryStructureTab } from '@/components/story-setup/StoryStructureTab'
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
 import { CharactersPanel } from '@/components/characters/CharactersPanel'
 import { TimelinePanel } from '@/components/timeline/TimelinePanel'
 import { DiagramsPanel } from '@/components/diagrams/DiagramsPanel'
 import { WorldsPanel } from '@/components/worlds/WorldsPanel'
+import { BoardPanel } from '@/components/structure/BoardPanel'
+import { SubplotsPanel } from '@/components/structure/SubplotsPanel'
 import type { StoryMeta } from '@/types/story'
-import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, Network } from 'lucide-react'
+import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, GitBranch } from 'lucide-react'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
@@ -76,10 +79,11 @@ export function FolderPage() {
 
   const tabs = [
     { id: 'documents', label: 'Documentos', icon: FileText },
-    { id: 'structure', label: t('storySetup.structureTab'), icon: Layers },
+    { id: 'structure', label: t('structureApp.structureTab'), icon: Layers },
+    { id: 'subplots', label: t('structureApp.subplotsTab'), icon: GitBranch },
+    { id: 'ai', label: t('aiApp.title'), icon: MessageSquare },
     { id: 'characters', label: 'Personajes', icon: Users },
     { id: 'timeline', label: t('timelineApp.title'), icon: Clock },
-    { id: 'diagrams', label: t('diagramApp.title'), icon: Network },
     { id: 'worlds', label: t('worldApp.title'), icon: Globe },
     { id: 'notes', label: t('notes.title'), icon: StickyNote },
     { id: 'versions', label: t('versions.title'), icon: History },
@@ -134,6 +138,7 @@ export function FolderPage() {
 
         {currentProject && (
           <StoryDescriptionSection
+            projectId={currentProject.id}
             description={currentProject.description}
             storyMeta={(currentProject.storyMeta ?? {}) as StoryMeta}
             onEdit={() => setShowWizard(true)}
@@ -225,12 +230,15 @@ export function FolderPage() {
           </div>
         )}
 
-        {activeTab === 'structure' && currentProject && (
-          <StoryStructureTab
-            projectId={folderId ?? ''}
-            storyMeta={(currentProject.storyMeta ?? {}) as StoryMeta}
-          />
+        {activeTab === 'structure' && folderId && (
+          <BoardPanel projectId={folderId} />
         )}
+
+        {activeTab === 'subplots' && folderId && (
+          <SubplotsPanel projectId={folderId} />
+        )}
+
+        {activeTab === 'ai' && folderId && <AiWorkspace key={folderId} projectId={folderId} />}
 
         {activeTab === 'characters' && folderId && (
           <CharactersPanel projectId={folderId} />

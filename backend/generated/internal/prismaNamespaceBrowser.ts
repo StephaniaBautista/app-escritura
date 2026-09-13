@@ -71,6 +71,7 @@ export const ModelName = {
   Creature: 'Creature',
   Location: 'Location',
   WorldRoute: 'WorldRoute',
+  MapBoard: 'MapBoard',
   Diagram: 'Diagram',
   TimelineEra: 'TimelineEra',
   TimelineEvent: 'TimelineEvent',
@@ -81,7 +82,17 @@ export const ModelName = {
   Activity: 'Activity',
   Role: 'Role',
   CharacterOption: 'CharacterOption',
-  StorySection: 'StorySection'
+  StorySection: 'StorySection',
+  StructureBoard: 'StructureBoard',
+  StructureColumn: 'StructureColumn',
+  StructureCard: 'StructureCard',
+  Subplot: 'Subplot',
+  AiConversation: 'AiConversation',
+  AiMessage: 'AiMessage',
+  AiUsage: 'AiUsage',
+  WritingStats: 'WritingStats',
+  WritingSession: 'WritingSession',
+  WritingActivityClock: 'WritingActivityClock'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -169,7 +180,8 @@ export const ProjectScalarFieldEnum = {
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  storyMeta: 'storyMeta'
+  storyMeta: 'storyMeta',
+  timelineConfig: 'timelineConfig'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -199,7 +211,8 @@ export const DocumentScalarFieldEnum = {
   parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  autoVersionState: 'autoVersionState'
+  autoVersionState: 'autoVersionState',
+  wordCount: 'wordCount'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -259,7 +272,8 @@ export const UserSettingsScalarFieldEnum = {
   userId: 'userId',
   theme: 'theme',
   language: 'language',
-  autoVersion: 'autoVersion'
+  autoVersion: 'autoVersion',
+  uiPrefs: 'uiPrefs'
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
@@ -271,6 +285,7 @@ export const CharacterScalarFieldEnum = {
   name: 'name',
   description: 'description',
   imageUrl: 'imageUrl',
+  heightMapImageUrl: 'heightMapImageUrl',
   sheetBackgroundMode: 'sheetBackgroundMode',
   sheetBackgroundImages: 'sheetBackgroundImages',
   nicknames: 'nicknames',
@@ -317,6 +332,11 @@ export const LoreEntryScalarFieldEnum = {
   description: 'description',
   type: 'type',
   limits: 'limits',
+  powerSource: 'powerSource',
+  cost: 'cost',
+  usedBy: 'usedBy',
+  pdfUrl: 'pdfUrl',
+  pdfName: 'pdfName',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -334,12 +354,18 @@ export const RaceScalarFieldEnum = {
   physicalTraits: 'physicalTraits',
   hasMagic: 'hasMagic',
   magicDescription: 'magicDescription',
+  spiritualTraits: 'spiritualTraits',
   lifeExpectancy: 'lifeExpectancy',
   language: 'language',
   culture: 'culture',
   religion: 'religion',
   origin: 'origin',
   territory: 'territory',
+  relationsWithOthers: 'relationsWithOthers',
+  importantNotes: 'importantNotes',
+  imageUrl: 'imageUrl',
+  pdfUrl: 'pdfUrl',
+  pdfName: 'pdfName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -367,6 +393,7 @@ export const CreatureScalarFieldEnum = {
   species: 'species',
   dangerType: 'dangerType',
   description: 'description',
+  imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -398,6 +425,20 @@ export const WorldRouteScalarFieldEnum = {
 } as const
 
 export type WorldRouteScalarFieldEnum = (typeof WorldRouteScalarFieldEnum)[keyof typeof WorldRouteScalarFieldEnum]
+
+
+export const MapBoardScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  backgroundUrl: 'backgroundUrl',
+  canvas: 'canvas',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MapBoardScalarFieldEnum = (typeof MapBoardScalarFieldEnum)[keyof typeof MapBoardScalarFieldEnum]
 
 
 export const DiagramScalarFieldEnum = {
@@ -440,6 +481,16 @@ export const TimelineEventScalarFieldEnum = {
   order: 'order',
   eraId: 'eraId',
   characterIds: 'characterIds',
+  icon: 'icon',
+  color: 'color',
+  groupName: 'groupName',
+  precision: 'precision',
+  endDate: 'endDate',
+  label: 'label',
+  labelColor: 'labelColor',
+  imageUrl: 'imageUrl',
+  relatedEventIds: 'relatedEventIds',
+  relatedDocumentIds: 'relatedDocumentIds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -548,6 +599,144 @@ export const StorySectionScalarFieldEnum = {
 } as const
 
 export type StorySectionScalarFieldEnum = (typeof StorySectionScalarFieldEnum)[keyof typeof StorySectionScalarFieldEnum]
+
+
+export const StructureBoardScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StructureBoardScalarFieldEnum = (typeof StructureBoardScalarFieldEnum)[keyof typeof StructureBoardScalarFieldEnum]
+
+
+export const StructureColumnScalarFieldEnum = {
+  id: 'id',
+  boardId: 'boardId',
+  name: 'name',
+  color: 'color',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StructureColumnScalarFieldEnum = (typeof StructureColumnScalarFieldEnum)[keyof typeof StructureColumnScalarFieldEnum]
+
+
+export const StructureCardScalarFieldEnum = {
+  id: 'id',
+  columnId: 'columnId',
+  title: 'title',
+  description: 'description',
+  cardType: 'cardType',
+  referenceId: 'referenceId',
+  color: 'color',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StructureCardScalarFieldEnum = (typeof StructureCardScalarFieldEnum)[keyof typeof StructureCardScalarFieldEnum]
+
+
+export const SubplotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  color: 'color',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubplotScalarFieldEnum = (typeof SubplotScalarFieldEnum)[keyof typeof SubplotScalarFieldEnum]
+
+
+export const AiConversationScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  mode: 'mode',
+  title: 'title',
+  characterId: 'characterId',
+  chapterId: 'chapterId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type AiConversationScalarFieldEnum = (typeof AiConversationScalarFieldEnum)[keyof typeof AiConversationScalarFieldEnum]
+
+
+export const AiMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  role: 'role',
+  content: 'content',
+  sources: 'sources',
+  provider: 'provider',
+  model: 'model',
+  requestId: 'requestId',
+  requestHash: 'requestHash',
+  createdAt: 'createdAt'
+} as const
+
+export type AiMessageScalarFieldEnum = (typeof AiMessageScalarFieldEnum)[keyof typeof AiMessageScalarFieldEnum]
+
+
+export const AiUsageScalarFieldEnum = {
+  userId: 'userId',
+  windowStartedAt: 'windowStartedAt',
+  requestCount: 'requestCount',
+  leaseUntil: 'leaseUntil',
+  leaseToken: 'leaseToken'
+} as const
+
+export type AiUsageScalarFieldEnum = (typeof AiUsageScalarFieldEnum)[keyof typeof AiUsageScalarFieldEnum]
+
+
+export const WritingStatsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  projectId: 'projectId',
+  documentId: 'documentId',
+  day: 'day',
+  wordsAdded: 'wordsAdded',
+  activeMilliseconds: 'activeMilliseconds',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WritingStatsScalarFieldEnum = (typeof WritingStatsScalarFieldEnum)[keyof typeof WritingStatsScalarFieldEnum]
+
+
+export const WritingSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  documentId: 'documentId',
+  projectId: 'projectId',
+  timeZone: 'timeZone',
+  reportedMilliseconds: 'reportedMilliseconds',
+  creditedMilliseconds: 'creditedMilliseconds',
+  createdAt: 'createdAt',
+  lastReceivedAt: 'lastReceivedAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type WritingSessionScalarFieldEnum = (typeof WritingSessionScalarFieldEnum)[keyof typeof WritingSessionScalarFieldEnum]
+
+
+export const WritingActivityClockScalarFieldEnum = {
+  userId: 'userId',
+  lastCreditedAt: 'lastCreditedAt'
+} as const
+
+export type WritingActivityClockScalarFieldEnum = (typeof WritingActivityClockScalarFieldEnum)[keyof typeof WritingActivityClockScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { prismaMock } = vi.hoisted(() => ({
+const { prismaMock, storageMock } = vi.hoisted(() => ({
   prismaMock: {
     project: { findFirst: vi.fn() },
     timelineEvent: {
@@ -21,10 +21,13 @@ const { prismaMock } = vi.hoisted(() => ({
       count: vi.fn(),
     },
     character: { findMany: vi.fn() },
+    document: { findMany: vi.fn() },
   },
+  storageMock: { deleteCharacterImage: vi.fn(), uploadTimelineImage: vi.fn() },
 }))
 
 vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
+vi.mock('../storage-service.js', () => ({ storageService: storageMock }))
 
 import { timelineService } from '../timeline-service.js'
 
@@ -39,6 +42,16 @@ const eventRow = {
   order: 0,
   eraId: null,
   characterIds: ['char-1'],
+  icon: null,
+  color: null,
+  groupName: null,
+  precision: 'year',
+  endDate: null,
+  label: null,
+  labelColor: null,
+  imageUrl: null,
+  relatedEventIds: [],
+  relatedDocumentIds: [],
   createdAt: new Date('2026-01-01'),
   updatedAt: new Date('2026-01-01'),
 }
@@ -101,7 +114,7 @@ describe('timelineService', () => {
 
       expect(prismaMock.character.findMany).toHaveBeenCalledWith({
         where: { projectId: 'proj-1', id: { in: ['char-1', 'char-inexistente'] } },
-        select: { id: true },
+        select: { id: true, evolvesFromId: true },
       })
       expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith({
         data: {
@@ -112,9 +125,104 @@ describe('timelineService', () => {
           order: 2,
           eraId: null,
           characterIds: ['char-1'],
+          icon: null,
+          color: null,
+          groupName: null,
+          precision: 'year',
+          endDate: null,
+          label: null,
+          labelColor: null,
+          relatedEventIds: [],
+          relatedDocumentIds: [],
         },
       })
       expect(event).toEqual(eventRow)
+    })
+
+    it('descarta evoluciones si el original no aparece antes en la línea', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.character.findMany
+        .mockResolvedValueOnce([{ id: 'char-2', evolvesFromId: 'char-1' }])
+        .mockResolvedValueOnce([
+          { id: 'char-1', evolvesFromId: null },
+          { id: 'char-2', evolvesFromId: 'char-1' },
+        ])
+      prismaMock.timelineEvent.findMany.mockResolvedValue([])
+      prismaMock.timelineEvent.count.mockResolvedValue(0)
+      prismaMock.timelineEvent.create.mockResolvedValue({ ...eventRow, characterIds: [] })
+
+      await timelineService.create('proj-1', 'user-1', {
+        title: 'Coronación',
+        date: '10',
+        characterIds: ['char-2'],
+      })
+
+      expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ characterIds: [] }),
+      })
+    })
+
+    it('conserva la evolución si el original aparece en un evento anterior', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.character.findMany
+        .mockResolvedValueOnce([{ id: 'char-2', evolvesFromId: 'char-1' }])
+        .mockResolvedValueOnce([
+          { id: 'char-1', evolvesFromId: null },
+          { id: 'char-2', evolvesFromId: 'char-1' },
+        ])
+      prismaMock.timelineEvent.findMany.mockResolvedValue([
+        { id: 'ev-prev', date: '1', characterIds: ['char-1'] },
+      ])
+      prismaMock.timelineEvent.count.mockResolvedValue(1)
+      prismaMock.timelineEvent.create.mockResolvedValue({ ...eventRow, characterIds: ['char-2'] })
+
+      await timelineService.create('proj-1', 'user-1', {
+        title: 'Coronación',
+        date: '10',
+        characterIds: ['char-2'],
+      })
+
+      expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ characterIds: ['char-2'] }),
+      })
+    })
+
+    it('guarda icono, color, grupo, período y etiqueta; sanea relatedEventIds al proyecto', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.timelineEvent.findMany.mockResolvedValue([{ id: 'ev-9' }])
+      prismaMock.timelineEvent.count.mockResolvedValue(0)
+      prismaMock.timelineEvent.create.mockResolvedValue(eventRow)
+
+      await timelineService.create('proj-1', 'user-1', {
+        title: 'Cambio de Ozma a Tip',
+        date: '-99',
+        endDate: '-98-03',
+        precision: 'month',
+        icon: 'check',
+        color: '#4d7c0f',
+        groupName: 'Oz',
+        label: 'Nacimiento',
+        labelColor: '#2d6b6b',
+        relatedEventIds: ['ev-9', 'ev-ajeno'],
+      })
+
+      expect(prismaMock.timelineEvent.findMany).toHaveBeenCalledWith({
+        where: { projectId: 'proj-1', id: { in: ['ev-9', 'ev-ajeno'] } },
+        select: { id: true },
+      })
+      expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          date: '-99',
+          endDate: '-98-03',
+          precision: 'month',
+          icon: 'check',
+          color: '#4d7c0f',
+          groupName: 'Oz',
+          label: 'Nacimiento',
+          labelColor: '#2d6b6b',
+          relatedEventIds: ['ev-9'],
+        }),
+      })
     })
 
     it('asigna eraId solo si la época pertenece al proyecto', async () => {
@@ -155,6 +263,52 @@ describe('timelineService', () => {
       })
     })
 
+    it('sanea relatedDocumentIds al proyecto (docs y subpáginas)', async () => {
+      prismaMock.timelineEvent.findFirst.mockResolvedValue(eventRow)
+      prismaMock.document.findMany.mockResolvedValue([{ id: 'doc-1' }, { id: 'tab-1' }])
+      prismaMock.timelineEvent.update.mockResolvedValue(eventRow)
+
+      await timelineService.update('ev-1', 'user-1', {
+        relatedDocumentIds: ['doc-1', 'tab-1', 'doc-ajeno', 'doc-1'],
+      })
+
+      expect(prismaMock.document.findMany).toHaveBeenCalledWith({
+        where: { projectId: 'proj-1', id: { in: ['doc-1', 'tab-1', 'doc-ajeno', 'doc-1'] } },
+        select: { id: true },
+      })
+      expect(prismaMock.timelineEvent.update).toHaveBeenCalledWith({
+        where: { id: 'ev-1' },
+        data: expect.objectContaining({ relatedDocumentIds: ['doc-1', 'tab-1'] }),
+      })
+    })
+
+    it('excluye el propio evento de relatedEventIds', async () => {
+      prismaMock.timelineEvent.findFirst.mockResolvedValue(eventRow)
+      prismaMock.timelineEvent.findMany.mockResolvedValue([{ id: 'ev-2' }])
+      prismaMock.timelineEvent.update.mockResolvedValue(eventRow)
+
+      await timelineService.update('ev-1', 'user-1', { relatedEventIds: ['ev-1', 'ev-2'] })
+
+      expect(prismaMock.timelineEvent.findMany).toHaveBeenCalledWith({
+        where: { projectId: 'proj-1', id: { in: ['ev-2'] } },
+        select: { id: true },
+      })
+      expect(prismaMock.timelineEvent.update).toHaveBeenCalledWith({
+        where: { id: 'ev-1' },
+        data: expect.objectContaining({ relatedEventIds: ['ev-2'] }),
+      })
+    })
+
+    it('al limpiar imageUrl borra la imagen anterior del storage', async () => {
+      prismaMock.timelineEvent.findFirst.mockResolvedValue({ ...eventRow, imageUrl: 'https://x/img.png' })
+      prismaMock.timelineEvent.update.mockResolvedValue({ ...eventRow, imageUrl: null })
+      storageMock.deleteCharacterImage.mockResolvedValue(true)
+
+      await timelineService.update('ev-1', 'user-1', { imageUrl: null })
+
+      expect(storageMock.deleteCharacterImage).toHaveBeenCalledWith('https://x/img.png')
+    })
+
     it('devuelve null si no existe o no pertenece', async () => {
       prismaMock.timelineEvent.findFirst.mockResolvedValue(null)
 
@@ -174,6 +328,17 @@ describe('timelineService', () => {
 
       expect(removed).toBe(true)
       expect(prismaMock.timelineEvent.delete).toHaveBeenCalledWith({ where: { id: 'ev-1' } })
+      expect(storageMock.deleteCharacterImage).not.toHaveBeenCalled()
+    })
+
+    it('borra la imagen del storage si el evento tenía una', async () => {
+      prismaMock.timelineEvent.findFirst.mockResolvedValue({ ...eventRow, imageUrl: 'https://x/img.png' })
+      prismaMock.timelineEvent.delete.mockResolvedValue(eventRow)
+      storageMock.deleteCharacterImage.mockResolvedValue(true)
+
+      await timelineService.remove('ev-1', 'user-1')
+
+      expect(storageMock.deleteCharacterImage).toHaveBeenCalledWith('https://x/img.png')
     })
 
     it('devuelve false si no existe', async () => {
@@ -249,17 +414,26 @@ describe('timelineService', () => {
       })
     })
 
-    it('updateEra renombra solo si es del usuario', async () => {
+    it('updateEra actualiza los campos enviados solo si es del usuario', async () => {
       prismaMock.timelineEra.findFirst.mockResolvedValue(eraRow)
-      prismaMock.timelineEra.update.mockResolvedValue({ ...eraRow, name: 'Nuevo' })
+      prismaMock.timelineEra.update.mockResolvedValue({ ...eraRow, name: 'Nuevo', color: '#2d6b6b' })
 
-      const era = await timelineService.updateEra('era-1', 'user-1', 'Nuevo')
+      const era = await timelineService.updateEra('era-1', 'user-1', { name: 'Nuevo', color: '#2d6b6b', startDate: '-90', endDate: '-84' })
 
       expect(era?.name).toBe('Nuevo')
       expect(prismaMock.timelineEra.update).toHaveBeenCalledWith({
         where: { id: 'era-1' },
-        data: { name: 'Nuevo' },
+        data: { name: 'Nuevo', color: '#2d6b6b', precision: undefined, startDate: '-90', endDate: '-84', rollover: undefined },
       })
+    })
+
+    it('updateEra devuelve null si no es del usuario', async () => {
+      prismaMock.timelineEra.findFirst.mockResolvedValue(null)
+
+      const era = await timelineService.updateEra('era-1', 'user-1', { name: 'Nuevo' })
+
+      expect(era).toBeNull()
+      expect(prismaMock.timelineEra.update).not.toHaveBeenCalled()
     })
 
     it('removeEra desasigna eventos y borra la época', async () => {

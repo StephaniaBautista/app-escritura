@@ -118,6 +118,11 @@ export type Location = Prisma.LocationModel
  */
 export type WorldRoute = Prisma.WorldRouteModel
 /**
+ * Model MapBoard
+ * 
+ */
+export type MapBoard = Prisma.MapBoardModel
+/**
  * Model Diagram
  * 
  */
@@ -172,3 +177,53 @@ export type CharacterOption = Prisma.CharacterOptionModel
  * 
  */
 export type StorySection = Prisma.StorySectionModel
+/**
+ * Model StructureBoard
+ * 
+ */
+export type StructureBoard = Prisma.StructureBoardModel
+/**
+ * Model StructureColumn
+ * 
+ */
+export type StructureColumn = Prisma.StructureColumnModel
+/**
+ * Model StructureCard
+ * 
+ */
+export type StructureCard = Prisma.StructureCardModel
+/**
+ * Model Subplot
+ * 
+ */
+export type Subplot = Prisma.SubplotModel
+/**
+ * Model AiConversation
+ * 
+ */
+export type AiConversation = Prisma.AiConversationModel
+/**
+ * Model AiMessage
+ * 
+ */
+export type AiMessage = Prisma.AiMessageModel
+/**
+ * Model AiUsage
+ * 
+ */
+export type AiUsage = Prisma.AiUsageModel
+/**
+ * Model WritingStats
+ * 
+ */
+export type WritingStats = Prisma.WritingStatsModel
+/**
+ * Model WritingSession
+ * 
+ */
+export type WritingSession = Prisma.WritingSessionModel
+/**
+ * Model WritingActivityClock
+ * 
+ */
+export type WritingActivityClock = Prisma.WritingActivityClockModel

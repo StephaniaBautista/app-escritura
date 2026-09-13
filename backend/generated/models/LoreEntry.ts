@@ -41,6 +41,11 @@ export type LoreEntryMinAggregateOutputType = {
   description: string | null
   type: string | null
   limits: string | null
+  powerSource: string | null
+  cost: string | null
+  usedBy: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -53,6 +58,11 @@ export type LoreEntryMaxAggregateOutputType = {
   description: string | null
   type: string | null
   limits: string | null
+  powerSource: string | null
+  cost: string | null
+  usedBy: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -65,6 +75,11 @@ export type LoreEntryCountAggregateOutputType = {
   description: number
   type: number
   limits: number
+  powerSource: number
+  cost: number
+  usedBy: number
+  pdfUrl: number
+  pdfName: number
   order: number
   createdAt: number
   updatedAt: number
@@ -87,6 +102,11 @@ export type LoreEntryMinAggregateInputType = {
   description?: true
   type?: true
   limits?: true
+  powerSource?: true
+  cost?: true
+  usedBy?: true
+  pdfUrl?: true
+  pdfName?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -99,6 +119,11 @@ export type LoreEntryMaxAggregateInputType = {
   description?: true
   type?: true
   limits?: true
+  powerSource?: true
+  cost?: true
+  usedBy?: true
+  pdfUrl?: true
+  pdfName?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +136,11 @@ export type LoreEntryCountAggregateInputType = {
   description?: true
   type?: true
   limits?: true
+  powerSource?: true
+  cost?: true
+  usedBy?: true
+  pdfUrl?: true
+  pdfName?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -210,6 +240,11 @@ export type LoreEntryGroupByOutputType = {
   description: string | null
   type: string
   limits: string | null
+  powerSource: string | null
+  cost: string | null
+  usedBy: string | null
+  pdfUrl: string | null
+  pdfName: string | null
   order: number
   createdAt: Date
   updatedAt: Date
@@ -245,6 +280,11 @@ export type LoreEntryWhereInput = {
   description?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   type?: Prisma.StringFilter<"LoreEntry"> | string
   limits?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  powerSource?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  cost?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  usedBy?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   order?: Prisma.IntFilter<"LoreEntry"> | number
   createdAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
@@ -258,6 +298,11 @@ export type LoreEntryOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   limits?: Prisma.SortOrderInput | Prisma.SortOrder
+  powerSource?: Prisma.SortOrderInput | Prisma.SortOrder
+  cost?: Prisma.SortOrderInput | Prisma.SortOrder
+  usedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfName?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -274,6 +319,11 @@ export type LoreEntryWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   type?: Prisma.StringFilter<"LoreEntry"> | string
   limits?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  powerSource?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  cost?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  usedBy?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   order?: Prisma.IntFilter<"LoreEntry"> | number
   createdAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
@@ -287,6 +337,11 @@ export type LoreEntryOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   limits?: Prisma.SortOrderInput | Prisma.SortOrder
+  powerSource?: Prisma.SortOrderInput | Prisma.SortOrder
+  cost?: Prisma.SortOrderInput | Prisma.SortOrder
+  usedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pdfName?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -307,6 +362,11 @@ export type LoreEntryScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
   type?: Prisma.StringWithAggregatesFilter<"LoreEntry"> | string
   limits?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
+  powerSource?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
+  cost?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
+  usedBy?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
+  pdfUrl?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
+  pdfName?: Prisma.StringNullableWithAggregatesFilter<"LoreEntry"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"LoreEntry"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LoreEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LoreEntry"> | Date | string
@@ -318,6 +378,11 @@ export type LoreEntryCreateInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -331,6 +396,11 @@ export type LoreEntryUncheckedCreateInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -342,6 +412,11 @@ export type LoreEntryUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,6 +430,11 @@ export type LoreEntryUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -367,6 +447,11 @@ export type LoreEntryCreateManyInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -378,6 +463,11 @@ export type LoreEntryUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,6 +480,11 @@ export type LoreEntryUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -412,6 +507,11 @@ export type LoreEntryCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   limits?: Prisma.SortOrder
+  powerSource?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  usedBy?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -428,6 +528,11 @@ export type LoreEntryMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   limits?: Prisma.SortOrder
+  powerSource?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  usedBy?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -440,6 +545,11 @@ export type LoreEntryMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
   limits?: Prisma.SortOrder
+  powerSource?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  usedBy?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  pdfName?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -497,6 +607,11 @@ export type LoreEntryCreateWithoutProjectInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -508,6 +623,11 @@ export type LoreEntryUncheckedCreateWithoutProjectInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -549,6 +669,11 @@ export type LoreEntryScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   type?: Prisma.StringFilter<"LoreEntry"> | string
   limits?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  powerSource?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  cost?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  usedBy?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfUrl?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
+  pdfName?: Prisma.StringNullableFilter<"LoreEntry"> | string | null
   order?: Prisma.IntFilter<"LoreEntry"> | number
   createdAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoreEntry"> | Date | string
@@ -560,6 +685,11 @@ export type LoreEntryCreateManyProjectInput = {
   description?: string | null
   type?: string
   limits?: string | null
+  powerSource?: string | null
+  cost?: string | null
+  usedBy?: string | null
+  pdfUrl?: string | null
+  pdfName?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -571,6 +701,11 @@ export type LoreEntryUpdateWithoutProjectInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -582,6 +717,11 @@ export type LoreEntryUncheckedUpdateWithoutProjectInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -593,6 +733,11 @@ export type LoreEntryUncheckedUpdateManyWithoutProjectInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   limits?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  powerSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cost?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -607,6 +752,11 @@ export type LoreEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   description?: boolean
   type?: boolean
   limits?: boolean
+  powerSource?: boolean
+  cost?: boolean
+  usedBy?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -620,6 +770,11 @@ export type LoreEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   description?: boolean
   type?: boolean
   limits?: boolean
+  powerSource?: boolean
+  cost?: boolean
+  usedBy?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -633,6 +788,11 @@ export type LoreEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   description?: boolean
   type?: boolean
   limits?: boolean
+  powerSource?: boolean
+  cost?: boolean
+  usedBy?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -646,12 +806,17 @@ export type LoreEntrySelectScalar = {
   description?: boolean
   type?: boolean
   limits?: boolean
+  powerSource?: boolean
+  cost?: boolean
+  usedBy?: boolean
+  pdfUrl?: boolean
+  pdfName?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LoreEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "type" | "limits" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["loreEntry"]>
+export type LoreEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "description" | "type" | "limits" | "powerSource" | "cost" | "usedBy" | "pdfUrl" | "pdfName" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["loreEntry"]>
 export type LoreEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -674,6 +839,11 @@ export type $LoreEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     description: string | null
     type: string
     limits: string | null
+    powerSource: string | null
+    cost: string | null
+    usedBy: string | null
+    pdfUrl: string | null
+    pdfName: string | null
     order: number
     createdAt: Date
     updatedAt: Date
@@ -1107,6 +1277,11 @@ export interface LoreEntryFieldRefs {
   readonly description: Prisma.FieldRef<"LoreEntry", 'String'>
   readonly type: Prisma.FieldRef<"LoreEntry", 'String'>
   readonly limits: Prisma.FieldRef<"LoreEntry", 'String'>
+  readonly powerSource: Prisma.FieldRef<"LoreEntry", 'String'>
+  readonly cost: Prisma.FieldRef<"LoreEntry", 'String'>
+  readonly usedBy: Prisma.FieldRef<"LoreEntry", 'String'>
+  readonly pdfUrl: Prisma.FieldRef<"LoreEntry", 'String'>
+  readonly pdfName: Prisma.FieldRef<"LoreEntry", 'String'>
   readonly order: Prisma.FieldRef<"LoreEntry", 'Int'>
   readonly createdAt: Prisma.FieldRef<"LoreEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LoreEntry", 'DateTime'>

@@ -7,18 +7,24 @@ export interface AutoVersionConfig {
   monthly: { enabled: boolean; intervalMs: number }
 }
 
+export interface UiPrefs {
+  dismissAiStructureWarning?: boolean
+}
+
 export interface UserSettings {
   id: string
   userId: string
   theme: string
   language: string
   autoVersion: AutoVersionConfig
+  uiPrefs: UiPrefs
 }
 
 export interface UpdateSettingsInput {
   theme?: string
   language?: string
   autoVersion?: Partial<AutoVersionConfig>
+  uiPrefs?: Partial<UiPrefs>
 }
 
 export interface AutoVersionState {

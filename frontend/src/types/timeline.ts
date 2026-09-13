@@ -1,3 +1,15 @@
+export type TimelinePrecision = 'year' | 'month' | 'day' | 'minute'
+export type TimelineTimeSystem = 'relative' | 'era'
+export type EraRollover = 'newYear' | 'afterYear'
+
+export interface TimelineConfig {
+  timeSystem: TimelineTimeSystem
+  beforeLabel?: string
+  afterLabel?: string
+}
+
+export const DEFAULT_TIMELINE_CONFIG: TimelineConfig = { timeSystem: 'relative' }
+
 export interface TimelineEra {
   id: string
   projectId: string
@@ -13,7 +25,7 @@ export interface TimelineEra {
 }
 
 export interface TimelineEraInput {
-  name: string
+  name?: string
   color?: string | null
   precision?: string | null
   startDate?: string | null
@@ -30,6 +42,16 @@ export interface TimelineEvent {
   order: number
   eraId: string | null
   characterIds: string[]
+  icon: string | null
+  color: string | null
+  groupName: string | null
+  precision: string
+  endDate: string | null
+  label: string | null
+  labelColor: string | null
+  imageUrl: string | null
+  relatedEventIds: string[]
+  relatedDocumentIds: string[]
   createdAt: string
   updatedAt: string
 }
@@ -41,4 +63,14 @@ export interface TimelineEventInput {
   order?: number
   eraId?: string | null
   characterIds?: string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: TimelinePrecision | null
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: null
+  relatedEventIds?: string[]
+  relatedDocumentIds?: string[]
 }

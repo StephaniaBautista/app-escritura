@@ -4,7 +4,7 @@ import {
   extractTextFromImage,
   extractTextFromPdf,
   isAllowedOcrMime,
-  MAX_OCR_BYTES,
+  maxOcrBytesForMime,
 } from '../services/ocr-service.js'
 
 const auth = [{ cookieAuth: [] }]
@@ -16,6 +16,17 @@ export async function ocrRoutes(app: FastifyInstance) {
       tags: ['OCR'],
       security: auth,
       consumes: ['multipart/form-data'],
+      response: {
+        200: {
+          type: 'object',
+          required: ['text'],
+          properties: { text: { type: 'string' } },
+        },
+        400: { type: 'object', properties: { error: { type: 'string' } } },
+        401: { type: 'object', properties: { error: { type: 'string' } } },
+        413: { type: 'object', properties: { error: { type: 'string' } } },
+        415: { type: 'object', properties: { error: { type: 'string' } } },
+      },
     },
     handler: async (request, reply) => {
       const user = await getSessionUser(request)
@@ -30,7 +41,7 @@ export async function ocrRoutes(app: FastifyInstance) {
       }
 
       const buffer = await file.toBuffer()
-      if (buffer.length > MAX_OCR_BYTES) {
+      if (buffer.length > maxOcrBytesForMime(mime)) {
         return reply.code(413).send({ error: 'FILE_TOO_LARGE' })
       }
 

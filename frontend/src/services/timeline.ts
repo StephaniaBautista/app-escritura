@@ -36,6 +36,12 @@ export const timelineApi = {
       body: JSON.stringify(data),
     }),
 
+  uploadImage: (id: string, dataUrl: string) =>
+    fetchJson<TimelineEvent>(`${API}/timeline/${id}/image`, {
+      method: 'PUT',
+      body: JSON.stringify({ dataUrl }),
+    }),
+
   delete: (id: string) =>
     fetchJson<{ message: string }>(`${API}/timeline/${id}`, {
       method: 'DELETE',
@@ -47,6 +53,12 @@ export const timelineApi = {
   createEra: (projectId: string, data: TimelineEraInput) =>
     fetchJson<TimelineEra>(`${API}/projects/${projectId}/timeline-eras`, {
       method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateEra: (id: string, data: TimelineEraInput) =>
+    fetchJson<TimelineEra>(`${API}/timeline-eras/${id}`, {
+      method: 'PUT',
       body: JSON.stringify(data),
     }),
 

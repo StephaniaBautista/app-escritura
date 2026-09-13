@@ -1,8 +1,15 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BookOpen, Pencil, Sparkles } from 'lucide-react'
+import { useDocumentStore } from '@/stores/document-store'
+import type { AiWizardSuggestion } from '@/types/ai'
 import type { StoryMeta } from '@/types/story'
+import { WizardAiButton } from './WizardAiButton'
+import { WizardStageSuggestions } from './WizardStageSuggestions'
+import { applyStageValue } from './wizard-stage-apply'
 
 interface StoryDescriptionSectionProps {
+  projectId: string
   description: string | null
   storyMeta: StoryMeta
   onEdit: () => void
@@ -36,8 +43,10 @@ function buildRows(meta: StoryMeta, t: (key: string, opts?: Record<string, unkno
   return rows
 }
 
-export function StoryDescriptionSection({ description, storyMeta, onEdit }: StoryDescriptionSectionProps) {
+export function StoryDescriptionSection({ projectId, description, storyMeta, onEdit }: StoryDescriptionSectionProps) {
   const { t } = useTranslation()
+  const { updateProject, updateStoryMeta } = useDocumentStore()
+  const [suggestions, setSuggestions] = useState<AiWizardSuggestion[]>([])
   const rows = buildRows(storyMeta, t)
   const hasContent = Boolean(description?.trim()) || rows.length > 0
 
@@ -48,15 +57,25 @@ export function StoryDescriptionSection({ description, storyMeta, onEdit }: Stor
           <BookOpen className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
           {t('storySetup.descriptionSectionTitle')}
         </h2>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-90"
-          style={{ background: 'var(--color-accent)', color: '#fff' }}
-        >
-          <Pencil className="w-3.5 h-3.5" />
-          {hasContent ? t('storySetup.edit') : t('storySetup.complete')}
-        </button>
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          <WizardAiButton
+            projectId={projectId}
+            stage="description"
+            description={description ?? ''}
+            meta={storyMeta}
+            onApplied={() => undefined}
+            onSuggestions={setSuggestions}
+          />
+          <button
+            type="button"
+            onClick={onEdit}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-90"
+            style={{ background: 'var(--color-accent)', color: '#fff' }}
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            {hasContent ? t('storySetup.edit') : t('storySetup.complete')}
+          </button>
+        </div>
       </div>
 
       {!hasContent ? (
@@ -78,6 +97,15 @@ export function StoryDescriptionSection({ description, storyMeta, onEdit }: Stor
           )}
         </div>
       )}
+      <WizardStageSuggestions
+        suggestions={suggestions}
+        onApply={(suggestion) => {
+          const next = applyStageValue(description ?? '', storyMeta, suggestion.field, suggestion.value)
+          setSuggestions((items) => items.filter((item) => item !== suggestion))
+          if (suggestion.field === 'description') void updateProject(projectId, { description: next.description.trim() })
+          else void updateStoryMeta(projectId, next.meta as Record<string, unknown>)
+        }}
+      />
     </div>
   )
 }

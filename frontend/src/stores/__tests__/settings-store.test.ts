@@ -25,6 +25,7 @@ const defaultSettings = {
     weekly: { enabled: true, intervalMs: 604800000 },
     monthly: { enabled: true, intervalMs: 2592000000 },
   },
+  uiPrefs: {},
 }
 
 describe('useSettingsStore', () => {
@@ -97,5 +98,22 @@ describe('useSettingsStore', () => {
 
     expect(config.inactivity.enabled).toBe(false)
     expect(config.inactivity.intervalMs).toBe(600000)
+  })
+
+  it('getUiPrefs: retorna defaults si no hay settings', () => {
+    useSettingsStore.setState({ settings: null })
+    expect(useSettingsStore.getState().getUiPrefs()).toEqual({})
+  })
+
+  it('dismissAiStructureWarning: persiste la preferencia via API', async () => {
+    settingsApiMock.update.mockResolvedValue({
+      ...defaultSettings,
+      uiPrefs: { dismissAiStructureWarning: true },
+    })
+
+    await useSettingsStore.getState().dismissAiStructureWarning()
+
+    expect(settingsApiMock.update).toHaveBeenCalledWith({ uiPrefs: { dismissAiStructureWarning: true } })
+    expect(useSettingsStore.getState().getUiPrefs().dismissAiStructureWarning).toBe(true)
   })
 })

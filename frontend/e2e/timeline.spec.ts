@@ -128,4 +128,46 @@ test.describe('Línea del tiempo (Fase 6)', () => {
 
     await page.close()
   })
+
+  test('lista evoluciones como personajes relacionados independientes', async ({ browser }) => {
+    const projectId = await createProject('E2E Timeline Evoluciones')
+    const lyra = await createCharacter(projectId, { name: 'Lyra', storyPoint: 'inicio' })
+    const evolve = await req.post(`${API}/characters/${lyra.id}/evolve`, {
+      data: { reason: 'Se vuelve reservada', changes: { name: 'Lyra la Dama', storyPoint: 'climax' } },
+    })
+    expect(evolve.status()).toBe(201)
+
+    const page = await newPage(browser)
+    await openTimeline(page, projectId)
+
+    await page.getByRole('button', { name: 'Nuevo evento' }).click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Seleccionar personajes relacionados' }).click()
+    await expect(dialog.getByRole('button', { name: 'Lyra' })).toBeVisible()
+    const evolution = dialog.getByRole('button', { name: /Lyra la Dama \(evolución de Lyra\)/ })
+    await expect(evolution).toBeVisible()
+    await expect(evolution).toBeDisabled()
+
+    await dialog.getByRole('button', { name: 'Cancelar' }).click()
+
+    const prior = await req.post(`${API}/projects/${projectId}/timeline`, {
+      data: { title: 'Lyra llega', date: '-1', characterIds: [lyra.id] },
+    })
+    expect(prior.status()).toBeLessThan(400)
+
+    await openTimeline(page, projectId)
+    await page.getByRole('button', { name: 'Nuevo evento' }).click()
+    const later = page.getByRole('dialog')
+    await later.getByRole('button', { name: 'Seleccionar personajes relacionados' }).click()
+    await expect(later.getByRole('button', { name: 'Lyra la Dama (evolución de Lyra)' })).toBeEnabled()
+
+    await later.getByRole('button', { name: 'Lyra la Dama (evolución de Lyra)' }).click()
+    await later.getByLabel('Ingresar nombre del evento').fill('Coronación')
+    await later.getByRole('button', { name: 'Guardar' }).click()
+
+    await expect(page.getByText('Coronación')).toBeVisible()
+    await expect(page.getByText('Lyra la Dama (evolución de Lyra)')).toBeVisible()
+
+    await page.close()
+  })
 })
