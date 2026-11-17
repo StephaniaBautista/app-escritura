@@ -40,6 +40,17 @@ describe('AI permission and shared quota boundaries', () => {
     await expect(withAiQuota('u1', provider)).rejects.toMatchObject({ code: 'AI_RATE_LIMITED', statusCode: 429 })
     expect(provider).not.toHaveBeenCalled()
   })
+  it('skips quota and lease for superadmin', async () => {
+    db.user.findUnique.mockResolvedValue({ role: 'superadmin' })
+    const provider = vi.fn(async (budget: { consumeRetry: () => Promise<void> }) => {
+      await budget.consumeRetry()
+      return 'done'
+    })
+    await expect(withAiQuota('admin-1', provider)).resolves.toBe('done')
+    expect(provider).toHaveBeenCalledOnce()
+    expect(db.aiUsage.upsert).not.toHaveBeenCalled()
+    expect(db.aiUsage.updateMany).not.toHaveBeenCalled()
+  })
   it('counts a repair atomically using the current lease owner token', async () => {
     await withAiQuota('u1', async (budget) => { await budget.consumeRetry() })
     const acquisition = db.aiUsage.updateMany.mock.calls[1][0]

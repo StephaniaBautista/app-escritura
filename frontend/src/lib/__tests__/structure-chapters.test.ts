@@ -12,7 +12,7 @@ const board: StructureBoard = {
   columns: [
     {
       id: 'col-1', boardId: 'board-1', name: 'Inicio', color: null, order: 0, createdAt: '', updatedAt: '',
-      cards: [{ id: 'card-1', columnId: 'col-1', title: 'Cap 1', description: null, cardType: 'chapter', referenceId: 'ch-1', color: null, order: 0, createdAt: '', updatedAt: '' }],
+      cards: [{ id: 'card-1', columnId: 'col-1', title: 'Cap 1', description: null, cardType: 'chapter', referenceId: 'ch-1', color: null, subplotId: null, order: 0, createdAt: '', updatedAt: '' }],
     },
     { id: 'col-2', boardId: 'board-1', name: 'Desarrollo', color: null, order: 1, createdAt: '', updatedAt: '', cards: [] },
     { id: 'col-3', boardId: 'board-1', name: 'Climax', color: null, order: 2, createdAt: '', updatedAt: '', cards: [] },

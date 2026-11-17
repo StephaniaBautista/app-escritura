@@ -20,6 +20,7 @@ export function Sidebar() {
     updateDocument,
     duplicateDocument,
     deleteDocument,
+    reorderDocuments,
   } = useDocumentStore()
   const [creatingChapter, setCreatingChapter] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
@@ -168,6 +169,7 @@ export function Sidebar() {
               onRename={handleRenameTab}
               onDuplicate={handleDuplicateTab}
               onDelete={(id) => setDeleteTarget(id)}
+              onReorder={(parentId, documentIds) => void reorderDocuments(parentId, documentIds)}
             />
           </AccordionSection>
         )}

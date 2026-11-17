@@ -50,7 +50,7 @@ function analysis(phase: PhaseFixture, suggestions: AiAnalysis['suggestions'], q
   const sources = [{ id: `document:${phase.chapterId}`, type: 'document', title: 'Capítulo sintético E2E', excerpt: quote }]
   return {
     suggestions, sources,
-    provider: 'deepseek', model: 'mock-e2e-no-provider-call',
+    provider: 'balanced', model: 'mock-e2e-no-provider-call',
   }
 }
 
@@ -147,7 +147,7 @@ test.describe('Fase 9: API real y respuestas generativas simuladas explícitas',
         conversationId: conversation.id,
         messages: [
           { id: 'mock-user', role: 'user', content: input.message, sources: [], provider: null, model: null, createdAt },
-          { id: 'mock-assistant', role: 'assistant', content: 'Respuesta simulada: revisa la motivación antes del giro.', sources: analysis(phase, []).sources, provider: 'deepseek', model: 'mock-e2e-no-provider-call', createdAt },
+          { id: 'mock-assistant', role: 'assistant', content: 'Respuesta simulada: revisa la motivación antes del giro.', sources: analysis(phase, []).sources, provider: 'balanced', model: 'mock-e2e-no-provider-call', createdAt },
         ],
       } })
     })
@@ -276,7 +276,8 @@ test.describe('Fase 9: API real y respuestas generativas simuladas explícitas',
       id: 'mock-subplot', kind: 'subplot', title: 'La promesa del faro E2E', description: 'Propuesta simulada que complementa la motivación principal.',
       sourceIds: [`document:${phase.chapterId}`], relation: 'complementary',
     }]))
-    await page.goto(`/app/documents/${phase.projectId}?tab=subplots`)
+    await page.goto(`/app/documents/${phase.projectId}?tab=structure`)
+    await page.getByTestId('subplots-layer-button').click()
     await page.getByRole('button', { name: 'Sugerir subtramas' }).click()
     await expect(page.getByText('La promesa del faro E2E', { exact: true })).toBeVisible()
     expect((await (await request.get(subplotsUrl)).json()).length).toBe(before.length)

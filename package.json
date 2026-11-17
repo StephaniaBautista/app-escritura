@@ -5,7 +5,7 @@
   "description": "Plataforma de escritura creativa con IA",
   "packageManager": "pnpm@11.22.0",
   "scripts": {
-    "setup:local": "node scripts/ensure-local-env.mjs && pnpm install --frozen-lockfile && pnpm db:up && pnpm db:push && pnpm prisma:generate",
+    "setup:local": "node scripts/ensure-local-env.mjs && pnpm install --frozen-lockfile && pnpm db:push && pnpm prisma:generate",
     "dev": "pnpm -r --parallel run dev",
     "dev:frontend": "pnpm --filter frontend run dev",
     "dev:backend": "pnpm --filter backend run dev",
@@ -21,8 +21,6 @@
     "test": "pnpm -r run test",
     "test:frontend": "pnpm --filter frontend run test",
     "test:backend": "pnpm --filter backend run test",
-    "db:up": "docker compose up -d --wait database",
-    "db:down": "docker compose down",
     "db:push": "pnpm --filter backend run prisma:push",
     "prisma:generate": "pnpm --filter backend run prisma:generate",
     "clean": "pnpm -r exec rm -rf node_modules dist .turbo"

@@ -1,0 +1,26 @@
+{
+  "title": "Tags",
+  "subtitle": "AO3 tags for “{{title}}”",
+  "add": "Add tag",
+  "addPlaceholder": "New tag…",
+  "suggest": "Suggest with AI",
+  "suggesting": "Suggesting…",
+  "suggested": "Suggested tags",
+  "acceptSuggested": "Accept selected",
+  "failed": "Could not load tags",
+  "added": "Tag added",
+  "removed": "Tag removed",
+  "empty": "No tags yet",
+  "kinds": {
+    "rating": "Rating",
+    "warning": "Warning",
+    "category": "Category",
+    "fandom": "Fandom",
+    "relationship": "Relationship",
+    "character": "Character",
+    "freeform": "Freeform"
+  },
+  "filterTitle": "Filter by tag",
+  "filterAll": "All",
+  "filterEmpty": "No project matches the filters"
+}

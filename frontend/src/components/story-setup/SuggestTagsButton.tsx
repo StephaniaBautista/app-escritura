@@ -7,6 +7,7 @@ import { useDocumentStore } from '@/stores/document-store'
 import { useOptionsStore } from '@/stores/options-store'
 import { useToastStore } from '@/stores/toast-store'
 import type { StoryMeta } from '@/types/story'
+import { useAiToolProvider } from '@/hooks/useAiToolProvider'
 import { hasLocalWrittenDocuments } from './wizard-ai'
 import { mergeUniqueTags } from './merge-tags'
 
@@ -21,6 +22,7 @@ export function SuggestTagsButton({ projectId, meta, update }: SuggestTagsButton
   const toast = useToastStore()
   const { documentTree, currentDocument } = useDocumentStore()
   const addOption = useOptionsStore((s) => s.addOption)
+  const provider = useAiToolProvider('wizard')
   const [loading, setLoading] = useState(false)
 
   if (!projectId) return null
@@ -34,7 +36,7 @@ export function SuggestTagsButton({ projectId, meta, update }: SuggestTagsButton
     setLoading(true)
     try {
       const locale = i18n.language.toLowerCase().startsWith('en') ? 'en' : 'es'
-      const result = await aiApi.suggestTags(projectId, { locale })
+      const result = await aiApi.suggestTags(projectId, { locale, ...(provider ? { provider } : {}) })
       const current = meta.tags ?? []
       const next = mergeUniqueTags(current, result.tags)
       if (next.length === current.length) {

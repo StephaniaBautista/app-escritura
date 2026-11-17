@@ -82,6 +82,12 @@ export const documentsApi = {
     fetchJson<Document>(`${API}/documents/${id}/duplicate`, {
       method: 'POST',
     }),
+
+  reorder: (projectId: string, parentId: string | null, documentIds: string[]) =>
+    fetchJson<DocumentNode[]>(`${API}/projects/${projectId}/documents/reorder`, {
+      method: 'PATCH',
+      body: JSON.stringify({ parentId, documentIds }),
+    }),
 }
 
 

@@ -1,0 +1,38 @@
+{
+  "title": "Export",
+  "description": "Export “{{title}}” in the format you need.",
+  "close": "Close",
+  "download": "Download",
+  "downloaded": "Export downloaded",
+  "copied": "HTML copied to clipboard",
+  "failed": "Export failed",
+  "downloadHint": "The file is saved to your device.",
+  "includeChildren": "Include chapters and subpages",
+  "copyHtml": "Copy HTML",
+  "preview": "HTML preview",
+  "ao3PasteHint": "AO3 cannot be signed in from here: copy the HTML and paste it into your work's rich text editor.",
+  "ao3OptionsTitle": "AO3 typography",
+  "fontFamily": "Font",
+  "fontSerif": "Serif",
+  "fontSans": "Sans",
+  "fontMono": "Monospace",
+  "fontSize": "Size",
+  "lineSpacing": "Line spacing",
+  "paragraphStyle": "Paragraphs",
+  "paragraphBlock": "Blank line",
+  "paragraphIndent": "Indent",
+  "sceneSeparator": "Scene separator",
+  "includeTitle": "Include title",
+  "format": {
+    "pdf": "PDF",
+    "md": "Markdown",
+    "html": "HTML",
+    "ao3": "AO3"
+  },
+  "formatDesc": {
+    "pdf": "Reading and printing",
+    "md": "Plain text with formatting",
+    "html": "Document with CSS",
+    "ao3": "Ready to paste"
+  }
+}

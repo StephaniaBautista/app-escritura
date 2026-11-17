@@ -2,12 +2,12 @@ export type AiMode = 'adviser' | 'character'
 export type AiLocale = 'es' | 'en'
 export interface AiSource { id: string; type: string; title: string; excerpt: string }
 export interface AiCapabilities {
-  providers: { id: string; available: boolean }[]
+  providers: { id: string; available: boolean; trainsData: boolean; comingSoon?: boolean }[]
   fallbackEnabled: boolean
   permissions: { chat: boolean; characters: boolean; suggestions: boolean }
   canCopy: boolean
   chapters: { id: string; title: string }[]
-  pages: { id: string; title: string; type: 'document' | 'chapter' | 'subpage' }[]
+  pages: { id: string; title: string; type: 'document' | 'chapter' | 'subpage'; parentId: string | null }[]
   characters: { id: string; name: string }[]
 }
 export interface AiConversation {
@@ -31,7 +31,7 @@ export interface AiMessage {
 }
 export interface AiConversationDetail extends AiConversation { messages: AiMessage[] }
 export interface AiConversationInput { mode: AiMode; title?: string; characterId?: string; chapterId?: string }
-export interface AiSendInput { direction?: string; message: string; requestId: string; provider?: string; locale: AiLocale }
+export interface AiSendInput { direction?: string; webSearch?: boolean; message: string; requestId: string; provider?: string; locale: AiLocale }
 export type ColumnPhase = 'beginning' | 'development' | 'climax' | 'ending'
 
 export interface AiSuggestion {

@@ -99,11 +99,39 @@ describe('settingsService', () => {
     expect(updateCall.data.uiPrefs.dismissAiStructureWarning).toBe(true)
   })
 
+  it('update: solo conserva modos de entrenamiento válidos', async () => {
+    prismaMock.userSettings.findUnique.mockResolvedValue(settingsRow())
+    prismaMock.userSettings.update.mockResolvedValue(settingsRow())
+
+    await settingsService.update('user-1', {
+      uiPrefs: { dismissedAiTrainingModes: ['saver', 'private', 'nope'] },
+    })
+
+    const updateCall = prismaMock.userSettings.update.mock.calls[0][0]
+    expect(updateCall.data.uiPrefs.dismissedAiTrainingModes).toEqual(['saver'])
+  })
+
   it('getUiPrefs: retorna prefs mergidas con defaults', async () => {
     prismaMock.userSettings.findUnique.mockResolvedValue(settingsRow({ uiPrefs: { dismissAiStructureWarning: true } }))
 
     const prefs = await settingsService.getUiPrefs('user-1')
 
     expect(prefs.dismissAiStructureWarning).toBe(true)
+    expect(prefs.reviewEnabledByDefault).toBe(false)
+  })
+
+  it('update: conserva presets por herramienta incluido el modo privado', async () => {
+    prismaMock.userSettings.findUnique.mockResolvedValue(settingsRow({
+      uiPrefs: { aiToolPresets: { wizard: 'balanced' }, reviewEnabledByDefault: true },
+    }))
+    prismaMock.userSettings.update.mockResolvedValue(settingsRow())
+
+    await settingsService.update('user-1', {
+      uiPrefs: { aiToolPresets: { review: 'sealed', characters: 'private' } },
+    })
+
+    const updateCall = prismaMock.userSettings.update.mock.calls[0][0]
+    expect(updateCall.data.uiPrefs.aiToolPresets).toEqual({ wizard: 'balanced', review: 'sealed', characters: 'private' })
+    expect(updateCall.data.uiPrefs.reviewEnabledByDefault).toBe(true)
   })
 })

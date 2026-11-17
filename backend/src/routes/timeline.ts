@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyReply } from 'fastify'
 import { getSessionUser } from '../lib/session.js'
 import { parseImageDataUrl } from '../lib/image-data-url.js'
+import { replySubplotError } from '../lib/subplot-errors.js'
 import { timelineService, type TimelineEraInput, type TimelineEventInput } from '../services/timeline-service.js'
 import { storageService, StorageUnavailableError, MAX_IMAGE_BYTES } from '../services/storage-service.js'
 
@@ -27,6 +28,7 @@ const timelineBodySchema = {
     imageUrl: { type: 'null' },
     relatedEventIds: idList,
     relatedDocumentIds: idList,
+    subplotId: { type: ['string', 'null'], maxLength: 100 },
   },
 } as const
 
@@ -82,7 +84,7 @@ export async function timelineRoutes(app: FastifyInstance) {
 
   app.post('/projects/:projectId/timeline', {
     schema: {
-      description: 'Create a timeline event. Evolution characterIds are dropped unless the original appears on an earlier event.',
+      description: 'Create a timeline event. Evolution characterIds are dropped unless the original appears on an earlier event. `subplotId` must belong to the project (400 SUBPLOT_NOT_IN_PROJECT otherwise).',
       tags: ['Timeline'],
       security: auth,
       params: paramsProjectSchema,
@@ -92,15 +94,19 @@ export async function timelineRoutes(app: FastifyInstance) {
       const user = await getSessionUser(request)
       if (!user) return reply.code(401).send({ error: 'UNAUTHORIZED' })
       const { projectId } = request.params as { projectId: string }
-      const event = await timelineService.create(projectId, user.id, request.body as TimelineEventInput)
-      if (!event) return notFound(reply)
-      return reply.code(201).send(event)
+      try {
+        const event = await timelineService.create(projectId, user.id, request.body as TimelineEventInput)
+        if (!event) return notFound(reply)
+        return reply.code(201).send(event)
+      } catch (err: unknown) {
+        return replySubplotError(reply, err)
+      }
     },
   })
 
   app.put('/timeline/:id', {
     schema: {
-      description: 'Update a timeline event (imageUrl only accepts null to clear the image). Evolution characterIds require the original on an earlier event.',
+      description: 'Update a timeline event (imageUrl only accepts null to clear the image). Evolution characterIds require the original on an earlier event. `subplotId` must belong to the project (400 SUBPLOT_NOT_IN_PROJECT otherwise); null clears it.',
       tags: ['Timeline'],
       security: auth,
       params: paramsIdSchema,
@@ -110,9 +116,13 @@ export async function timelineRoutes(app: FastifyInstance) {
       const user = await getSessionUser(request)
       if (!user) return reply.code(401).send({ error: 'UNAUTHORIZED' })
       const { id } = request.params as { id: string }
-      const event = await timelineService.update(id, user.id, request.body as TimelineEventInput)
-      if (!event) return notFound(reply)
-      return event
+      try {
+        const event = await timelineService.update(id, user.id, request.body as TimelineEventInput)
+        if (!event) return notFound(reply)
+        return event
+      } catch (err: unknown) {
+        return replySubplotError(reply, err)
+      }
     },
   })
 

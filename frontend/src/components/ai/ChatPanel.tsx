@@ -60,7 +60,6 @@ export function ChatPanel({ projectId, mode = 'adviser', characterId, chapterId 
         <p className="text-xs font-semibold mb-1">{t(message.role === 'user' ? 'aiApp.you' : mode === 'character' ? 'aiApp.characterVoice' : 'aiApp.adviser')}</p>
         <ProtectedAiText canCopy={message.role === 'user' || state.capabilities?.canCopy === true}><p className="text-sm whitespace-pre-wrap">{message.content}</p></ProtectedAiText>
         <AiSources sources={message.sources} />
-        {message.provider && <p className="mt-1 text-xs ai-panel__muted">{message.provider} · {message.model}</p>}
       </article>)}
       {(state.sending || state.loading) && <p role="status" className="text-sm ai-panel__muted">{t(state.sending ? 'aiApp.thinking' : 'aiApp.loading')}</p>}
       <div ref={endRef} />

@@ -4,7 +4,7 @@ Estas rutas requieren sesión de Better Auth y estado de cuenta vigente consulta
 
 ## GET /api/stats
 
-Parámetros opcionales: `days=30|90|365` (365 por defecto), `timeZone=America/Mexico_City` (UTC por defecto), `projectId`, `documentId`.
+Parámetros opcionales: `allTime=true` (desde el primer día con actividad, máximo 3650 días), `from` y `to` (`YYYY-MM-DD`, ambos juntos, máximo 730 días; `to` posterior a hoy se recorta al día local actual), o `days=7|30|60|90|365` (30 por defecto si no hay rango ni `allTime`), `timeZone=America/Mexico_City` (UTC por defecto; se usa para el día local, no se muestra en la UI), `projectId`, `documentId`.
 
 ```json
 {
@@ -18,12 +18,17 @@ Parámetros opcionales: `days=30|90|365` (365 por defecto), `timeZone=America/Me
     "dailyAverage": 20, "todayWords": 150
   },
   "days": [{ "date": "2026-08-14", "wordsAdded": 0, "activeSeconds": 0 }],
+  "calendar": {
+    "from": "2025-09-13",
+    "to": "2026-09-12",
+    "days": [{ "date": "2025-09-13", "wordsAdded": 0, "activeSeconds": 0 }]
+  },
   "projects": [{ "id": "project-id", "name": "Novela" }],
   "documents": [{ "id": "document-id", "title": "Manuscrito", "projectId": "project-id", "parentId": null }]
 }
 ```
 
-`days` incluye todos los días del periodo, también los que tienen cero actividad. El ejemplo abrevia ese arreglo. `projects` y `documents` contienen opciones actuales propias. `trackedSince` es la primera fecha registrada con palabras o tiempo en el ámbito y es `null` si no existe actividad.
+`allTime`, `days` o `from`/`to` incluyen todos los días del periodo, también los que tienen cero actividad. El ejemplo abrevia ese arreglo. `calendar` es independiente del periodo: siempre cubre 365 días hasta hoy (el heatmap de escritura), con el mismo recorte de carpeta o documento. `allTime` tiene prioridad; si no, `from` y `to` tienen prioridad sobre `days`. `projects` y `documents` contienen opciones actuales propias. `trackedSince` es la primera fecha registrada con palabras o tiempo en el ámbito y es `null` si no existe actividad.
 
 `totalWords` cuenta el contenido actual de los documentos existentes del ámbito. `documentId` incluye el nodo y sus descendientes actuales, de modo que seleccionar un manuscrito suma sus capítulos. Se detectan ciclos al recorrerlos. Si también se envía `projectId`, el documento debe pertenecer a ese proyecto.
 

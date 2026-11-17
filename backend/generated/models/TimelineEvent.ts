@@ -50,6 +50,7 @@ export type TimelineEventMinAggregateOutputType = {
   label: string | null
   labelColor: string | null
   imageUrl: string | null
+  subplotId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +71,7 @@ export type TimelineEventMaxAggregateOutputType = {
   label: string | null
   labelColor: string | null
   imageUrl: string | null
+  subplotId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -93,6 +95,7 @@ export type TimelineEventCountAggregateOutputType = {
   imageUrl: number
   relatedEventIds: number
   relatedDocumentIds: number
+  subplotId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -123,6 +126,7 @@ export type TimelineEventMinAggregateInputType = {
   label?: true
   labelColor?: true
   imageUrl?: true
+  subplotId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -143,6 +147,7 @@ export type TimelineEventMaxAggregateInputType = {
   label?: true
   labelColor?: true
   imageUrl?: true
+  subplotId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -166,6 +171,7 @@ export type TimelineEventCountAggregateInputType = {
   imageUrl?: true
   relatedEventIds?: true
   relatedDocumentIds?: true
+  subplotId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -276,6 +282,7 @@ export type TimelineEventGroupByOutputType = {
   imageUrl: string | null
   relatedEventIds: string[]
   relatedDocumentIds: string[]
+  subplotId: string | null
   createdAt: Date
   updatedAt: Date
   _count: TimelineEventCountAggregateOutputType | null
@@ -322,9 +329,11 @@ export type TimelineEventWhereInput = {
   imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  subplotId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  subplot?: Prisma.XOR<Prisma.SubplotNullableScalarRelationFilter, Prisma.SubplotWhereInput> | null
 }
 
 export type TimelineEventOrderByWithRelationInput = {
@@ -346,9 +355,11 @@ export type TimelineEventOrderByWithRelationInput = {
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   relatedEventIds?: Prisma.SortOrder
   relatedDocumentIds?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  subplot?: Prisma.SubplotOrderByWithRelationInput
 }
 
 export type TimelineEventWhereUniqueInput = Prisma.AtLeast<{
@@ -373,9 +384,11 @@ export type TimelineEventWhereUniqueInput = Prisma.AtLeast<{
   imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  subplotId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  subplot?: Prisma.XOR<Prisma.SubplotNullableScalarRelationFilter, Prisma.SubplotWhereInput> | null
 }, "id">
 
 export type TimelineEventOrderByWithAggregationInput = {
@@ -397,6 +410,7 @@ export type TimelineEventOrderByWithAggregationInput = {
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   relatedEventIds?: Prisma.SortOrder
   relatedDocumentIds?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TimelineEventCountOrderByAggregateInput
@@ -428,6 +442,7 @@ export type TimelineEventScalarWhereWithAggregatesInput = {
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
   relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  subplotId?: Prisma.StringNullableWithAggregatesFilter<"TimelineEvent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TimelineEvent"> | Date | string
 }
@@ -453,6 +468,7 @@ export type TimelineEventCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutTimelineEventsInput
+  subplot?: Prisma.SubplotCreateNestedOneWithoutEventsInput
 }
 
 export type TimelineEventUncheckedCreateInput = {
@@ -474,6 +490,7 @@ export type TimelineEventUncheckedCreateInput = {
   imageUrl?: string | null
   relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  subplotId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -499,6 +516,7 @@ export type TimelineEventUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimelineEventsNestedInput
+  subplot?: Prisma.SubplotUpdateOneWithoutEventsNestedInput
 }
 
 export type TimelineEventUncheckedUpdateInput = {
@@ -520,6 +538,7 @@ export type TimelineEventUncheckedUpdateInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -543,6 +562,7 @@ export type TimelineEventCreateManyInput = {
   imageUrl?: string | null
   relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  subplotId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -588,6 +608,7 @@ export type TimelineEventUncheckedUpdateManyInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -621,6 +642,7 @@ export type TimelineEventCountOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   relatedEventIds?: Prisma.SortOrder
   relatedDocumentIds?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -645,6 +667,7 @@ export type TimelineEventMaxOrderByAggregateInput = {
   label?: Prisma.SortOrder
   labelColor?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -665,6 +688,7 @@ export type TimelineEventMinOrderByAggregateInput = {
   label?: Prisma.SortOrder
   labelColor?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -742,6 +766,48 @@ export type TimelineEventUpdaterelatedDocumentIdsInput = {
   push?: string | string[]
 }
 
+export type TimelineEventCreateNestedManyWithoutSubplotInput = {
+  create?: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput> | Prisma.TimelineEventCreateWithoutSubplotInput[] | Prisma.TimelineEventUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.TimelineEventCreateOrConnectWithoutSubplotInput | Prisma.TimelineEventCreateOrConnectWithoutSubplotInput[]
+  createMany?: Prisma.TimelineEventCreateManySubplotInputEnvelope
+  connect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+}
+
+export type TimelineEventUncheckedCreateNestedManyWithoutSubplotInput = {
+  create?: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput> | Prisma.TimelineEventCreateWithoutSubplotInput[] | Prisma.TimelineEventUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.TimelineEventCreateOrConnectWithoutSubplotInput | Prisma.TimelineEventCreateOrConnectWithoutSubplotInput[]
+  createMany?: Prisma.TimelineEventCreateManySubplotInputEnvelope
+  connect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+}
+
+export type TimelineEventUpdateManyWithoutSubplotNestedInput = {
+  create?: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput> | Prisma.TimelineEventCreateWithoutSubplotInput[] | Prisma.TimelineEventUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.TimelineEventCreateOrConnectWithoutSubplotInput | Prisma.TimelineEventCreateOrConnectWithoutSubplotInput[]
+  upsert?: Prisma.TimelineEventUpsertWithWhereUniqueWithoutSubplotInput | Prisma.TimelineEventUpsertWithWhereUniqueWithoutSubplotInput[]
+  createMany?: Prisma.TimelineEventCreateManySubplotInputEnvelope
+  set?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  disconnect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  delete?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  connect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  update?: Prisma.TimelineEventUpdateWithWhereUniqueWithoutSubplotInput | Prisma.TimelineEventUpdateWithWhereUniqueWithoutSubplotInput[]
+  updateMany?: Prisma.TimelineEventUpdateManyWithWhereWithoutSubplotInput | Prisma.TimelineEventUpdateManyWithWhereWithoutSubplotInput[]
+  deleteMany?: Prisma.TimelineEventScalarWhereInput | Prisma.TimelineEventScalarWhereInput[]
+}
+
+export type TimelineEventUncheckedUpdateManyWithoutSubplotNestedInput = {
+  create?: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput> | Prisma.TimelineEventCreateWithoutSubplotInput[] | Prisma.TimelineEventUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.TimelineEventCreateOrConnectWithoutSubplotInput | Prisma.TimelineEventCreateOrConnectWithoutSubplotInput[]
+  upsert?: Prisma.TimelineEventUpsertWithWhereUniqueWithoutSubplotInput | Prisma.TimelineEventUpsertWithWhereUniqueWithoutSubplotInput[]
+  createMany?: Prisma.TimelineEventCreateManySubplotInputEnvelope
+  set?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  disconnect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  delete?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  connect?: Prisma.TimelineEventWhereUniqueInput | Prisma.TimelineEventWhereUniqueInput[]
+  update?: Prisma.TimelineEventUpdateWithWhereUniqueWithoutSubplotInput | Prisma.TimelineEventUpdateWithWhereUniqueWithoutSubplotInput[]
+  updateMany?: Prisma.TimelineEventUpdateManyWithWhereWithoutSubplotInput | Prisma.TimelineEventUpdateManyWithWhereWithoutSubplotInput[]
+  deleteMany?: Prisma.TimelineEventScalarWhereInput | Prisma.TimelineEventScalarWhereInput[]
+}
+
 export type TimelineEventCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -762,6 +828,7 @@ export type TimelineEventCreateWithoutProjectInput = {
   relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  subplot?: Prisma.SubplotCreateNestedOneWithoutEventsInput
 }
 
 export type TimelineEventUncheckedCreateWithoutProjectInput = {
@@ -782,6 +849,7 @@ export type TimelineEventUncheckedCreateWithoutProjectInput = {
   imageUrl?: string | null
   relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  subplotId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -834,8 +902,81 @@ export type TimelineEventScalarWhereInput = {
   imageUrl?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   relatedEventIds?: Prisma.StringNullableListFilter<"TimelineEvent">
   relatedDocumentIds?: Prisma.StringNullableListFilter<"TimelineEvent">
+  subplotId?: Prisma.StringNullableFilter<"TimelineEvent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TimelineEvent"> | Date | string
+}
+
+export type TimelineEventCreateWithoutSubplotInput = {
+  id?: string
+  title: string
+  date?: string | null
+  description?: string | null
+  order?: number
+  eraId?: string | null
+  characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutTimelineEventsInput
+}
+
+export type TimelineEventUncheckedCreateWithoutSubplotInput = {
+  id?: string
+  projectId: string
+  title: string
+  date?: string | null
+  description?: string | null
+  order?: number
+  eraId?: string | null
+  characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TimelineEventCreateOrConnectWithoutSubplotInput = {
+  where: Prisma.TimelineEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput>
+}
+
+export type TimelineEventCreateManySubplotInputEnvelope = {
+  data: Prisma.TimelineEventCreateManySubplotInput | Prisma.TimelineEventCreateManySubplotInput[]
+  skipDuplicates?: boolean
+}
+
+export type TimelineEventUpsertWithWhereUniqueWithoutSubplotInput = {
+  where: Prisma.TimelineEventWhereUniqueInput
+  update: Prisma.XOR<Prisma.TimelineEventUpdateWithoutSubplotInput, Prisma.TimelineEventUncheckedUpdateWithoutSubplotInput>
+  create: Prisma.XOR<Prisma.TimelineEventCreateWithoutSubplotInput, Prisma.TimelineEventUncheckedCreateWithoutSubplotInput>
+}
+
+export type TimelineEventUpdateWithWhereUniqueWithoutSubplotInput = {
+  where: Prisma.TimelineEventWhereUniqueInput
+  data: Prisma.XOR<Prisma.TimelineEventUpdateWithoutSubplotInput, Prisma.TimelineEventUncheckedUpdateWithoutSubplotInput>
+}
+
+export type TimelineEventUpdateManyWithWhereWithoutSubplotInput = {
+  where: Prisma.TimelineEventScalarWhereInput
+  data: Prisma.XOR<Prisma.TimelineEventUpdateManyMutationInput, Prisma.TimelineEventUncheckedUpdateManyWithoutSubplotInput>
 }
 
 export type TimelineEventCreateManyProjectInput = {
@@ -856,6 +997,7 @@ export type TimelineEventCreateManyProjectInput = {
   imageUrl?: string | null
   relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  subplotId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -880,6 +1022,7 @@ export type TimelineEventUpdateWithoutProjectInput = {
   relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subplot?: Prisma.SubplotUpdateOneWithoutEventsNestedInput
 }
 
 export type TimelineEventUncheckedUpdateWithoutProjectInput = {
@@ -900,12 +1043,106 @@ export type TimelineEventUncheckedUpdateWithoutProjectInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
   relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimelineEventUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TimelineEventCreateManySubplotInput = {
+  id?: string
+  projectId: string
+  title: string
+  date?: string | null
+  description?: string | null
+  order?: number
+  eraId?: string | null
+  characterIds?: Prisma.TimelineEventCreatecharacterIdsInput | string[]
+  icon?: string | null
+  color?: string | null
+  groupName?: string | null
+  precision?: string
+  endDate?: string | null
+  label?: string | null
+  labelColor?: string | null
+  imageUrl?: string | null
+  relatedEventIds?: Prisma.TimelineEventCreaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventCreaterelatedDocumentIdsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TimelineEventUpdateWithoutSubplotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutTimelineEventsNestedInput
+}
+
+export type TimelineEventUncheckedUpdateWithoutSubplotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  eraId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  characterIds?: Prisma.TimelineEventUpdatecharacterIdsInput | string[]
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groupName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  precision?: Prisma.StringFieldUpdateOperationsInput | string
+  endDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  labelColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedEventIds?: Prisma.TimelineEventUpdaterelatedEventIdsInput | string[]
+  relatedDocumentIds?: Prisma.TimelineEventUpdaterelatedDocumentIdsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TimelineEventUncheckedUpdateManyWithoutSubplotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -947,9 +1184,11 @@ export type TimelineEventSelect<ExtArgs extends runtime.Types.Extensions.Interna
   imageUrl?: boolean
   relatedEventIds?: boolean
   relatedDocumentIds?: boolean
+  subplotId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["timelineEvent"]>
 
 export type TimelineEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -971,9 +1210,11 @@ export type TimelineEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   imageUrl?: boolean
   relatedEventIds?: boolean
   relatedDocumentIds?: boolean
+  subplotId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["timelineEvent"]>
 
 export type TimelineEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -995,9 +1236,11 @@ export type TimelineEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   imageUrl?: boolean
   relatedEventIds?: boolean
   relatedDocumentIds?: boolean
+  subplotId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["timelineEvent"]>
 
 export type TimelineEventSelectScalar = {
@@ -1019,25 +1262,30 @@ export type TimelineEventSelectScalar = {
   imageUrl?: boolean
   relatedEventIds?: boolean
   relatedDocumentIds?: boolean
+  subplotId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TimelineEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "date" | "description" | "order" | "eraId" | "characterIds" | "icon" | "color" | "groupName" | "precision" | "endDate" | "label" | "labelColor" | "imageUrl" | "relatedEventIds" | "relatedDocumentIds" | "createdAt" | "updatedAt", ExtArgs["result"]["timelineEvent"]>
+export type TimelineEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "date" | "description" | "order" | "eraId" | "characterIds" | "icon" | "color" | "groupName" | "precision" | "endDate" | "label" | "labelColor" | "imageUrl" | "relatedEventIds" | "relatedDocumentIds" | "subplotId" | "createdAt" | "updatedAt", ExtArgs["result"]["timelineEvent"]>
 export type TimelineEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }
 export type TimelineEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }
 export type TimelineEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.TimelineEvent$subplotArgs<ExtArgs>
 }
 
 export type $TimelineEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TimelineEvent"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    subplot: Prisma.$SubplotPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1058,6 +1306,7 @@ export type $TimelineEventPayload<ExtArgs extends runtime.Types.Extensions.Inter
     imageUrl: string | null
     relatedEventIds: string[]
     relatedDocumentIds: string[]
+    subplotId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["timelineEvent"]>
@@ -1455,6 +1704,7 @@ readonly fields: TimelineEventFieldRefs;
 export interface Prisma__TimelineEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  subplot<T extends Prisma.TimelineEvent$subplotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimelineEvent$subplotArgs<ExtArgs>>): Prisma.Prisma__SubplotClient<runtime.Types.Result.GetResult<Prisma.$SubplotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1502,6 +1752,7 @@ export interface TimelineEventFieldRefs {
   readonly imageUrl: Prisma.FieldRef<"TimelineEvent", 'String'>
   readonly relatedEventIds: Prisma.FieldRef<"TimelineEvent", 'String[]'>
   readonly relatedDocumentIds: Prisma.FieldRef<"TimelineEvent", 'String[]'>
+  readonly subplotId: Prisma.FieldRef<"TimelineEvent", 'String'>
   readonly createdAt: Prisma.FieldRef<"TimelineEvent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TimelineEvent", 'DateTime'>
 }
@@ -1902,6 +2153,25 @@ export type TimelineEventDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many TimelineEvents to delete.
    */
   limit?: number
+}
+
+/**
+ * TimelineEvent.subplot
+ */
+export type TimelineEvent$subplotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subplot
+   */
+  select?: Prisma.SubplotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subplot
+   */
+  omit?: Prisma.SubplotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubplotInclude<ExtArgs> | null
+  where?: Prisma.SubplotWhereInput
 }
 
 /**

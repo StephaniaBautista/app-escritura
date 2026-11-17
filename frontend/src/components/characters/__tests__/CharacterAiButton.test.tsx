@@ -24,7 +24,7 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@/components/ai/useAiCapabilities', () => ({
   useAiCapabilities: () => ({
-    capabilities: { permissions: { characters: true }, providers: [{ id: 'deepseek', available: true }] },
+    capabilities: { permissions: { characters: true }, providers: [{ id: 'balanced', available: true, trainsData: true }] },
     loading: false, error: null, retry: vi.fn(),
   }),
 }))
@@ -65,7 +65,7 @@ describe('CharacterAiButton', () => {
     const onFilled = vi.fn()
     fillCharacters.mockResolvedValue({
       characters: [{ name: 'Ada', description: 'Vive en Madrid.' }],
-      sources: [], provider: 'deepseek', model: 'test',
+      sources: [], provider: 'balanced', model: 'test',
     })
     render(<CharacterAiButton projectId="p1" name="Ada" onFilled={onFilled} />)
     fireEvent.click(screen.getByRole('button', { name: 'characterApp.generateWithAi' }))
@@ -76,7 +76,7 @@ describe('CharacterAiButton', () => {
 
   it('labels completion mode when editing an existing character', async () => {
     store.documentTree = [{ id: 'd1' }]
-    fillCharacters.mockResolvedValue({ characters: [{ name: 'Ada', age: '30' }], sources: [], provider: 'deepseek', model: 'test' })
+    fillCharacters.mockResolvedValue({ characters: [{ name: 'Ada', age: '30' }], sources: [], provider: 'balanced', model: 'test' })
     render(<CharacterAiButton projectId="p1" characterId="c1" onFilled={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'characterApp.completeWithAi' }))
     await waitFor(() => expect(fillCharacters).toHaveBeenCalledWith('p1', { locale: 'es', characterId: 'c1' }))

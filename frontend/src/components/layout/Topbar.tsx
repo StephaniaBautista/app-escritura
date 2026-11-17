@@ -1,17 +1,21 @@
 import { Link, useLocation, useNavigate } from 'react-router'
-import { Bell, Settings, Moon, Sun, Menu, ArrowLeft } from 'lucide-react'
+import { Bell, Settings, Moon, Sun, Menu, ArrowLeft, MessageSquare, PanelRightClose } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAiStore } from '@/stores/ai-store'
 
 interface TopbarProps {
   onMenuClick?: () => void
+  adviserOpen?: boolean
+  onToggleAdviser?: () => void
 }
 
-export function Topbar({ onMenuClick }: TopbarProps) {
+export function Topbar({ onMenuClick, adviserOpen, onToggleAdviser }: TopbarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
+  const sending = useAiStore((state) => state.sending)
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains('dark'))
@@ -38,6 +42,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     if (path.startsWith('/app/documents/')) return 'Carpeta'
     if (path === '/app/recent') return 'Recientes'
     if (path === '/app/shared') return 'Compartidos'
+    if (path === '/app/ai-characters') return t('sidebar.aiCharacters')
     if (path === '/app/stats') return t('sidebar.statistics')
     if (path === '/app/settings') return t('settings.title')
     return 'Archivum'
@@ -82,6 +87,27 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
+        {onToggleAdviser && (
+          <button
+            type="button"
+            onClick={onToggleAdviser}
+            className="relative p-2 rounded-lg hover:opacity-80 transition-opacity"
+            style={{
+              color: adviserOpen ? 'var(--color-accent)' : 'var(--color-ink-light)',
+            }}
+            title={sending && !adviserOpen ? t('aiApp.thinkingBackground') : adviserOpen ? t('aiApp.close') : t('aiApp.open')}
+            aria-label={sending && !adviserOpen ? t('aiApp.thinkingBackground') : adviserOpen ? t('aiApp.close') : t('aiApp.open')}
+            aria-pressed={adviserOpen}
+            aria-busy={sending}
+            data-testid="adviser-toggle"
+          >
+            {adviserOpen ? <PanelRightClose className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
+            {sending && !adviserOpen && (
+              <span className="ai-adviser-pulse" aria-hidden="true" />
+            )}
+          </button>
+        )}
+
         <button
           className="p-2 rounded-lg hover:opacity-80 transition-opacity relative"
           style={{ color: 'var(--color-ink-light)' }}
@@ -115,3 +141,4 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     </header>
   )
 }
+

@@ -20,7 +20,7 @@ describe('writing calendar dates', () => {
     expect(completeStatsDays('2026-01-02', '2026-01-01', [])).toEqual([])
   })
   it('uses a deterministic encouragement for a date independently of render timing', () => {
-    expect(motivationIndex('2026-09-12', 7)).toBe(motivationIndex('2026-09-12', 7))
-    expect(motivationIndex('2026-09-19', 7)).toBe(motivationIndex('2026-09-12', 7))
+    expect(motivationIndex('2026-09-12', 6)).toBe(motivationIndex('2026-09-12', 6))
+    expect(motivationIndex('2026-09-18', 6)).toBe(motivationIndex('2026-09-12', 6))
   })
 })

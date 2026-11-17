@@ -53,6 +53,11 @@ export type Folder = Prisma.FolderModel
  */
 export type Document = Prisma.DocumentModel
 /**
+ * Model AiDocumentChunk
+ * 
+ */
+export type AiDocumentChunk = Prisma.AiDocumentChunkModel
+/**
  * Model Note
  * 
  */
@@ -213,6 +218,11 @@ export type AiMessage = Prisma.AiMessageModel
  */
 export type AiUsage = Prisma.AiUsageModel
 /**
+ * Model AiUsageEvent
+ * 
+ */
+export type AiUsageEvent = Prisma.AiUsageEventModel
+/**
  * Model WritingStats
  * 
  */
@@ -227,3 +237,23 @@ export type WritingSession = Prisma.WritingSessionModel
  * 
  */
 export type WritingActivityClock = Prisma.WritingActivityClockModel
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
+ * Model SharedLink
+ * 
+ */
+export type SharedLink = Prisma.SharedLinkModel
+/**
+ * Model SharedComment
+ * 
+ */
+export type SharedComment = Prisma.SharedCommentModel
+/**
+ * Model SharedView
+ * 
+ */
+export type SharedView = Prisma.SharedViewModel

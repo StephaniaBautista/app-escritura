@@ -1,5 +1,6 @@
 import { Prisma } from '@generated/client'
 import { prisma } from '../lib/prisma.js'
+import { resolveSubplotId } from '../lib/subplot-link.js'
 
 export const CARD_TYPES = ['scene', 'chapter', 'character', 'document', 'note'] as const
 export type CardType = typeof CARD_TYPES[number]
@@ -31,6 +32,7 @@ export interface CardInput {
   cardType?: string
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
 }
 
@@ -142,8 +144,12 @@ export const structureService = {
   },
 
   async createCard(columnId: string, userId: string, data: CardInput) {
-    const column = await prisma.structureColumn.findFirst({ where: { id: columnId, board: { project: { userId } } } })
+    const column = await prisma.structureColumn.findFirst({
+      where: { id: columnId, board: { project: { userId } } },
+      include: { board: { select: { projectId: true } } },
+    })
     if (!column) return null
+    const subplotId = await resolveSubplotId(column.board.projectId, data.subplotId)
     const order = data.order ?? (await prisma.structureCard.count({ where: { columnId } }))
     return prisma.structureCard.create({
       data: {
@@ -153,14 +159,19 @@ export const structureService = {
         cardType: normalizeCardType(data.cardType),
         referenceId: data.referenceId ?? null,
         color: data.color ?? null,
+        subplotId: subplotId ?? null,
         order,
       },
     })
   },
 
   async updateCard(id: string, userId: string, data: CardInput) {
-    const card = await prisma.structureCard.findFirst({ where: { id, column: { board: { project: { userId } } } } })
+    const card = await prisma.structureCard.findFirst({
+      where: { id, column: { board: { project: { userId } } } },
+      include: { column: { select: { board: { select: { projectId: true } } } } },
+    })
     if (!card) return null
+    const subplotId = await resolveSubplotId(card.column.board.projectId, data.subplotId)
     return prisma.structureCard.update({
       where: { id },
       data: {
@@ -169,6 +180,7 @@ export const structureService = {
         cardType: data.cardType === undefined ? undefined : normalizeCardType(data.cardType),
         referenceId: data.referenceId,
         color: data.color,
+        subplotId,
         order: data.order,
       },
     })

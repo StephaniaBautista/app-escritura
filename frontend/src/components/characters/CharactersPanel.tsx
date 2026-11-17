@@ -21,9 +21,10 @@ import { EMPTY_FILTERS, filterCharacters, type CharacterFiltersState } from '@/l
 
 interface CharactersPanelProps {
   projectId: string
+  onOpenDiagrams?: () => void
 }
 
-export function CharactersPanel({ projectId }: CharactersPanelProps) {
+export function CharactersPanel({ projectId, onOpenDiagrams }: CharactersPanelProps) {
   const { t } = useTranslation()
   const [, setSearchParams] = useSearchParams()
   const { characters, isLoading, load, remove, createMany } = useCharactersStore()
@@ -115,7 +116,10 @@ export function CharactersPanel({ projectId }: CharactersPanelProps) {
             {t('characterApp.heightMapTitle')}
           </button>
           <button
-            onClick={() => setSearchParams({ tab: 'diagrams' })}
+            onClick={() => {
+              if (onOpenDiagrams) onOpenDiagrams()
+              else setSearchParams({ tab: 'diagrams' })
+            }}
             className="flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all hover:opacity-80"
             style={{ borderColor: 'var(--color-paper-lines)', color: 'var(--color-ink)' }}
             data-testid="characters-diagrams-btn"

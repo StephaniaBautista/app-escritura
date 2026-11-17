@@ -22,6 +22,7 @@ const { prismaMock, storageMock } = vi.hoisted(() => ({
     },
     character: { findMany: vi.fn() },
     document: { findMany: vi.fn() },
+    subplot: { findFirst: vi.fn() },
   },
   storageMock: { deleteCharacterImage: vi.fn(), uploadTimelineImage: vi.fn() },
 }))
@@ -30,6 +31,7 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
 vi.mock('../storage-service.js', () => ({ storageService: storageMock }))
 
 import { timelineService } from '../timeline-service.js'
+import { SubplotNotInProjectError } from '../../lib/subplot-link.js'
 
 const projectRow = { id: 'proj-1', name: 'Mi novela', userId: 'user-1' }
 
@@ -124,6 +126,7 @@ describe('timelineService', () => {
           description: null,
           order: 2,
           eraId: null,
+          subplotId: null,
           characterIds: ['char-1'],
           icon: null,
           color: null,
@@ -246,6 +249,29 @@ describe('timelineService', () => {
       expect(event).toBeNull()
       expect(prismaMock.timelineEvent.create).not.toHaveBeenCalled()
     })
+
+    it('enlaza la subtrama si pertenece al proyecto', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.subplot.findFirst.mockResolvedValue({ id: 'sub-1' })
+      prismaMock.timelineEvent.count.mockResolvedValue(0)
+      prismaMock.timelineEvent.create.mockResolvedValue({ ...eventRow, subplotId: 'sub-1' })
+
+      await timelineService.create('proj-1', 'user-1', { title: 'X', subplotId: 'sub-1' })
+
+      expect(prismaMock.subplot.findFirst).toHaveBeenCalledWith({ where: { id: 'sub-1', projectId: 'proj-1' }, select: { id: true } })
+      expect(prismaMock.timelineEvent.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ subplotId: 'sub-1' }),
+      })
+    })
+
+    it('rechaza una subtrama de otro proyecto', async () => {
+      prismaMock.project.findFirst.mockResolvedValue(projectRow)
+      prismaMock.subplot.findFirst.mockResolvedValue(null)
+
+      await expect(timelineService.create('proj-1', 'user-1', { title: 'X', subplotId: 'sub-ajena' }))
+        .rejects.toBeInstanceOf(SubplotNotInProjectError)
+      expect(prismaMock.timelineEvent.create).not.toHaveBeenCalled()
+    })
   })
 
   describe('update', () => {
@@ -259,8 +285,25 @@ describe('timelineService', () => {
       expect(event?.title).toBe('Nuevo título')
       expect(prismaMock.timelineEvent.update).toHaveBeenCalledWith({
         where: { id: 'ev-1' },
-        data: expect.objectContaining({ title: 'Nuevo título' }),
+        data: expect.objectContaining({ title: 'Nuevo título', subplotId: undefined }),
       })
+      expect(prismaMock.subplot.findFirst).not.toHaveBeenCalled()
+    })
+
+    it('subplotId null desasocia; una subtrama ajena se rechaza', async () => {
+      prismaMock.timelineEvent.findFirst.mockResolvedValue(eventRow)
+      prismaMock.timelineEvent.update.mockResolvedValue({ ...eventRow, subplotId: null })
+
+      await timelineService.update('ev-1', 'user-1', { subplotId: null })
+      expect(prismaMock.timelineEvent.update).toHaveBeenCalledWith({
+        where: { id: 'ev-1' },
+        data: expect.objectContaining({ subplotId: null }),
+      })
+
+      prismaMock.subplot.findFirst.mockResolvedValue(null)
+      await expect(timelineService.update('ev-1', 'user-1', { subplotId: 'sub-ajena' }))
+        .rejects.toBeInstanceOf(SubplotNotInProjectError)
+      expect(prismaMock.timelineEvent.update).toHaveBeenCalledTimes(1)
     })
 
     it('sanea relatedDocumentIds al proyecto (docs y subpáginas)', async () => {

@@ -1,5 +1,10 @@
-export const AI_PROVIDERS = ['deepseek', 'mimo'] as const
-export type AiProvider = typeof AI_PROVIDERS[number]
+import { extractTokenUsage, type AiTokenUsage } from './ai-tokens.js'
+import {
+  AI_PRESETS, isAiPreset, presetAvailable, resolvePreset, listPresetStatus,
+  type AiPreset, type AiProvider, type AiVendor,
+} from './ai-presets.js'
+
+export { AI_PRESETS as AI_PROVIDERS, type AiPreset, type AiProvider, type AiVendor }
 
 export interface AiMessage {
   role: 'system' | 'user' | 'assistant'
@@ -17,13 +22,19 @@ export interface AiCompletionInput {
 export interface AiCompletion {
   content: string
   provider: AiProvider
+  vendor?: AiVendor
   model: string
+  usage?: AiTokenUsage
 }
 
 export const AI_MAX_INPUT_CHARS = 60_000
-export const AI_MAX_OUTPUT_CHARS = 24_000
-const MAX_RESPONSE_BYTES = 160_000
-const DEFAULT_TIMEOUT_MS = 45_000
+export const AI_MAX_OUTPUT_CHARS = 400_000
+export const AI_MAX_OUTPUT_TOKENS = 131_072
+export const AI_REPAIR_INSTRUCTION = 'The response did not satisfy the required JSON contract. Answer the original request using the same supplied evidence and the exact JSON object schema in the system instructions. Start with { and end with }. Return JSON only, never whitespace, markdown or narrative prose. Use short strings, stay within every item and character limit, and include all required fields. For character suggestions, return only complete field/value/documentId/quote candidates with exact documentary evidence; omit entire ambiguous or non-actionable suggestions. Never invent evidence to satisfy the format.'
+export const AI_REPAIR_RESERVE = AI_REPAIR_INSTRUCTION.length + 32
+export const AI_EVIDENCE_INPUT_CHARS = 40_000
+const MAX_RESPONSE_BYTES = 1_048_576
+const DEFAULT_TIMEOUT_MS = 90_000
 
 type AiErrorCode = 'AI_UNAVAILABLE' | 'AI_AUTHENTICATION_FAILED' | 'AI_INVALID_INPUT' | 'AI_RATE_LIMITED' | 'AI_TIMEOUT' | 'AI_PROVIDER_ERROR' | 'AI_INVALID_RESPONSE' | 'AI_CANCELLED'
 
@@ -34,34 +45,19 @@ export class AiClientError extends Error {
   }
 }
 
-const PROVIDERS = {
-  deepseek: { url: 'https://api.deepseek.com/chat/completions', key: 'DEEPSEEK_API_KEY', model: 'DEEPSEEK_MODEL', defaultModel: 'deepseek-v4-flash' },
-  mimo: { url: 'https://api.xiaomimimo.com/v1/chat/completions', key: 'MIMO_API_KEY', model: 'MIMO_MODEL', defaultModel: 'mimo-v2.5-pro' },
-} as const
-
-function providerConfig(provider: AiProvider) {
-  const definition = PROVIDERS[provider]
-  const apiKey = process.env[definition.key]?.trim()
-  const model = process.env[definition.model]?.trim() || definition.defaultModel
-  if (!apiKey || !/^[a-zA-Z0-9._:/-]{1,100}$/.test(model)) {
-    throw new AiClientError('AI_UNAVAILABLE', 503)
-  }
-  return { ...definition, apiKey, model }
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 function validateInput(input: AiCompletionInput) {
-  if (!AI_PROVIDERS.includes(input.provider) || !Array.isArray(input.messages)
+  if (!isAiPreset(input.provider) || !Array.isArray(input.messages)
     || input.messages.length < 1 || input.messages.length > 32
     || input.messages.some((message) => !['system', 'user', 'assistant'].includes(message.role)
       || typeof message.content !== 'string' || !message.content.trim())
     || input.messages.reduce((total, message) => total + message.content.length, 0) > AI_MAX_INPUT_CHARS
-    || (input.maxTokens !== undefined && (!Number.isInteger(input.maxTokens) || input.maxTokens < 1 || input.maxTokens > 4096))) {
+    || (input.maxTokens !== undefined && (!Number.isInteger(input.maxTokens) || input.maxTokens < 1 || input.maxTokens > AI_MAX_OUTPUT_TOKENS))) {
     throw new AiClientError('AI_INVALID_INPUT', 400)
   }
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 async function readResponse(response: Response): Promise<unknown> {
@@ -91,17 +87,29 @@ async function readResponse(response: Response): Promise<unknown> {
   }
 }
 
+function messageContent(message: Record<string, unknown>): string | null {
+  if (typeof message.content === 'string') return message.content
+  if (!Array.isArray(message.content)) return null
+  const parts = message.content.flatMap((part) => {
+    if (!isObject(part) || typeof part.text !== 'string') return []
+    return [part.text]
+  })
+  return parts.length ? parts.join('') : null
+}
+
 function extractContent(value: unknown, json: boolean): string {
   if (!isObject(value) || !Array.isArray(value.choices) || value.choices.length !== 1) {
     throw new AiClientError('AI_INVALID_RESPONSE', 502)
   }
   const choice: unknown = value.choices[0]
-  if (!isObject(choice) || choice.finish_reason !== 'stop' || !isObject(choice.message)
-    || choice.message.role !== 'assistant' || typeof choice.message.content !== 'string'
+  if (!isObject(choice)
+    || (choice.finish_reason !== 'stop' && choice.finish_reason !== undefined
+      && !(choice.finish_reason === 'length' && json))
+    || !isObject(choice.message) || choice.message.role !== 'assistant'
     || choice.message.tool_calls != null || choice.message.function_call != null) {
     throw new AiClientError('AI_INVALID_RESPONSE', 502)
   }
-  const content = choice.message.content.trim()
+  const content = messageContent(choice.message)?.trim() ?? ''
   if (!content || content.length > AI_MAX_OUTPUT_CHARS) throw new AiClientError('AI_INVALID_RESPONSE', 502)
   if (json) {
     try {
@@ -114,8 +122,27 @@ function extractContent(value: unknown, json: boolean): string {
   return content
 }
 
-async function completeWithProvider(input: AiCompletionInput, provider: AiProvider): Promise<AiCompletion> {
-  const config = providerConfig(provider)
+function requestBody(input: AiCompletionInput, model: string, vendor: AiVendor, maxTokens: number) {
+  const body: Record<string, unknown> = {
+    model,
+    messages: input.messages,
+    stream: false,
+    temperature: 0.4,
+    [vendor === 'openai' || vendor === 'muse' ? 'max_completion_tokens' : 'max_tokens']: maxTokens,
+  }
+  if (vendor === 'deepseek') body.thinking = { type: 'disabled' }
+  if (vendor === 'muse') body.reasoning_effort = input.json ? 'medium' : 'low'
+  if (vendor === 'openai') {
+    body.reasoning_effort = input.json ? 'medium' : 'max'
+    body.store = false
+  }
+  if (input.json) body.response_format = { type: 'json_object' }
+  return body
+}
+
+async function completeWithPreset(input: AiCompletionInput, preset: AiPreset): Promise<AiCompletion> {
+  if (!presetAvailable(preset)) throw new AiClientError('AI_UNAVAILABLE', 503)
+  const config = resolvePreset(preset)
   const controller = new AbortController()
   const timeout = Number(process.env.AI_TIMEOUT_MS)
   const timeoutMs = Number.isFinite(timeout) && timeout >= 1000 && timeout <= 90_000 ? timeout : DEFAULT_TIMEOUT_MS
@@ -131,25 +158,20 @@ async function completeWithProvider(input: AiCompletionInput, provider: AiProvid
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        ...(provider === 'mimo' ? { 'api-key': config.apiKey } : { Authorization: `Bearer ${config.apiKey}` }),
+        Authorization: `Bearer ${config.apiKey}`,
       },
-      body: JSON.stringify({
-        model: config.model,
-        messages: input.messages,
-        stream: false,
-        temperature: 0.4,
-        thinking: { type: 'disabled' },
-        ...(provider === 'mimo' ? { max_completion_tokens: input.maxTokens ?? 2048 } : { max_tokens: input.maxTokens ?? 2048 }),
-        ...(input.json ? { response_format: { type: 'json_object' } } : {}),
-      }),
+      body: JSON.stringify(requestBody(input, config.model, config.vendor, input.maxTokens ?? 2048)),
     })
     if (!response.ok) {
       await response.body?.cancel()
       if (response.status === 401 || response.status === 403) throw new AiClientError('AI_AUTHENTICATION_FAILED', 503)
       throw new AiClientError(response.status === 429 ? 'AI_RATE_LIMITED' : 'AI_PROVIDER_ERROR', response.status === 429 ? 429 : 502)
     }
-    const content = extractContent(await readResponse(response), input.json === true)
-    return { content, provider, model: config.model }
+    const payload = await readResponse(response)
+    const content = extractContent(payload, input.json === true)
+    return {
+      content, provider: preset, vendor: config.vendor, model: config.model, usage: extractTokenUsage(payload),
+    }
   } catch (error) {
     if (input.signal?.aborted) throw new AiClientError('AI_CANCELLED', 499)
     if (timedOut) throw new AiClientError('AI_TIMEOUT', 504)
@@ -164,28 +186,14 @@ async function completeWithProvider(input: AiCompletionInput, provider: AiProvid
 export const aiClient = {
   status() {
     return {
-      providers: AI_PROVIDERS.map((id) => {
-        try {
-          providerConfig(id)
-          return { id, available: true }
-        } catch {
-          return { id, available: false }
-        }
-      }),
-      fallbackEnabled: process.env.AI_FALLBACK_ENABLED === 'true',
+      providers: listPresetStatus(),
+      fallbackEnabled: false,
     }
   },
 
   async complete(input: AiCompletionInput): Promise<AiCompletion> {
     validateInput(input)
-    try {
-      return await completeWithProvider(input, input.provider)
-    } catch (error) {
-      const fallback = input.provider === 'deepseek' ? 'mimo' : 'deepseek'
-      const available = this.status().providers.find((provider) => provider.id === fallback)?.available
-      if (!(error instanceof AiClientError) || !['AI_PROVIDER_ERROR', 'AI_RATE_LIMITED', 'AI_TIMEOUT'].includes(error.code)
-        || process.env.AI_FALLBACK_ENABLED !== 'true' || !available) throw error
-      return completeWithProvider(input, fallback)
-    }
+    if (!presetAvailable(input.provider)) throw new AiClientError('AI_UNAVAILABLE', 503)
+    return completeWithPreset(input, input.provider)
   },
 }

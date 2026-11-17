@@ -18,7 +18,7 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
 vi.mock('../ai-access.js', () => ({ authorizeAi: authorize, withAiQuota: quota }))
 vi.mock('../../lib/ai-client.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../lib/ai-client.js')>()),
-  aiClient: { complete, status: () => ({ providers: [{ id: 'deepseek', available: true }], fallbackEnabled: false }) },
+  aiClient: { complete, status: () => ({ providers: [{ id: 'balanced', available: true }], fallbackEnabled: false }) },
 }))
 vi.mock('../../lib/rag-service.js', () => ({ ragService: { build } }))
 
@@ -44,7 +44,7 @@ describe('timeline fill generation gates', () => {
         eras: [{ name: 'Era imperial', startDate: '1' }],
         events: [{ title: 'Coronación', description: 'Ada corona al rey.', eraName: 'Era imperial', characterNames: ['Ada'] }],
       }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
   })
@@ -85,7 +85,7 @@ describe('timeline fill generation gates', () => {
         eras: [],
         events: [{ title: 'Coronación', description: 'No debe aplicar', date: 'Año 3' }],
       }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await fillTimeline('p1', 'u1', {})

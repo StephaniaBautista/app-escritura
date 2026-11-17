@@ -1,0 +1,38 @@
+{
+  "title": "Exportar",
+  "description": "Exporta «{{title}}» al formato que necesites.",
+  "close": "Cerrar",
+  "download": "Descargar",
+  "downloaded": "Exportación descargada",
+  "copied": "HTML copiado al portapapeles",
+  "failed": "No se pudo exportar",
+  "downloadHint": "El archivo se descarga a tu equipo.",
+  "includeChildren": "Incluir capítulos y subpáginas",
+  "copyHtml": "Copiar HTML",
+  "preview": "Vista previa del HTML",
+  "ao3PasteHint": "AO3 no admite login desde aquí: copia el HTML y pégalo en el editor rico de tu obra.",
+  "ao3OptionsTitle": "Tipografía AO3",
+  "fontFamily": "Tipografía",
+  "fontSerif": "Serif",
+  "fontSans": "Sans",
+  "fontMono": "Monoespaciada",
+  "fontSize": "Tamaño",
+  "lineSpacing": "Interlineado",
+  "paragraphStyle": "Párrafos",
+  "paragraphBlock": "Salto en blanco",
+  "paragraphIndent": "Sangría",
+  "sceneSeparator": "Separador de escena",
+  "includeTitle": "Incluir título",
+  "format": {
+    "pdf": "PDF",
+    "md": "Markdown",
+    "html": "HTML",
+    "ao3": "AO3"
+  },
+  "formatDesc": {
+    "pdf": "Lectura e impresión",
+    "md": "Texto plano con formato",
+    "html": "Documento con CSS",
+    "ao3": "Listo para pegar"
+  }
+}

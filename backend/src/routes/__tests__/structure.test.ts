@@ -26,6 +26,7 @@ vi.mock('../../lib/session.js', () => ({ getSessionUser: mocks.getSessionUser })
 vi.mock('../../services/structure-service.js', () => ({ structureService: mocks.structureService }))
 
 import { structureRoutes } from '../structure.js'
+import { SubplotNotInProjectError } from '../../lib/subplot-errors.js'
 
 async function buildApp() {
   const app = Fastify()
@@ -173,6 +174,20 @@ describe('structureRoutes', () => {
       payload: { title: 'Escena 1', cardType: 'inexistente' },
     })
     expect(res.statusCode).toBe(400)
+    await app.close()
+  })
+
+  it('PUT /cards/:id: acepta subplotId y devuelve 400 SUBPLOT_NOT_IN_PROJECT si el service lo rechaza', async () => {
+    mocks.structureService.updateCard.mockResolvedValueOnce({ ...cardRow, subplotId: 'sub-1' })
+    const app = await buildApp()
+    const ok = await app.inject({ method: 'PUT', url: '/api/cards/card-1', payload: { subplotId: 'sub-1' } })
+    expect(ok.statusCode).toBe(200)
+    expect(mocks.structureService.updateCard).toHaveBeenCalledWith('card-1', 'user-1', { subplotId: 'sub-1' })
+
+    mocks.structureService.updateCard.mockRejectedValueOnce(new SubplotNotInProjectError())
+    const bad = await app.inject({ method: 'PUT', url: '/api/cards/card-1', payload: { subplotId: 'sub-ajena' } })
+    expect(bad.statusCode).toBe(400)
+    expect(bad.json().error.code).toBe('SUBPLOT_NOT_IN_PROJECT')
     await app.close()
   })
 

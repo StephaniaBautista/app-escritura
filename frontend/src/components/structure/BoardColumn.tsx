@@ -3,6 +3,8 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Pencil, Plus, Trash2 } from 'lucide-react'
 import type { StructureCard, StructureColumn } from '@/types/structure'
+import { useStructureStore } from '@/stores/structure-store'
+import { filterVisibleSubplotItems } from '@/lib/subplot-visibility'
 import { BoardCard } from './BoardCard'
 
 interface BoardColumnProps {
@@ -19,7 +21,10 @@ export function BoardColumn({ column, onAddCard, onEditCard, onRenameColumn, onD
     id: column.id,
     data: { type: 'column', column },
   })
-  const cards = column.cards ?? []
+  const subplots = useStructureStore((state) => state.subplots)
+  const hiddenSubplotIds = useStructureStore((state) => state.hiddenSubplotIds)
+  const cards = filterVisibleSubplotItems(column.cards ?? [], hiddenSubplotIds)
+  const subplotById = new Map(subplots.map((subplot) => [subplot.id, subplot]))
 
   return (
     <div
@@ -82,7 +87,12 @@ export function BoardColumn({ column, onAddCard, onEditCard, onRenameColumn, onD
       <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-24">
         <SortableContext items={cards.map((card) => card.id)} strategy={verticalListSortingStrategy}>
           {cards.map((card) => (
-            <BoardCard key={card.id} card={card} onEdit={onEditCard} />
+            <BoardCard
+              key={card.id}
+              card={card}
+              subplot={card.subplotId ? subplotById.get(card.subplotId) ?? null : null}
+              onEdit={onEditCard}
+            />
           ))}
         </SortableContext>
         {cards.length === 0 && (

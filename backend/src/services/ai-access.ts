@@ -28,7 +28,20 @@ export interface AiGenerationBudget {
   consumeRetry: () => Promise<void>
 }
 
+async function isQuotaExempt(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } })
+  return user?.role === 'superadmin'
+}
+
 export async function withAiQuota<T>(userId: string, operation: (budget: AiGenerationBudget) => Promise<T>): Promise<T> {
+  if (await isQuotaExempt(userId)) {
+    const controller = new AbortController()
+    return operation({
+      signal: controller.signal,
+      consumeRetry: async () => {},
+    })
+  }
+
   const now = new Date()
   const leaseToken = randomUUID()
   const available = { OR: [{ leaseUntil: null }, { leaseUntil: { lte: now } }] }

@@ -7,8 +7,25 @@ export interface AutoVersionConfig {
   monthly: { enabled: boolean; intervalMs: number }
 }
 
+export interface AiToolPresets {
+  review?: string
+  wizard?: string
+  timeline?: string
+  characters?: string
+}
+
+export interface AiModeStatus {
+  id: string
+  available: boolean
+  trainsData: boolean
+  comingSoon: boolean
+}
+
 export interface UiPrefs {
   dismissAiStructureWarning?: boolean
+  dismissedAiTrainingModes?: string[]
+  reviewEnabledByDefault?: boolean
+  aiToolPresets?: AiToolPresets
 }
 
 export interface UserSettings {
@@ -18,6 +35,7 @@ export interface UserSettings {
   language: string
   autoVersion: AutoVersionConfig
   uiPrefs: UiPrefs
+  aiModes?: AiModeStatus[]
 }
 
 export interface UpdateSettingsInput {

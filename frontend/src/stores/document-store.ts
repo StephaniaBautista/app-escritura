@@ -33,6 +33,7 @@ interface DocumentState {
   updateDocument: (id: string, data: { title?: string; content?: Record<string, unknown> }) => Promise<void>
   deleteDocument: (id: string) => Promise<void>
   duplicateDocument: (id: string) => Promise<Document>
+  reorderDocuments: (parentId: string | null, documentIds: string[]) => Promise<void>
 
   quickCreateDocument: () => Promise<Document>
 
@@ -61,6 +62,8 @@ function getActiveBranchIdForDocument(documentId: string): string | undefined {
   return active?.documentId === documentId ? active.id : undefined
 }
 
+let loadDocumentSeq = 0
+
 export const useDocumentStore = create<DocumentState>()((set, get) => ({
   projects: [],
   currentProject: null,
@@ -88,7 +91,8 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   selectProject: async (projectId: string) => {
     set({ isLoading: true, error: null })
     const cached = get().projects.find((p) => p.id === projectId)
-    if (cached) {
+    const isSameProject = get().currentProject?.id === projectId
+    if (cached && !isSameProject) {
       set({ currentProject: cached, documentTree: [] })
     }
     try {
@@ -167,12 +171,15 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
   },
 
   loadDocument: async (id: string) => {
+    const seq = ++loadDocumentSeq
     set({ isLoading: true, error: null })
     try {
       const doc = await documentsApi.getById(id)
+      if (seq !== loadDocumentSeq) return
       set({ currentDocument: doc, isLoading: false })
     } catch (error: unknown) {
-      set({ error: getErrorMessage(error), isLoading: false })
+      if (seq !== loadDocumentSeq) return
+      set({ currentDocument: null, error: getErrorMessage(error), isLoading: false })
     }
   },
 
@@ -225,6 +232,25 @@ export const useDocumentStore = create<DocumentState>()((set, get) => ({
       set({ error: message })
       useToastStore.getState().error(message)
       throw error
+    }
+  },
+
+  reorderDocuments: async (parentId: string | null, documentIds: string[]) => {
+    const projectId = get().currentProject?.id
+    if (!projectId) return
+    const snapshot = get().documentTree
+    set({
+      documentTree: snapshot.map((doc) => {
+        const index = documentIds.indexOf(doc.id)
+        return index >= 0 ? { ...doc, order: index } : doc
+      }),
+    })
+    try {
+      const tree = await documentsApi.reorder(projectId, parentId, documentIds)
+      set({ documentTree: tree })
+    } catch (error: unknown) {
+      set({ documentTree: snapshot, error: getErrorMessage(error) })
+      useToastStore.getState().error(i18n.t('editorApp.errorReorderTabs'))
     }
   },
 

@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { Routes, Route } from 'react-router'
 import { useAuthStore } from '@/stores/auth-store'
+import { useSettingsStore } from '@/stores/settings-store'
 import { settingsApi } from '@/services/settings'
 import { applySavedLanguage } from '@/i18n/language'
 import { I18nBoundary } from '@/components/ui/I18nBoundary'
@@ -19,19 +20,23 @@ import { DocumentsPage } from '@/pages/dashboard/DocumentsPage'
 import { FolderPage } from '@/pages/dashboard/FolderPage'
 import { RecentPage } from '@/pages/dashboard/RecentPage'
 import { SharedPage } from '@/pages/dashboard/SharedPage'
+import { SharedDocumentPage } from '@/pages/shared/SharedDocumentPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { AdminPage } from '@/pages/admin/AdminPage'
 
 const StatsDashboard = lazy(() => import('@/components/stats/StatsDashboard').then((module) => ({ default: module.StatsDashboard })))
+const AiCharactersDashboard = lazy(() => import('@/components/characters/AiCharactersDashboard').then((module) => ({ default: module.AiCharactersDashboard })))
 const STATS_NS = ['statsApp', 'common']
+const AI_CHARACTERS_NS = ['characterApp', 'aiApp', 'common']
 
 const LANDING_NS = ['nav', 'hero', 'features', 'editor', 'characters', 'timeline', 'worldbuilding', 'ai', 'structure', 'stats', 'exportSection', 'pricing', 'cta', 'footer', 'comparison', 'faq', 'common']
 const PRICING_NS = ['pricing', 'pricingPage', 'comparison', 'faq', 'cta', 'ai', 'nav', 'footer', 'common']
 const AUTH_NS = ['auth', 'common']
 const SHELL_NS = ['sidebar', 'admin', 'settings', 'common']
-const DOCUMENTS_NS = ['projects', 'storySetup', 'common']
-const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'worldApp', 'structureApp', 'aiApp', 'common']
-const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'aiApp', 'common']
+const DOCUMENTS_NS = ['projects', 'storySetup', 'tagsApp', 'common']
+const FOLDER_NS = ['folder', 'notes', 'versions', 'storySetup', 'characterApp', 'timelineApp', 'diagramApp', 'worldApp', 'structureApp', 'exportApp', 'tagsApp', 'sharingApp', 'common']
+const EDITOR_NS = ['editorApp', 'sidebar', 'notes', 'postit', 'versions', 'branches', 'aiApp', 'exportApp', 'common']
+const SHARED_NS = ['sharingApp', 'common']
 
 function App() {
   const { checkSession, isInitialized, isAuthenticated } = useAuthStore()
@@ -46,7 +51,10 @@ function App() {
     if (!isInitialized) return
     if (useAuthStore.getState().isAuthenticated) {
       settingsApi.get()
-        .then((settings) => applySavedLanguage(settings.language))
+        .then((settings) => {
+          useSettingsStore.setState({ settings, loading: false, error: null })
+          applySavedLanguage(settings.language)
+        })
         .catch(() => applySavedLanguage())
     }
   }, [isInitialized, isAuthenticated])
@@ -60,6 +68,7 @@ function App() {
         <Route path="/register" element={<I18nBoundary key="register" namespaces={AUTH_NS}><Register /></I18nBoundary>} />
         <Route path="/forgot-password" element={<I18nBoundary key="forgot-password" namespaces={AUTH_NS}><ForgotPassword /></I18nBoundary>} />
         <Route path="/reset-password" element={<I18nBoundary key="reset-password" namespaces={AUTH_NS}><ResetPassword /></I18nBoundary>} />
+        <Route path="/shared/:token" element={<I18nBoundary key="shared-doc" namespaces={SHARED_NS}><SharedDocumentPage /></I18nBoundary>} />
         <Route
           path="/app"
           element={
@@ -71,10 +80,11 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="documents" element={<I18nBoundary key="documents" namespaces={DOCUMENTS_NS}><DocumentsPage /></I18nBoundary>} />
           <Route path="documents/:folderId" element={<I18nBoundary key="folder" namespaces={FOLDER_NS}><FolderPage /></I18nBoundary>} />
+          <Route path="ai-characters" element={<I18nBoundary key="ai-characters" namespaces={AI_CHARACTERS_NS}><AiCharactersDashboard /></I18nBoundary>} />
           <Route path="stats" element={<I18nBoundary key="stats" namespaces={STATS_NS}><StatsDashboard /></I18nBoundary>} />
           <Route path="recent" element={<RecentPage />} />
-          <Route path="shared" element={<SharedPage />} />
-          <Route path="settings" element={<SettingsPage />} />
+          <Route path="shared" element={<I18nBoundary key="shared-with-me" namespaces={SHARED_NS}><SharedPage /></I18nBoundary>} />
+          <Route path="settings" element={<I18nBoundary key="settings" namespaces={['settings', 'aiApp', 'common']}><SettingsPage /></I18nBoundary>} />
           <Route
             path="admin"
             element={

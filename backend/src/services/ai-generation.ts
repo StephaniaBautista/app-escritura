@@ -1,22 +1,38 @@
-import { aiClient, AiClientError, type AiCompletionInput } from '../lib/ai-client.js'
+import { aiClient, AiClientError, AI_MAX_INPUT_CHARS, AI_REPAIR_INSTRUCTION, type AiCompletionInput } from '../lib/ai-client.js'
+import { recordAiUsage } from '../lib/ai-usage.js'
 import type { AiGenerationBudget } from './ai-access.js'
 import { AiServiceError } from './ai-types.js'
 
-const repairInstruction = 'The response did not satisfy the required JSON contract. Answer the original request using the same supplied evidence and the exact JSON object schema in the system instructions. Start with { and end with }. Return JSON only, never whitespace, markdown or narrative prose. Use short strings, stay within every item and character limit, and include all required fields. For character suggestions, return only complete field/value/documentId/quote candidates with exact documentary evidence; omit entire ambiguous or non-actionable suggestions. Never invent evidence to satisfy the format.'
+function withRepairInstruction(messages: AiCompletionInput['messages']): AiCompletionInput['messages'] {
+  const total = messages.reduce((sum, message) => sum + message.content.length, 0)
+  if (total + AI_REPAIR_INSTRUCTION.length + 1 > AI_MAX_INPUT_CHARS) return messages
+  return [...messages, { role: 'user', content: AI_REPAIR_INSTRUCTION }]
+}
 
 export async function generateValidated<T>(
-  input: Omit<AiCompletionInput, 'signal'>,
+  input: Omit<AiCompletionInput, 'signal'> & { userId?: string },
   budget: AiGenerationBudget,
   validate: (content: string) => T,
 ) {
+  const { userId, ...completionInput } = input
   for (let attempt = 0; attempt < 2; attempt++) {
     if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)
     try {
       const completion = await aiClient.complete({
-        ...input, signal: budget.signal,
-        messages: attempt === 0 ? input.messages : [...input.messages, { role: 'user', content: repairInstruction }],
+        ...completionInput, signal: budget.signal,
+        messages: attempt === 0 ? completionInput.messages : withRepairInstruction(completionInput.messages),
       })
       if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)
+      if (userId && completion.vendor) {
+        await recordAiUsage({
+          userId,
+          preset: completion.provider,
+          vendor: completion.vendor,
+          model: completion.model,
+          promptTokens: completion.usage?.promptTokens ?? 0,
+          completionTokens: completion.usage?.completionTokens ?? 0,
+        }).catch(() => undefined)
+      }
       return { completion, value: validate(completion.content) }
     } catch (error) {
       if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)

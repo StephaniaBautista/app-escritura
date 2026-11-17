@@ -179,7 +179,7 @@ async function seed(prisma: PrismaClient, fixture: Fixture): Promise<SeedIds> {
       userId, projectId: project.id, mode: 'adviser', title: 'Conversación de prueba guardada', expiresAt: new Date(now + 86_400_000),
       messages: { create: [
         { role: 'user', content: '¿Qué conflicto tiene Aurora?', requestId: 'fixture-history', requestHash: 'fixture-history', createdAt: new Date(now) },
-        { role: 'assistant', content: '• Aurora quiere reparar el faro, pero teme las alturas. ¿Cómo afecta ese miedo a sus decisiones?', requestId: 'fixture-history', requestHash: 'fixture-history', provider: 'deepseek', model: 'synthetic-fixture', createdAt: new Date(now + 1), sources: [{ id: `document:${chapter.id}`, type: 'document', title: chapter.title, excerpt: 'Aurora es cartógrafa y teme las alturas.' }] },
+        { role: 'assistant', content: '• Aurora quiere reparar el faro, pero teme las alturas. ¿Cómo afecta ese miedo a sus decisiones?', requestId: 'fixture-history', requestHash: 'fixture-history', provider: 'balanced', model: 'synthetic-fixture', createdAt: new Date(now + 1), sources: [{ id: `document:${chapter.id}`, type: 'document', title: chapter.title, excerpt: 'Aurora es cartógrafa y teme las alturas.' }] },
       ] },
     } })
     return { projectId: project.id, deniedProjectId: denied.id, rootDocumentId: root.id, chapterId: chapter.id, secondChapterId: second.id, characterId: character.id, subplotId: subplot.id, historyConversationId: conversation.id }

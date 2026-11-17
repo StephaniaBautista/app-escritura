@@ -4,13 +4,13 @@ import { BoardPanel } from '../BoardPanel'
 import { useAiStore } from '@/stores/ai-store'
 import { useStructureStore } from '@/stores/structure-store'
 import { capabilities } from '@/components/ai/__tests__/fixtures'
-import { structureApi } from '@/services/structure'
+import { structureApi, subplotsApi } from '@/services/structure'
 import { aiApi } from '@/services/ai'
 import type { StructureBoard } from '@/types/structure'
 
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, values?: Record<string, unknown>) => values?.count === undefined ? key : `${key} ${values.count}`, i18n: { language: 'es' } }) }))
 vi.mock('@/i18n', () => ({ default: { t: (key: string) => key } }))
-vi.mock('@/services/structure', async (importOriginal) => ({ ...await importOriginal<typeof import('@/services/structure')>(), structureApi: { listBoards: vi.fn(), syncChapters: vi.fn() } }))
+vi.mock('@/services/structure', async (importOriginal) => ({ ...await importOriginal<typeof import('@/services/structure')>(), structureApi: { listBoards: vi.fn(), syncChapters: vi.fn() }, subplotsApi: { list: vi.fn() } }))
 vi.mock('@/services/ai', async (importOriginal) => ({ ...await importOriginal<typeof import('@/services/ai')>(), aiApi: { capabilities: vi.fn(), analyze: vi.fn() } }))
 vi.mock('@/components/ai/StructureSuggestions', () => ({ StructureSuggestions: () => null }))
 
@@ -35,9 +35,11 @@ beforeEach(() => {
     projectId: null,
     isLoadingBoards: false,
     subplots: [],
+    hiddenSubplotIds: [],
     isLoadingSubplots: false,
   })
   vi.mocked(structureApi.listBoards).mockResolvedValue([board])
+  vi.mocked(subplotsApi.list).mockResolvedValue([])
   vi.mocked(aiApi.capabilities).mockResolvedValue(capabilities)
 })
 
@@ -60,5 +62,11 @@ describe('BoardPanel', () => {
     await waitFor(() => expect(screen.getByTestId('structure-board-toolbar')).toBeVisible())
     expect(screen.getByText('structureApp.boardSubtitle')).toBeVisible()
     expect(screen.getByRole('button', { name: 'structureApp.addColumn' })).toBeVisible()
+  })
+
+  it('shows the subplots layer button in the toolbar and loads subplots', async () => {
+    render(<BoardPanel projectId="project-1" />)
+    await waitFor(() => expect(screen.getByTestId('subplots-layer-button')).toBeVisible())
+    expect(subplotsApi.list).toHaveBeenCalledWith('project-1')
   })
 })

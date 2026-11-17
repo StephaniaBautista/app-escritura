@@ -404,6 +404,7 @@ export const ModelName = {
   Project: 'Project',
   Folder: 'Folder',
   Document: 'Document',
+  AiDocumentChunk: 'AiDocumentChunk',
   Note: 'Note',
   DocumentVersion: 'DocumentVersion',
   Branch: 'Branch',
@@ -436,9 +437,14 @@ export const ModelName = {
   AiConversation: 'AiConversation',
   AiMessage: 'AiMessage',
   AiUsage: 'AiUsage',
+  AiUsageEvent: 'AiUsageEvent',
   WritingStats: 'WritingStats',
   WritingSession: 'WritingSession',
-  WritingActivityClock: 'WritingActivityClock'
+  WritingActivityClock: 'WritingActivityClock',
+  Tag: 'Tag',
+  SharedLink: 'SharedLink',
+  SharedComment: 'SharedComment',
+  SharedView: 'SharedView'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -454,7 +460,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "loreEntry" | "race" | "glossaryEntry" | "creature" | "location" | "worldRoute" | "mapBoard" | "diagram" | "timelineEra" | "timelineEvent" | "characterRelationship" | "storyOption" | "storyQuestion" | "storyTemplate" | "activity" | "role" | "characterOption" | "storySection" | "structureBoard" | "structureColumn" | "structureCard" | "subplot" | "aiConversation" | "aiMessage" | "aiUsage" | "writingStats" | "writingSession" | "writingActivityClock"
+    modelProps: "user" | "session" | "account" | "verification" | "project" | "folder" | "document" | "aiDocumentChunk" | "note" | "documentVersion" | "branch" | "versionParent" | "userSettings" | "character" | "world" | "loreEntry" | "race" | "glossaryEntry" | "creature" | "location" | "worldRoute" | "mapBoard" | "diagram" | "timelineEra" | "timelineEvent" | "characterRelationship" | "storyOption" | "storyQuestion" | "storyTemplate" | "activity" | "role" | "characterOption" | "storySection" | "structureBoard" | "structureColumn" | "structureCard" | "subplot" | "aiConversation" | "aiMessage" | "aiUsage" | "aiUsageEvent" | "writingStats" | "writingSession" | "writingActivityClock" | "tag" | "sharedLink" | "sharedComment" | "sharedView"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -973,6 +979,64 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.DocumentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.DocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiDocumentChunk: {
+      payload: Prisma.$AiDocumentChunkPayload<ExtArgs>
+      fields: Prisma.AiDocumentChunkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiDocumentChunkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiDocumentChunkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>
+        }
+        findFirst: {
+          args: Prisma.AiDocumentChunkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiDocumentChunkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>
+        }
+        findMany: {
+          args: Prisma.AiDocumentChunkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>[]
+        }
+        delete: {
+          args: Prisma.AiDocumentChunkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>
+        }
+        update: {
+          args: Prisma.AiDocumentChunkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiDocumentChunkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiDocumentChunkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiDocumentChunkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDocumentChunkPayload>[]
+        }
+        aggregate: {
+          args: Prisma.AiDocumentChunkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiDocumentChunk>
+        }
+        groupBy: {
+          args: Prisma.AiDocumentChunkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiDocumentChunkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiDocumentChunkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiDocumentChunkCountAggregateOutputType> | number
         }
       }
     }
@@ -3344,6 +3408,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AiUsageEvent: {
+      payload: Prisma.$AiUsageEventPayload<ExtArgs>
+      fields: Prisma.AiUsageEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiUsageEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiUsageEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        findFirst: {
+          args: Prisma.AiUsageEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiUsageEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        findMany: {
+          args: Prisma.AiUsageEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>[]
+        }
+        create: {
+          args: Prisma.AiUsageEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        createMany: {
+          args: Prisma.AiUsageEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiUsageEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>[]
+        }
+        delete: {
+          args: Prisma.AiUsageEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        update: {
+          args: Prisma.AiUsageEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiUsageEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiUsageEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiUsageEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.AiUsageEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiUsageEventPayload>
+        }
+        aggregate: {
+          args: Prisma.AiUsageEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiUsageEvent>
+        }
+        groupBy: {
+          args: Prisma.AiUsageEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiUsageEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiUsageEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiUsageEventCountAggregateOutputType> | number
+        }
+      }
+    }
     WritingStats: {
       payload: Prisma.$WritingStatsPayload<ExtArgs>
       fields: Prisma.WritingStatsFieldRefs
@@ -3566,6 +3704,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Tag: {
+      payload: Prisma.$TagPayload<ExtArgs>
+      fields: Prisma.TagFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TagFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TagFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        findFirst: {
+          args: Prisma.TagFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TagFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        findMany: {
+          args: Prisma.TagFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        create: {
+          args: Prisma.TagCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        createMany: {
+          args: Prisma.TagCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TagCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        delete: {
+          args: Prisma.TagDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        update: {
+          args: Prisma.TagUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        deleteMany: {
+          args: Prisma.TagDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TagUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TagUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        upsert: {
+          args: Prisma.TagUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        aggregate: {
+          args: Prisma.TagAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTag>
+        }
+        groupBy: {
+          args: Prisma.TagGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TagGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TagCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TagCountAggregateOutputType> | number
+        }
+      }
+    }
+    SharedLink: {
+      payload: Prisma.$SharedLinkPayload<ExtArgs>
+      fields: Prisma.SharedLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SharedLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SharedLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.SharedLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SharedLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        findMany: {
+          args: Prisma.SharedLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>[]
+        }
+        create: {
+          args: Prisma.SharedLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        createMany: {
+          args: Prisma.SharedLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SharedLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.SharedLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        update: {
+          args: Prisma.SharedLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.SharedLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SharedLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SharedLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.SharedLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.SharedLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSharedLink>
+        }
+        groupBy: {
+          args: Prisma.SharedLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SharedLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedLinkCountAggregateOutputType> | number
+        }
+      }
+    }
+    SharedComment: {
+      payload: Prisma.$SharedCommentPayload<ExtArgs>
+      fields: Prisma.SharedCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SharedCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SharedCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.SharedCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SharedCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        findMany: {
+          args: Prisma.SharedCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>[]
+        }
+        create: {
+          args: Prisma.SharedCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        createMany: {
+          args: Prisma.SharedCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SharedCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.SharedCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        update: {
+          args: Prisma.SharedCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.SharedCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SharedCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SharedCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.SharedCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.SharedCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSharedComment>
+        }
+        groupBy: {
+          args: Prisma.SharedCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SharedCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedCommentCountAggregateOutputType> | number
+        }
+      }
+    }
+    SharedView: {
+      payload: Prisma.$SharedViewPayload<ExtArgs>
+      fields: Prisma.SharedViewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SharedViewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SharedViewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        findFirst: {
+          args: Prisma.SharedViewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SharedViewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        findMany: {
+          args: Prisma.SharedViewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>[]
+        }
+        create: {
+          args: Prisma.SharedViewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        createMany: {
+          args: Prisma.SharedViewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SharedViewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>[]
+        }
+        delete: {
+          args: Prisma.SharedViewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        update: {
+          args: Prisma.SharedViewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        deleteMany: {
+          args: Prisma.SharedViewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SharedViewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SharedViewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>[]
+        }
+        upsert: {
+          args: Prisma.SharedViewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SharedViewPayload>
+        }
+        aggregate: {
+          args: Prisma.SharedViewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSharedView>
+        }
+        groupBy: {
+          args: Prisma.SharedViewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedViewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SharedViewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SharedViewCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3710,6 +4144,22 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const AiDocumentChunkScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  documentId: 'documentId',
+  chunkIndex: 'chunkIndex',
+  content: 'content',
+  contentHash: 'contentHash',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiDocumentChunkScalarFieldEnum = (typeof AiDocumentChunkScalarFieldEnum)[keyof typeof AiDocumentChunkScalarFieldEnum]
 
 
 export const NoteScalarFieldEnum = {
@@ -3985,6 +4435,7 @@ export const TimelineEventScalarFieldEnum = {
   imageUrl: 'imageUrl',
   relatedEventIds: 'relatedEventIds',
   relatedDocumentIds: 'relatedDocumentIds',
+  subplotId: 'subplotId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4128,6 +4579,7 @@ export const StructureCardScalarFieldEnum = {
   cardType: 'cardType',
   referenceId: 'referenceId',
   color: 'color',
+  subplotId: 'subplotId',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -4194,6 +4646,21 @@ export const AiUsageScalarFieldEnum = {
 export type AiUsageScalarFieldEnum = (typeof AiUsageScalarFieldEnum)[keyof typeof AiUsageScalarFieldEnum]
 
 
+export const AiUsageEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  preset: 'preset',
+  vendor: 'vendor',
+  model: 'model',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  costMicros: 'costMicros',
+  createdAt: 'createdAt'
+} as const
+
+export type AiUsageEventScalarFieldEnum = (typeof AiUsageEventScalarFieldEnum)[keyof typeof AiUsageEventScalarFieldEnum]
+
+
 export const WritingStatsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -4231,6 +4698,56 @@ export const WritingActivityClockScalarFieldEnum = {
 } as const
 
 export type WritingActivityClockScalarFieldEnum = (typeof WritingActivityClockScalarFieldEnum)[keyof typeof WritingActivityClockScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  kind: 'kind',
+  createdAt: 'createdAt'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+export const SharedLinkScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  documentId: 'documentId',
+  createdById: 'createdById',
+  includeChildren: 'includeChildren',
+  allowComments: 'allowComments',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SharedLinkScalarFieldEnum = (typeof SharedLinkScalarFieldEnum)[keyof typeof SharedLinkScalarFieldEnum]
+
+
+export const SharedCommentScalarFieldEnum = {
+  id: 'id',
+  sharedLinkId: 'sharedLinkId',
+  blockIndex: 'blockIndex',
+  quote: 'quote',
+  body: 'body',
+  authorName: 'authorName',
+  userId: 'userId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SharedCommentScalarFieldEnum = (typeof SharedCommentScalarFieldEnum)[keyof typeof SharedCommentScalarFieldEnum]
+
+
+export const SharedViewScalarFieldEnum = {
+  sharedLinkId: 'sharedLinkId',
+  userId: 'userId',
+  firstViewedAt: 'firstViewedAt',
+  lastViewedAt: 'lastViewedAt'
+} as const
+
+export type SharedViewScalarFieldEnum = (typeof SharedViewScalarFieldEnum)[keyof typeof SharedViewScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -4513,6 +5030,7 @@ export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   folder?: Prisma.FolderOmit
   document?: Prisma.DocumentOmit
+  aiDocumentChunk?: Prisma.AiDocumentChunkOmit
   note?: Prisma.NoteOmit
   documentVersion?: Prisma.DocumentVersionOmit
   branch?: Prisma.BranchOmit
@@ -4545,9 +5063,14 @@ export type GlobalOmitConfig = {
   aiConversation?: Prisma.AiConversationOmit
   aiMessage?: Prisma.AiMessageOmit
   aiUsage?: Prisma.AiUsageOmit
+  aiUsageEvent?: Prisma.AiUsageEventOmit
   writingStats?: Prisma.WritingStatsOmit
   writingSession?: Prisma.WritingSessionOmit
   writingActivityClock?: Prisma.WritingActivityClockOmit
+  tag?: Prisma.TagOmit
+  sharedLink?: Prisma.SharedLinkOmit
+  sharedComment?: Prisma.SharedCommentOmit
+  sharedView?: Prisma.SharedViewOmit
 }
 
 /* Types for Logging */

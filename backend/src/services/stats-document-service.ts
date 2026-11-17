@@ -1,4 +1,5 @@
 import { countDocumentWords, visibleDocumentText } from '../lib/document-words.js'
+import { ragIndexService } from '../lib/rag-index-service.js'
 import { localDay, normalizeTimeZone } from '../lib/stats-time.js'
 import { writingTransaction } from '../lib/stats-transaction.js'
 import { requireActiveWriter } from './stats-access.js'
@@ -9,7 +10,7 @@ export async function updateWrittenDocument(id: string, userId: string, data: Up
   const now = new Date()
   const wordCount = countDocumentWords(data.content)
   const visibleText = visibleDocumentText(data.content)
-  return writingTransaction(async (tx) => {
+  const updated = await writingTransaction(async (tx) => {
     await requireActiveWriter(tx, userId)
     const document = await tx.document.findFirst({ where: { id, userId, project: { userId } } })
     if (!document) return null
@@ -17,7 +18,7 @@ export async function updateWrittenDocument(id: string, userId: string, data: Up
     if (data.parentId && !await tx.document.findFirst({ where: { id: data.parentId, projectId: document.projectId, userId }, select: { id: true } })) return null
     const oldCount = document.wordCount ?? countDocumentWords(document.content)
     const wordsAdded = visibleText === visibleDocumentText(document.content) ? 0 : Math.max(0, wordCount - oldCount)
-    const updated = await tx.document.update({ where: { id }, data: {
+    const saved = await tx.document.update({ where: { id }, data: {
       title: data.title, content: data.content, folderId: data.folderId, parentId: data.parentId, order: data.order, wordCount,
     } })
     if (wordsAdded > 0) {
@@ -28,6 +29,8 @@ export async function updateWrittenDocument(id: string, userId: string, data: Up
         update: { wordsAdded: { increment: wordsAdded } },
       })
     }
-    return updated
+    return saved
   })
+  if (updated) await ragIndexService.schedule(updated.id, userId)
+  return updated
 }

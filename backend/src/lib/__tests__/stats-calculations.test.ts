@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calculateWritingStats, descendantDocumentIds } from '../stats-calculations.js'
+import { calculateWritingStats, descendantDocumentIds, fillStatsDays, parseStatsRange, resolveStatsRange, statsCalendarRange } from '../stats-calculations.js'
 import { localDay, normalizeTimeZone, shiftDay, splitActivityDays } from '../stats-time.js'
 
 describe('statistics dates and streaks', () => {
@@ -31,23 +31,40 @@ describe('statistics dates and streaks', () => {
       { day: '2026-09-10', wordsAdded: 30, activeMilliseconds: 0 },
       { day: '2026-09-11', wordsAdded: 60, activeMilliseconds: 1500 },
       { day: '2026-09-12', wordsAdded: 0, activeMilliseconds: 2000 },
-    ], '2026-09-12', 30, 500)
+    ], '2026-09-12', parseStatsRange('2026-09-12', { days: 30 })!, 500)
     expect(result.days).toHaveLength(30)
     expect(result.summary).toEqual({ totalWords: 500, wordsAdded: 90, activeSeconds: 3.5, activeDays: 2, currentStreak: 2, longestStreak: 2, dailyAverage: 3, todayWords: 0 })
   })
   it('calculates streaks beyond the visible 365-day range', () => {
     const history = Array.from({ length: 400 }, (_, index) => ({ day: shiftDay('2026-09-12', -399 + index), wordsAdded: 1, activeMilliseconds: 0 }))
-    const result = calculateWritingStats(history, '2026-09-12', 365, 400)
+    const result = calculateWritingStats(history, '2026-09-12', parseStatsRange('2026-09-12', { days: 365 })!, 400)
     expect(result.summary.currentStreak).toBe(400)
     expect(result.summary.longestStreak).toBe(400)
     expect(result.summary.wordsAdded).toBe(365)
     expect(result.trackedSince).toBe(history[0]!.day)
   })
   it('ends the current streak after a missed yesterday', () => {
-    expect(calculateWritingStats([{ day: '2026-09-10', wordsAdded: 1, activeMilliseconds: 0 }], '2026-09-12', 30, 0).summary.currentStreak).toBe(0)
+    expect(calculateWritingStats([{ day: '2026-09-10', wordsAdded: 1, activeMilliseconds: 0 }], '2026-09-12', parseStatsRange('2026-09-12', { days: 30 })!, 0).summary.currentStreak).toBe(0)
   })
   it('returns empty history without fabricated tracking date', () => {
-    expect(calculateWritingStats([], '2026-09-12', 30, 100).trackedSince).toBeNull()
+    expect(calculateWritingStats([], '2026-09-12', parseStatsRange('2026-09-12', { days: 30 })!, 100).trackedSince).toBeNull()
+  })
+  it('accepts an explicit from/to window and rejects incomplete or oversized ranges', () => {
+    expect(parseStatsRange('2026-09-12', { from: '2026-09-10', to: '2026-09-12' })).toEqual({ from: '2026-09-10', to: '2026-09-12' })
+    expect(calculateWritingStats([
+      { day: '2026-09-10', wordsAdded: 10, activeMilliseconds: 0 },
+      { day: '2026-09-11', wordsAdded: 20, activeMilliseconds: 0 },
+    ], '2026-09-12', { from: '2026-09-10', to: '2026-09-11' }, 0).summary.wordsAdded).toBe(30)
+    expect(parseStatsRange('2026-09-12', { from: '2026-09-10' })).toBeNull()
+    expect(parseStatsRange('2026-09-12', { from: '2026-09-13', to: '2026-09-14' })).toBeNull()
+    expect(parseStatsRange('2026-09-12', { from: '2024-01-01', to: '2026-09-12' })).toBeNull()
+    expect(parseStatsRange('2026-09-12', { from: '2026-09-12', to: '2026-09-20' })).toEqual({ from: '2026-09-12', to: '2026-09-12' })
+    expect(parseStatsRange('2026-09-12', { days: 7 })).toEqual({ from: '2026-09-06', to: '2026-09-12' })
+    expect(parseStatsRange('2026-09-12', { days: 60 })).toEqual({ from: '2026-07-15', to: '2026-09-12' })
+    expect(statsCalendarRange('2026-09-12')).toEqual({ from: '2025-09-13', to: '2026-09-12' })
+    expect(fillStatsDays([], statsCalendarRange('2026-09-12'))).toHaveLength(365)
+    expect(resolveStatsRange('2026-09-12', { allTime: true }, '2026-08-01')).toEqual({ from: '2026-08-01', to: '2026-09-12' })
+    expect(resolveStatsRange('2026-09-12', { allTime: true }, null)).toEqual({ from: '2026-09-12', to: '2026-09-12' })
   })
   it('includes descendant chapters and terminates malformed cycles', () => {
     expect(descendantDocumentIds([{ id: 'a', parentId: 'b' }, { id: 'b', parentId: 'a' }, { id: 'c', parentId: 'b' }, { id: 'd', parentId: null }], 'a').sort()).toEqual(['a', 'b', 'c'])

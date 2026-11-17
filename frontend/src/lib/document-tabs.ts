@@ -28,6 +28,9 @@ export function getDocumentTabs(tree: DocumentNode[], activeDocId: string | null
     list.push(d)
     childrenByParent.set(parentKey, list)
   })
+  for (const list of childrenByParent.values()) {
+    list.sort((a, b) => a.order - b.order)
+  }
 
   const result: DocumentNode[] = []
   const visited = new Set<string>()

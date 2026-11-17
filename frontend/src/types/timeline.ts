@@ -52,6 +52,7 @@ export interface TimelineEvent {
   imageUrl: string | null
   relatedEventIds: string[]
   relatedDocumentIds: string[]
+  subplotId: string | null
   createdAt: string
   updatedAt: string
 }
@@ -73,4 +74,5 @@ export interface TimelineEventInput {
   imageUrl?: null
   relatedEventIds?: string[]
   relatedDocumentIds?: string[]
+  subplotId?: string | null
 }

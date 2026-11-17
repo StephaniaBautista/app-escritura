@@ -1,5 +1,3 @@
-import { AiWorkspace } from '@/components/ai/AiWorkspace'
-import { MessageSquare } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
@@ -16,19 +14,22 @@ import { NotesList } from '@/components/notes/NotesList'
 import { VersionsList } from '@/components/versions/VersionsList'
 import { StoryDescriptionSection } from '@/components/story-setup/StoryDescriptionSection'
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
+import { TagManager } from '@/components/tags/TagManager'
 import { CharactersPanel } from '@/components/characters/CharactersPanel'
 import { TimelinePanel } from '@/components/timeline/TimelinePanel'
 import { DiagramsPanel } from '@/components/diagrams/DiagramsPanel'
 import { WorldsPanel } from '@/components/worlds/WorldsPanel'
 import { BoardPanel } from '@/components/structure/BoardPanel'
-import { SubplotsPanel } from '@/components/structure/SubplotsPanel'
 import type { StoryMeta } from '@/types/story'
-import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, GitBranch } from 'lucide-react'
+import { FileText, Plus, Users, Globe, StickyNote, History, Layers, Clock, Download, Trash2, Share2 } from 'lucide-react'
+import { ExportPanel } from '@/components/export/ExportPanel'
+import { ShareDialog } from '@/components/sharing/ShareDialog'
 
 export function FolderPage() {
   const { folderId } = useParams<{ folderId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const activeTab = searchParams.get('tab') || 'documents'
+  const requestedTab = searchParams.get('tab') || 'documents'
+  const activeTab = requestedTab === 'subplots' ? 'structure' : requestedTab
   const { currentProject, documentTree, isLoading, selectProject, createDocument, updateProject, deleteDocument, loadNotes, loadVersions, error } = useDocumentStore()
   const { addActivity } = useActivityStore()
   const { t } = useTranslation()
@@ -37,6 +38,8 @@ export function FolderPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
   const [showWizard, setShowWizard] = useState(false)
+  const [exportTarget, setExportTarget] = useState<{ id: string; title: string } | null>(null)
+  const [shareTarget, setShareTarget] = useState<{ id: string; title: string } | null>(null)
 
   useEffect(() => {
     if (folderId) {
@@ -80,8 +83,6 @@ export function FolderPage() {
   const tabs = [
     { id: 'documents', label: 'Documentos', icon: FileText },
     { id: 'structure', label: t('structureApp.structureTab'), icon: Layers },
-    { id: 'subplots', label: t('structureApp.subplotsTab'), icon: GitBranch },
-    { id: 'ai', label: t('aiApp.title'), icon: MessageSquare },
     { id: 'characters', label: 'Personajes', icon: Users },
     { id: 'timeline', label: t('timelineApp.title'), icon: Clock },
     { id: 'worlds', label: t('worldApp.title'), icon: Globe },
@@ -143,6 +144,12 @@ export function FolderPage() {
             storyMeta={(currentProject.storyMeta ?? {}) as StoryMeta}
             onEdit={() => setShowWizard(true)}
           />
+        )}
+
+        {currentProject && (
+          <div className="notebook-paper p-4 mb-6">
+            <TagManager projectId={currentProject.id} projectTitle={currentProject.name} />
+          </div>
         )}
 
         <div className="flex gap-1 border-b mb-6 overflow-x-auto" style={{ borderColor: 'var(--color-paper-lines)' }}>
@@ -209,7 +216,26 @@ export function FolderPage() {
                       </div>
                     </Link>
                     <div className="absolute top-2 right-2 z-20">
-                      <KebabMenu onDelete={() => setDeleteTarget(doc.id)} />
+                      <KebabMenu
+                        items={[
+                          {
+                            label: t('sharingApp.share'),
+                            icon: Share2,
+                            onClick: () => setShareTarget({ id: doc.id, title: doc.title }),
+                          },
+                          {
+                            label: t('exportApp.title'),
+                            icon: Download,
+                            onClick: () => setExportTarget({ id: doc.id, title: doc.title }),
+                          },
+                          {
+                            label: t('common.delete'),
+                            icon: Trash2,
+                            onClick: () => setDeleteTarget(doc.id),
+                            danger: true,
+                          },
+                        ]}
+                      />
                     </div>
                   </div>
                 ))}
@@ -233,12 +259,6 @@ export function FolderPage() {
         {activeTab === 'structure' && folderId && (
           <BoardPanel projectId={folderId} />
         )}
-
-        {activeTab === 'subplots' && folderId && (
-          <SubplotsPanel projectId={folderId} />
-        )}
-
-        {activeTab === 'ai' && folderId && <AiWorkspace key={folderId} projectId={folderId} />}
 
         {activeTab === 'characters' && folderId && (
           <CharactersPanel projectId={folderId} />
@@ -309,6 +329,24 @@ export function FolderPage() {
         onClose={() => setShowWizard(false)}
         onSaved={() => setShowWizard(false)}
       />
+
+      {exportTarget && (
+        <ExportPanel
+          documentId={exportTarget.id}
+          documentTitle={exportTarget.title}
+          hasChildren={documentTree.some((doc) => doc.parentId === exportTarget.id)}
+          isOpen
+          onClose={() => setExportTarget(null)}
+        />
+      )}
+
+      {shareTarget && (
+        <ShareDialog
+          documentId={shareTarget.id}
+          documentTitle={shareTarget.title}
+          onClose={() => setShareTarget(null)}
+        />
+      )}
     </div>
   )
 }

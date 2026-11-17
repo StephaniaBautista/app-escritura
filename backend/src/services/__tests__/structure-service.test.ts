@@ -7,6 +7,7 @@ const { prismaMock } = vi.hoisted(() => ({
     structureColumn: { findMany: vi.fn(), findFirst: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
     structureCard: { findMany: vi.fn(), findFirst: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
     document: { findMany: vi.fn() },
+    subplot: { findFirst: vi.fn() },
     $transaction: vi.fn((promises: Promise<unknown>[]) => Promise.all(promises)),
   },
 }))
@@ -14,11 +15,12 @@ const { prismaMock } = vi.hoisted(() => ({
 vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
 
 import { structureService } from '../structure-service.js'
+import { SubplotNotInProjectError } from '../../lib/subplot-link.js'
 
 const projectRow = { id: 'proj-1', name: 'Mi novela', userId: 'user-1' }
 const boardRow = { id: 'board-1', projectId: 'proj-1', name: 'Estructura', order: 0, columns: [] }
-const columnRow = { id: 'col-1', boardId: 'board-1', name: 'Inicio', order: 0, color: null, cards: [] }
-const cardRow = { id: 'card-1', columnId: 'col-1', title: 'Escena 1', cardType: 'scene', order: 0 }
+const columnRow = { id: 'col-1', boardId: 'board-1', name: 'Inicio', order: 0, color: null, cards: [], board: { projectId: 'proj-1' } }
+const cardRow = { id: 'card-1', columnId: 'col-1', title: 'Escena 1', cardType: 'scene', order: 0, column: { board: { projectId: 'proj-1' } } }
 
 describe('structureService', () => {
   beforeEach(() => {
@@ -191,6 +193,69 @@ describe('structureService', () => {
       prismaMock.structureCard.findFirst.mockResolvedValue(null)
 
       expect(await structureService.updateCard('card-1', 'user-2', { title: 'X' })).toBeNull()
+      expect(prismaMock.structureCard.update).not.toHaveBeenCalled()
+    })
+
+    it('createCard enlaza la subtrama si pertenece al proyecto', async () => {
+      prismaMock.structureColumn.findFirst.mockResolvedValue(columnRow)
+      prismaMock.subplot.findFirst.mockResolvedValue({ id: 'sub-1' })
+      prismaMock.structureCard.count.mockResolvedValue(0)
+      prismaMock.structureCard.create.mockResolvedValue({ ...cardRow, subplotId: 'sub-1' })
+
+      await structureService.createCard('col-1', 'user-1', { title: 'Escena', subplotId: 'sub-1' })
+
+      expect(prismaMock.subplot.findFirst).toHaveBeenCalledWith({ where: { id: 'sub-1', projectId: 'proj-1' }, select: { id: true } })
+      expect(prismaMock.structureCard.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ subplotId: 'sub-1' }),
+      })
+    })
+
+    it('createCard sin subplotId guarda null y no consulta subtramas', async () => {
+      prismaMock.structureColumn.findFirst.mockResolvedValue(columnRow)
+      prismaMock.structureCard.count.mockResolvedValue(0)
+      prismaMock.structureCard.create.mockResolvedValue(cardRow)
+
+      await structureService.createCard('col-1', 'user-1', { title: 'Escena' })
+
+      expect(prismaMock.subplot.findFirst).not.toHaveBeenCalled()
+      expect(prismaMock.structureCard.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ subplotId: null }),
+      })
+    })
+
+    it('createCard rechaza una subtrama de otro proyecto', async () => {
+      prismaMock.structureColumn.findFirst.mockResolvedValue(columnRow)
+      prismaMock.subplot.findFirst.mockResolvedValue(null)
+
+      await expect(structureService.createCard('col-1', 'user-1', { title: 'X', subplotId: 'sub-ajena' }))
+        .rejects.toBeInstanceOf(SubplotNotInProjectError)
+      expect(prismaMock.structureCard.create).not.toHaveBeenCalled()
+    })
+
+    it('updateCard con subplotId null desasocia y no toca la subtrama si no viene', async () => {
+      prismaMock.structureCard.findFirst.mockResolvedValue(cardRow)
+      prismaMock.structureCard.update.mockResolvedValue(cardRow)
+
+      await structureService.updateCard('card-1', 'user-1', { subplotId: null })
+      expect(prismaMock.structureCard.update).toHaveBeenCalledWith({
+        where: { id: 'card-1' },
+        data: expect.objectContaining({ subplotId: null }),
+      })
+
+      await structureService.updateCard('card-1', 'user-1', { title: 'Otro' })
+      expect(prismaMock.structureCard.update).toHaveBeenLastCalledWith({
+        where: { id: 'card-1' },
+        data: expect.objectContaining({ subplotId: undefined }),
+      })
+      expect(prismaMock.subplot.findFirst).not.toHaveBeenCalled()
+    })
+
+    it('updateCard rechaza una subtrama de otro proyecto', async () => {
+      prismaMock.structureCard.findFirst.mockResolvedValue(cardRow)
+      prismaMock.subplot.findFirst.mockResolvedValue(null)
+
+      await expect(structureService.updateCard('card-1', 'user-1', { subplotId: 'sub-ajena' }))
+        .rejects.toBeInstanceOf(SubplotNotInProjectError)
       expect(prismaMock.structureCard.update).not.toHaveBeenCalled()
     })
 

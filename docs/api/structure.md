@@ -20,11 +20,23 @@ Base: `/api`. Todas las rutas requieren sesión BetterAuth y un proyecto del usu
 | `PUT /columns/:id` | Actualiza columna |
 | `DELETE /columns/:id` | Elimina columna y tarjetas |
 | `PUT /boards/:boardId/columns/reorder` | Reordena columnas (`columnIds`) |
-| `POST /columns/:columnId/cards` | Crea tarjeta (`cardType`: scene/chapter/character/document/note) |
-| `PUT /cards/:id` | Actualiza tarjeta |
+| `POST /columns/:columnId/cards` | Crea tarjeta (`cardType`: scene/chapter/character/document/note; `subplotId?` opcional) |
+| `PUT /cards/:id` | Actualiza tarjeta (`subplotId: null` desasocia la subtrama) |
 | `DELETE /cards/:id` | Elimina tarjeta |
 | `PUT /columns/:columnId/cards/reorder` | Reordena tarjetas en columna |
 | `PUT /cards/:id/move` | Mueve tarjeta a otra columna (`toColumnId`, `toIndex`) |
+
+## Subtramas (capa fantasma)
+
+| Método y ruta | Descripción |
+| --- | --- |
+| `GET /projects/:projectId/subplots` | Lista subtramas ordenadas por `order` |
+| `POST /projects/:projectId/subplots` | Crea subtrama (`title`, `description?`, `status`: active/resolved/dropped, `color?`) |
+| `PUT /subplots/:id` | Actualiza subtrama |
+| `DELETE /subplots/:id` | Elimina subtrama; sus tarjetas y eventos quedan con `subplotId = null` (SetNull) |
+| `PUT /projects/:projectId/subplots/reorder` | Reordena (`subplotIds`) |
+
+Tarjetas (`StructureCard`) y eventos de línea de tiempo (`TimelineEvent`) aceptan `subplotId: string | null`. La subtrama debe pertenecer al mismo proyecto; si no, la ruta responde `400 { error: { code: 'SUBPLOT_NOT_IN_PROJECT' } }`. Omitir el campo no lo modifica. En la UI los ítems con `subplotId` se dibujan como «fantasmas» dentro de la trama principal y se pueden ocultar por subtrama (estado en memoria, no persistido).
 
 ## IA — orden sugerido
 

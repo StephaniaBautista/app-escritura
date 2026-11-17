@@ -51,6 +51,8 @@
   "addSubtab": "Add subtab",
   "rename": "Rename",
   "renameTab": "Rename tab",
+  "reorderTab": "Reorder tab",
+  "errorReorderTabs": "Could not reorder tabs",
   "tabName": "Tab name...",
   "duplicate": "Duplicate",
   "duplicated": "Tab duplicated",

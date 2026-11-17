@@ -27,12 +27,18 @@ describe('owned statistics scopes', () => {
     expect(db.writingStats.groupBy).toHaveBeenCalledWith(expect.objectContaining({ where: { userId: 'user', documentId: { in: ['root', 'chapter', 'subpage'] } } }))
     expect(result.summary.totalWords).toBe(100)
     expect(result.documents[1]?.parentId).toBe('root')
+    expect(result.days).toHaveLength(30)
+    expect(result.calendar.days).toHaveLength(365)
   })
   it('keeps deleted-document history in account and project totals', async () => {
     db.writingStats.groupBy.mockResolvedValue([{ day: '2026-09-12', _sum: { wordsAdded: 50, activeMilliseconds: 1000 } }])
     const result = await statsService.get('user', { projectId: 'project' })
     expect(db.writingStats.groupBy).toHaveBeenCalledWith(expect.objectContaining({ where: { userId: 'user', projectId: 'project' } }))
     expect(result.trackedSince).toBe('2026-09-12')
+  })
+  it('rejects an incomplete date range before loading history', async () => {
+    await expect(statsService.get('user', { from: '2026-09-01' })).rejects.toMatchObject({ statusCode: 400, code: 'STATS_INVALID_INPUT' })
+    expect(db.writingStats.groupBy).not.toHaveBeenCalled()
   })
   it('rejects unknown or foreign filter ids before loading history', async () => {
     await expect(statsService.get('user', { documentId: 'foreign' })).rejects.toMatchObject({ statusCode: 404 })

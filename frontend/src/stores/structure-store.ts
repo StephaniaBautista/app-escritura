@@ -6,6 +6,7 @@ import type {
   Subplot, SubplotInput,
 } from '@/types/structure'
 import { structureApi, subplotsApi } from '@/services/structure'
+import { toggleHiddenSubplot } from '@/lib/subplot-visibility'
 import { useToastStore } from './toast-store'
 import i18n from '@/i18n'
 
@@ -14,6 +15,7 @@ interface StructureState {
   activeBoardId: string | null
   projectId: string | null
   subplots: Subplot[]
+  hiddenSubplotIds: string[]
   isLoadingBoards: boolean
   isLoadingSubplots: boolean
 
@@ -39,6 +41,8 @@ interface StructureState {
   updateSubplot: (id: string, data: SubplotInput) => Promise<Subplot | null>
   removeSubplot: (id: string) => Promise<void>
   reorderSubplots: (projectId: string, subplotIds: string[]) => Promise<void>
+  toggleSubplotVisibility: (id: string) => void
+  setAllSubplotsVisible: (visible: boolean) => void
 }
 
 function getErrorMessage(error: unknown): string {
@@ -119,6 +123,7 @@ export const useStructureStore = create<StructureState>()((set, get) => {
     activeBoardId: null,
     projectId: null,
     subplots: [],
+    hiddenSubplotIds: [],
     isLoadingBoards: false,
     isLoadingSubplots: false,
 
@@ -326,7 +331,12 @@ export const useStructureStore = create<StructureState>()((set, get) => {
       set({ isLoadingSubplots: true, projectId })
       try {
         const subplots = await subplotsApi.list(projectId)
-        set({ subplots, isLoadingSubplots: false })
+        const ids = new Set(subplots.map((subplot) => subplot.id))
+        set((state) => ({
+          subplots,
+          isLoadingSubplots: false,
+          hiddenSubplotIds: state.hiddenSubplotIds.filter((id) => ids.has(id)),
+        }))
       } catch (err: unknown) {
         set({ isLoadingSubplots: false })
         useToastStore.getState().error(getErrorMessage(err))
@@ -358,10 +368,28 @@ export const useStructureStore = create<StructureState>()((set, get) => {
     async removeSubplot(id) {
       try {
         await subplotsApi.delete(id)
-        set({ subplots: get().subplots.filter((item) => item.id !== id) })
+        set((state) => ({
+          subplots: state.subplots.filter((item) => item.id !== id),
+          hiddenSubplotIds: state.hiddenSubplotIds.filter((hidden) => hidden !== id),
+          boards: state.boards.map((board) => ({
+            ...board,
+            columns: (board.columns ?? []).map((column) => ({
+              ...column,
+              cards: (column.cards ?? []).map((card) => (card.subplotId === id ? { ...card, subplotId: null } : card)),
+            })),
+          })),
+        }))
       } catch (err: unknown) {
         useToastStore.getState().error(getErrorMessage(err))
       }
+    },
+
+    toggleSubplotVisibility(id) {
+      set((state) => ({ hiddenSubplotIds: toggleHiddenSubplot(state.hiddenSubplotIds, id) }))
+    },
+
+    setAllSubplotsVisible(visible) {
+      set((state) => ({ hiddenSubplotIds: visible ? [] : state.subplots.map((subplot) => subplot.id) }))
     },
 
     async reorderSubplots(projectId, subplotIds) {

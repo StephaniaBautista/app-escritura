@@ -40,6 +40,45 @@ export async function documentRoutes(app: FastifyInstance) {
     return tree
   })
 
+  app.patch('/projects/:projectId/documents/reorder', {
+    schema: {
+      description: 'Reorder sibling document tabs/subtabs under a parent',
+      tags: ['Documents'],
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { projectId: { type: 'string' } },
+        required: ['projectId'],
+      },
+      body: {
+        type: 'object',
+        required: ['documentIds'],
+        properties: {
+          parentId: { type: ['string', 'null'] },
+          documentIds: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 1,
+            maxItems: 500,
+          },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const user = await getSessionUser(request)
+    if (!user) return reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'No autenticado' } })
+
+    const { projectId } = request.params as { projectId: string }
+    const body = request.body as { parentId?: string | null; documentIds: string[] }
+    const tree = await documentService.reorderSiblings(
+      projectId,
+      user.id,
+      body.parentId ?? null,
+      body.documentIds,
+    )
+    return tree
+  })
+
   app.get('/documents/:id', {
     schema: {
       description: 'Get a document with its content and children',

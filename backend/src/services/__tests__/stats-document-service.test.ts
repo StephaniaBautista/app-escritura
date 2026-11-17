@@ -4,8 +4,12 @@ const db = vi.hoisted(() => ({
   user: { findUnique: vi.fn() }, document: { findFirst: vi.fn(), update: vi.fn() }, folder: { findFirst: vi.fn() }, writingStats: { upsert: vi.fn() }, $transaction: vi.fn(),
 }))
 vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
+vi.mock('../../lib/rag-index-service.js', () => ({
+  ragIndexService: { schedule: vi.fn(async () => undefined), indexDocument: vi.fn(), ensureProject: vi.fn() },
+}))
 import { updateWrittenDocument } from '../stats-document-service.js'
 import { writingTransaction } from '../../lib/stats-transaction.js'
+import { ragIndexService } from '../../lib/rag-index-service.js'
 
 const content = (text: string) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
 const row = () => ({ id: 'doc', userId: 'user', projectId: 'project', wordCount: 2, content: content('uno dos') })
@@ -25,6 +29,7 @@ describe('transactional writing additions', () => {
     expect(db.$transaction).toHaveBeenCalledWith(expect.any(Function), expect.objectContaining({ isolationLevel: 'Serializable' }))
     expect(db.document.findFirst).toHaveBeenCalledWith({ where: { id: 'doc', userId: 'user', project: { userId: 'user' } } })
     expect(db.writingStats.upsert).toHaveBeenCalledWith(expect.objectContaining({ create: expect.objectContaining({ userId: 'user', documentId: 'doc', projectId: 'project', wordsAdded: 1 }) }))
+    expect(ragIndexService.schedule).toHaveBeenCalledWith('doc', 'user')
   })
   it('does not count a replay of the same save', async () => {
     db.document.findFirst.mockResolvedValue({ ...row(), content: content('uno dos tres'), wordCount: 3 })

@@ -1,14 +1,14 @@
 import { create } from 'zustand'
 import { statsApi, StatsRequestError } from '@/services/stats'
 import { useAuthStore } from './auth-store'
-import type { StatsQuery, WritingStats } from '@/types/stats'
+import type { StatsRequestQuery, WritingStats } from '@/types/stats'
 
 interface StatsState {
   report: WritingStats | null
   loading: boolean
   error: string | null
   requestId: number
-  load: (query: StatsQuery) => Promise<void>
+  load: (query: StatsRequestQuery) => Promise<void>
   reset: () => void
 }
 

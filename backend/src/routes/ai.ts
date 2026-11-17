@@ -68,7 +68,7 @@ export async function aiRoutes(app: FastifyInstance) {
     return reply.code(204).send()
   }))
   app.post(`${base}/conversations/:id/messages`, { bodyLimit: 20_000, schema: { ...common,
-    description: 'Request read-only advice or character reply. requestId identifies an idempotent turn. At most 10 provider attempts per user per minute; requests are serialized across processes. No prose generation or document writes.',
+    description: 'Chat turn with project context. requestId identifies an idempotent turn. Optional webSearch runs a public web search from the user query only (never the manuscript) via Brave if configured, otherwise DuckDuckGo. At most 10 provider attempts per user per minute; requests are serialized across processes. No prose generation or document writes.',
     params: aiConversationParams, body: messageBody, response: { 200: turnSchema, ...aiErrors },
   } }, (request, reply) => authenticated(request, reply, (userId, { projectId, id }) => aiService.send(projectId, userId, id, request.body as AiMessageInput)))
   app.post(`${base}/wizard-completion`, { bodyLimit: 4_000, schema: { ...common,

@@ -1,7 +1,7 @@
 const id = { type: 'string', minLength: 1, maxLength: 100 } as const
 const nullableId = { type: ['string', 'null'] } as const
 const date = { type: 'string', format: 'date-time' } as const
-const provider = { type: 'string', enum: ['deepseek', 'mimo'] } as const
+const provider = { type: 'string', enum: ['saver', 'balanced', 'quality', 'private', 'sealed'] } as const
 export const aiParams = { type: 'object', properties: { projectId: id }, required: ['projectId'], additionalProperties: false } as const
 export const aiConversationParams = { type: 'object', properties: { projectId: id, id }, required: ['projectId', 'id'], additionalProperties: false } as const
 const source = { type: 'object', properties: {
@@ -26,11 +26,11 @@ export const turnSchema = { type: 'object', properties: {
   conversationId: id, messages: { type: 'array', items: message },
 }, required: ['conversationId', 'messages'], additionalProperties: false } as const
 export const capabilitiesSchema = { type: 'object', properties: {
-  providers: { type: 'array', items: { type: 'object', properties: { id: provider, available: { type: 'boolean' } }, required: ['id', 'available'], additionalProperties: false } },
+  providers: { type: 'array', items: { type: 'object', properties: { id: provider, available: { type: 'boolean' }, trainsData: { type: 'boolean' }, comingSoon: { type: 'boolean' } }, required: ['id', 'available', 'trainsData', 'comingSoon'], additionalProperties: false } },
   fallbackEnabled: { type: 'boolean' }, canCopy: { type: 'boolean' },
   permissions: { type: 'object', properties: { chat: { type: 'boolean' }, characters: { type: 'boolean' }, suggestions: { type: 'boolean' } }, required: ['chat', 'characters', 'suggestions'], additionalProperties: false },
   chapters: { type: 'array', items: { type: 'object', properties: { id, title: { type: 'string' } }, required: ['id', 'title'], additionalProperties: false } },
-  pages: { type: 'array', items: { type: 'object', properties: { id, title: { type: 'string' }, type: { type: 'string', enum: ['document', 'chapter', 'subpage'] } }, required: ['id', 'title', 'type'], additionalProperties: false } },
+  pages: { type: 'array', items: { type: 'object', properties: { id, title: { type: 'string' }, type: { type: 'string', enum: ['document', 'chapter', 'subpage'] }, parentId: { type: ['string', 'null'] } }, required: ['id', 'title', 'type', 'parentId'], additionalProperties: false } },
   characters: { type: 'array', items: { type: 'object', properties: { id, name: { type: 'string' } }, required: ['id', 'name'], additionalProperties: false } },
 }, required: ['providers', 'fallbackEnabled', 'permissions', 'canCopy', 'chapters', 'pages', 'characters'], additionalProperties: false } as const
 export const createConversationBody = { type: 'object', properties: {
@@ -40,6 +40,7 @@ const generationProperties = { provider, locale: { type: 'string', enum: ['es', 
 export const messageBody = { type: 'object', properties: {
   ...generationProperties, message: { type: 'string', minLength: 1, maxLength: 4000, pattern: '\\S' },
   direction: { type: 'string', minLength: 1, maxLength: 2000, pattern: '\\S' },
+  webSearch: { type: 'boolean' },
   requestId: { type: 'string', minLength: 8, maxLength: 100, pattern: '^[a-zA-Z0-9_-]+$' },
 }, required: ['message', 'requestId'], additionalProperties: false } as const
 export const wizardGenerationBody = { type: 'object', properties: generationProperties, additionalProperties: false } as const
@@ -54,11 +55,18 @@ export const wizardCompletionSchema = { type: 'object', properties: {
     field: { type: 'string', minLength: 1, maxLength: 40 },
     title: { type: 'string', maxLength: 120 },
     description: { type: 'string', maxLength: 500 },
-    value: {},
+    value: { oneOf: [
+      { type: 'array' },
+      { type: 'object', additionalProperties: true },
+      { type: 'string' },
+      { type: 'boolean' },
+      { type: 'number' },
+      { type: 'null' },
+    ] },
   }, required: ['field', 'title', 'description', 'value'], additionalProperties: false }, maxItems: 8 },
   stage: wizardStage,
   sources,
-  provider: { type: 'string', enum: ['deepseek', 'mimo', ''] },
+  provider: { type: 'string', enum: ['saver', 'balanced', 'quality', 'private', 'sealed', ''] },
   model: { type: 'string' },
 }, required: ['description', 'meta', 'suggestions', 'stage', 'sources', 'provider', 'model'], additionalProperties: false } as const
 export const tagSuggestionsSchema = { type: 'object', properties: {

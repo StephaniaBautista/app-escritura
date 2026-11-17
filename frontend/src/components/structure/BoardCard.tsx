@@ -1,25 +1,34 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { StructureCard } from '@/types/structure'
+import type { StructureCard, Subplot } from '@/types/structure'
+import { subplotLayerColor } from '@/lib/subplot-visibility'
+import './subplot-layer.css'
 
 interface BoardCardProps {
   card: StructureCard
+  subplot?: Subplot | null
   onEdit: (card: StructureCard) => void
 }
 
-export function BoardCard({ card, onEdit }: BoardCardProps) {
+export function BoardCard({ card, subplot = null, onEdit }: BoardCardProps) {
   const { t } = useTranslation()
   const wasDragging = useRef(false)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card.id,
     data: { type: 'card', card },
   })
+  const isLayer = Boolean(card.subplotId)
+  const color = subplotLayerColor(subplot)
 
   useEffect(() => {
     if (isDragging) wasDragging.current = true
   }, [isDragging])
+
+  const surface: CSSProperties = isLayer
+    ? { '--subplot-color': color } as CSSProperties
+    : { background: 'var(--color-paper)', borderColor: 'var(--color-paper-lines)' }
 
   return (
     <div
@@ -27,9 +36,8 @@ export function BoardCard({ card, onEdit }: BoardCardProps) {
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
-        background: 'var(--color-paper)',
-        borderColor: 'var(--color-paper-lines)',
-        opacity: isDragging ? 0.5 : 1,
+        ...surface,
+        ...(isDragging ? { opacity: 0.5 } : {}),
       }}
       {...attributes}
       {...listeners}
@@ -40,8 +48,15 @@ export function BoardCard({ card, onEdit }: BoardCardProps) {
         }
         onEdit(card)
       }}
-      className="rounded-lg border p-3 cursor-grab active:cursor-grabbing shadow-sm hover:shadow transition-shadow touch-none"
+      data-testid={`board-card-${card.id}`}
+      data-subplot-layer={isLayer ? 'true' : undefined}
+      className={`rounded-lg border p-3 cursor-grab active:cursor-grabbing shadow-sm hover:shadow transition-shadow touch-none ${isLayer ? 'subplot-layer-card' : ''}`}
     >
+      {isLayer && (
+        <span className="subplot-layer-card__pill mb-2" title={subplot?.title ?? t('structureApp.subplotField')}>
+          {subplot?.title ?? t('structureApp.subplotField')}
+        </span>
+      )}
       {card.color && (
         <div className="h-1 w-8 rounded-full mb-2" style={{ background: card.color }} />
       )}

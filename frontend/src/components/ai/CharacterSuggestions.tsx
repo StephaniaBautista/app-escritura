@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAiStore } from '@/stores/ai-store'
+import { useAiToolProvider } from '@/hooks/useAiToolProvider'
 import { useCharactersStore } from '@/stores/characters-store'
 import type { Character } from '@/types/character'
 import type { AiSuggestion } from '@/types/ai'
@@ -14,7 +14,7 @@ import { useDocumentStore } from '@/stores/document-store'
 export function CharacterSuggestions({ character }: { character: Character }) {
   const { t, i18n } = useTranslation()
   const { capabilities } = useAiCapabilities(character.projectId)
-  const provider = useAiStore((state) => state.provider)
+  const provider = useAiToolProvider('characters')
   const { documentTree, currentDocument } = useDocumentStore()
   const analysis = useAiAnalysis(character.projectId, 'character-suggestions', { characterId: character.id, locale: i18n.language.startsWith('en') ? 'en' : 'es', ...(provider ? { provider } : {}) })
   const [applied, setApplied] = useState<string[]>([])

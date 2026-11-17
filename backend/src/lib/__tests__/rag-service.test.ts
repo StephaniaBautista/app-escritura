@@ -1,13 +1,45 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { prismaMock } = vi.hoisted(() => ({
-  prismaMock: {
-    project: { findFirst: vi.fn() }, document: { findMany: vi.fn() }, character: { findFirst: vi.fn(), findMany: vi.fn() },
-    world: { findMany: vi.fn() }, loreEntry: { findMany: vi.fn() }, race: { findMany: vi.fn() }, glossaryEntry: { findMany: vi.fn() }, creature: { findMany: vi.fn() }, location: { findMany: vi.fn() }, worldRoute: { findMany: vi.fn() }, timelineEvent: { findMany: vi.fn() }, timelineEra: { findMany: vi.fn() }, characterRelationship: { findMany: vi.fn() }, subplot: { findMany: vi.fn() }, structureBoard: { findMany: vi.fn() },
-  },
-}))
+const {
+  embeddingsConfiguredMock, embedTextsMock, searchMock, ensureProjectMock, VectorStoreError, prismaMock,
+} = vi.hoisted(() => {
+  class VectorStoreError extends Error {
+    constructor(public readonly code: 'AI_RAG_UNAVAILABLE', public readonly statusCode: number) {
+      super(code)
+      this.name = 'VectorStoreError'
+    }
+  }
+  return {
+    embeddingsConfiguredMock: vi.fn(() => false),
+    embedTextsMock: vi.fn(),
+    searchMock: vi.fn(),
+    ensureProjectMock: vi.fn(),
+    VectorStoreError,
+    prismaMock: {
+      project: { findFirst: vi.fn() }, document: { findMany: vi.fn() }, character: { findFirst: vi.fn(), findMany: vi.fn() },
+      world: { findMany: vi.fn() }, loreEntry: { findMany: vi.fn() }, race: { findMany: vi.fn() }, glossaryEntry: { findMany: vi.fn() }, creature: { findMany: vi.fn() }, location: { findMany: vi.fn() }, worldRoute: { findMany: vi.fn() }, timelineEvent: { findMany: vi.fn() }, timelineEra: { findMany: vi.fn() }, characterRelationship: { findMany: vi.fn() }, subplot: { findMany: vi.fn() }, structureBoard: { findMany: vi.fn() },
+    },
+  }
+})
 
 vi.mock('../prisma.js', () => ({ prisma: prismaMock }))
+vi.mock('../ai-embeddings.js', () => ({
+  embeddingsConfigured: embeddingsConfiguredMock,
+  embedTexts: embedTextsMock,
+  EmbeddingError: class EmbeddingError extends Error {
+    constructor(public readonly code: 'AI_RAG_UNAVAILABLE' | 'AI_AUTHENTICATION_FAILED', public readonly statusCode: number) {
+      super(code)
+      this.name = 'EmbeddingError'
+    }
+  },
+}))
+vi.mock('../rag-index-service.js', () => ({
+  ragIndexService: { ensureProject: ensureProjectMock, indexDocument: vi.fn(), schedule: vi.fn() },
+}))
+vi.mock('../rag-vector-search.js', () => ({
+  searchSimilarChunks: searchMock,
+  VectorStoreError,
+}))
 import { ragService } from '../rag-service.js'
 
 const text = (value: string) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: value }] }] })
@@ -26,6 +58,7 @@ function setDocuments(rows = [root, chapter1, page1, chapter2]) {
 describe('ragService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    embeddingsConfiguredMock.mockReturnValue(false)
     prismaMock.project.findFirst.mockResolvedValue({ id: 'project-1', name: 'Historia de Alba', description: 'Todos mueren al final', storyMeta: { guidedMode: true, ending: 'Un final secreto' } })
     setDocuments()
     prismaMock.character.findFirst.mockResolvedValue(character)
@@ -126,6 +159,15 @@ describe('ragService', () => {
     expect(contentQueries[0][0].where.id.in).toEqual(['chapter-1', 'page-1'])
   })
 
+  it('keeps character chat chapter-scoped even when embeddings are configured', async () => {
+    embeddingsConfiguredMock.mockReturnValue(true)
+    const result = await ragService.build({ ...baseInput, mode: 'character', characterId: 'alba', chapterId: 'chapter-1' })
+    expect(ensureProjectMock).not.toHaveBeenCalled()
+    expect(searchMock).not.toHaveBeenCalled()
+    expect(result?.text).toContain('se reúne con Bruno')
+    expect(result?.text).not.toContain('hermano secreto')
+  })
+
   it('ignores unsaved character drafts and includes later knowledge only after raising the chapter limit', async () => {
     const first = await ragService.build({ ...baseInput, mode: 'character', characterId: 'alba', chapterId: 'chapter-1', documentId: 'chapter-1', draftContent: 'PRIVATE FUTURE DRAFT' })
     expect(first?.text).not.toContain('PRIVATE FUTURE DRAFT')
@@ -152,5 +194,37 @@ describe('ragService', () => {
   it('fails closed if a project is too large to validate its chapter hierarchy', async () => {
     setDocuments(Array.from({ length: 401 }, (_, index) => document(String(index), 'chapter', null, index, 'text')))
     await expect(ragService.build(baseInput)).rejects.toMatchObject({ code: 'AI_CONTEXT_TOO_LARGE', statusCode: 413 })
+  })
+
+  it('retrieves adviser passages by embedding similarity without keyword sampling', async () => {
+    embeddingsConfiguredMock.mockReturnValue(true)
+    embedTextsMock.mockResolvedValue([Array.from({ length: 8 }, () => 0.1)])
+    searchMock.mockResolvedValue([{ id: 'chunk-1', documentId: 'chapter-2', chunkIndex: 0, content: 'Alba descubre que Bruno es su hermano secreto.' }])
+    const result = await ragService.build({ ...baseInput, query: 'quién es el hermano de Alba' })
+    expect(ensureProjectMock).toHaveBeenCalledWith('project-1', 'user-1')
+    expect(searchMock).toHaveBeenCalledWith(expect.objectContaining({ projectId: 'project-1', userId: 'user-1' }))
+    expect(result?.text).toContain('hermano secreto')
+    expect(result?.text).toContain('retrieved_indexed_subset')
+    expect(result?.text).not.toContain('[...]')
+    const contentQueries = prismaMock.document.findMany.mock.calls.filter(([query]) => query.select.content)
+    expect(contentQueries).toHaveLength(0)
+  })
+
+  it('does not mix another project into adviser retrieval', async () => {
+    embeddingsConfiguredMock.mockReturnValue(true)
+    embedTextsMock.mockResolvedValue([[0.1, 0.2]])
+    searchMock.mockResolvedValue([{ id: 'chunk-b', documentId: 'foreign', chunkIndex: 0, content: 'FOREIGN SECRET from project B' }])
+    const result = await ragService.build({ ...baseInput, query: 'secreto' })
+    expect(result?.text).not.toContain('FOREIGN SECRET')
+    expect(searchMock).toHaveBeenCalledWith(expect.objectContaining({ projectId: 'project-1', userId: 'user-1' }))
+  })
+
+  it('fails closed when embeddings are configured but the vector store is unavailable', async () => {
+    embeddingsConfiguredMock.mockReturnValue(true)
+    embedTextsMock.mockResolvedValue([[0.1]])
+    searchMock.mockRejectedValue(new VectorStoreError('AI_RAG_UNAVAILABLE', 503))
+    await expect(ragService.build(baseInput)).rejects.toMatchObject({ code: 'AI_RAG_UNAVAILABLE', statusCode: 503 })
+    const contentQueries = prismaMock.document.findMany.mock.calls.filter(([query]) => query.select.content)
+    expect(contentQueries).toHaveLength(0)
   })
 })

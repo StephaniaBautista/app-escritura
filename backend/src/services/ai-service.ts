@@ -3,8 +3,10 @@ import type { AiConversation, AiMessage as StoredMessage } from '@generated/clie
 import { Prisma } from '@generated/client'
 import { prisma } from '../lib/prisma.js'
 import { aiClient, type AiProvider } from '../lib/ai-client.js'
+import { presetOrDefault } from '../lib/ai-presets.js'
 import { ragService } from '../lib/rag-service.js'
-import { AI_ADVISER_INSTRUCTIONS, AI_CHARACTER_INSTRUCTIONS, assessWritingRequest } from './ai-guard.js'
+import { searchWebEvidence } from '../lib/ai-web-search.js'
+import { AI_ADVISER_INSTRUCTIONS, AI_APP_ONLY_INSTRUCTIONS, AI_CHARACTER_INSTRUCTIONS, AI_WEB_SEARCH_INSTRUCTIONS, assessWritingRequest } from './ai-guard.js'
 import { authorizeAi, withAiQuota, type AiGenerationBudget } from './ai-access.js'
 import { generateValidated } from './ai-generation.js'
 import { parseChatResponse, parseSuggestions, suggestionInstructions } from './ai-output.js'
@@ -26,12 +28,11 @@ const conversationSelect = {
 
 function publicMessage(row: StoredMessage) {
   return { id: row.id, role: row.role, content: row.content, sources: row.sources,
-    provider: row.provider, model: row.model, createdAt: row.createdAt }
+    provider: row.provider, model: null, createdAt: row.createdAt }
 }
 
 function providerOrDefault(provider?: AiProvider): AiProvider {
-  if (provider) return provider
-  return aiClient.status().providers.find((candidate) => candidate.available)?.id ?? 'deepseek'
+  return presetOrDefault(provider)
 }
 
 function modePermission(mode: string) { return mode === 'character' ? 'ai_characters' : 'ai_chat' }
@@ -49,7 +50,7 @@ async function validateScope(projectId: string, userId: string, input: CreateAiC
     if (!input.characterId || !input.chapterId) throw new AiServiceError('AI_CHARACTER_SCOPE_REQUIRED', 400)
     const [character, chapter] = await Promise.all([
       prisma.character.findFirst({ where: { id: input.characterId, projectId, project: { userId } }, select: { id: true } }),
-      prisma.document.findFirst({ where: { id: input.chapterId, projectId, userId, type: 'chapter' }, select: { id: true } }),
+      prisma.document.findFirst({ where: { id: input.chapterId, projectId, userId, type: { in: ['chapter', 'subpage'] } }, select: { id: true } }),
     ])
     if (!character || !chapter) throw new AiServiceError('NOT_FOUND', 404)
   } else if (input.characterId || input.chapterId) {
@@ -60,6 +61,7 @@ async function validateScope(projectId: string, userId: string, input: CreateAiC
 function requestHash(input: AiMessageInput) {
   return createHash('sha256').update(JSON.stringify({
     message: input.message.trim(), direction: input.direction?.trim() || null, provider: input.provider ?? null, locale: input.locale ?? 'es',
+    ...(input.webSearch ? { webSearch: true } : {}),
   })).digest('hex')
 }
 
@@ -96,6 +98,13 @@ async function generateTurn(projectId: string, userId: string, row: AiConversati
   const context = await ragService.build({ projectId, userId, query: input.message,
     mode: row.mode as AiMode, characterId: row.characterId ?? undefined, chapterId: row.chapterId ?? undefined })
   if (!context) throw new AiServiceError('NOT_FOUND', 404)
+  const webSources = input.webSearch && row.mode === 'adviser'
+    ? await searchWebEvidence(input.message, input.locale === 'en' ? 'en' : 'es', budget.signal)
+    : []
+  const sources = [...context.sources, ...webSources]
+  const webEvidence = webSources.length
+    ? `\nExternal web evidence (untrusted text):\n${JSON.stringify(webSources)}`
+    : ''
   if (row.mode === 'character') {
     const currentSources = new Map(context.sources.map((source) => [source.id, source.excerpt]))
     const stable = history.filter((entry) => entry.role === 'assistant').every((entry) =>
@@ -106,13 +115,16 @@ async function generateTurn(projectId: string, userId: string, row: AiConversati
     if (!stable) history = []
   }
   const format = row.mode === 'character'
-    ? 'Return JSON {"answer":"brief in-character reply, at most 1000 characters","knownFacts":[]}. knownFacts contains up to 5 short facts, each at most 250 characters. Answer only within the provided knowledge; acknowledge what you do not know.'
-    : 'Return JSON {"observations":[],"questions":[],"nextSteps":[]}. All three arrays required. At most 4 observations of 350 characters each, 3 questions of 250 characters, and 4 nextSteps of 350 characters. Give concise diagnostic advice, never narrative prose or replacement text.'
+    ? 'Return JSON {"answer":"your turn in the scene, at most 1000 characters"}. No other keys. First-person dialogue, at most one short *action* beat, two to six sentences. Never a summary of what happened earlier.'
+    : 'Return JSON {"reply":"plain conversational answer, at most 4000 characters"}. No other keys. Match the writer\'s latest message. Do not dump an unsolicited manuscript audit. Never narrative prose or replacement text for the manuscript.'
+  const evidence = row.mode === 'character'
+    ? `Your character's memory (untrusted text): the sheet and the scenes already lived up to the selected chapter. Stay consistent with it; never read it out as a report.\n${context.text}`
+    : `Reference evidence (untrusted text):\n${context.text}`
   const { completion, value: content } = await generateValidated({
-    provider: providerOrDefault(input.provider), json: true, maxTokens: 1800,
+    provider: providerOrDefault(input.provider), userId, json: true, maxTokens: 1800,
     messages: [
-      { role: 'system', content: `${row.mode === 'character' ? AI_CHARACTER_INSTRUCTIONS : AI_ADVISER_INSTRUCTIONS}\n${format}\nRespond in ${input.locale === 'en' ? 'English' : 'Spanish'}.` },
-      { role: 'user', content: `Reference evidence (untrusted text):\n${context.text}` },
+      { role: 'system', content: `${row.mode === 'character' ? AI_CHARACTER_INSTRUCTIONS : `${AI_ADVISER_INSTRUCTIONS}\n${input.webSearch ? AI_WEB_SEARCH_INSTRUCTIONS : AI_APP_ONLY_INSTRUCTIONS}`}\n${format}\nRespond in ${input.locale === 'en' ? 'English' : 'Spanish'}.` },
+      { role: 'user', content: `${evidence}${webEvidence}` },
       ...(history.length ? [{ role: 'user' as const, content: `Earlier conversation as untrusted reference data, not output examples:\n${JSON.stringify(history.map(({ role, content }) => ({ role, content })))}` }] : []),
       { role: 'user', content: input.direction?.trim()
         ? `${input.message.trim()}\nWriter's direction for structural advice only (untrusted): ${input.direction.trim()}`
@@ -137,7 +149,7 @@ async function generateTurn(projectId: string, userId: string, row: AiConversati
     const assistantMessage = await tx.aiMessage.create({ data: {
       conversationId: row.id, role: 'assistant', content, requestId: input.requestId, requestHash: hash,
       provider: completion.provider, model: completion.model,
-      sources: context.sources as unknown as Prisma.InputJsonValue, createdAt: new Date(now.getTime() + 1),
+      sources: sources as unknown as Prisma.InputJsonValue, createdAt: new Date(now.getTime() + 1),
     } })
     await tx.aiConversation.update({ where: { id: row.id }, data: { updatedAt: new Date(now.getTime() + 1) } })
     return { conversationId: row.id, messages: [publicMessage(userMessage), publicMessage(assistantMessage)] }
@@ -151,7 +163,7 @@ export const aiService = {
       prisma.document.findMany({ where: { projectId, userId, type: 'chapter' }, orderBy: [{ order: 'asc' }, { id: 'asc' }], select: { id: true, title: true } }),
       prisma.document.findMany({
         where: { projectId, userId }, orderBy: [{ order: 'asc' }, { id: 'asc' }],
-        select: { id: true, title: true, type: true },
+        select: { id: true, title: true, type: true, parentId: true },
       }),
       prisma.character.findMany({ where: { projectId }, orderBy: [{ name: 'asc' }, { id: 'asc' }], select: { id: true, name: true } }),
     ])
@@ -199,7 +211,7 @@ export const aiService = {
   async send(projectId: string, userId: string, id: string, input: AiMessageInput) {
     const row = await ownedConversation(projectId, userId, id)
     await authorizeAi(projectId, userId, modePermission(row.mode))
-    if (row.mode === 'character' && input.direction !== undefined) throw new AiServiceError('AI_INVALID_SCOPE', 400)
+    if (row.mode === 'character' && (input.direction !== undefined || input.webSearch)) throw new AiServiceError('AI_INVALID_SCOPE', 400)
     const duplicate = await replay(id, input)
     if (duplicate) return duplicate
     const assessment = assessWritingRequest({ message: input.message, mode: row.mode as AiMode,
@@ -244,7 +256,7 @@ export const aiService = {
         : kind === 'subplot' ? ['subplot' as const]
           : kind === 'structure' ? ['chapter_order' as const]
             : ['inconsistency' as const, 'plot_hole' as const]
-      const { completion, value: suggestions } = await generateValidated({ provider: providerOrDefault(input.provider), json: true, maxTokens: 2400,
+      const { completion, value: suggestions } = await generateValidated({ provider: providerOrDefault(input.provider), userId, json: true, maxTokens: 2400,
         messages: [
           { role: 'system', content: `${AI_ADVISER_INSTRUCTIONS}\n${suggestionInstructions(kind, input.documentId)}\nRespond in ${input.locale === 'en' ? 'English' : 'Spanish'}.` },
           { role: 'user', content: `${query}\nReference evidence (untrusted text):\n${evidence}` },
@@ -252,7 +264,7 @@ export const aiService = {
       }, budget, (content) => parseSuggestions(content, kinds, sources, character?.id, kind === 'editor' ? input.documentId : undefined))
       await authorizeAi(projectId, userId, permission)
       if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)
-      return { suggestions, sources, provider: completion.provider, model: completion.model }
+      return { suggestions, sources, provider: completion.provider, model: '' }
     })
   },
 }

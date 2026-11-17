@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
+import { listPresetStatus, sanitizeDismissedTrainingModes, sanitizeSelectablePreset, type AiPreset } from '../lib/ai-presets.js'
 
 export interface AutoVersionConfig {
   inactivity: { enabled: boolean; intervalMs: number }
@@ -19,11 +20,67 @@ export const DEFAULT_AUTO_VERSION_CONFIG: AutoVersionConfig = {
   monthly: { enabled: true, intervalMs: 30 * 24 * 60 * 60 * 1000 },
 }
 
+export const AI_TOOL_PRESET_KEYS = ['review', 'wizard', 'timeline', 'characters'] as const
+export type AiToolPresetKey = typeof AI_TOOL_PRESET_KEYS[number]
+export type AiToolPresets = Partial<Record<AiToolPresetKey, AiPreset>>
+
 export interface UiPrefs {
   dismissAiStructureWarning?: boolean
+  dismissedAiTrainingModes?: string[]
+  reviewEnabledByDefault?: boolean
+  aiToolPresets?: AiToolPresets
 }
 
-export const DEFAULT_UI_PREFS: UiPrefs = {}
+export const DEFAULT_UI_PREFS: UiPrefs = {
+  reviewEnabledByDefault: false,
+  aiToolPresets: {},
+}
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function sanitizeAiToolPresets(value: unknown): AiToolPresets {
+  if (!isRecord(value)) return {}
+  const next: AiToolPresets = {}
+  for (const key of AI_TOOL_PRESET_KEYS) {
+    const preset = sanitizeSelectablePreset(value[key])
+    if (preset) next[key] = preset
+  }
+  return next
+}
+
+function sanitizeUiPrefs(value: Record<string, unknown>): UiPrefs {
+  const next: UiPrefs = {
+    reviewEnabledByDefault: value.reviewEnabledByDefault === true,
+    aiToolPresets: sanitizeAiToolPresets(value.aiToolPresets),
+  }
+  if (value.dismissAiStructureWarning === true) next.dismissAiStructureWarning = true
+  if ('dismissedAiTrainingModes' in value) {
+    next.dismissedAiTrainingModes = sanitizeDismissedTrainingModes(value.dismissedAiTrainingModes)
+  }
+  return next
+}
+
+function mergeUiPrefs(existing: unknown, patch: Partial<UiPrefs>): Record<string, unknown> {
+  const current = isRecord(existing) ? existing : {}
+  return {
+    ...current,
+    ...patch,
+    aiToolPresets: {
+      ...(isRecord(current.aiToolPresets) ? current.aiToolPresets : {}),
+      ...(patch.aiToolPresets ?? {}),
+    },
+  }
+}
+
+function toClientSettings<T extends { uiPrefs: unknown }>(row: T) {
+  return {
+    ...row,
+    uiPrefs: sanitizeUiPrefs({ ...DEFAULT_UI_PREFS, ...(isRecord(row.uiPrefs) ? row.uiPrefs : {}) }),
+    aiModes: listPresetStatus(),
+  }
+}
 
 export const settingsService = {
   async get(userId: string) {
@@ -31,11 +88,11 @@ export const settingsService = {
     if (!settings) {
       return this.createDefaults(userId)
     }
-    return settings
+    return toClientSettings(settings)
   },
 
   async createDefaults(userId: string) {
-    return prisma.userSettings.create({
+    const settings = await prisma.userSettings.create({
       data: {
         userId,
         theme: 'system',
@@ -44,31 +101,33 @@ export const settingsService = {
         uiPrefs: DEFAULT_UI_PREFS as unknown as Prisma.InputJsonValue,
       },
     })
+    return toClientSettings(settings)
   },
 
   async update(userId: string, data: { theme?: string; language?: string; autoVersion?: Partial<AutoVersionConfig>; uiPrefs?: Partial<UiPrefs> }) {
     const existing = await prisma.userSettings.findUnique({ where: { userId } })
 
     if (!existing) {
-      return prisma.userSettings.create({
+      const settings = await prisma.userSettings.create({
         data: {
           userId,
           theme: data.theme ?? 'system',
           language: data.language ?? 'es',
           autoVersion: (data.autoVersion ?? DEFAULT_AUTO_VERSION_CONFIG) as unknown as Prisma.InputJsonValue,
-          uiPrefs: (data.uiPrefs ?? DEFAULT_UI_PREFS) as unknown as Prisma.InputJsonValue,
+          uiPrefs: sanitizeUiPrefs(mergeUiPrefs(DEFAULT_UI_PREFS, data.uiPrefs ?? {})) as unknown as Prisma.InputJsonValue,
         },
       })
+      return toClientSettings(settings)
     }
 
     const mergedAutoVersion = data.autoVersion
       ? { ...(existing.autoVersion as Record<string, unknown>), ...data.autoVersion }
       : undefined
     const mergedUiPrefs = data.uiPrefs
-      ? { ...(existing.uiPrefs as Record<string, unknown>), ...data.uiPrefs }
+      ? sanitizeUiPrefs(mergeUiPrefs(existing.uiPrefs, data.uiPrefs))
       : undefined
 
-    return prisma.userSettings.update({
+    const settings = await prisma.userSettings.update({
       where: { userId },
       data: {
         ...(data.theme !== undefined && { theme: data.theme }),
@@ -77,11 +136,12 @@ export const settingsService = {
         ...(mergedUiPrefs && { uiPrefs: mergedUiPrefs as Prisma.InputJsonValue }),
       },
     })
+    return toClientSettings(settings)
   },
 
   async getUiPrefs(userId: string): Promise<UiPrefs> {
     const settings = await this.get(userId)
-    return { ...DEFAULT_UI_PREFS, ...(settings.uiPrefs as Record<string, unknown>) } as UiPrefs
+    return settings.uiPrefs
   },
 
   async getAutoVersionConfig(userId: string): Promise<AutoVersionConfig> {

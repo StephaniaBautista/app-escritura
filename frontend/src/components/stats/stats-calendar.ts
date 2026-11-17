@@ -1,6 +1,21 @@
 import type { StatsDay } from '@/types/stats'
 
 const dayMilliseconds = 86_400_000
+export const MAX_STATS_RANGE_DAYS = 3650
+
+export function shiftIsoDay(day: string, amount: number): string {
+  const date = new Date(`${day}T12:00:00.000Z`)
+  date.setUTCDate(date.getUTCDate() + amount)
+  return date.toISOString().slice(0, 10)
+}
+
+export function localIsoDay(timeZone: string, date = new Date()): string {
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)
+  } catch {
+    return date.toISOString().slice(0, 10)
+  }
+}
 
 export function calendarDate(value: string): Date {
   return new Date(`${value}T12:00:00Z`)
@@ -9,7 +24,7 @@ export function calendarDate(value: string): Date {
 export function completeStatsDays(from: string, to: string, days: StatsDay[]): StatsDay[] {
   const start = calendarDate(from).getTime()
   const end = calendarDate(to).getTime()
-  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start || end - start > 366 * dayMilliseconds) return []
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start || end - start > (MAX_STATS_RANGE_DAYS - 1) * dayMilliseconds) return []
   const data = new Map(days.map((day) => [day.date, day]))
   const result: StatsDay[] = []
   for (let time = start; time <= end; time += dayMilliseconds) {

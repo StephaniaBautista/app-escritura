@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 const { complete } = vi.hoisted(() => ({ complete: vi.fn() }))
+vi.mock('../../lib/prisma.js', () => ({ prisma: { aiUsageEvent: { create: vi.fn() } } }))
 vi.mock('../../lib/ai-client.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../lib/ai-client.js')>()), aiClient: { complete },
 }))
@@ -8,8 +9,8 @@ import { generateValidated } from '../ai-generation.js'
 import { parseChatResponse } from '../ai-output.js'
 import { AiServiceError } from '../ai-types.js'
 
-const input = { provider: 'deepseek' as const, json: true, messages: [{ role: 'system' as const, content: 'Return JSON observations/questions/nextSteps.' }, { role: 'user' as const, content: 'Give structural advice about Ada.' }] }
-const valid = { provider: 'deepseek' as const, model: 'test', content: '{"observations":["An existing conflict."],"questions":[],"nextSteps":[]}' }
+const input = { provider: 'balanced' as const, json: true, messages: [{ role: 'system' as const, content: 'Return JSON {"reply"}.' }, { role: 'user' as const, content: 'Give structural advice about Ada.' }] }
+const valid = { provider: 'balanced' as const, model: 'test', content: '{"reply":"An existing conflict."}' }
 const validate = (content: string) => parseChatResponse(content, 'adviser')
 
 beforeEach(() => { vi.clearAllMocks(); complete.mockResolvedValue(valid) })
@@ -20,13 +21,30 @@ describe('bounded AI response repair', () => {
     const consumeRetry = vi.fn().mockResolvedValue(undefined)
     const signal = new AbortController().signal
     const result = await generateValidated(input, { signal, consumeRetry }, validate)
-    expect(result.value).toBe('• An existing conflict.')
+    expect(result.value).toBe('An existing conflict.')
     expect(consumeRetry).toHaveBeenCalledTimes(1)
     expect(complete).toHaveBeenCalledTimes(2)
     expect(complete.mock.calls[0][0].signal).toBe(signal)
     expect(complete.mock.calls[1][0].signal).toBe(signal)
     expect(complete.mock.calls[1][0].messages).toHaveLength(3)
     expect(complete.mock.calls[1][0].messages[2].content).toContain('never whitespace')
+  })
+  it('skips the repair prompt when the original messages already sit at the hard input limit', async () => {
+    const { AI_MAX_INPUT_CHARS } = await import('../../lib/ai-client.js')
+    const packed = {
+      provider: 'balanced' as const,
+      json: true,
+      messages: [
+        { role: 'system' as const, content: 's'.repeat(1_000) },
+        { role: 'user' as const, content: 'u'.repeat(AI_MAX_INPUT_CHARS - 1_000) },
+      ],
+    }
+    complete.mockRejectedValue(new AiClientError('AI_INVALID_RESPONSE', 502))
+    const consumeRetry = vi.fn().mockResolvedValue(undefined)
+    await expect(generateValidated(packed, { signal: new AbortController().signal, consumeRetry }, validate))
+      .rejects.toMatchObject({ code: 'AI_INVALID_RESPONSE' })
+    expect(complete).toHaveBeenCalledTimes(2)
+    expect(complete.mock.calls[1][0].messages).toHaveLength(2)
   })
   it('stops after a second invalid output and never loops until valid', async () => {
     complete.mockResolvedValue({ ...valid, content: ' '.repeat(429) })

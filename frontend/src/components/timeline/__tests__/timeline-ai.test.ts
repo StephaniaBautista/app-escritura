@@ -18,7 +18,7 @@ const era = (over: Partial<TimelineEra> = {}): TimelineEra => ({
 const event = (over: Partial<TimelineEvent> = {}): TimelineEvent => ({
   id: 'v1', projectId: 'p1', title: 'Coronación', date: '1', description: 'd', order: 0, eraId: 'e1',
   characterIds: ['c1'], icon: null, color: null, groupName: null, precision: 'year', endDate: '2',
-  label: null, labelColor: null, imageUrl: null, relatedEventIds: [], relatedDocumentIds: [],
+  label: null, labelColor: null, imageUrl: null, relatedEventIds: [], relatedDocumentIds: [], subplotId: null,
   createdAt: '', updatedAt: '',
   ...over,
 })

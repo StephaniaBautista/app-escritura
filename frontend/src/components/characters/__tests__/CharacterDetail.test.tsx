@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { CharacterDetail } from '../CharacterDetail'
 import type { Character } from '@/types/character'
 
@@ -81,19 +82,21 @@ const baseCharacter: Character = {
 const renderDetail = (character: Character, props: Partial<React.ComponentProps<typeof CharacterDetail>> = {}) => {
   const onSelect = vi.fn()
   render(
-    <CharacterDetail
-      character={character}
-      characters={[character]}
-      onClose={vi.fn()}
-      onEdit={vi.fn()}
-      onEvolve={vi.fn()}
-      evolving={false}
-      onCancelEvolve={vi.fn()}
-      onEvolved={vi.fn()}
-      onSelect={onSelect}
-      onDelete={vi.fn()}
-      {...props}
-    />,
+    <MemoryRouter>
+      <CharacterDetail
+        character={character}
+        characters={[character]}
+        onClose={vi.fn()}
+        onEdit={vi.fn()}
+        onEvolve={vi.fn()}
+        evolving={false}
+        onCancelEvolve={vi.fn()}
+        onEvolved={vi.fn()}
+        onSelect={onSelect}
+        onDelete={vi.fn()}
+        {...props}
+      />
+    </MemoryRouter>,
   )
   return { onSelect }
 }
@@ -135,5 +138,14 @@ describe('CharacterDetail', () => {
     fireEvent.click(screen.getByText('Lyra la Dama'))
 
     expect(onSelect).toHaveBeenCalledWith('char-2')
+  })
+
+  it('lleva al chat de personajes con el personaje elegido y sin bloque de IA en la ficha', () => {
+    renderDetail(baseCharacter)
+
+    const link = screen.getByRole('link', { name: /characterApp.talkWithCharacter/ })
+
+    expect(link).toHaveAttribute('href', '/app/ai-characters?project=project-1&character=char-1')
+    expect(screen.queryByText('aiApp.characterChat')).not.toBeInTheDocument()
   })
 })

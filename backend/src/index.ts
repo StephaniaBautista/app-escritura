@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import './lib/load-env.js'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
@@ -18,6 +18,7 @@ import { optionsRoutes } from './routes/options.js'
 import { adminOptionsRoutes } from './routes/admin-options.js'
 import { adminRolesRoutes } from './routes/admin-roles.js'
 import { adminUsersRoutes } from './routes/admin-users.js'
+import { adminAiUsageRoutes } from './routes/admin-ai-usage.js'
 import { meRoutes } from './routes/me.js'
 import { activityRoutes } from './routes/activity.js'
 import { i18nRoutes } from './routes/i18n.js'
@@ -35,12 +36,16 @@ import { structureRoutes } from './routes/structure.js'
 import { subplotsRoutes } from './routes/subplots.js'
 import { statsRoutes } from './routes/stats.js'
 import { aiRoutes } from './routes/ai.js'
+import { exportRoutes } from './routes/export.js'
+import { tagsRoutes } from './routes/tags.js'
+import { sharingRoutes } from './routes/sharing.js'
 import { MAX_OCR_UPLOAD_BYTES } from './services/ocr-service.js'
 import { optionsService } from './services/options-service.js'
 import { roleService } from './services/role-service.js'
 import { storyBankService } from './services/story-bank-service.js'
 import { characterOptionService } from './services/character-option-service.js'
 import { storySectionService } from './services/story-section-service.js'
+import { listPresetStatus } from './lib/ai-presets.js'
 
 const app = Fastify({
   logger: true,
@@ -98,6 +103,9 @@ await app.register(swagger, {
       { name: 'OCR', description: 'Extracción de texto de imágenes y PDFs escaneados (Fase 7)' },
       { name: 'Structure', description: 'Tablero de estructura por columnas y tarjetas (Fase 8)' },
       { name: 'Subplots', description: 'Gestión de subtramas del proyecto (Fase 8)' },
+      { name: 'Export', description: 'Exportación PDF, Markdown, HTML y AO3 (Fase 11)' },
+      { name: 'Tags', description: 'Etiquetas AO3 por obra (Fase 12)' },
+      { name: 'Sharing', description: 'Links compartidos y comentarios de beta readers (Fase 12)' },
     ],
   },
 })
@@ -190,6 +198,7 @@ await app.register(adminOptionsRoutes, { prefix: '/api' })
 // Admin roles + users routes (Fase 04c)
 await app.register(adminRolesRoutes, { prefix: '/api' })
 await app.register(adminUsersRoutes, { prefix: '/api' })
+await app.register(adminAiUsageRoutes, { prefix: '/api' })
 
 // Current user (role + permissions)
 await app.register(meRoutes, { prefix: '/api' })
@@ -227,6 +236,10 @@ await app.register(structureRoutes, { prefix: '/api' })
 await app.register(subplotsRoutes, { prefix: '/api' })
 await app.register(aiRoutes, { prefix: '/api' })
 await app.register(statsRoutes, { prefix: '/api' })
+await app.register(exportRoutes, { prefix: '/api' })
+// Fase 12: etiquetas AO3 por obra + compartir con beta readers
+await app.register(tagsRoutes, { prefix: '/api' })
+await app.register(sharingRoutes, { prefix: '/api' })
 
 // Test endpoint (development only)
 if (process.env.NODE_ENV !== 'production') {
@@ -255,8 +268,10 @@ const start = async () => {
   try {
     const port = parseInt(process.env.PORT || '3001', 10)
     await app.listen({ port, host: '0.0.0.0' })
+    const ready = listPresetStatus().filter((item) => item.available).map((item) => item.id)
     console.log(`Server running on http://localhost:${port}`)
     console.log(`Swagger docs available at http://localhost:${port}/docs`)
+    console.log(`AI modes ready: ${ready.length ? ready.join(', ') : 'none'}`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

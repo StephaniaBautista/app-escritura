@@ -4,6 +4,7 @@ import { normalizeTimeZone } from '../lib/stats-time.js'
 import { prisma } from '../lib/prisma.js'
 import { Prisma } from '@generated/client'
 import { branchService } from './branch-service.js'
+import { ragIndexService } from '../lib/rag-index-service.js'
 import { normalizeTimelineConfig, type TimelineConfig } from '../lib/timeline-config.js'
 
 export interface CreateProjectInput {
@@ -176,13 +177,22 @@ export const documentService = {
       if (!parent) return null
     }
 
+    let order = data.order
+    if (order === undefined) {
+      const maxSibling = await prisma.document.aggregate({
+        where: { projectId: project.id, parentId: data.parentId ?? null },
+        _max: { order: true },
+      })
+      order = (maxSibling._max.order ?? -1) + 1
+    }
+
     const document = await prisma.document.create({
       data: {
         title: data.title,
         content: data.content ?? Prisma.JsonNull,
         wordCount: countDocumentWords(data.content),
         type: data.type ?? 'document',
-        order: data.order ?? 0,
+        order,
         userId,
         projectId: data.projectId,
         folderId: data.folderId,
@@ -191,6 +201,7 @@ export const documentService = {
     })
 
     await branchService.ensureMainBranch(document.id, userId)
+    await ragIndexService.schedule(document.id, userId)
 
     return document
   },
@@ -217,7 +228,7 @@ export const documentService = {
       if (!parent) return null
     }
 
-    return prisma.document.update({
+    const updated = await prisma.document.update({
       where: { id },
       data: {
         title: data.title,
@@ -227,6 +238,8 @@ export const documentService = {
         order: data.order,
       },
     })
+    await ragIndexService.schedule(updated.id, userId)
+    return updated
   },
 
   async delete(id: string, userId: string) {
@@ -240,7 +253,7 @@ export const documentService = {
   async getTree(projectId: string, userId: string) {
     return prisma.document.findMany({
       where: { projectId, userId },
-      orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
+      orderBy: [{ parentId: 'asc' }, { order: 'asc' }, { createdAt: 'asc' }],
       select: {
         id: true,
         title: true,
@@ -250,6 +263,23 @@ export const documentService = {
         updatedAt: true,
       },
     })
+  },
+
+  async reorderSiblings(projectId: string, userId: string, parentId: string | null, documentIds: string[]) {
+    const siblings = await prisma.document.findMany({
+      where: { projectId, userId, parentId },
+      select: { id: true },
+    })
+    const validIds = new Set(siblings.map((d) => d.id))
+    const updates = documentIds
+      .filter((id) => validIds.has(id))
+      .map((id, index) =>
+        prisma.document.update({ where: { id }, data: { order: index } }),
+      )
+    if (updates.length > 0) {
+      await prisma.$transaction(updates)
+    }
+    return this.getTree(projectId, userId)
   },
 
   async duplicate(id: string, userId: string) {
@@ -335,6 +365,7 @@ export const documentService = {
       await prisma.branch.createMany({
         data: [...idMap.values()].map((newDocId) => ({ documentId: newDocId, name: 'main', userId })),
       })
+      await Promise.all([...idMap.values()].map((newDocId) => ragIndexService.schedule(newDocId, userId)))
     }
 
     return duplicatedRoot

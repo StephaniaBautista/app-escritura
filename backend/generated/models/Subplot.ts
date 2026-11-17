@@ -249,6 +249,8 @@ export type SubplotWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Subplot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subplot"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  cards?: Prisma.StructureCardListRelationFilter
+  events?: Prisma.TimelineEventListRelationFilter
 }
 
 export type SubplotOrderByWithRelationInput = {
@@ -262,6 +264,8 @@ export type SubplotOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  cards?: Prisma.StructureCardOrderByRelationAggregateInput
+  events?: Prisma.TimelineEventOrderByRelationAggregateInput
 }
 
 export type SubplotWhereUniqueInput = Prisma.AtLeast<{
@@ -278,6 +282,8 @@ export type SubplotWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Subplot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subplot"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  cards?: Prisma.StructureCardListRelationFilter
+  events?: Prisma.TimelineEventListRelationFilter
 }, "id">
 
 export type SubplotOrderByWithAggregationInput = {
@@ -322,6 +328,8 @@ export type SubplotCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutSubplotsInput
+  cards?: Prisma.StructureCardCreateNestedManyWithoutSubplotInput
+  events?: Prisma.TimelineEventCreateNestedManyWithoutSubplotInput
 }
 
 export type SubplotUncheckedCreateInput = {
@@ -334,6 +342,8 @@ export type SubplotUncheckedCreateInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  cards?: Prisma.StructureCardUncheckedCreateNestedManyWithoutSubplotInput
+  events?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutSubplotInput
 }
 
 export type SubplotUpdateInput = {
@@ -346,6 +356,8 @@ export type SubplotUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutSubplotsNestedInput
+  cards?: Prisma.StructureCardUpdateManyWithoutSubplotNestedInput
+  events?: Prisma.TimelineEventUpdateManyWithoutSubplotNestedInput
 }
 
 export type SubplotUncheckedUpdateInput = {
@@ -358,6 +370,8 @@ export type SubplotUncheckedUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cards?: Prisma.StructureCardUncheckedUpdateManyWithoutSubplotNestedInput
+  events?: Prisma.TimelineEventUncheckedUpdateManyWithoutSubplotNestedInput
 }
 
 export type SubplotCreateManyInput = {
@@ -403,6 +417,11 @@ export type SubplotListRelationFilter = {
 
 export type SubplotOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SubplotNullableScalarRelationFilter = {
+  is?: Prisma.SubplotWhereInput | null
+  isNot?: Prisma.SubplotWhereInput | null
 }
 
 export type SubplotCountOrderByAggregateInput = {
@@ -491,6 +510,38 @@ export type SubplotUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.SubplotScalarWhereInput | Prisma.SubplotScalarWhereInput[]
 }
 
+export type SubplotCreateNestedOneWithoutEventsInput = {
+  create?: Prisma.XOR<Prisma.SubplotCreateWithoutEventsInput, Prisma.SubplotUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.SubplotCreateOrConnectWithoutEventsInput
+  connect?: Prisma.SubplotWhereUniqueInput
+}
+
+export type SubplotUpdateOneWithoutEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubplotCreateWithoutEventsInput, Prisma.SubplotUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.SubplotCreateOrConnectWithoutEventsInput
+  upsert?: Prisma.SubplotUpsertWithoutEventsInput
+  disconnect?: Prisma.SubplotWhereInput | boolean
+  delete?: Prisma.SubplotWhereInput | boolean
+  connect?: Prisma.SubplotWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubplotUpdateToOneWithWhereWithoutEventsInput, Prisma.SubplotUpdateWithoutEventsInput>, Prisma.SubplotUncheckedUpdateWithoutEventsInput>
+}
+
+export type SubplotCreateNestedOneWithoutCardsInput = {
+  create?: Prisma.XOR<Prisma.SubplotCreateWithoutCardsInput, Prisma.SubplotUncheckedCreateWithoutCardsInput>
+  connectOrCreate?: Prisma.SubplotCreateOrConnectWithoutCardsInput
+  connect?: Prisma.SubplotWhereUniqueInput
+}
+
+export type SubplotUpdateOneWithoutCardsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubplotCreateWithoutCardsInput, Prisma.SubplotUncheckedCreateWithoutCardsInput>
+  connectOrCreate?: Prisma.SubplotCreateOrConnectWithoutCardsInput
+  upsert?: Prisma.SubplotUpsertWithoutCardsInput
+  disconnect?: Prisma.SubplotWhereInput | boolean
+  delete?: Prisma.SubplotWhereInput | boolean
+  connect?: Prisma.SubplotWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubplotUpdateToOneWithWhereWithoutCardsInput, Prisma.SubplotUpdateWithoutCardsInput>, Prisma.SubplotUncheckedUpdateWithoutCardsInput>
+}
+
 export type SubplotCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -500,6 +551,8 @@ export type SubplotCreateWithoutProjectInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  cards?: Prisma.StructureCardCreateNestedManyWithoutSubplotInput
+  events?: Prisma.TimelineEventCreateNestedManyWithoutSubplotInput
 }
 
 export type SubplotUncheckedCreateWithoutProjectInput = {
@@ -511,6 +564,8 @@ export type SubplotUncheckedCreateWithoutProjectInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  cards?: Prisma.StructureCardUncheckedCreateNestedManyWithoutSubplotInput
+  events?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutSubplotInput
 }
 
 export type SubplotCreateOrConnectWithoutProjectInput = {
@@ -554,6 +609,142 @@ export type SubplotScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Subplot"> | Date | string
 }
 
+export type SubplotCreateWithoutEventsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: string
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutSubplotsInput
+  cards?: Prisma.StructureCardCreateNestedManyWithoutSubplotInput
+}
+
+export type SubplotUncheckedCreateWithoutEventsInput = {
+  id?: string
+  projectId: string
+  title: string
+  description?: string | null
+  status?: string
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cards?: Prisma.StructureCardUncheckedCreateNestedManyWithoutSubplotInput
+}
+
+export type SubplotCreateOrConnectWithoutEventsInput = {
+  where: Prisma.SubplotWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubplotCreateWithoutEventsInput, Prisma.SubplotUncheckedCreateWithoutEventsInput>
+}
+
+export type SubplotUpsertWithoutEventsInput = {
+  update: Prisma.XOR<Prisma.SubplotUpdateWithoutEventsInput, Prisma.SubplotUncheckedUpdateWithoutEventsInput>
+  create: Prisma.XOR<Prisma.SubplotCreateWithoutEventsInput, Prisma.SubplotUncheckedCreateWithoutEventsInput>
+  where?: Prisma.SubplotWhereInput
+}
+
+export type SubplotUpdateToOneWithWhereWithoutEventsInput = {
+  where?: Prisma.SubplotWhereInput
+  data: Prisma.XOR<Prisma.SubplotUpdateWithoutEventsInput, Prisma.SubplotUncheckedUpdateWithoutEventsInput>
+}
+
+export type SubplotUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutSubplotsNestedInput
+  cards?: Prisma.StructureCardUpdateManyWithoutSubplotNestedInput
+}
+
+export type SubplotUncheckedUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cards?: Prisma.StructureCardUncheckedUpdateManyWithoutSubplotNestedInput
+}
+
+export type SubplotCreateWithoutCardsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: string
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutSubplotsInput
+  events?: Prisma.TimelineEventCreateNestedManyWithoutSubplotInput
+}
+
+export type SubplotUncheckedCreateWithoutCardsInput = {
+  id?: string
+  projectId: string
+  title: string
+  description?: string | null
+  status?: string
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.TimelineEventUncheckedCreateNestedManyWithoutSubplotInput
+}
+
+export type SubplotCreateOrConnectWithoutCardsInput = {
+  where: Prisma.SubplotWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubplotCreateWithoutCardsInput, Prisma.SubplotUncheckedCreateWithoutCardsInput>
+}
+
+export type SubplotUpsertWithoutCardsInput = {
+  update: Prisma.XOR<Prisma.SubplotUpdateWithoutCardsInput, Prisma.SubplotUncheckedUpdateWithoutCardsInput>
+  create: Prisma.XOR<Prisma.SubplotCreateWithoutCardsInput, Prisma.SubplotUncheckedCreateWithoutCardsInput>
+  where?: Prisma.SubplotWhereInput
+}
+
+export type SubplotUpdateToOneWithWhereWithoutCardsInput = {
+  where?: Prisma.SubplotWhereInput
+  data: Prisma.XOR<Prisma.SubplotUpdateWithoutCardsInput, Prisma.SubplotUncheckedUpdateWithoutCardsInput>
+}
+
+export type SubplotUpdateWithoutCardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutSubplotsNestedInput
+  events?: Prisma.TimelineEventUpdateManyWithoutSubplotNestedInput
+}
+
+export type SubplotUncheckedUpdateWithoutCardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.TimelineEventUncheckedUpdateManyWithoutSubplotNestedInput
+}
+
 export type SubplotCreateManyProjectInput = {
   id?: string
   title: string
@@ -574,6 +765,8 @@ export type SubplotUpdateWithoutProjectInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cards?: Prisma.StructureCardUpdateManyWithoutSubplotNestedInput
+  events?: Prisma.TimelineEventUpdateManyWithoutSubplotNestedInput
 }
 
 export type SubplotUncheckedUpdateWithoutProjectInput = {
@@ -585,6 +778,8 @@ export type SubplotUncheckedUpdateWithoutProjectInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cards?: Prisma.StructureCardUncheckedUpdateManyWithoutSubplotNestedInput
+  events?: Prisma.TimelineEventUncheckedUpdateManyWithoutSubplotNestedInput
 }
 
 export type SubplotUncheckedUpdateManyWithoutProjectInput = {
@@ -599,6 +794,44 @@ export type SubplotUncheckedUpdateManyWithoutProjectInput = {
 }
 
 
+/**
+ * Count Type SubplotCountOutputType
+ */
+
+export type SubplotCountOutputType = {
+  cards: number
+  events: number
+}
+
+export type SubplotCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  cards?: boolean | SubplotCountOutputTypeCountCardsArgs
+  events?: boolean | SubplotCountOutputTypeCountEventsArgs
+}
+
+/**
+ * SubplotCountOutputType without action
+ */
+export type SubplotCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubplotCountOutputType
+   */
+  select?: Prisma.SubplotCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SubplotCountOutputType without action
+ */
+export type SubplotCountOutputTypeCountCardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StructureCardWhereInput
+}
+
+/**
+ * SubplotCountOutputType without action
+ */
+export type SubplotCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimelineEventWhereInput
+}
+
 
 export type SubplotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -611,6 +844,9 @@ export type SubplotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  cards?: boolean | Prisma.Subplot$cardsArgs<ExtArgs>
+  events?: boolean | Prisma.Subplot$eventsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubplotCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subplot"]>
 
 export type SubplotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -654,6 +890,9 @@ export type SubplotSelectScalar = {
 export type SubplotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "description" | "status" | "color" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["subplot"]>
 export type SubplotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  cards?: boolean | Prisma.Subplot$cardsArgs<ExtArgs>
+  events?: boolean | Prisma.Subplot$eventsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubplotCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubplotIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -666,6 +905,8 @@ export type $SubplotPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Subplot"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    cards: Prisma.$StructureCardPayload<ExtArgs>[]
+    events: Prisma.$TimelineEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1072,6 +1313,8 @@ readonly fields: SubplotFieldRefs;
 export interface Prisma__SubplotClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  cards<T extends Prisma.Subplot$cardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subplot$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StructureCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  events<T extends Prisma.Subplot$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subplot$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimelineEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1508,6 +1751,54 @@ export type SubplotDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Subplots to delete.
    */
   limit?: number
+}
+
+/**
+ * Subplot.cards
+ */
+export type Subplot$cardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StructureCard
+   */
+  select?: Prisma.StructureCardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StructureCard
+   */
+  omit?: Prisma.StructureCardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StructureCardInclude<ExtArgs> | null
+  where?: Prisma.StructureCardWhereInput
+  orderBy?: Prisma.StructureCardOrderByWithRelationInput | Prisma.StructureCardOrderByWithRelationInput[]
+  cursor?: Prisma.StructureCardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StructureCardScalarFieldEnum | Prisma.StructureCardScalarFieldEnum[]
+}
+
+/**
+ * Subplot.events
+ */
+export type Subplot$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimelineEvent
+   */
+  select?: Prisma.TimelineEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimelineEvent
+   */
+  omit?: Prisma.TimelineEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimelineEventInclude<ExtArgs> | null
+  where?: Prisma.TimelineEventWhereInput
+  orderBy?: Prisma.TimelineEventOrderByWithRelationInput | Prisma.TimelineEventOrderByWithRelationInput[]
+  cursor?: Prisma.TimelineEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimelineEventScalarFieldEnum | Prisma.TimelineEventScalarFieldEnum[]
 }
 
 /**

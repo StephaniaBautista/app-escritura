@@ -1,5 +1,8 @@
 export interface StatsQuery {
-  days?: 30 | 90 | 365
+  days?: 7 | 30 | 60 | 90 | 365
+  from?: string
+  to?: string
+  allTime?: boolean
   timeZone?: string
   projectId?: string
   documentId?: string

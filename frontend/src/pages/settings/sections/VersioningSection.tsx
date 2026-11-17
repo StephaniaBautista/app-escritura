@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '@/stores/settings-store'
 import type { AutoVersionConfig } from '@/types/settings'
-import { Clock, LogOut, Timer, Calendar, CalendarDays, CalendarRange } from 'lucide-react'
+import { SettingsSwitch } from '../SettingsSwitch'
 
 interface TriggerRowProps {
-  icon: React.ReactNode
   label: string
   description: string
   enabled: boolean
@@ -14,49 +13,37 @@ interface TriggerRowProps {
   onIntervalChange?: (ms: number) => void
 }
 
-function TriggerRow({ icon, label, description, enabled, intervalMs, intervalOptions, onToggle, onIntervalChange }: TriggerRowProps) {
+function TriggerRow({ label, description, enabled, intervalMs, intervalOptions, onToggle, onIntervalChange }: TriggerRowProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="flex items-start gap-4 py-4 border-b border-[var(--color-border)] last:border-b-0">
-      <div className="mt-1 text-[var(--color-muted)]">{icon}</div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="font-medium text-[var(--color-ink)]">{label}</p>
-            <p className="text-sm text-[var(--color-muted)]">{description}</p>
-          </div>
-          <button
-            role="switch"
-            aria-checked={enabled}
-            aria-label={`${t('settings.autoVersion.enabled')}: ${label}`}
-            onClick={onToggle}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 ${
-              enabled ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-border)]'
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                enabled ? 'translate-x-5' : 'translate-x-0'
-              }`}
-            />
-          </button>
+    <div className="settings-tick" data-on={enabled ? 'true' : 'false'}>
+      <div className="settings-tick__head">
+        <div>
+          <h3>{label}</h3>
+          <p>{description}</p>
         </div>
-        {enabled && intervalOptions && onIntervalChange && (
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-sm text-[var(--color-muted)]">{t('settings.autoVersion.interval')}:</span>
-            <select
-              value={intervalMs}
-              onChange={(e) => onIntervalChange(Number(e.target.value))}
-              className="rounded border border-[var(--color-border)] bg-[var(--color-paper)] px-2 py-1 text-sm text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
-            >
-              {intervalOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-        )}
+        <SettingsSwitch
+          checked={enabled}
+          label={`${t('settings.autoVersion.enabled')}: ${label}`}
+          onToggle={onToggle}
+        />
       </div>
+      {enabled && intervalOptions && onIntervalChange && (
+        <div className="settings-tick__interval">
+          <span>{t('settings.autoVersion.interval')}</span>
+          <select
+            value={intervalMs}
+            aria-label={`${label}: ${t('settings.autoVersion.interval')}`}
+            onChange={(e) => onIntervalChange(Number(e.target.value))}
+            className="settings-field"
+          >
+            {intervalOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   )
 }
@@ -82,7 +69,7 @@ export function VersioningSection() {
     } else {
       updated[key] = { ...current, enabled, ...(intervalMs !== undefined && { intervalMs }) } as AutoVersionConfig[typeof key]
     }
-    updateSettings({ autoVersion: updated })
+    void updateSettings({ autoVersion: updated })
   }
 
   const inactivityOptions = [
@@ -107,8 +94,8 @@ export function VersioningSection() {
   ]
 
   const weeklyOptions = [
-    { value: 3 * 24 * 60 * 60 * 1000, label: `3 ${t('settings.autoVersion.days')}` },
-    { value: 7 * 24 * 60 * 60 * 1000, label: `1 ${t('settings.autoVersion.weeks')}` },
+    { value: 3 * 24 * 60 * 1000, label: `3 ${t('settings.autoVersion.days')}` },
+    { value: 7 * 24 * 60 * 1000, label: `1 ${t('settings.autoVersion.weeks')}` },
     { value: 2 * 7 * 24 * 60 * 60 * 1000, label: `2 ${t('settings.autoVersion.weeks')}` },
   ]
 
@@ -119,13 +106,11 @@ export function VersioningSection() {
   ]
 
   return (
-    <section>
-      <h2 className="text-lg font-semibold text-[var(--color-ink)] mb-1">{t('settings.autoVersion.title')}</h2>
-      <p className="text-sm text-[var(--color-muted)] mb-4">{t('settings.autoVersion.description')}</p>
-
-      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-paper)] px-4">
+    <section className="settings-block">
+      <h2 className="settings-block__title">{t('settings.autoVersion.title')}</h2>
+      <p className="settings-block__lede">{t('settings.autoVersion.description')}</p>
+      <div className="settings-spine">
         <TriggerRow
-          icon={<Timer size={18} />}
           label={t('settings.autoVersion.inactivity')}
           description={t('settings.autoVersion.inactivityDesc')}
           enabled={config.inactivity.enabled}
@@ -135,14 +120,12 @@ export function VersioningSection() {
           onIntervalChange={(ms) => updateTrigger('inactivity', config.inactivity.enabled, ms)}
         />
         <TriggerRow
-          icon={<LogOut size={18} />}
           label={t('settings.autoVersion.exit')}
           description={t('settings.autoVersion.exitDesc')}
           enabled={config.exit.enabled}
           onToggle={() => updateTrigger('exit', !config.exit.enabled)}
         />
         <TriggerRow
-          icon={<Clock size={18} />}
           label={t('settings.autoVersion.hourly')}
           description={t('settings.autoVersion.hourlyDesc')}
           enabled={config.hourly.enabled}
@@ -152,7 +135,6 @@ export function VersioningSection() {
           onIntervalChange={(ms) => updateTrigger('hourly', config.hourly.enabled, ms)}
         />
         <TriggerRow
-          icon={<Calendar size={18} />}
           label={t('settings.autoVersion.daily')}
           description={t('settings.autoVersion.dailyDesc')}
           enabled={config.daily.enabled}
@@ -162,7 +144,6 @@ export function VersioningSection() {
           onIntervalChange={(ms) => updateTrigger('daily', config.daily.enabled, ms)}
         />
         <TriggerRow
-          icon={<CalendarDays size={18} />}
           label={t('settings.autoVersion.weekly')}
           description={t('settings.autoVersion.weeklyDesc')}
           enabled={config.weekly.enabled}
@@ -172,7 +153,6 @@ export function VersioningSection() {
           onIntervalChange={(ms) => updateTrigger('weekly', config.weekly.enabled, ms)}
         />
         <TriggerRow
-          icon={<CalendarRange size={18} />}
           label={t('settings.autoVersion.monthly')}
           description={t('settings.autoVersion.monthlyDesc')}
           enabled={config.monthly.enabled}

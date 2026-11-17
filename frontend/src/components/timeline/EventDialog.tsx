@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown, FileText, Timer, UserPlus, Users } from 'lucide-react'
 import type { TimelineConfig, TimelineEra, TimelineEvent, TimelineEventInput, TimelinePrecision } from '@/types/timeline'
+import type { Subplot } from '@/types/structure'
 import { useCharactersStore } from '@/stores/characters-store'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
@@ -14,7 +15,7 @@ import { FormSheet } from '@/components/ui/FormSheet'
 import { ColorDot } from '@/components/ui/ColorDot'
 import { PillButton, SectionTitle, UnderlineInput, UnderlineSelect } from '@/components/ui/SheetFields'
 import { DatePartsPicker } from './DatePartsPicker'
-import { CharacterPicker, DocumentPicker, EventGroupPicker, EventImageField, IconPicker } from './EventDialogSections'
+import { CharacterPicker, DocumentPicker, EventGroupPicker, EventImageField, IconPicker, SubplotPicker } from './EventDialogSections'
 import { DEFAULT_EVENT_ICON, EVENT_PRECISIONS, isPrecision, PALETTE } from './timeline-constants'
 
 export interface EventImageChange {
@@ -28,10 +29,13 @@ interface EventDialogProps {
   event: TimelineEvent | null
   events: TimelineEvent[]
   eras: TimelineEra[]
+  subplots?: Subplot[]
   timelineConfig: TimelineConfig
   onSubmit: (data: TimelineEventInput, image: EventImageChange) => Promise<void>
   onCancel: () => void
 }
+
+const NO_SUBPLOTS: Subplot[] = []
 
 function partsFrom(raw: string | null): DateParts | null {
   const parts = parseDateParts(raw)
@@ -45,7 +49,7 @@ export function EventDialog({ isOpen, event, ...rest }: EventDialogProps) {
   return <EventForm key={event?.id ?? 'new'} event={event} {...rest} />
 }
 
-function EventForm({ projectId, event, events, eras, timelineConfig, onSubmit, onCancel }: Omit<EventDialogProps, 'isOpen'>) {
+function EventForm({ projectId, event, events, eras, subplots = NO_SUBPLOTS, timelineConfig, onSubmit, onCancel }: Omit<EventDialogProps, 'isOpen'>) {
   const { t } = useTranslation()
   const toast = useToastStore()
   const { characters, isLoading: charactersLoading, load: loadCharacters } = useCharactersStore()
@@ -72,6 +76,7 @@ function EventForm({ projectId, event, events, eras, timelineConfig, onSubmit, o
   const [icon, setIcon] = useState(event?.icon ?? DEFAULT_EVENT_ICON)
   const [color, setColor] = useState<string | null>(event?.color ?? null)
   const [groupName, setGroupName] = useState<string | null>(event?.groupName ?? null)
+  const [subplotId, setSubplotId] = useState<string | null>(event?.subplotId ?? null)
   const [precision, setPrecision] = useState<TimelinePrecision>(isPrecision(event?.precision) ? event.precision : 'year')
   const [start, setStart] = useState<DateParts>(() => partsFrom(event?.date ?? null) ?? { year: 0 })
   const [end, setEnd] = useState<DateParts | null>(() => partsFrom(event?.endDate ?? null))
@@ -150,6 +155,7 @@ function EventForm({ projectId, event, events, eras, timelineConfig, onSubmit, o
           icon,
           color,
           groupName,
+          subplotId,
           precision,
           date: serializeDateParts(coerceParts(start, precision), precision),
           endDate: end ? serializeDateParts(coerceParts(end, precision), precision) : null,
@@ -198,6 +204,10 @@ function EventForm({ projectId, event, events, eras, timelineConfig, onSubmit, o
         </div>
 
         <EventGroupPicker events={events} value={groupName} onChange={setGroupName} disabled={isSaving} />
+
+        {subplots.length > 0 && (
+          <SubplotPicker subplots={subplots} value={subplotId} onChange={setSubplotId} disabled={isSaving} />
+        )}
 
         <EventImageField
           preview={imagePreview}

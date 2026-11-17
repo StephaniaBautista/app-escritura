@@ -56,7 +56,7 @@ describe('SuggestTagsButton', () => {
     const update = vi.fn()
     const meta: StoryMeta = { tags: ['Angst'] }
     suggestTags.mockResolvedValue({
-      tags: ['Dead Dove: Do Not Eat', 'Angst'], sources: [], provider: 'deepseek', model: 'test',
+      tags: ['Dead Dove: Do Not Eat', 'Angst'], sources: [], provider: 'balanced', model: 'test',
     })
     render(<SuggestTagsButton projectId="p1" meta={meta} update={update} />)
     fireEvent.click(screen.getByRole('button', { name: 'storySetup.suggestTagsWithAi' }))

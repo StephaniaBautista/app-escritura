@@ -1,7 +1,6 @@
 {
   "structureTab": "Structure",
   "boardTab": "Board",
-  "subplotsTab": "Subplots",
   "boardTitle": "Story structure",
   "boardSubtitle": "Order your chapters across beginning, development and ending. Drag cards or let AI suggest placement.",
   "syncChapters_one": "Import {{count}} chapter",
@@ -71,7 +70,16 @@
   },
   "subplotColor": "Color",
   "subplotsEmpty": "No subplots yet. Create the first one to track parallel stories.",
-  "dragSubplot": "Drag subplot",
   "deleteSubplotTitle": "Delete subplot",
-  "confirmDeleteSubplot": "Delete subplot \"{{name}}\"?"
+  "confirmDeleteSubplot": "Delete subplot \"{{name}}\"?",
+  "subplotsLayer": "Subplots",
+  "subplotsVisibleCount": "{{visible}} of {{total}} subplots visible",
+  "showSubplot": "Show subplot \"{{name}}\"",
+  "hideSubplot": "Hide subplot \"{{name}}\"",
+  "showAllSubplots": "Show all",
+  "hideAllSubplots": "Hide all",
+  "subplotField": "Subplot",
+  "noSubplot": "None (main plot)",
+  "subplotLayerHint": "On the board, each subplot tints its cards with its color. On the timeline, each visible subplot is its own group. You can switch each subplot off.",
+  "subplotLane": "Subplot: {{name}}"
 }

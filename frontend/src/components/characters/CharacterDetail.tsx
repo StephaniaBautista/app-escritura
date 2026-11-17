@@ -1,7 +1,7 @@
-import { CharacterSuggestions } from '@/components/ai/CharacterSuggestions'
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { X, Pencil, GitFork, History, Trash2, Check, Loader2, ArrowLeft } from 'lucide-react'
+import { X, Pencil, GitFork, History, Trash2, Check, Loader2, ArrowLeft, MessageCircle } from 'lucide-react'
 import type { Character } from '@/types/character'
 import type { CharacterRelationship } from '@/types/relationship'
 import { CharacterSheet } from './CharacterSheet'
@@ -132,7 +132,19 @@ export function CharacterDetail({ character, characters, relations = [], onClose
                 onRemoveRelation={setRelRemoveTarget}
               />
 
-              <CharacterSuggestions key={character.id} character={character} />
+              <section className="border-t pt-4" style={{ borderColor: 'var(--color-paper-lines)' }}>
+                <Link
+                  to={`/app/ai-characters?project=${character.projectId}&character=${character.id}`}
+                  className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  style={{ background: 'var(--color-accent)', outlineColor: 'var(--color-accent)' }}
+                >
+                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  {t('characterApp.talkWithCharacter')}
+                </Link>
+                <p className="mt-2 text-center text-xs" style={{ color: 'var(--color-ink-faint)' }}>
+                  {t('characterApp.talkWithCharacterHint')}
+                </p>
+              </section>
 
           {source && (
             <section className="rounded-lg border p-3" style={{ borderColor: 'var(--color-paper-lines)' }}>

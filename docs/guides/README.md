@@ -7,7 +7,7 @@ Documentacion de guias para desarrolladores.
 ### Requisitos
 - Node.js 22 LTS (`nvm use` desde la raíz)
 - pnpm >= 9
-- Docker Desktop o una base PostgreSQL/Supabase existente
+- PostgreSQL/Supabase (extensión `vector` para el RAG del asesor)
 
 ### Instalacion
 
@@ -16,20 +16,20 @@ Documentacion de guias para desarrolladores.
 git clone https://github.com/StephaniaBautista/app-escritura.git
 cd app-escritura
 
-# Instalar dependencias, levantar PostgreSQL y aplicar el schema
+# Instalar dependencias y aplicar el schema (DATABASE_URL en backend/.env)
 pnpm setup:local
 
 # Iniciar desarrollo
 pnpm dev
 ```
 
-El setup local crea `backend/.env` solo si no existe, conserva configuraciones previas y usa PostgreSQL en `127.0.0.1:54329`.
+El setup local crea `backend/.env` solo si no existe y conserva configuraciones previas. `DATABASE_URL` debe apuntar a Postgres/Supabase.
 
 ### Variables de Entorno
 
 | Variable | Descripcion | Requerida |
 |----------|-------------|-----------|
-| DATABASE_URL | URL de conexion a PostgreSQL | Si; el ejemplo apunta al contenedor local |
+| DATABASE_URL | URL de conexion a PostgreSQL/Supabase | Si |
 | BETTER_AUTH_SECRET | Secret de BetterAuth | Si; cambiar en produccion |
 | BETTER_AUTH_URL | URL del backend | Si |
 | SMTP_HOST | Servidor SMTP | No |

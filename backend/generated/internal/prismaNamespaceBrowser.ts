@@ -58,6 +58,7 @@ export const ModelName = {
   Project: 'Project',
   Folder: 'Folder',
   Document: 'Document',
+  AiDocumentChunk: 'AiDocumentChunk',
   Note: 'Note',
   DocumentVersion: 'DocumentVersion',
   Branch: 'Branch',
@@ -90,9 +91,14 @@ export const ModelName = {
   AiConversation: 'AiConversation',
   AiMessage: 'AiMessage',
   AiUsage: 'AiUsage',
+  AiUsageEvent: 'AiUsageEvent',
   WritingStats: 'WritingStats',
   WritingSession: 'WritingSession',
-  WritingActivityClock: 'WritingActivityClock'
+  WritingActivityClock: 'WritingActivityClock',
+  Tag: 'Tag',
+  SharedLink: 'SharedLink',
+  SharedComment: 'SharedComment',
+  SharedView: 'SharedView'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -216,6 +222,22 @@ export const DocumentScalarFieldEnum = {
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const AiDocumentChunkScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  documentId: 'documentId',
+  chunkIndex: 'chunkIndex',
+  content: 'content',
+  contentHash: 'contentHash',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiDocumentChunkScalarFieldEnum = (typeof AiDocumentChunkScalarFieldEnum)[keyof typeof AiDocumentChunkScalarFieldEnum]
 
 
 export const NoteScalarFieldEnum = {
@@ -491,6 +513,7 @@ export const TimelineEventScalarFieldEnum = {
   imageUrl: 'imageUrl',
   relatedEventIds: 'relatedEventIds',
   relatedDocumentIds: 'relatedDocumentIds',
+  subplotId: 'subplotId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -634,6 +657,7 @@ export const StructureCardScalarFieldEnum = {
   cardType: 'cardType',
   referenceId: 'referenceId',
   color: 'color',
+  subplotId: 'subplotId',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -700,6 +724,21 @@ export const AiUsageScalarFieldEnum = {
 export type AiUsageScalarFieldEnum = (typeof AiUsageScalarFieldEnum)[keyof typeof AiUsageScalarFieldEnum]
 
 
+export const AiUsageEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  preset: 'preset',
+  vendor: 'vendor',
+  model: 'model',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  costMicros: 'costMicros',
+  createdAt: 'createdAt'
+} as const
+
+export type AiUsageEventScalarFieldEnum = (typeof AiUsageEventScalarFieldEnum)[keyof typeof AiUsageEventScalarFieldEnum]
+
+
 export const WritingStatsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -737,6 +776,56 @@ export const WritingActivityClockScalarFieldEnum = {
 } as const
 
 export type WritingActivityClockScalarFieldEnum = (typeof WritingActivityClockScalarFieldEnum)[keyof typeof WritingActivityClockScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  kind: 'kind',
+  createdAt: 'createdAt'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+export const SharedLinkScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  documentId: 'documentId',
+  createdById: 'createdById',
+  includeChildren: 'includeChildren',
+  allowComments: 'allowComments',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SharedLinkScalarFieldEnum = (typeof SharedLinkScalarFieldEnum)[keyof typeof SharedLinkScalarFieldEnum]
+
+
+export const SharedCommentScalarFieldEnum = {
+  id: 'id',
+  sharedLinkId: 'sharedLinkId',
+  blockIndex: 'blockIndex',
+  quote: 'quote',
+  body: 'body',
+  authorName: 'authorName',
+  userId: 'userId',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SharedCommentScalarFieldEnum = (typeof SharedCommentScalarFieldEnum)[keyof typeof SharedCommentScalarFieldEnum]
+
+
+export const SharedViewScalarFieldEnum = {
+  sharedLinkId: 'sharedLinkId',
+  userId: 'userId',
+  firstViewedAt: 'firstViewedAt',
+  lastViewedAt: 'lastViewedAt'
+} as const
+
+export type SharedViewScalarFieldEnum = (typeof SharedViewScalarFieldEnum)[keyof typeof SharedViewScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -15,7 +15,7 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
 vi.mock('../ai-access.js', () => ({ authorizeAi: authorize, withAiQuota: quota }))
 vi.mock('../../lib/ai-client.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../lib/ai-client.js')>()),
-  aiClient: { complete, status: () => ({ providers: [{ id: 'deepseek', available: true }], fallbackEnabled: false }) },
+  aiClient: { complete, status: () => ({ providers: [{ id: 'balanced', available: true }], fallbackEnabled: false }) },
 }))
 vi.mock('../../lib/rag-service.js', () => ({ ragService: { build } }))
 
@@ -42,7 +42,7 @@ describe('tag suggestions', () => {
     build.mockResolvedValue({ text: 'Ada muere.', sources, directed: false })
     complete.mockResolvedValue({
       content: JSON.stringify({ tags: ['Angst', 'Dead Dove: Do Not Eat', 'Major Character Death'] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
   })

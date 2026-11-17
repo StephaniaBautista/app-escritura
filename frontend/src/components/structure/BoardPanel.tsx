@@ -28,6 +28,7 @@ import { LoadingState } from '@/components/ui/LoadingState'
 import { BoardColumn } from './BoardColumn'
 import { CardDialog } from './CardDialog'
 import { ColumnDialog } from './ColumnDialog'
+import { SubplotsLayerButton } from './SubplotsLayerButton'
 
 type DragData =
   | { type: 'card'; card: StructureCard }
@@ -176,6 +177,7 @@ export function BoardPanel({ projectId }: { projectId: string }) {
                 </button>
               )}
               <StructureSuggestions projectId={projectId} board={board} />
+              <SubplotsLayerButton projectId={projectId} align="start" />
             </div>
             <button
               type="button"

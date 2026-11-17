@@ -2,23 +2,15 @@ import type { ReactNode, SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAiStore } from '@/stores/ai-store'
 import type { AiSource } from '@/types/ai'
+import { AiProviderSelect } from './AiPresetPicker'
 import './ai.css'
+
+export { AiProviderSelect }
 
 export function AiError({ error, onRetry }: { error: string | null; onRetry?: () => void }) {
   const { t } = useTranslation()
   if (!error) return null
   return <div role="alert" className="ai-panel__error space-y-2"><p>{t(error)}</p>{onRetry && <button type="button" className="ai-panel__button" onClick={onRetry}>{t('aiApp.retry')}</button>}</div>
-}
-
-export function AiProviderSelect() {
-  const { t } = useTranslation()
-  const { capabilities, provider, setProvider } = useAiStore()
-  return <label className="block text-xs ai-panel__muted space-y-1"><span>{t('aiApp.provider')}</span>
-    <select className="ai-panel__control" value={provider} onChange={(event) => setProvider(event.target.value)}>
-      <option value="">{t('aiApp.providerAuto')}</option>
-      {capabilities?.providers.map((item) => <option key={item.id} value={item.id} disabled={!item.available}>{item.id}{item.available ? '' : ` · ${t('aiApp.unavailable')}`}</option>)}
-    </select>
-  </label>
 }
 
 export function AiSources({ sources }: { sources: AiSource[] }) {

@@ -9,6 +9,8 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { KebabMenu } from '@/components/ui/KebabMenu'
 import { FolderCreationDialog } from '@/components/story-setup/FolderCreationDialog'
 import { StoryWizard } from '@/components/story-setup/StoryWizard'
+import { TagFilterBar } from '@/components/tags/TagFilterBar'
+import { tagsApi, type Tag } from '@/services/tags'
 import { Plus, FolderOpen, FileText, ChevronDown } from 'lucide-react'
 import type { Project } from '@/types/document'
 import { getFirstTabId } from '@/lib/document-tabs'
@@ -25,9 +27,12 @@ export function DocumentsPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [createdProject, setCreatedProject] = useState<Project | null>(null)
   const [showWizard, setShowWizard] = useState(false)
+  const [allTags, setAllTags] = useState<Tag[]>([])
+  const [tagFilter, setTagFilter] = useState<string[]>([])
 
   useEffect(() => {
     loadProjects()
+    tagsApi.listAll().then(setAllTags).catch(() => setAllTags([]))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -97,6 +102,12 @@ export function DocumentsPage() {
     }
   }
 
+  const filteredProjects = projects.filter((project) => {
+    if (tagFilter.length === 0) return true
+    const names = new Set(allTags.filter((tag) => tag.projectId === project.id).map((tag) => tag.name))
+    return tagFilter.every((name) => names.has(name))
+  })
+
   return (
     <div className="p-6 md:p-8">
       <div>
@@ -126,6 +137,8 @@ export function DocumentsPage() {
         </div>
 
         <ErrorMessage message={localError || error} />
+
+        <TagFilterBar tags={allTags} selected={tagFilter} onChange={setTagFilter} />
 
         {isCreating && (
           <InlineCreateInput
@@ -165,8 +178,13 @@ export function DocumentsPage() {
         )}
 
         {projects.length > 0 ? (
+          filteredProjects.length === 0 ? (
+            <div className="notebook-paper p-8 text-center">
+              <p className="text-sm" style={{ color: 'var(--color-ink-faint)' }}>{t('tagsApp.filterEmpty')}</p>
+            </div>
+          ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <div key={project.id} className="relative group">
                 <Link
                   to={`/app/documents/${project.id}`}
@@ -191,6 +209,7 @@ export function DocumentsPage() {
               </div>
             ))}
           </div>
+          )
         ) : (
           !isCreating && (
             <div className="notebook-paper p-8 md:p-12 relative">

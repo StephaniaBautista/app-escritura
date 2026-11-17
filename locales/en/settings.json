@@ -1,5 +1,6 @@
 {
   "title": "Settings",
+  "intro": "How the machine helps, and when a cut of the manuscript is kept. The adviser chat still picks its own mode.",
   "saving": "Saving...",
   "saved": "Settings saved",
   "saveError": "Error saving settings",
@@ -25,5 +26,22 @@
     "weeks": "weeks",
     "months": "months",
     "enabled": "Enabled"
+  },
+  "ai": {
+    "title": "Artificial intelligence",
+    "description": "Choose the mode for each tool. The adviser chat still has its own selector.",
+    "reviewDefault": "Review when opening a document",
+    "reviewDefaultDesc": "If this is off, the text is not analyzed until you turn review on in the editor.",
+    "mode": "Mode",
+    "tools": {
+      "review": "Review",
+      "reviewDesc": "Coherence notes on the open document.",
+      "wizard": "Story wizard",
+      "wizardDesc": "Fill the wizard and suggest tags.",
+      "timeline": "Timeline",
+      "timelineDesc": "Generate or complete eras and events.",
+      "characters": "Characters",
+      "charactersDesc": "Create or complete character sheets from the manuscript."
+    }
   }
 }

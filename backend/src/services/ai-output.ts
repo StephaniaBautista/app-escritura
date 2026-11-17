@@ -37,19 +37,11 @@ function strings(value: unknown, maxItems: number, maxLength: number): string[] 
 export function parseChatResponse(content: string, mode: AiMode): string {
   const output = json(content)
   if (mode === 'character') {
-    if (Object.keys(output).some((key) => key !== 'answer' && key !== 'knownFacts')) return invalid('unexpected_fields')
-    const answer = string(output.answer, 1000)
-    strings(output.knownFacts, 5, 250)
-    return answer
+    if (Object.keys(output).some((key) => key !== 'answer')) return invalid('unexpected_fields')
+    return string(output.answer, 1000)
   }
-  if (Object.keys(output).some((key) => !['observations', 'questions', 'nextSteps'].includes(key))) return invalid('unexpected_fields')
-  const items = [
-    ...strings(output.observations, 4, 350),
-    ...strings(output.questions, 3, 250),
-    ...strings(output.nextSteps, 4, 350),
-  ]
-  if (!items.length) return invalid('empty_response')
-  return items.map((item) => `• ${item}`).join('\n\n')
+  if (Object.keys(output).some((key) => key !== 'reply')) return invalid('unexpected_fields')
+  return string(output.reply, 4000)
 }
 
 export function parseSuggestions(

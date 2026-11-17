@@ -14,7 +14,7 @@ const summary = { totalWords: 1, wordsAdded: 0, activeSeconds: 0, activeDays: 0,
 beforeEach(async () => {
   vi.resetAllMocks()
   mocks.getSessionUser.mockResolvedValue({ id: 'user' })
-  mocks.get.mockResolvedValue({ timeZone: 'UTC', today: '2026-09-12', trackedSince: null, range: { from: '2026-08-14', to: '2026-09-12' }, summary, days: [], projects: [], documents: [], secret: 'must-not-leak' })
+  mocks.get.mockResolvedValue({ timeZone: 'UTC', today: '2026-09-12', trackedSince: null, range: { from: '2026-08-14', to: '2026-09-12' }, summary, days: [], calendar: { from: '2025-09-13', to: '2026-09-12', days: [] }, projects: [], documents: [], secret: 'must-not-leak' })
   mocks.report.mockResolvedValue({ sessionId: body.sessionId, acceptedMilliseconds: 0, creditedMilliseconds: 0, totalActiveMilliseconds: 0, expiresAt: '2026-09-12T20:00:00.000Z' })
   app = Fastify()
   await app.register(statsRoutes, { prefix: '/api' })
@@ -36,14 +36,20 @@ describe('statistics HTTP contract', () => {
     const response = await app.inject({ url: '/api/stats?days=30&timeZone=UTC&documentId=doc' })
     expect(response.statusCode).toBe(200)
     expect(mocks.get).toHaveBeenCalledWith('user', { days: 30, timeZone: 'UTC', documentId: 'doc' })
+    const ranged = await app.inject({ url: '/api/stats?from=2026-09-01&to=2026-09-12&timeZone=UTC' })
+    expect(ranged.statusCode).toBe(200)
+    expect(mocks.get).toHaveBeenCalledWith('user', { days: 30, from: '2026-09-01', to: '2026-09-12', timeZone: 'UTC' })
+    const allTime = await app.inject({ url: '/api/stats?allTime=true&timeZone=UTC' })
+    expect(allTime.statusCode).toBe(200)
+    expect(mocks.get).toHaveBeenCalledWith('user', { days: 30, allTime: true, timeZone: 'UTC' })
     expect(response.json().summary).toEqual(summary)
     expect(response.body).not.toContain('secret')
   })
-  it('defaults the range to 365 days', async () => {
+  it('defaults the range to 30 days', async () => {
     await app.inject({ url: '/api/stats' })
-    expect(mocks.get).toHaveBeenCalledWith('user', { days: 365 })
+    expect(mocks.get).toHaveBeenCalledWith('user', { days: 30 })
   })
-  it.each(['days=31', 'days=-1', 'days=100000', 'documentId=', 'timeZone='])('rejects malformed query %s', async (query) => {
+  it.each(['days=31', 'days=-1', 'days=100000', 'documentId=', 'timeZone=', 'from=12-09-2026', 'to=2026/09/12'])('rejects malformed query %s', async (query) => {
     expect((await app.inject({ url: `/api/stats?${query}` })).statusCode).toBe(400)
     expect(mocks.get).not.toHaveBeenCalled()
   })

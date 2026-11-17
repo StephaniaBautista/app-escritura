@@ -1,5 +1,8 @@
 import { prisma } from './prisma.js'
-import { assembleContext, documentContextText, documentsThroughChapter, focusedPageText, FOCUSED_PAGE_CHARS, narrativeFields, source, type AiSource, type RagContext } from './rag-context.js'
+import { embeddingsConfigured, EmbeddingError } from './ai-embeddings.js'
+import { assembleContext, documentContextText, documentsThroughScope, focusedPageText, FOCUSED_PAGE_CHARS, narrativeFields, source, type AiSource, type RagContext } from './rag-context.js'
+import { buildAdviserSemanticContext } from './rag-adviser-context.js'
+import { VectorStoreError } from './rag-vector-search.js'
 import { worldContext } from './rag-world-context.js'
 
 export type { AiSource, RagContext } from './rag-context.js'
@@ -14,10 +17,11 @@ export interface RagInput {
   documentId?: string
   draftContent?: string
   pageMode?: boolean
+  spread?: boolean
 }
 
 export class RagContextError extends Error {
-  constructor(public readonly code: 'AI_CONTEXT_TOO_LARGE' | 'AI_INVALID_CONTEXT', public readonly statusCode: number) {
+  constructor(public readonly code: 'AI_CONTEXT_TOO_LARGE' | 'AI_INVALID_CONTEXT' | 'AI_RAG_UNAVAILABLE' | 'AI_AUTHENTICATION_FAILED', public readonly statusCode: number) {
     super(code)
     this.name = 'RagContextError'
   }
@@ -62,6 +66,18 @@ export const ragService = {
     })
     if (!project) return null
     const directed = isRecord(project.storyMeta) && project.storyMeta.guidedMode === true
+    if (!characterMode && embeddingsConfigured() && input.pageMode !== true && input.spread !== true && !input.documentId) {
+      try {
+        return await buildAdviserSemanticContext({
+          projectId: input.projectId, userId: input.userId, query: input.query, directed, project,
+        })
+      } catch (error) {
+        if (error instanceof EmbeddingError || error instanceof VectorStoreError) {
+          throw new RagContextError(error.code, error.statusCode)
+        }
+        throw error
+      }
+    }
     const scope = { projectId: input.projectId, project: { userId: input.userId }, userId: input.userId }
     const documents = await prisma.document.findMany({
       where: scope,
@@ -70,7 +86,7 @@ export const ragService = {
       take: MAX_DOCUMENTS + 1,
     })
     if (documents.length > MAX_DOCUMENTS) throw new RagContextError('AI_CONTEXT_TOO_LARGE', 413)
-    const allowedDocuments = characterMode ? documentsThroughChapter(documents, input.chapterId!) : documents
+    const allowedDocuments = characterMode ? documentsThroughScope(documents, input.chapterId!) : documents
     if (!allowedDocuments || (input.documentId && !allowedDocuments.some((document) => document.id === input.documentId))) return null
     const candidates: AiSource[] = []
     for (let index = 0; index < allowedDocuments.length; index += 20) {
@@ -84,7 +100,7 @@ export const ragService = {
       for (const metadata of selected) {
         const document = byId.get(metadata.id)
         if (!document) continue
-        const completePage = !characterMode && (input.pageMode === true || input.documentId === document.id)
+        const completePage = !characterMode && input.spread !== true && (input.pageMode === true || input.documentId === document.id)
         const persisted = completePage ? focusedPageText(document.content) : documentContextText(document.content, input.query)
         const draft = !characterMode && input.documentId === document.id ? input.draftContent : undefined
         const text = draft === undefined
@@ -124,6 +140,8 @@ export const ragService = {
     }
     candidates.push(...await worldContext(input.projectId, input.userId, characterNames))
     candidates.push(source('project', project.id, project.name, { description: project.description, metadata: narrativeFields(project.storyMeta) }))
-    return assembleContext(candidates, input.query, directed, undefined, input.documentId, { pageMode: input.pageMode === true })
+    return assembleContext(candidates, input.query, directed, undefined, input.documentId, {
+      pageMode: input.pageMode === true, spread: input.spread === true,
+    })
   },
 }

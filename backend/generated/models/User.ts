@@ -241,9 +241,14 @@ export type UserWhereInput = {
   activities?: Prisma.ActivityListRelationFilter
   aiConversations?: Prisma.AiConversationListRelationFilter
   aiUsage?: Prisma.XOR<Prisma.AiUsageNullableScalarRelationFilter, Prisma.AiUsageWhereInput> | null
+  aiUsageEvents?: Prisma.AiUsageEventListRelationFilter
   writingStats?: Prisma.WritingStatsListRelationFilter
   writingSessions?: Prisma.WritingSessionListRelationFilter
   writingActivityClock?: Prisma.XOR<Prisma.WritingActivityClockNullableScalarRelationFilter, Prisma.WritingActivityClockWhereInput> | null
+  aiDocumentChunks?: Prisma.AiDocumentChunkListRelationFilter
+  sharedLinks?: Prisma.SharedLinkListRelationFilter
+  sharedComments?: Prisma.SharedCommentListRelationFilter
+  sharedViews?: Prisma.SharedViewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -269,9 +274,14 @@ export type UserOrderByWithRelationInput = {
   activities?: Prisma.ActivityOrderByRelationAggregateInput
   aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
   aiUsage?: Prisma.AiUsageOrderByWithRelationInput
+  aiUsageEvents?: Prisma.AiUsageEventOrderByRelationAggregateInput
   writingStats?: Prisma.WritingStatsOrderByRelationAggregateInput
   writingSessions?: Prisma.WritingSessionOrderByRelationAggregateInput
   writingActivityClock?: Prisma.WritingActivityClockOrderByWithRelationInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkOrderByRelationAggregateInput
+  sharedLinks?: Prisma.SharedLinkOrderByRelationAggregateInput
+  sharedComments?: Prisma.SharedCommentOrderByRelationAggregateInput
+  sharedViews?: Prisma.SharedViewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -300,9 +310,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   activities?: Prisma.ActivityListRelationFilter
   aiConversations?: Prisma.AiConversationListRelationFilter
   aiUsage?: Prisma.XOR<Prisma.AiUsageNullableScalarRelationFilter, Prisma.AiUsageWhereInput> | null
+  aiUsageEvents?: Prisma.AiUsageEventListRelationFilter
   writingStats?: Prisma.WritingStatsListRelationFilter
   writingSessions?: Prisma.WritingSessionListRelationFilter
   writingActivityClock?: Prisma.XOR<Prisma.WritingActivityClockNullableScalarRelationFilter, Prisma.WritingActivityClockWhereInput> | null
+  aiDocumentChunks?: Prisma.AiDocumentChunkListRelationFilter
+  sharedLinks?: Prisma.SharedLinkListRelationFilter
+  sharedComments?: Prisma.SharedCommentListRelationFilter
+  sharedViews?: Prisma.SharedViewListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -362,9 +377,14 @@ export type UserCreateInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -390,9 +410,14 @@ export type UserUncheckedCreateInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -418,9 +443,14 @@ export type UserUpdateInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -446,9 +476,14 @@ export type UserUncheckedUpdateInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -540,6 +575,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -614,6 +654,14 @@ export type UserUpdateOneRequiredWithoutDocumentsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutDocumentsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDocumentsInput, Prisma.UserUpdateWithoutDocumentsInput>, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type UserUpdateOneRequiredWithoutAiDocumentChunksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiDocumentChunksInput, Prisma.UserUncheckedCreateWithoutAiDocumentChunksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiDocumentChunksInput
+  upsert?: Prisma.UserUpsertWithoutAiDocumentChunksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiDocumentChunksInput, Prisma.UserUpdateWithoutAiDocumentChunksInput>, Prisma.UserUncheckedUpdateWithoutAiDocumentChunksInput>
 }
 
 export type UserCreateNestedOneWithoutNotesInput = {
@@ -714,6 +762,20 @@ export type UserUpdateOneRequiredWithoutAiUsageNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiUsageInput, Prisma.UserUpdateWithoutAiUsageInput>, Prisma.UserUncheckedUpdateWithoutAiUsageInput>
 }
 
+export type UserCreateNestedOneWithoutAiUsageEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiUsageEventsInput, Prisma.UserUncheckedCreateWithoutAiUsageEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiUsageEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiUsageEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiUsageEventsInput, Prisma.UserUncheckedCreateWithoutAiUsageEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiUsageEventsInput
+  upsert?: Prisma.UserUpsertWithoutAiUsageEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiUsageEventsInput, Prisma.UserUpdateWithoutAiUsageEventsInput>, Prisma.UserUncheckedUpdateWithoutAiUsageEventsInput>
+}
+
 export type UserCreateNestedOneWithoutWritingStatsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutWritingStatsInput, Prisma.UserUncheckedCreateWithoutWritingStatsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutWritingStatsInput
@@ -756,6 +818,50 @@ export type UserUpdateOneRequiredWithoutWritingActivityClockNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWritingActivityClockInput, Prisma.UserUpdateWithoutWritingActivityClockInput>, Prisma.UserUncheckedUpdateWithoutWritingActivityClockInput>
 }
 
+export type UserCreateNestedOneWithoutSharedLinksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedLinksInput, Prisma.UserUncheckedCreateWithoutSharedLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSharedLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedLinksInput, Prisma.UserUncheckedCreateWithoutSharedLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedLinksInput
+  upsert?: Prisma.UserUpsertWithoutSharedLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSharedLinksInput, Prisma.UserUpdateWithoutSharedLinksInput>, Prisma.UserUncheckedUpdateWithoutSharedLinksInput>
+}
+
+export type UserCreateNestedOneWithoutSharedCommentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedCommentsInput, Prisma.UserUncheckedCreateWithoutSharedCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSharedCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedCommentsInput, Prisma.UserUncheckedCreateWithoutSharedCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedCommentsInput
+  upsert?: Prisma.UserUpsertWithoutSharedCommentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSharedCommentsInput, Prisma.UserUpdateWithoutSharedCommentsInput>, Prisma.UserUncheckedUpdateWithoutSharedCommentsInput>
+}
+
+export type UserCreateNestedOneWithoutSharedViewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedViewsInput, Prisma.UserUncheckedCreateWithoutSharedViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSharedViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedViewsInput, Prisma.UserUncheckedCreateWithoutSharedViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedViewsInput
+  upsert?: Prisma.UserUpsertWithoutSharedViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSharedViewsInput, Prisma.UserUpdateWithoutSharedViewsInput>, Prisma.UserUncheckedUpdateWithoutSharedViewsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -778,9 +884,14 @@ export type UserCreateWithoutSessionsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -805,9 +916,14 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -848,9 +964,14 @@ export type UserUpdateWithoutSessionsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -875,9 +996,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -902,9 +1028,14 @@ export type UserCreateWithoutAccountsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -929,9 +1060,14 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -972,9 +1108,14 @@ export type UserUpdateWithoutAccountsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -999,9 +1140,14 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -1026,9 +1172,14 @@ export type UserCreateWithoutProjectsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -1053,9 +1204,14 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -1096,9 +1252,14 @@ export type UserUpdateWithoutProjectsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -1123,9 +1284,14 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentsInput = {
@@ -1150,9 +1316,14 @@ export type UserCreateWithoutDocumentsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -1177,9 +1348,14 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -1220,9 +1396,14 @@ export type UserUpdateWithoutDocumentsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -1247,9 +1428,158 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiDocumentChunksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiDocumentChunksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiDocumentChunksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiDocumentChunksInput, Prisma.UserUncheckedCreateWithoutAiDocumentChunksInput>
+}
+
+export type UserUpsertWithoutAiDocumentChunksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiDocumentChunksInput, Prisma.UserUncheckedUpdateWithoutAiDocumentChunksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiDocumentChunksInput, Prisma.UserUncheckedCreateWithoutAiDocumentChunksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiDocumentChunksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiDocumentChunksInput, Prisma.UserUncheckedUpdateWithoutAiDocumentChunksInput>
+}
+
+export type UserUpdateWithoutAiDocumentChunksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiDocumentChunksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotesInput = {
@@ -1274,9 +1604,14 @@ export type UserCreateWithoutNotesInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotesInput = {
@@ -1301,9 +1636,14 @@ export type UserUncheckedCreateWithoutNotesInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotesInput = {
@@ -1344,9 +1684,14 @@ export type UserUpdateWithoutNotesInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotesInput = {
@@ -1371,9 +1716,14 @@ export type UserUncheckedUpdateWithoutNotesInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVersionsInput = {
@@ -1398,9 +1748,14 @@ export type UserCreateWithoutVersionsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVersionsInput = {
@@ -1425,9 +1780,14 @@ export type UserUncheckedCreateWithoutVersionsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVersionsInput = {
@@ -1468,9 +1828,14 @@ export type UserUpdateWithoutVersionsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVersionsInput = {
@@ -1495,9 +1860,14 @@ export type UserUncheckedUpdateWithoutVersionsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBranchesInput = {
@@ -1522,9 +1892,14 @@ export type UserCreateWithoutBranchesInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBranchesInput = {
@@ -1549,9 +1924,14 @@ export type UserUncheckedCreateWithoutBranchesInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBranchesInput = {
@@ -1592,9 +1972,14 @@ export type UserUpdateWithoutBranchesInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchesInput = {
@@ -1619,9 +2004,14 @@ export type UserUncheckedUpdateWithoutBranchesInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -1646,9 +2036,14 @@ export type UserCreateWithoutSettingsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -1673,9 +2068,14 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -1716,9 +2116,14 @@ export type UserUpdateWithoutSettingsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -1743,9 +2148,14 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivitiesInput = {
@@ -1770,9 +2180,14 @@ export type UserCreateWithoutActivitiesInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -1797,9 +2212,14 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -1840,9 +2260,14 @@ export type UserUpdateWithoutActivitiesInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -1867,9 +2292,14 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiConversationsInput = {
@@ -1894,9 +2324,14 @@ export type UserCreateWithoutAiConversationsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiConversationsInput = {
@@ -1921,9 +2356,14 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiConversationsInput = {
@@ -1964,9 +2404,14 @@ export type UserUpdateWithoutAiConversationsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiConversationsInput = {
@@ -1991,9 +2436,14 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiUsageInput = {
@@ -2018,9 +2468,14 @@ export type UserCreateWithoutAiUsageInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiUsageInput = {
@@ -2045,9 +2500,14 @@ export type UserUncheckedCreateWithoutAiUsageInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiUsageInput = {
@@ -2088,9 +2548,14 @@ export type UserUpdateWithoutAiUsageInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiUsageInput = {
@@ -2115,9 +2580,158 @@ export type UserUncheckedUpdateWithoutAiUsageInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiUsageEventsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiUsageEventsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiUsageEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiUsageEventsInput, Prisma.UserUncheckedCreateWithoutAiUsageEventsInput>
+}
+
+export type UserUpsertWithoutAiUsageEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiUsageEventsInput, Prisma.UserUncheckedUpdateWithoutAiUsageEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiUsageEventsInput, Prisma.UserUncheckedCreateWithoutAiUsageEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiUsageEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiUsageEventsInput, Prisma.UserUncheckedUpdateWithoutAiUsageEventsInput>
+}
+
+export type UserUpdateWithoutAiUsageEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiUsageEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWritingStatsInput = {
@@ -2143,8 +2757,13 @@ export type UserCreateWithoutWritingStatsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWritingStatsInput = {
@@ -2170,8 +2789,13 @@ export type UserUncheckedCreateWithoutWritingStatsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWritingStatsInput = {
@@ -2213,8 +2837,13 @@ export type UserUpdateWithoutWritingStatsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWritingStatsInput = {
@@ -2240,8 +2869,13 @@ export type UserUncheckedUpdateWithoutWritingStatsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWritingSessionsInput = {
@@ -2267,8 +2901,13 @@ export type UserCreateWithoutWritingSessionsInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWritingSessionsInput = {
@@ -2294,8 +2933,13 @@ export type UserUncheckedCreateWithoutWritingSessionsInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWritingSessionsInput = {
@@ -2337,8 +2981,13 @@ export type UserUpdateWithoutWritingSessionsInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWritingSessionsInput = {
@@ -2364,8 +3013,13 @@ export type UserUncheckedUpdateWithoutWritingSessionsInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWritingActivityClockInput = {
@@ -2391,8 +3045,13 @@ export type UserCreateWithoutWritingActivityClockInput = {
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWritingActivityClockInput = {
@@ -2418,8 +3077,13 @@ export type UserUncheckedCreateWithoutWritingActivityClockInput = {
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
   aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
   writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWritingActivityClockInput = {
@@ -2461,8 +3125,13 @@ export type UserUpdateWithoutWritingActivityClockInput = {
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWritingActivityClockInput = {
@@ -2488,8 +3157,445 @@ export type UserUncheckedUpdateWithoutWritingActivityClockInput = {
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
   aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
   writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSharedLinksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSharedLinksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSharedLinksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedLinksInput, Prisma.UserUncheckedCreateWithoutSharedLinksInput>
+}
+
+export type UserUpsertWithoutSharedLinksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSharedLinksInput, Prisma.UserUncheckedUpdateWithoutSharedLinksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedLinksInput, Prisma.UserUncheckedCreateWithoutSharedLinksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSharedLinksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSharedLinksInput, Prisma.UserUncheckedUpdateWithoutSharedLinksInput>
+}
+
+export type UserUpdateWithoutSharedLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSharedLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSharedCommentsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedViews?: Prisma.SharedViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSharedCommentsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedViews?: Prisma.SharedViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSharedCommentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedCommentsInput, Prisma.UserUncheckedCreateWithoutSharedCommentsInput>
+}
+
+export type UserUpsertWithoutSharedCommentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSharedCommentsInput, Prisma.UserUncheckedUpdateWithoutSharedCommentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedCommentsInput, Prisma.UserUncheckedCreateWithoutSharedCommentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSharedCommentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSharedCommentsInput, Prisma.UserUncheckedUpdateWithoutSharedCommentsInput>
+}
+
+export type UserUpdateWithoutSharedCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedViews?: Prisma.SharedViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSharedCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedViews?: Prisma.SharedViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSharedViewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSharedViewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  emailVerified?: boolean
+  image?: string | null
+  role?: string
+  status?: string
+  suspendedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutUserInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUserInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiUsage?: Prisma.AiUsageUncheckedCreateNestedOneWithoutUserInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedCreateNestedManyWithoutUserInput
+  writingStats?: Prisma.WritingStatsUncheckedCreateNestedManyWithoutUserInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutUserInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedCreateNestedOneWithoutUserInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutUserInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  sharedComments?: Prisma.SharedCommentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSharedViewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedViewsInput, Prisma.UserUncheckedCreateWithoutSharedViewsInput>
+}
+
+export type UserUpsertWithoutSharedViewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSharedViewsInput, Prisma.UserUncheckedUpdateWithoutSharedViewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedViewsInput, Prisma.UserUncheckedCreateWithoutSharedViewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSharedViewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSharedViewsInput, Prisma.UserUncheckedUpdateWithoutSharedViewsInput>
+}
+
+export type UserUpdateWithoutSharedViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSharedViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutUserNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUserNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiUsage?: Prisma.AiUsageUncheckedUpdateOneWithoutUserNestedInput
+  aiUsageEvents?: Prisma.AiUsageEventUncheckedUpdateManyWithoutUserNestedInput
+  writingStats?: Prisma.WritingStatsUncheckedUpdateManyWithoutUserNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutUserNestedInput
+  writingActivityClock?: Prisma.WritingActivityClockUncheckedUpdateOneWithoutUserNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutUserNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+  sharedComments?: Prisma.SharedCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2507,8 +3613,13 @@ export type UserCountOutputType = {
   branches: number
   activities: number
   aiConversations: number
+  aiUsageEvents: number
   writingStats: number
   writingSessions: number
+  aiDocumentChunks: number
+  sharedLinks: number
+  sharedComments: number
+  sharedViews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2521,8 +3632,13 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   branches?: boolean | UserCountOutputTypeCountBranchesArgs
   activities?: boolean | UserCountOutputTypeCountActivitiesArgs
   aiConversations?: boolean | UserCountOutputTypeCountAiConversationsArgs
+  aiUsageEvents?: boolean | UserCountOutputTypeCountAiUsageEventsArgs
   writingStats?: boolean | UserCountOutputTypeCountWritingStatsArgs
   writingSessions?: boolean | UserCountOutputTypeCountWritingSessionsArgs
+  aiDocumentChunks?: boolean | UserCountOutputTypeCountAiDocumentChunksArgs
+  sharedLinks?: boolean | UserCountOutputTypeCountSharedLinksArgs
+  sharedComments?: boolean | UserCountOutputTypeCountSharedCommentsArgs
+  sharedViews?: boolean | UserCountOutputTypeCountSharedViewsArgs
 }
 
 /**
@@ -2601,6 +3717,13 @@ export type UserCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountAiUsageEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiUsageEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountWritingStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WritingStatsWhereInput
 }
@@ -2610,6 +3733,34 @@ export type UserCountOutputTypeCountWritingStatsArgs<ExtArgs extends runtime.Typ
  */
 export type UserCountOutputTypeCountWritingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WritingSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiDocumentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiDocumentChunkWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSharedLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SharedLinkWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSharedCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SharedCommentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSharedViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SharedViewWhereInput
 }
 
 
@@ -2636,9 +3787,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
   aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
   aiUsage?: boolean | Prisma.User$aiUsageArgs<ExtArgs>
+  aiUsageEvents?: boolean | Prisma.User$aiUsageEventsArgs<ExtArgs>
   writingStats?: boolean | Prisma.User$writingStatsArgs<ExtArgs>
   writingSessions?: boolean | Prisma.User$writingSessionsArgs<ExtArgs>
   writingActivityClock?: boolean | Prisma.User$writingActivityClockArgs<ExtArgs>
+  aiDocumentChunks?: boolean | Prisma.User$aiDocumentChunksArgs<ExtArgs>
+  sharedLinks?: boolean | Prisma.User$sharedLinksArgs<ExtArgs>
+  sharedComments?: boolean | Prisma.User$sharedCommentsArgs<ExtArgs>
+  sharedViews?: boolean | Prisma.User$sharedViewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2697,9 +3853,14 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
   aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
   aiUsage?: boolean | Prisma.User$aiUsageArgs<ExtArgs>
+  aiUsageEvents?: boolean | Prisma.User$aiUsageEventsArgs<ExtArgs>
   writingStats?: boolean | Prisma.User$writingStatsArgs<ExtArgs>
   writingSessions?: boolean | Prisma.User$writingSessionsArgs<ExtArgs>
   writingActivityClock?: boolean | Prisma.User$writingActivityClockArgs<ExtArgs>
+  aiDocumentChunks?: boolean | Prisma.User$aiDocumentChunksArgs<ExtArgs>
+  sharedLinks?: boolean | Prisma.User$sharedLinksArgs<ExtArgs>
+  sharedComments?: boolean | Prisma.User$sharedCommentsArgs<ExtArgs>
+  sharedViews?: boolean | Prisma.User$sharedViewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2719,9 +3880,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     activities: Prisma.$ActivityPayload<ExtArgs>[]
     aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
     aiUsage: Prisma.$AiUsagePayload<ExtArgs> | null
+    aiUsageEvents: Prisma.$AiUsageEventPayload<ExtArgs>[]
     writingStats: Prisma.$WritingStatsPayload<ExtArgs>[]
     writingSessions: Prisma.$WritingSessionPayload<ExtArgs>[]
     writingActivityClock: Prisma.$WritingActivityClockPayload<ExtArgs> | null
+    aiDocumentChunks: Prisma.$AiDocumentChunkPayload<ExtArgs>[]
+    sharedLinks: Prisma.$SharedLinkPayload<ExtArgs>[]
+    sharedComments: Prisma.$SharedCommentPayload<ExtArgs>[]
+    sharedViews: Prisma.$SharedViewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3140,9 +4306,14 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   activities<T extends Prisma.User$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiConversations<T extends Prisma.User$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiUsage<T extends Prisma.User$aiUsageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiUsageArgs<ExtArgs>>): Prisma.Prisma__AiUsageClient<runtime.Types.Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aiUsageEvents<T extends Prisma.User$aiUsageEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiUsageEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiUsageEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   writingStats<T extends Prisma.User$writingStatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingStatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   writingSessions<T extends Prisma.User$writingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   writingActivityClock<T extends Prisma.User$writingActivityClockArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writingActivityClockArgs<ExtArgs>>): Prisma.Prisma__WritingActivityClockClient<runtime.Types.Result.GetResult<Prisma.$WritingActivityClockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aiDocumentChunks<T extends Prisma.User$aiDocumentChunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiDocumentChunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDocumentChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sharedLinks<T extends Prisma.User$sharedLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharedLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharedLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sharedComments<T extends Prisma.User$sharedCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharedCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharedCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sharedViews<T extends Prisma.User$sharedViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharedViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharedViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3830,6 +5001,30 @@ export type User$aiUsageArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
+ * User.aiUsageEvents
+ */
+export type User$aiUsageEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiUsageEvent
+   */
+  select?: Prisma.AiUsageEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiUsageEvent
+   */
+  omit?: Prisma.AiUsageEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiUsageEventInclude<ExtArgs> | null
+  where?: Prisma.AiUsageEventWhereInput
+  orderBy?: Prisma.AiUsageEventOrderByWithRelationInput | Prisma.AiUsageEventOrderByWithRelationInput[]
+  cursor?: Prisma.AiUsageEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiUsageEventScalarFieldEnum | Prisma.AiUsageEventScalarFieldEnum[]
+}
+
+/**
  * User.writingStats
  */
 export type User$writingStatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3894,6 +5089,102 @@ export type User$writingActivityClockArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.WritingActivityClockInclude<ExtArgs> | null
   where?: Prisma.WritingActivityClockWhereInput
+}
+
+/**
+ * User.aiDocumentChunks
+ */
+export type User$aiDocumentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiDocumentChunk
+   */
+  select?: Prisma.AiDocumentChunkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiDocumentChunk
+   */
+  omit?: Prisma.AiDocumentChunkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiDocumentChunkInclude<ExtArgs> | null
+  where?: Prisma.AiDocumentChunkWhereInput
+  orderBy?: Prisma.AiDocumentChunkOrderByWithRelationInput | Prisma.AiDocumentChunkOrderByWithRelationInput[]
+  cursor?: Prisma.AiDocumentChunkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiDocumentChunkScalarFieldEnum | Prisma.AiDocumentChunkScalarFieldEnum[]
+}
+
+/**
+ * User.sharedLinks
+ */
+export type User$sharedLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SharedLink
+   */
+  select?: Prisma.SharedLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SharedLink
+   */
+  omit?: Prisma.SharedLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SharedLinkInclude<ExtArgs> | null
+  where?: Prisma.SharedLinkWhereInput
+  orderBy?: Prisma.SharedLinkOrderByWithRelationInput | Prisma.SharedLinkOrderByWithRelationInput[]
+  cursor?: Prisma.SharedLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SharedLinkScalarFieldEnum | Prisma.SharedLinkScalarFieldEnum[]
+}
+
+/**
+ * User.sharedComments
+ */
+export type User$sharedCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SharedComment
+   */
+  select?: Prisma.SharedCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SharedComment
+   */
+  omit?: Prisma.SharedCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SharedCommentInclude<ExtArgs> | null
+  where?: Prisma.SharedCommentWhereInput
+  orderBy?: Prisma.SharedCommentOrderByWithRelationInput | Prisma.SharedCommentOrderByWithRelationInput[]
+  cursor?: Prisma.SharedCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SharedCommentScalarFieldEnum | Prisma.SharedCommentScalarFieldEnum[]
+}
+
+/**
+ * User.sharedViews
+ */
+export type User$sharedViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SharedView
+   */
+  select?: Prisma.SharedViewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SharedView
+   */
+  omit?: Prisma.SharedViewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SharedViewInclude<ExtArgs> | null
+  where?: Prisma.SharedViewWhereInput
+  orderBy?: Prisma.SharedViewOrderByWithRelationInput | Prisma.SharedViewOrderByWithRelationInput[]
+  cursor?: Prisma.SharedViewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SharedViewScalarFieldEnum | Prisma.SharedViewScalarFieldEnum[]
 }
 
 /**

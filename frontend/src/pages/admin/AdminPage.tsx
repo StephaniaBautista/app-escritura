@@ -6,8 +6,9 @@ import { ModerationSection } from './sections/ModerationSection'
 import { RolesSection } from './sections/RolesSection'
 import { UsersSection } from './sections/UsersSection'
 import { StoryBankSection } from './sections/StoryBankSection'
+import { AiUsageSection } from './sections/AiUsageSection'
 
-type AdminTab = 'moderate' | 'roles' | 'users' | 'structure'
+type AdminTab = 'moderate' | 'roles' | 'users' | 'structure' | 'ai'
 
 export function AdminPage() {
   const { t } = useTranslation()
@@ -24,6 +25,7 @@ export function AdminPage() {
       ? [
           { id: 'roles' as AdminTab, label: t('admin.tabs.roles') },
           { id: 'users' as AdminTab, label: t('admin.tabs.users') },
+          { id: 'ai' as AdminTab, label: t('admin.tabs.ai') },
         ]
       : []),
   ]
@@ -32,7 +34,7 @@ export function AdminPage() {
 
   return (
     <div className="p-6 md:p-8">
-      <div className="max-w-5xl">
+      <div className="max-w-6xl">
         <div className="mb-6">
           <h1 className="font-display text-2xl sm:text-4xl font-bold flex items-center gap-3" style={{ color: 'var(--color-ink)' }}>
             <ShieldCheck className="w-8 h-8" style={{ color: 'var(--color-accent)' }} />
@@ -67,6 +69,7 @@ export function AdminPage() {
         {active === 'structure' && <StoryBankSection />}
         {active === 'roles' && <RolesSection />}
         {active === 'users' && <UsersSection />}
+        {active === 'ai' && <AiUsageSection />}
       </div>
     </div>
   )

@@ -56,6 +56,17 @@ async function patch(request: APIRequestContext, id: string, text: string, bold 
   expect(response.status()).toBe(200)
 }
 
+function shiftIso(day: string, amount: number): string {
+  const date = new Date(`${day}T12:00:00.000Z`)
+  date.setUTCDate(date.getUTCDate() + amount)
+  return date.toISOString().slice(0, 10)
+}
+
+async function setStatsRange(page: Page, from: string, to: string) {
+  await page.getByLabel('Desde', { exact: true }).fill(from)
+  await page.getByLabel('Hasta', { exact: true }).fill(to)
+}
+
 async function openStats(page: Page) {
   await page.goto('/app/stats')
   await expect(page.getByRole('heading', { name: 'Estadísticas de escritura', exact: true })).toBeVisible()
@@ -83,6 +94,7 @@ test.describe('Fase 10: estadísticas con API y persistencia reales', () => {
     for (const days of [30, 90, 365]) {
       const stats = await report(request, { days: String(days), documentId: fixture.documentId })
       expect(stats.days).toHaveLength(days)
+      expect(stats.calendar.days).toHaveLength(365)
       expect(stats.days[0].date).toBe(stats.range.from)
       expect(stats.days.at(-1)?.date).toBe(stats.today)
       expect(new Set(stats.days.map((day) => day.date)).size).toBe(days)
@@ -166,8 +178,9 @@ test.describe('Fase 10: estadísticas con API y persistencia reales', () => {
     const reloaded = await report(request, { documentId: fixture.editorDocumentId })
     expect(reloaded.summary.wordsAdded).toBe(written.summary.wordsAdded)
     await openStats(page)
-    await page.getByRole('combobox', { name: 'Historia', exact: true }).selectOption(fixture.projectId)
-    await page.getByRole('combobox', { name: 'Documento', exact: true }).selectOption(fixture.editorDocumentId)
+    await page.getByRole('combobox', { name: 'Carpeta', exact: true }).selectOption(fixture.projectId)
+    await page.getByRole('combobox', { name: 'Documento', exact: true }).selectOption(fixture.rootDocumentId)
+    await page.getByRole('combobox', { name: 'Subpágina', exact: true }).selectOption(fixture.editorDocumentId)
     await expect(page.locator('[data-metric="currentWords"]')).toHaveText('4')
   })
 
@@ -200,9 +213,11 @@ test.describe('Fase 10: estadísticas con API y persistencia reales', () => {
 
   test('los filtros muestran fechas reales, detalles accesibles y un calendario vacío', async ({ page, fixture }) => {
     await openStats(page)
-    await page.getByRole('combobox', { name: 'Período', exact: true }).selectOption('30')
-    await page.getByRole('combobox', { name: 'Historia', exact: true }).selectOption(fixture.projectId)
-    await page.getByRole('combobox', { name: 'Documento', exact: true }).selectOption(fixture.documentId)
+    await expect(page.getByRole('combobox', { name: 'Período', exact: true })).toHaveValue('30')
+    await expect(page.getByLabel('Desde', { exact: true })).toHaveCount(0)
+    await page.getByRole('combobox', { name: 'Carpeta', exact: true }).selectOption(fixture.projectId)
+    await page.getByRole('combobox', { name: 'Documento', exact: true }).selectOption(fixture.rootDocumentId)
+    await page.getByRole('combobox', { name: 'Subpágina', exact: true }).selectOption(fixture.documentId)
     await expect(page.locator('[data-metric="wordsAdded"]')).toHaveText('40')
     await expect(page.locator('button[data-date]')).toHaveCount(30)
     const historic = page.locator(`button[data-date="${fixture.yesterday}"]`)
@@ -210,13 +225,17 @@ test.describe('Fase 10: estadísticas con API y persistencia reales', () => {
     await expect(historic).toHaveAttribute('aria-pressed', 'true')
     await expect(historic).toHaveAccessibleName(/40 palabras añadidas/)
     await expect(page.getByText('40 palabras añadidas · 10 min 0 s activos')).toBeVisible()
+    await expect(page.getByRole('img', { name: /Palabras añadidas/ })).toBeVisible()
+    expect(await page.getByText(/Días según/).count()).toBe(0)
+    expect(await page.getByText('Ver detalle diario').count()).toBe(0)
     const encouragement = page.getByRole('complementary', { name: 'Una idea para seguir escribiendo' })
     const phrase = await encouragement.innerText()
+    expect(phrase).not.toContain('Deja una pregunta abierta para tu próxima sesión.')
     await page.getByRole('button', { name: 'Actualizar', exact: true }).click()
     await expect(encouragement).toHaveText(phrase)
-    await page.getByRole('combobox', { name: 'Historia', exact: true }).selectOption(fixture.secondProjectId)
+    await page.getByRole('combobox', { name: 'Carpeta', exact: true }).selectOption(fixture.secondProjectId)
     await expect(page.getByRole('combobox', { name: 'Documento', exact: true })).toHaveValue('')
-    await expect(page.locator(`option[value="${fixture.documentId}"]`)).toHaveCount(0)
+    await expect(page.getByRole('combobox', { name: 'Subpágina', exact: true })).toHaveCount(0)
     await page.getByRole('combobox', { name: 'Documento', exact: true }).selectOption(fixture.emptyDocumentId)
     await expect(page.getByRole('heading', { name: 'Todavía no hay actividad en este período' })).toBeVisible()
     await expect(page.locator('[data-metric="currentWords"]')).toHaveText('0')
@@ -224,11 +243,15 @@ test.describe('Fase 10: estadísticas con API y persistencia reales', () => {
     expect(await page.locator('button[data-date]').evaluateAll((buttons) => buttons.every((button) => button.getAttribute('aria-label')?.includes('0 palabras añadidas')))).toBe(true)
     await page.getByRole('combobox', { name: 'Período', exact: true }).selectOption('90')
     await expect(page.locator('button[data-date]')).toHaveCount(90)
+    await page.getByRole('combobox', { name: 'Período', exact: true }).selectOption('custom')
+    const to = await page.getByLabel('Hasta', { exact: true }).inputValue()
+    await setStatsRange(page, shiftIso(to, -59), to)
+    await expect(page.locator('button[data-date]')).toHaveCount(60)
   })
 
-  test('los controles y el calendario anual caben en móvil y tablet', async ({ page }) => {
+  test('los controles y el calendario del período caben en móvil y tablet', async ({ page }) => {
     await openStats(page)
-    await expect(page.locator('button[data-date]')).toHaveCount(365)
+    await expect(page.locator('button[data-date]')).toHaveCount(30)
     for (const width of [320, 375, 414, 768]) {
       await page.setViewportSize({ width, height: 900 })
       const dashboard = page.getByTestId('stats-dashboard')

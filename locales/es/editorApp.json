@@ -51,6 +51,8 @@
   "addSubtab": "Agregar subpestaña",
   "rename": "Renombrar",
   "renameTab": "Renombrar pestaña",
+  "reorderTab": "Reordenar pestaña",
+  "errorReorderTabs": "No se pudo reordenar las pestañas",
   "tabName": "Nombre de la pestaña...",
   "duplicate": "Duplicar",
   "duplicated": "Pestaña duplicada",

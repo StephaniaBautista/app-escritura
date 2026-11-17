@@ -54,6 +54,7 @@ function makeCard(id: string, columnId: string, order: number): StructureCard {
     cardType: 'scene',
     referenceId: null,
     color: null,
+    subplotId: null,
     order,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
@@ -115,6 +116,7 @@ describe('useStructureStore', () => {
       activeBoardId: null,
       projectId: null,
       subplots: [],
+      hiddenSubplotIds: [],
       isLoadingBoards: false,
       isLoadingSubplots: false,
     })
@@ -306,5 +308,44 @@ describe('useStructureStore', () => {
 
     expect(created).toEqual(subplot)
     expect(useStructureStore.getState().subplots).toHaveLength(1)
+  })
+
+  it('toggleSubplotVisibility / setAllSubplotsVisible: estado en memoria de la capa fantasma', () => {
+    const subplots = [makeSubplot('sub-1', 0), makeSubplot('sub-2', 1)]
+    useStructureStore.setState({ subplots, hiddenSubplotIds: [] })
+    const store = useStructureStore.getState()
+
+    store.toggleSubplotVisibility('sub-1')
+    expect(useStructureStore.getState().hiddenSubplotIds).toEqual(['sub-1'])
+    store.toggleSubplotVisibility('sub-1')
+    expect(useStructureStore.getState().hiddenSubplotIds).toEqual([])
+
+    store.setAllSubplotsVisible(false)
+    expect(useStructureStore.getState().hiddenSubplotIds).toEqual(['sub-1', 'sub-2'])
+    store.setAllSubplotsVisible(true)
+    expect(useStructureStore.getState().hiddenSubplotIds).toEqual([])
+  })
+
+  it('loadSubplots: descarta ids ocultos que ya no existen', async () => {
+    useStructureStore.setState({ hiddenSubplotIds: ['sub-1', 'sub-gone'] })
+    subplotsApiMock.list.mockResolvedValue([makeSubplot('sub-1', 0)])
+
+    await useStructureStore.getState().loadSubplots('proj-1')
+
+    expect(useStructureStore.getState().hiddenSubplotIds).toEqual(['sub-1'])
+  })
+
+  it('removeSubplot: desasocia las tarjetas y limpia el id oculto', async () => {
+    const board = makeBoard()
+    board.columns![0].cards![0].subplotId = 'sub-1'
+    useStructureStore.setState({ boards: [board], subplots: [makeSubplot('sub-1', 0)], hiddenSubplotIds: ['sub-1'] })
+    subplotsApiMock.delete.mockResolvedValue(undefined)
+
+    await useStructureStore.getState().removeSubplot('sub-1')
+
+    const state = useStructureStore.getState()
+    expect(state.subplots).toEqual([])
+    expect(state.hiddenSubplotIds).toEqual([])
+    expect(state.boards[0].columns![0].cards![0].subplotId).toBeNull()
   })
 })

@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { Plus, FileText, BookOpen, FolderOpen, History, MessageSquare } from 'lucide-react'
+import { Plus, FileText, BookOpen, FolderOpen, History, Download } from 'lucide-react'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
 import { useActivityStore } from '@/stores/activity-store'
+import { useSettingsStore } from '@/stores/settings-store'
 import { getDocumentRootId, getDocumentTabs, getFirstTabId } from '@/lib/document-tabs'
 import { DocumentEditor } from '@/components/editor/DocumentEditor'
 import { Sidebar } from '@/components/sidebar/Sidebar'
@@ -14,9 +15,13 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { InlineCreateInput } from '@/components/ui/InlineCreateInput'
 import { EditableTitle } from '@/components/ui/EditableTitle'
 import { LoadingState } from '@/components/ui/LoadingState'
-import { AiWorkspace } from '@/components/ai/AiWorkspace'
+import { ReviewToggle } from '@/components/ai/DocumentReview'
+import { EditorReviewPanel } from '@/components/ai/EditorReviewPanel'
+import { ExportPanel } from '@/components/export/ExportPanel'
 import type { AiSuggestion } from '@/types/ai'
 import { useAutoVersion } from '@/hooks/useAutoVersion'
+
+let lastLoadedEditorProjectId: string | null = null
 
 export function EditorPage() {
   const { projectId, documentId } = useParams<{ projectId: string; documentId?: string }>()
@@ -34,20 +39,32 @@ export function EditorPage() {
     updateDocument,
   } = useDocumentStore()
 
-  const [showAi, setShowAi] = useState(false)
   const [aiDraft, setAiDraft] = useState<{ documentId: string; text: string } | null>(null)
   const [aiSuggestions, setAiSuggestions] = useState<AiSuggestion[]>([])
   const [aiReveal, setAiReveal] = useState<{ suggestion: AiSuggestion; sequence: number } | null>(null)
+  const [reviewVisible, setReviewVisible] = useState(true)
+  const [reviewActive, setReviewActive] = useState(() => useSettingsStore.getState().getUiPrefs().reviewEnabledByDefault === true)
   const onDraftChange = useCallback((text: string) => {
     if (documentId) setAiDraft({ documentId, text })
   }, [documentId])
+  const onSuggestionsChange = useCallback((suggestions: AiSuggestion[]) => {
+    setAiSuggestions(suggestions)
+  }, [])
+  const onRevealSuggestion = useCallback((suggestion: AiSuggestion) => {
+    setAiReveal((previous) => ({ suggestion, sequence: (previous?.sequence ?? 0) + 1 }))
+  }, [])
+  const onReviewActiveChange = useCallback((active: boolean) => {
+    setReviewActive(active)
+  }, [])
   const [showNewDoc, setShowNewDoc] = useState(false)
   const [showPanel, setShowPanel] = useState(false)
+  const [showExport, setShowExport] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
-  const loadedProjectRef = useRef<string | null>(null)
   const hasChangesRef = useRef(false)
   const { addActivity } = useActivityStore()
   const activityThrottleRef = useRef<{ docId: string; at: number } | null>(null)
+
+  const draftContent = aiDraft && aiDraft.documentId === documentId ? aiDraft.text : undefined
 
   const hasUnsavedChanges = useCallback(() => hasChangesRef.current, [])
 
@@ -75,11 +92,10 @@ export function EditorPage() {
   })
 
   useEffect(() => {
-    if (projectId && projectId !== loadedProjectRef.current) {
-      loadedProjectRef.current = projectId
+    if (projectId && projectId !== lastLoadedEditorProjectId) {
+      lastLoadedEditorProjectId = projectId
       selectProject(projectId)
     }
-    return () => { loadedProjectRef.current = null }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId])
 
@@ -93,12 +109,13 @@ export function EditorPage() {
 
   useEffect(() => {
     if (!projectId || !currentDocument || currentDocument.type !== 'document') return
+    if (documentId && documentId !== currentDocument.id) return
     const firstTabId = getFirstTabId(documentTree, currentDocument.id)
     if (firstTabId) {
       navigate(`/app/editor/${projectId}/${firstTabId}`, { replace: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId, currentDocument, documentTree])
+  }, [projectId, currentDocument, documentTree, documentId])
 
   const handleCreateDocument = async (title: string) => {
     if (!projectId) return
@@ -223,7 +240,7 @@ export function EditorPage() {
       <>
         <div className="border-b px-8 py-3 flex items-center gap-3" style={{ borderColor: 'var(--color-paper-lines)' }}>
           <BookOpen className="w-4 h-4" style={{ color: 'var(--color-ink-faint)' }} />
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <EditableTitle
               title={currentDocument.title}
               onSave={(newTitle) => updateDocument(currentDocument.id, { title: newTitle })}
@@ -237,7 +254,22 @@ export function EditorPage() {
               </p>
             )}
           </div>
-          <button type="button" className="ai-panel__button" aria-label={t('aiApp.open')} aria-expanded={showAi} onClick={() => setShowAi((visible) => !visible)}><MessageSquare className="h-4 w-4" /><span className="hidden sm:inline">{t('aiApp.title')}</span></button>
+          <ReviewToggle
+            visible={reviewVisible}
+            active={reviewActive}
+            onToggleVisibility={() => setReviewVisible((value) => !value)}
+          />
+          <button
+            type="button"
+            onClick={() => setShowExport(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-80 flex-shrink-0"
+            style={{ color: 'var(--color-ink-light)', border: '1px solid var(--color-paper-lines)' }}
+            title={t('exportApp.title')}
+            aria-label={t('exportApp.title')}
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('exportApp.title')}</span>
+          </button>
           <button
             type="button"
             onClick={() => setShowPanel(true)}
@@ -267,11 +299,23 @@ export function EditorPage() {
               }}
             />
           </div>
-          {showAi ? <aside className="ai-editor-panel w-full lg:w-96 shrink-0 overflow-y-auto" aria-label={t('aiApp.title')}><AiWorkspace key={projectId} projectId={projectId} documentId={currentDocument.id} draftContent={aiDraft?.documentId === currentDocument.id ? aiDraft.text : undefined} onClose={() => setShowAi(false)} onSuggestionsChange={setAiSuggestions} onReveal={(suggestion) => setAiReveal((previous) => ({ suggestion, sequence: (previous?.sequence ?? 0) + 1 }))} /></aside> : <PostItWall
+          {projectId && documentId && (
+            <EditorReviewPanel
+              key={documentId}
+              projectId={projectId}
+              documentId={documentId}
+              draftContent={draftContent}
+              visible={reviewVisible}
+              onActiveChange={onReviewActiveChange}
+              onSuggestionsChange={onSuggestionsChange}
+              onReveal={onRevealSuggestion}
+            />
+          )}
+          <PostItWall
             documentId={currentDocument.id}
             rootDocumentId={getDocumentRootId(documentTree, currentDocument.id) ?? currentDocument.id}
             projectId={projectId}
-          />}
+          />
         </div>
 
         {showPanel && (
@@ -280,6 +324,14 @@ export function EditorPage() {
             onClose={() => setShowPanel(false)}
           />
         )}
+
+        <ExportPanel
+          documentId={currentDocument.id}
+          documentTitle={currentDocument.title}
+          hasChildren={documentTree.some((doc) => doc.parentId === currentDocument.id)}
+          isOpen={showExport}
+          onClose={() => setShowExport(false)}
+        />
       </>
     )
   }

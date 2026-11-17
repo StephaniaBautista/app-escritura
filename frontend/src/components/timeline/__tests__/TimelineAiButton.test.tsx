@@ -24,7 +24,7 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@/components/ai/useAiCapabilities', () => ({
   useAiCapabilities: () => ({
-    capabilities: { permissions: { suggestions: true }, providers: [{ id: 'deepseek', available: true }] },
+    capabilities: { permissions: { suggestions: true }, providers: [{ id: 'balanced', available: true, trainsData: true }] },
     loading: false, error: null, retry: vi.fn(),
   }),
 }))
@@ -66,14 +66,14 @@ describe('TimelineAiButton', () => {
     fillTimeline.mockResolvedValue({
       eras: [{ name: 'Era imperial' }],
       events: [{ title: 'Coronación' }],
-      sources: [], provider: 'deepseek', model: 'test',
+      sources: [], provider: 'balanced', model: 'test',
     })
     render(<TimelineAiButton projectId="p1" empty onFilled={onFilled} />)
     fireEvent.click(screen.getByRole('button', { name: 'timelineApp.generateWithAi' }))
     await waitFor(() => expect(onFilled).toHaveBeenCalledWith({
       eras: [{ name: 'Era imperial' }],
       events: [{ title: 'Coronación' }],
-      sources: [], provider: 'deepseek', model: 'test',
+      sources: [], provider: 'balanced', model: 'test',
     }))
     expect(fillTimeline).toHaveBeenCalledWith('p1', { locale: 'es' })
     expect(toastSuccess).toHaveBeenCalledWith('timelineApp.aiReady')
@@ -81,7 +81,7 @@ describe('TimelineAiButton', () => {
 
   it('labels completion mode when the timeline already has items', async () => {
     store.documentTree = [{ id: 'd1' }]
-    fillTimeline.mockResolvedValue({ eras: [], events: [{ title: 'Huida', date: '2' }], sources: [], provider: 'deepseek', model: 'test' })
+    fillTimeline.mockResolvedValue({ eras: [], events: [{ title: 'Huida', date: '2' }], sources: [], provider: 'balanced', model: 'test' })
     render(<TimelineAiButton projectId="p1" empty={false} onFilled={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'timelineApp.completeWithAi' }))
     await waitFor(() => expect(fillTimeline).toHaveBeenCalledWith('p1', { locale: 'es' }))

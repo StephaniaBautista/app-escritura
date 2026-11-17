@@ -7,7 +7,9 @@ import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
 import type { AiWizardStage, AiWizardSuggestion } from '@/types/ai'
 import type { StoryMeta } from '@/types/story'
+import { useAiToolProvider } from '@/hooks/useAiToolProvider'
 import { hasLocalWrittenDocuments } from './wizard-ai'
+import { mergeAiMetaPatch } from './wizard-stage-apply'
 
 interface WizardAiButtonProps {
   projectId: string
@@ -24,6 +26,7 @@ export function WizardAiButton({
   const { t, i18n } = useTranslation()
   const toast = useToastStore()
   const { documentTree, currentDocument, updateProject, updateStoryMeta } = useDocumentStore()
+  const provider = useAiToolProvider('wizard')
   const [loading, setLoading] = useState(false)
 
   if (!projectId) return null
@@ -37,9 +40,9 @@ export function WizardAiButton({
     setLoading(true)
     try {
       const locale = i18n.language.toLowerCase().startsWith('en') ? 'en' : 'es'
-      const result = await aiApi.completeWizard(projectId, { locale, stage })
+      const result = await aiApi.completeWizard(projectId, { locale, stage, ...(provider ? { provider } : {}) })
       const nextDescription = result.description?.trim() ? result.description : description
-      const nextMeta = { ...meta, ...result.meta } as StoryMeta
+      const nextMeta = mergeAiMetaPatch(meta, result.meta)
       onApplied(nextDescription, nextMeta)
       onSuggestions(result.suggestions)
       const writes: Promise<unknown>[] = []

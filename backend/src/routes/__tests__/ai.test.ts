@@ -15,7 +15,7 @@ import { AiServiceError } from '../../services/ai-types.js'
 const now = new Date().toISOString()
 const conversation = { id: 'c1', projectId: 'p1', mode: 'adviser', title: 'Consejos', characterId: null, chapterId: null, createdAt: now, updatedAt: now }
 const source = { id: 'document:d1', type: 'document', title: 'Capítulo 1', excerpt: 'Ada descubre la puerta.' }
-const assistant = { id: 'm1', role: 'assistant', content: '¿Qué desea Ada?', sources: [source], provider: 'deepseek', model: 'test-model', createdAt: now }
+const assistant = { id: 'm1', role: 'assistant', content: '¿Qué desea Ada?', sources: [source], provider: 'balanced', model: 'test-model', createdAt: now }
 let app: FastifyInstance
 const base = '/api/projects/p1/ai'
 
@@ -39,7 +39,7 @@ describe('AI route authorization and JSON contracts', () => {
     expect(response.json()).toEqual({ error: 'UNAUTHORIZED' })
   })
   it('only returns safe capability fields, with role resolved by service', async () => {
-    service.capabilities.mockResolvedValue({ providers: [{ id: 'deepseek', available: true, key: 'must-not-leak' }], fallbackEnabled: false,
+    service.capabilities.mockResolvedValue({ providers: [{ id: 'balanced', available: true, trainsData: true, comingSoon: false, key: 'must-not-leak' }], fallbackEnabled: false,
       canCopy: false, permissions: { chat: true, characters: false, suggestions: false }, chapters: [], pages: [], characters: [], private: 'secret' })
     const response = await app.inject({ method: 'GET', url: `${base}/capabilities` })
     expect(response.statusCode).toBe(200)
@@ -84,8 +84,16 @@ describe('AI route authorization and JSON contracts', () => {
     expect(response.statusCode).toBe(200)
     expect(service.send).toHaveBeenCalledWith('p1', 'u1', 'c1', { message: '¿Qué desea?', requestId: 'request-1', direction: 'Explorar su miedo' })
   })
+  it('forwards webSearch and still strips injected history', async () => {
+    service.send.mockResolvedValue({ conversationId: 'c1', messages: [assistant] })
+    const response = await app.inject({ method: 'POST', url: `${base}/conversations/c1/messages`, payload: {
+      message: '¿Qué clima tiene Madrid?', requestId: 'request-2', webSearch: true, history: ['future secrets'],
+    } })
+    expect(response.statusCode).toBe(200)
+    expect(service.send).toHaveBeenCalledWith('p1', 'u1', 'c1', { message: '¿Qué clima tiene Madrid?', requestId: 'request-2', webSearch: true })
+  })
   it('accepts every documented suggestion kind without auto-applying fields', async () => {
-    service.suggest.mockResolvedValue({ suggestions: [], sources: [source], provider: 'deepseek', model: 'test' })
+    service.suggest.mockResolvedValue({ suggestions: [], sources: [source], provider: 'balanced', model: 'test' })
     for (const [path, body] of [['suggestions', { documentId: 'd1', draftContent: 'Draft' }],
       ['character-suggestions', { characterId: 'p1' }], ['subplot-suggestions', { subplotId: 's1' }]] as const) {
       const response = await app.inject({ method: 'POST', url: `${base}/${path}`, payload: body })
@@ -149,7 +157,7 @@ describe('AI route authorization and JSON contracts', () => {
   it('returns a wizard stage patch without persisting through the AI route', async () => {
     service.completeWizard.mockResolvedValue({
       description: null, meta: { type: ['Romance'] }, suggestions: [], stage: 'basics',
-      sources: [source], provider: 'deepseek', model: 'test',
+      sources: [source], provider: 'balanced', model: 'test',
     })
     const response = await app.inject({ method: 'POST', url: `${base}/wizard-completion`, payload: { locale: 'es', stage: 'basics' } })
     expect(response.statusCode).toBe(200)
@@ -157,9 +165,22 @@ describe('AI route authorization and JSON contracts', () => {
     expect(response.json().meta).toEqual({ type: ['Romance'] })
     expect(response.json().suggestions).toEqual([])
   })
+  it('serializes wizard suggestion values that are arrays or strings', async () => {
+    service.completeWizard.mockResolvedValue({
+      description: null, meta: {}, stage: 'basics', sources: [source], provider: 'balanced', model: 'test',
+      suggestions: [
+        { field: 'type', title: 'Géneros', description: 'Hay romance.', value: ['Romance'] },
+        { field: 'rating', title: 'Público', description: 'Texto adulto.', value: 'mature' },
+      ],
+    })
+    const response = await app.inject({ method: 'POST', url: `${base}/wizard-completion`, payload: { locale: 'es', stage: 'basics' } })
+    expect(response.statusCode).toBe(200)
+    expect(response.json().suggestions[0].value).toEqual(['Romance'])
+    expect(response.json().suggestions[1].value).toBe('mature')
+  })
   it('returns character fills without persisting through the AI route', async () => {
     service.fillCharacters.mockResolvedValue({
-      characters: [{ name: 'Ada', description: 'Vive en Madrid.' }], sources: [source], provider: 'deepseek', model: 'test',
+      characters: [{ name: 'Ada', description: 'Vive en Madrid.' }], sources: [source], provider: 'balanced', model: 'test',
     })
     const response = await app.inject({ method: 'POST', url: `${base}/character-fill`, payload: { locale: 'es', name: 'Ada' } })
     expect(response.statusCode).toBe(200)
@@ -176,7 +197,7 @@ describe('AI route authorization and JSON contracts', () => {
   it('returns timeline fills without persisting through the AI route', async () => {
     service.fillTimeline.mockResolvedValue({
       eras: [{ name: 'Era imperial' }], events: [{ title: 'La coronación', eraName: 'Era imperial' }],
-      sources: [source], provider: 'deepseek', model: 'test',
+      sources: [source], provider: 'balanced', model: 'test',
     })
     const response = await app.inject({ method: 'POST', url: `${base}/timeline-fill`, payload: { locale: 'es' } })
     expect(response.statusCode).toBe(200)
@@ -193,7 +214,7 @@ describe('AI route authorization and JSON contracts', () => {
   })
   it('returns tag suggestions without persisting through the AI route', async () => {
     service.suggestTags.mockResolvedValue({
-      tags: ['Dead Dove: Do Not Eat'], sources: [source], provider: 'deepseek', model: 'test',
+      tags: ['Dead Dove: Do Not Eat'], sources: [source], provider: 'balanced', model: 'test',
     })
     const response = await app.inject({ method: 'POST', url: `${base}/tag-suggestions`, payload: { locale: 'es' } })
     expect(response.statusCode).toBe(200)

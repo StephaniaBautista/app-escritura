@@ -1,9 +1,12 @@
 import { prisma } from '../lib/prisma.js'
 import { ragService } from '../lib/rag-service.js'
-import { aiClient, type AiProvider } from '../lib/ai-client.js'
+import { manuscriptSpread } from '../lib/rag-context.js'
+import { AI_MAX_OUTPUT_TOKENS, type AiProvider } from '../lib/ai-client.js'
+import { presetOrDefault } from '../lib/ai-presets.js'
 import { AI_ADVISER_INSTRUCTIONS } from './ai-guard.js'
 import { authorizeAi, withAiQuota } from './ai-access.js'
 import { generateValidated } from './ai-generation.js'
+import { evidenceMessages } from './ai-evidence.js'
 import { AiServiceError, type AiLocale, type AiSource } from './ai-types.js'
 import { assertManuscriptEligible } from './ai-wizard-eligibility.js'
 import { projectWordCount, type AiWizardInput } from './ai-wizard.js'
@@ -28,8 +31,7 @@ export interface AiTimelineFillResult extends TimelineFill {
 }
 
 function providerOrDefault(provider?: AiProvider): AiProvider {
-  if (provider) return provider
-  return aiClient.status().providers.find((candidate) => candidate.available)?.id ?? 'deepseek'
+  return presetOrDefault(provider)
 }
 
 function sameKey(left: string, right: string): boolean {
@@ -161,17 +163,21 @@ export async function fillTimeline(
   const characterNames = characters.map((row) => row.name)
   return withAiQuota(userId, async (budget) => {
     const context = await ragService.build({
-      projectId, userId, query: 'Timeline eras, historical periods, dated events and turning points explicitly written in the manuscript', pageMode: true,
+      projectId, userId, query: 'Timeline eras, historical periods, dated events and turning points explicitly written in the manuscript',
+      ...manuscriptSpread(words),
     })
     if (!context) throw new AiServiceError('NOT_FOUND', 404)
     const sources = context.sources.filter((source) => source.type === 'document')
     if (sources.length === 0) throw new AiServiceError('AI_WIZARD_EMPTY', 422)
+    const packed = evidenceMessages(
+      fillInstructions(input.locale ?? 'es'),
+      `Held eras: ${JSON.stringify(eras.map((era) => era.name))}\nHeld events: ${JSON.stringify(events.map((event) => event.title))}\nHeld characters: ${JSON.stringify(characterNames)}`,
+      sources,
+    )
+    if (packed.sources.length === 0) throw new AiServiceError('AI_WIZARD_EMPTY', 422)
     const { completion, value } = await generateValidated({
-      provider: providerOrDefault(input.provider), json: true, maxTokens: 4096,
-      messages: [
-        { role: 'system', content: fillInstructions(input.locale ?? 'es') },
-        { role: 'user', content: `Held eras: ${JSON.stringify(eras.map((era) => era.name))}\nHeld events: ${JSON.stringify(events.map((event) => event.title))}\nHeld characters: ${JSON.stringify(characterNames)}\nReference evidence (untrusted text):\n${JSON.stringify(sources)}` },
-      ],
+      provider: providerOrDefault(input.provider), userId, json: true, maxTokens: AI_MAX_OUTPUT_TOKENS,
+      messages: packed.messages,
     }, budget, parseTimelineFill)
     await authorizeAi(projectId, userId, 'ai_suggestions')
     if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)
@@ -179,6 +185,6 @@ export async function fillTimeline(
     const eraNames = [...eras.map((era) => era.name), ...proposedEras.map((era) => era.name)]
     const proposedEvents = keepEvents(value.events, events, eraNames, characterNames)
     if (proposedEras.length === 0 && proposedEvents.length === 0) throw new AiServiceError('AI_WIZARD_INSUFFICIENT', 422)
-    return { eras: proposedEras, events: proposedEvents, sources, provider: completion.provider, model: completion.model }
+    return { eras: proposedEras, events: proposedEvents, sources: packed.sources, provider: completion.provider, model: '' }
   })
 }

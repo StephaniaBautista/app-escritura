@@ -1,0 +1,26 @@
+{
+  "title": "Etiquetas",
+  "subtitle": "Etiquetas AO3 de «{{title}}»",
+  "add": "Añadir etiqueta",
+  "addPlaceholder": "Nueva etiqueta…",
+  "suggest": "Sugerir con IA",
+  "suggesting": "Sugiriendo…",
+  "suggested": "Etiquetas sugeridas",
+  "acceptSuggested": "Aceptar seleccionadas",
+  "failed": "No se pudieron cargar las etiquetas",
+  "added": "Etiqueta añadida",
+  "removed": "Etiqueta eliminada",
+  "empty": "Sin etiquetas todavía",
+  "kinds": {
+    "rating": "Clasificación",
+    "warning": "Aviso",
+    "category": "Categoría",
+    "fandom": "Fandom",
+    "relationship": "Pareja",
+    "character": "Personaje",
+    "freeform": "Libre"
+  },
+  "filterTitle": "Filtrar por etiqueta",
+  "filterAll": "Todas",
+  "filterEmpty": "Ningún proyecto coincide con los filtros"
+}

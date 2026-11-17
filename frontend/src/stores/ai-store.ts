@@ -22,10 +22,10 @@ interface AiState {
   loadCapabilities: (projectId: string) => Promise<void>
   loadConversations: (projectId: string) => Promise<void>
   open: (id: string | null) => Promise<void>
-  createConversation: (input: AiConversationInput) => Promise<void>
+  createConversation: (input: AiConversationInput) => Promise<string | null>
   remove: (id: string) => Promise<void>
   setProvider: (provider: string) => void
-  send: (message: string, locale: AiLocale, direction?: string) => Promise<boolean>
+  send: (message: string, locale: AiLocale, direction?: string, webSearch?: boolean) => Promise<boolean>
   retry: () => Promise<boolean>
 }
 
@@ -46,14 +46,16 @@ export const useAiStore = create<AiState>()((set, get) => {
       if (!current(generation)) return false
       const pending = { ...get().pending }
       delete pending[activeId]
-      set({ pending })
       if (get().selection === selection) {
         const ids = new Set(result.messages.map((message) => message.id))
-        set({ messages: [...get().messages.filter((message) => !ids.has(message.id)), ...result.messages], sending: false })
+        set({ messages: [...get().messages.filter((message) => !ids.has(message.id)), ...result.messages], sending: false, pending })
+      } else {
+        set({ sending: false, pending })
       }
       return true
     } catch (error) {
       if (current(generation) && get().selection === selection) set({ sending: false, error: aiErrorKey(error) })
+      else if (current(generation)) set({ sending: false })
       return false
     }
   }
@@ -78,7 +80,13 @@ export const useAiStore = create<AiState>()((set, get) => {
       set({ loading: true, error: null })
       try {
         const conversations = await aiApi.conversations(projectId)
-        if (current(generation)) set({ conversations, loading: false })
+        if (!current(generation)) return
+        const known = get().conversations
+        const ids = new Set(conversations.map((item) => item.id))
+        set({
+          conversations: [...conversations, ...known.filter((item) => !ids.has(item.id))],
+          loading: false,
+        })
       } catch (error) {
         if (current(generation)) set({ error: aiErrorKey(error), loading: false })
       }
@@ -96,16 +104,22 @@ export const useAiStore = create<AiState>()((set, get) => {
       }
     },
     async createConversation(input) {
-      const { projectId, generation, selection, loading } = get()
-      if (!projectId || loading) return
+      const { projectId, generation, selection } = get()
+      if (!projectId) return null
       set({ loading: true, error: null })
       try {
         const conversation = await aiApi.createConversation(projectId, input)
-        if (!current(generation)) return
-        set({ conversations: [conversation, ...get().conversations] })
-        if (get().selection === selection) set({ activeId: conversation.id, messages: [], loading: false, sending: false, selection: selection + 1 })
+        if (!current(generation)) return null
+        const conversations = [conversation, ...get().conversations.filter((item) => item.id !== conversation.id)]
+        if (get().selection === selection) {
+          set({ conversations, activeId: conversation.id, messages: [], loading: false, sending: false, selection: selection + 1 })
+        } else {
+          set({ conversations, loading: false })
+        }
+        return conversation.id
       } catch (error) {
         if (current(generation)) set({ loading: false, error: aiErrorKey(error) })
+        return null
       }
     },
     async remove(id) {
@@ -121,10 +135,12 @@ export const useAiStore = create<AiState>()((set, get) => {
       }
     },
     setProvider: (provider) => set({ provider }),
-    send(message, locale, direction) {
+    send(message, locale, direction, webSearch) {
       const previous = get().activeId ? get().pending[get().activeId!] : undefined
-      const input = previous?.message === message.trim() && previous.direction === (direction?.trim() || undefined) ? previous : {
-        message: message.trim(), ...(direction?.trim() ? { direction: direction.trim() } : {}), locale, requestId: crypto.randomUUID(), ...(get().provider ? { provider: get().provider } : {}),
+      const trimmedDirection = direction?.trim() || undefined
+      const useWeb = webSearch === true
+      const input = previous?.message === message.trim() && previous.direction === trimmedDirection && Boolean(previous.webSearch) === useWeb ? previous : {
+        message: message.trim(), ...(trimmedDirection ? { direction: trimmedDirection } : {}), ...(useWeb ? { webSearch: true } : {}), locale, requestId: crypto.randomUUID(), ...(get().provider ? { provider: get().provider } : {}),
       }
       return sendRequest(input)
     },

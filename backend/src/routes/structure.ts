@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { getSessionUser } from '../lib/session.js'
+import { replySubplotError } from '../lib/subplot-errors.js'
 import {
   structureService,
   type BoardInput,
@@ -55,6 +56,7 @@ const cardProperties = {
   cardType: { type: 'string', enum: ['scene', 'chapter', 'character', 'document', 'note'] },
   referenceId: { type: ['string', 'null'], maxLength: 100 },
   color: { type: ['string', 'null'], maxLength: 50 },
+  subplotId: { type: ['string', 'null'], maxLength: 100 },
   order: { type: ['integer', 'null'], minimum: 0, maximum: 100000 },
 } as const
 
@@ -253,7 +255,7 @@ export async function structureRoutes(app: FastifyInstance) {
 
   app.post('/columns/:columnId/cards', {
     schema: {
-      description: 'Create a card in a column',
+      description: 'Create a card in a column. `subplotId` links the card to a subplot of the same project (400 SUBPLOT_NOT_IN_PROJECT otherwise); null clears it.',
       tags: ['Structure'],
       security: auth,
       params: paramsColumnSchema,
@@ -263,15 +265,19 @@ export async function structureRoutes(app: FastifyInstance) {
       const user = await getSessionUser(request)
       if (!user) return reply.code(401).send({ error: 'UNAUTHORIZED' })
       const { columnId } = request.params as { columnId: string }
-      const card = await structureService.createCard(columnId, user.id, request.body as CardInput)
-      if (!card) return notFound(reply)
-      return reply.code(201).send(card)
+      try {
+        const card = await structureService.createCard(columnId, user.id, request.body as CardInput)
+        if (!card) return notFound(reply)
+        return reply.code(201).send(card)
+      } catch (err: unknown) {
+        return replySubplotError(reply, err)
+      }
     },
   })
 
   app.put('/cards/:id', {
     schema: {
-      description: 'Update a card',
+      description: 'Update a card. `subplotId` links the card to a subplot of the same project (400 SUBPLOT_NOT_IN_PROJECT otherwise); null clears it.',
       tags: ['Structure'],
       security: auth,
       params: paramsIdSchema,
@@ -281,9 +287,13 @@ export async function structureRoutes(app: FastifyInstance) {
       const user = await getSessionUser(request)
       if (!user) return reply.code(401).send({ error: 'UNAUTHORIZED' })
       const { id } = request.params as { id: string }
-      const card = await structureService.updateCard(id, user.id, request.body as CardInput)
-      if (!card) return notFound(reply)
-      return card
+      try {
+        const card = await structureService.updateCard(id, user.id, request.body as CardInput)
+        if (!card) return notFound(reply)
+        return card
+      } catch (err: unknown) {
+        return replySubplotError(reply, err)
+      }
     },
   })
 

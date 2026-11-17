@@ -1,0 +1,158 @@
+/* Hallmark · component: subplot layer · genre: editorial · theme: project tokens
+ * states: default · hover · focus · active · disabled · loading · error · success
+ */
+.subplot-layer-card {
+  --subplot-color: var(--color-accent-violet);
+  opacity: 0.92;
+  border-style: solid;
+  border-color: var(--subplot-color);
+  background: color-mix(in srgb, var(--subplot-color) 22%, var(--color-paper));
+  transition: background 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), opacity 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.subplot-layer-card:hover,
+.subplot-layer-card:focus-within,
+.subplot-layer-card.is-hover {
+  background: color-mix(in srgb, var(--subplot-color) 30%, var(--color-paper));
+}
+
+.subplot-layer-card:active,
+.subplot-layer-card.is-active {
+  background: color-mix(in srgb, var(--subplot-color) 34%, var(--color-paper));
+}
+
+.subplot-layer-card:focus-visible,
+.subplot-layer-card.is-focus {
+  outline: 2px solid var(--subplot-color);
+  outline-offset: 2px;
+}
+
+.subplot-layer-card.is-disabled,
+.subplot-layer-card:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.subplot-layer-card[data-state='loading'] {
+  opacity: 0.7;
+}
+
+.subplot-layer-card[data-state='error'] {
+  border-color: var(--color-danger, #dc2626);
+}
+
+.subplot-layer-card[data-state='success'] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--subplot-color) 40%, transparent);
+}
+
+.subplot-layer-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  border: 1px solid var(--subplot-color);
+  border-radius: 999px;
+  padding: 0 0.45rem;
+  font-size: 10px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--subplot-color);
+  background: color-mix(in srgb, var(--subplot-color) 12%, var(--color-paper));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subplot-layer-card__pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--subplot-color);
+  flex-shrink: 0;
+}
+
+.subplot-layer-lane {
+  --subplot-color: var(--color-accent-violet);
+  background: color-mix(in srgb, var(--subplot-color) 10%, transparent);
+}
+
+.subplot-layer-lane__head {
+  background: var(--subplot-color);
+  color: var(--color-paper);
+}
+
+.subplot-layer-event {
+  --subplot-color: var(--color-accent-violet);
+  opacity: 0.92;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--subplot-color) 18%, var(--color-paper));
+  transition: background 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)), opacity 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.subplot-layer-event:hover,
+.subplot-layer-event:focus-within,
+.subplot-layer-event.is-hover,
+.subplot-layer-event[data-selected='true'] {
+  background: color-mix(in srgb, var(--subplot-color) 28%, var(--color-paper));
+}
+
+.subplot-layer-event:focus-visible,
+.subplot-layer-event.is-focus {
+  outline: 2px solid var(--subplot-color);
+  outline-offset: 2px;
+}
+
+.subplot-layer__pop {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  z-index: 30;
+  width: min(92vw, 400px);
+  max-height: min(70vh, 640px);
+  overflow-y: auto;
+  border: 1px solid var(--color-paper-lines);
+  border-radius: 0.75rem;
+  background: var(--color-paper);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+
+.subplot-layer__pop[data-align='end'] {
+  right: 0;
+}
+
+.subplot-layer__pop[data-align='start'] {
+  left: 0;
+}
+
+.subplot-layer__badge {
+  min-width: 1.5rem;
+  border-radius: 999px;
+  padding: 0 0.4rem;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent-violet);
+  background: var(--color-accent-violet-light);
+}
+
+@media (max-width: 640px) {
+  .subplot-layer__pop {
+    position: fixed;
+    top: auto;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+    max-height: 75vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subplot-layer-card,
+  .subplot-layer-event {
+    transition: none;
+  }
+}

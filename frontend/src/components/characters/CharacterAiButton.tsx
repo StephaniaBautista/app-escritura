@@ -6,6 +6,7 @@ import { aiApi, aiErrorKey, AiRequestError } from '@/services/ai'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
 import { useAiCapabilities } from '@/components/ai/useAiCapabilities'
+import { useAiToolProvider } from '@/hooks/useAiToolProvider'
 import { hasLocalWrittenDocuments } from '@/components/story-setup/wizard-ai'
 import type { AiCharacterFill } from '@/types/ai'
 
@@ -22,6 +23,7 @@ export function CharacterAiButton({ projectId, characterId, name, tone = 'hero',
   const toast = useToastStore()
   const { documentTree, currentDocument } = useDocumentStore()
   const { capabilities } = useAiCapabilities(projectId)
+  const provider = useAiToolProvider('characters')
   const [loading, setLoading] = useState(false)
   if (!projectId || !capabilities?.permissions.characters) return null
 
@@ -36,6 +38,7 @@ export function CharacterAiButton({ projectId, characterId, name, tone = 'hero',
       const locale = i18n.language.toLowerCase().startsWith('en') ? 'en' : 'es'
       const result = await aiApi.fillCharacters(projectId, {
         locale,
+        ...(provider ? { provider } : {}),
         ...(characterId ? { characterId } : {}),
         ...(name?.trim() && !characterId ? { name: name.trim() } : {}),
       })

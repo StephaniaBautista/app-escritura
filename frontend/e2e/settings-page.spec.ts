@@ -34,8 +34,7 @@ test.describe('Settings Page', () => {
   test('toggle de inactividad tiene switch role y es interactivo', async ({ page }) => {
     await page.goto('/app/settings')
     await page.waitForTimeout(1000)
-    const switches = page.locator('button[role="switch"]')
-    const inactivitySwitch = switches.first()
+    const inactivitySwitch = page.getByRole('switch', { name: /Por inactividad|On inactivity/ })
     await expect(inactivitySwitch).toBeVisible()
 
     const initialState = await inactivitySwitch.getAttribute('aria-checked')
@@ -53,17 +52,14 @@ test.describe('Settings Page', () => {
   test('selector de intervalo aparece cuando trigger está activo', async ({ page }) => {
     await page.goto('/app/settings')
     await page.waitForTimeout(1000)
-    const switches = page.locator('button[role="switch"]')
-    const inactivitySwitch = switches.first()
+    const inactivitySwitch = page.getByRole('switch', { name: /Por inactividad|On inactivity/ })
     const isChecked = await inactivitySwitch.getAttribute('aria-checked')
 
-    if (isChecked === 'true') {
-      await expect(page.locator('select').first()).toBeVisible()
-    } else {
+    if (isChecked !== 'true') {
       await inactivitySwitch.click()
       await page.waitForTimeout(500)
-      await expect(page.locator('select').first()).toBeVisible()
     }
+    await expect(page.getByRole('combobox', { name: /Por inactividad|On inactivity/ })).toBeVisible()
   })
 
   test('topbar settings icon redirige a /app/settings', async ({ page }) => {

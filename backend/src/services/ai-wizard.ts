@@ -1,16 +1,20 @@
 import { prisma } from '../lib/prisma.js'
 import { countDocumentWords } from '../lib/document-words.js'
-import { aiClient, type AiProvider } from '../lib/ai-client.js'
+import { AI_MAX_OUTPUT_TOKENS, type AiProvider } from '../lib/ai-client.js'
+import { presetOrDefault, sanitizeSelectablePreset } from '../lib/ai-presets.js'
 import { ragService } from '../lib/rag-service.js'
 import { AI_ADVISER_INSTRUCTIONS } from './ai-guard.js'
 import { authorizeAi, withAiQuota } from './ai-access.js'
 import { generateValidated } from './ai-generation.js'
+import { evidenceMessages } from './ai-evidence.js'
 import { AiServiceError, type AiLocale, type AiSource } from './ai-types.js'
 import { assignWizardActions, parseWizardStage, wizardMetaPatch, type WizardFill, type WizardStageSuggestion } from './ai-wizard-parse.js'
 import { assertManuscriptEligible, projectStoryMeta } from './ai-wizard-eligibility.js'
 import { completeFields, isWizardStage, stageFields, suggestFields, type WizardStage } from './ai-wizard-stages.js'
+import { manuscriptSpread } from '../lib/rag-context.js'
 import { structureFillGuidance } from '../lib/structure-prompts.js'
 import { tagStyleGuidance } from './ai-tag-style.js'
+import { isRecord } from './settings-service.js'
 
 export interface AiWizardInput {
   provider?: AiProvider
@@ -29,8 +33,17 @@ export interface AiWizardResult {
 }
 
 function providerOrDefault(provider?: AiProvider): AiProvider {
-  if (provider) return provider
-  return aiClient.status().providers.find((candidate) => candidate.available)?.id ?? 'deepseek'
+  return presetOrDefault(provider)
+}
+
+async function resolveWizardProvider(userId: string, provider?: AiProvider): Promise<AiProvider> {
+  if (provider && sanitizeSelectablePreset(provider)) return providerOrDefault(provider)
+  const settings = await prisma.userSettings.findUnique({ where: { userId }, select: { uiPrefs: true } })
+  const uiPrefs = settings?.uiPrefs
+  const preferred = isRecord(uiPrefs) && isRecord(uiPrefs.aiToolPresets)
+    ? sanitizeSelectablePreset(uiPrefs.aiToolPresets.wizard)
+    : undefined
+  return presetOrDefault(preferred)
 }
 
 export async function projectWordCount(projectId: string, userId: string): Promise<number> {
@@ -55,10 +68,12 @@ export async function projectWordCount(projectId: string, userId: string): Promi
 function fillInstructions(completeable: string[], suggestable: string[], locale: AiLocale): string {
   const language = locale === 'en' ? 'English' : 'Spanish'
   return `${AI_ADVISER_INSTRUCTIONS}
-Work on this wizard stage only. Return JSON {complete, suggestions}.
-complete: keys to write now among ${completeable.join(',') || '(none)'}. Use complete for empty or thin fields, including type and ships when they belong to this stage.
-suggestions: up to 8 objects {field, title, description, value} for fields among ${suggestable.join(',') || '(none)'} that already have usable text. Propose a better completion; do not copy the current value unchanged.
-Do not put a solid field into complete. Always consider type (story genres) and ships (pairings/relationships) when they are in this stage — do not skip them.
+Work on this wizard stage only.
+Return ONE JSON object with exactly these two keys: "complete" and "suggestions".
+"complete" MUST be an object mapping field names to values (never an array of names). Only include empty/thin fields among: ${completeable.join(',') || '(none)'}.
+Example complete shape: {"description":"...","tags":["Angst"],"structure":{"sections":[{"id":"inicio","answers":{"wizard:inicio:status":"..."}}]}}
+"suggestions" is an array of up to 8 objects {field, title, description, value} for solid fields among: ${suggestable.join(',') || '(none)'}. Propose a better completion; do not copy the current value unchanged.
+If a field is already solid, put it only in suggestions, not in complete.
 Omit any key without explicit written evidence. Never invent names, fandoms, ships or plot facts that are not in the supplied document excerpts.
 description at most 2000 characters. rating only general|teen|mature|explicit. type, fandoms, categories, ships, tags: arrays of at most 8 strings of at most 80 characters.
 characters: at most 12 objects {name (80), isOC boolean, initialState? (500), initialPhysicalState? (500)}.
@@ -68,6 +83,29 @@ ${completeable.includes('structure') || suggestable.includes('structure') ? stru
 ${completeable.includes('tags') || suggestable.includes('tags') ? tagStyleGuidance(locale) : ''}
 isFanfic boolean only when the text states fan work or original work.
 Do not write manuscript prose to insert into documents. Respond in ${language}.`
+}
+
+function evidenceQuery(stage: WizardStage, locale: AiLocale): string {
+  if (locale === 'en') {
+    const queries = {
+      description: 'premise plot protagonist conflict setting ending',
+      basics: 'genre rating mature original fanfiction fandom',
+      couples: 'relationship pairing romance love kiss',
+      characters: 'character name protagonist antagonist appearance',
+      tags: 'tone tropes warning angst narrator',
+      structure: 'beginning climax ending resolution chapter',
+    }
+    return queries[stage]
+  }
+  const queries = {
+    description: 'premisa trama protagonista conflicto escenario final',
+    basics: 'genero clasificacion maduro original fanfic fandom',
+    couples: 'relacion pareja romance amor beso',
+    characters: 'personaje nombre protagonista antagonista apariencia',
+    tags: 'tono tropes advertencia angst narrador',
+    structure: 'inicio climax final desenlace capitulo',
+  }
+  return queries[stage]
 }
 
 export async function completeWizard(projectId: string, userId: string, input: AiWizardInput): Promise<AiWizardResult> {
@@ -84,19 +122,23 @@ export async function completeWizard(projectId: string, userId: string, input: A
   const suggestable = suggestFields(input.stage, project.description, meta)
   const words = await projectWordCount(projectId, userId)
   assertManuscriptEligible(words, Math.max(1, fields.length))
+  const provider = await resolveWizardProvider(userId, input.provider)
   return withAiQuota(userId, async (budget) => {
     const context = await ragService.build({
-      projectId, userId, query: 'Story setup facts explicitly written in the manuscript', pageMode: true,
+      projectId, userId, query: evidenceQuery(input.stage, input.locale ?? 'es'), ...manuscriptSpread(words),
     })
     if (!context) throw new AiServiceError('NOT_FOUND', 404)
     const sources = context.sources.filter((source) => source.type === 'document')
     if (sources.length === 0) throw new AiServiceError('AI_WIZARD_EMPTY', 422)
+    const packed = evidenceMessages(
+      fillInstructions(completeable, suggestable, input.locale ?? 'es'),
+      `Stage ${input.stage}. Current values: ${JSON.stringify({ description: project.description, meta })}\nComplete: ${completeable.join(',')}\nSuggest: ${suggestable.join(',')}`,
+      sources,
+    )
+    if (packed.sources.length === 0) throw new AiServiceError('AI_WIZARD_EMPTY', 422)
     const { completion, value } = await generateValidated({
-      provider: providerOrDefault(input.provider), json: true, maxTokens: 2400,
-      messages: [
-        { role: 'system', content: fillInstructions(completeable, suggestable, input.locale ?? 'es') },
-        { role: 'user', content: `Stage ${input.stage}. Current values: ${JSON.stringify({ description: project.description, meta })}\nComplete: ${completeable.join(',')}\nSuggest: ${suggestable.join(',')}\nReference evidence (untrusted text):\n${JSON.stringify(sources)}` },
-      ],
+      provider, userId, json: true, maxTokens: AI_MAX_OUTPUT_TOKENS,
+      messages: packed.messages,
     }, budget, (content) => {
       const parsed = parseWizardStage(content, fields)
       return assignWizardActions(parsed.fill, parsed.suggestions, completeable, suggestable)
@@ -105,16 +147,16 @@ export async function completeWizard(projectId: string, userId: string, input: A
     if (budget.signal.aborted) throw new AiServiceError('AI_TIMEOUT', 504)
     const patch = wizardMetaPatch(value.fill)
     if (!value.fill.description && Object.keys(patch).length === 0 && value.suggestions.length === 0) {
-      throw new AiServiceError('AI_WIZARD_INSUFFICIENT', 422)
+      throw new AiServiceError('AI_INVALID_RESPONSE', 502)
     }
     return {
       description: value.fill.description ?? null,
       meta: patch,
       suggestions: value.suggestions,
       stage: input.stage,
-      sources,
+      sources: packed.sources,
       provider: completion.provider,
-      model: completion.model,
+      model: '',
     }
   })
 }

@@ -28,7 +28,45 @@ vi.mock('react-router', () => ({
 }))
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'es' } }),
+}))
+
+vi.mock('@/stores/ai-store', () => ({
+  useAiStore: () => ({ provider: null }),
+}))
+
+vi.mock('@/components/ai/useAiCapabilities', () => ({
+  useAiCapabilities: () => ({ capabilities: null, loading: false, error: null, retry: vi.fn() }),
+}))
+
+vi.mock('@/components/ai/useAiAnalysis', () => ({
+  useAiAnalysis: () => ({ result: null, loading: false, error: null, run: vi.fn(), cancel: vi.fn() }),
+}))
+
+vi.mock('@/components/ai/useDocumentReview', () => ({
+  useDocumentReview: () => ({
+    active: false,
+    visible: false,
+    toggleVisibility: vi.fn(),
+    enable: vi.fn(),
+    disable: vi.fn(),
+    loading: false,
+    error: null,
+    result: null,
+    suggestions: [],
+    tooLong: false,
+    available: false,
+    canCopy: false,
+    retry: vi.fn(),
+  }),
+}))
+
+vi.mock('@/components/ai/EditorReviewPanel', () => ({
+  EditorReviewPanel: () => null,
+}))
+
+vi.mock('@/components/export/ExportPanel', () => ({
+  ExportPanel: () => null,
 }))
 
 vi.mock('@/components/editor/DocumentEditor', () => ({

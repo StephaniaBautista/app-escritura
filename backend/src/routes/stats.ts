@@ -25,7 +25,7 @@ export async function statsRoutes(app: FastifyInstance) {
     return reply.code(error.statusCode && error.statusCode < 500 ? error.statusCode : 500).send({ error: 'STATS_REQUEST_FAILED' })
   })
   app.get('/stats', { schema: { ...common,
-    description: 'Read current word totals and historical writing activity for owned account, project, or current document subtree. Streaks use all tracked history; deleted documents retain account/project activity.',
+    description: 'Read current word totals and historical writing activity for owned account, project, or current document subtree. Optional allTime, days=7|30|60|90|365 (30 by default), or from/to (YYYY-MM-DD, max 730 days). Streaks use all tracked history; deleted documents retain account/project activity.',
     querystring: statsQuery, response: { 200: statsResponse, ...statsErrors },
   } }, (request, reply) => authenticated(request, reply, (userId) => statsService.get(userId, request.query as StatsQuery)))
   app.post('/stats/activity', { bodyLimit: 2048, schema: { ...common,

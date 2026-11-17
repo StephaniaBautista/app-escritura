@@ -123,6 +123,66 @@ describe('document-store: selectProject', () => {
     expect(state.error).toBe('No autenticado')
     expect(state.isLoading).toBe(false)
   })
+
+  it('no vacía el tree si se recarga el mismo proyecto (remount del editor)', async () => {
+    const tree = [{ id: 'doc-1', title: 'Capítulo 1', type: 'document' as const, parentId: null, order: 0, updatedAt: '2026-01-01T00:00:00.000Z' }]
+    useDocumentStore.setState({
+      ...initialState,
+      currentProject: { ...pageResponse, tree },
+      documentTree: tree,
+    })
+    projectsApiMock.getById.mockResolvedValue({ ...pageResponse, tree })
+
+    await useDocumentStore.getState().selectProject('folder-1')
+
+    expect(useDocumentStore.getState().documentTree).toEqual(tree)
+  })
+})
+
+describe('document-store: loadDocument con respuestas en carrera', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useDocumentStore.setState(initialState)
+  })
+
+  afterEach(() => {
+    useDocumentStore.setState(initialState)
+  })
+
+  it('ignora una respuesta obsoleta si llegó después de cargar otro documento', async () => {
+    const container = { id: 'doc-1', title: 'Novela', type: 'document', content: {}, projectId: 'p1', parentId: null, order: 0, folderId: null, userId: 'u1', createdAt: '', updatedAt: '' }
+    const tab = { ...container, id: 'tab-1', title: 'Pestaña 1', type: 'chapter', parentId: 'doc-1' }
+
+    let resolveContainer!: (value: unknown) => void
+    documentsApiMock.getById.mockImplementation((id: string) => {
+      if (id === 'doc-1') {
+        return new Promise((resolve) => { resolveContainer = resolve })
+      }
+      return Promise.resolve(tab)
+    })
+
+    const first = useDocumentStore.getState().loadDocument('doc-1')
+    const second = useDocumentStore.getState().loadDocument('tab-1')
+    await second
+    resolveContainer(container)
+    await first
+
+    expect(useDocumentStore.getState().currentDocument?.id).toBe('tab-1')
+    expect(useDocumentStore.getState().isLoading).toBe(false)
+  })
+
+  it('limpia currentDocument si load falla', async () => {
+    useDocumentStore.setState({
+      currentDocument: { id: 'old', title: 'Viejo', type: 'chapter', content: {}, projectId: 'p1', parentId: null, order: 0, folderId: null, userId: 'u1', createdAt: '', updatedAt: '' },
+    })
+    documentsApiMock.getById.mockRejectedValue(new Error('404'))
+
+    await useDocumentStore.getState().loadDocument('tab-1')
+
+    expect(useDocumentStore.getState().currentDocument).toBeNull()
+    expect(useDocumentStore.getState().isLoading).toBe(false)
+    expect(useDocumentStore.getState().error).toBe('404')
+  })
 })
 
 describe('document-store: versiones con rama activa', () => {

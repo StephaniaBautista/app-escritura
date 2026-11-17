@@ -50,7 +50,7 @@ export function SuggestionsPanel({ projectId, documentId, draftContent, onSugges
         {onReveal && suggestion.documentId === documentId && suggestion.quote && draftContent?.includes(suggestion.quote) && <button type="button" className="ai-panel__button mt-2" onClick={() => onReveal(suggestion)}>{t('aiApp.revealPassage')}</button>}
         <AiSources sources={analysis.result!.sources.filter((source) => suggestion.sourceIds.includes(source.id))} />
       </article>)}
-      {analysis.result && <p className="text-xs ai-panel__muted">{analysis.result.provider} · {analysis.result.model}</p>}
+      {analysis.result && <p className="text-xs ai-panel__muted">{t('aiApp.analysisDone')}</p>}
     </div>
   </section>
 }

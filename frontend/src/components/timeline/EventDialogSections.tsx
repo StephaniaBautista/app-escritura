@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Camera, ChevronDown, X } from 'lucide-react'
 import type { TimelineEvent } from '@/types/timeline'
+import type { Subplot } from '@/types/structure'
 import { collectEventGroupNames, NEW_GROUP_OPTION, normalizeGroupName } from '@/lib/timeline-groups'
+import { subplotLayerColor } from '@/lib/subplot-visibility'
 import { useToastStore } from '@/stores/toast-store'
 import { PillButton, UnderlineInput, UnderlineSelect } from '@/components/ui/SheetFields'
 import { EVENT_ICONS } from './timeline-constants'
@@ -300,6 +302,43 @@ export function EventGroupPicker({ events, value, onChange, disabled = false }: 
 
 export function DocumentPicker(props: CharacterPickerProps) {
   return <CharacterPicker {...props} />
+}
+
+interface SubplotPickerProps {
+  subplots: Subplot[]
+  value: string | null
+  onChange: (subplotId: string | null) => void
+  disabled?: boolean
+}
+
+export function SubplotPicker({ subplots, value, onChange, disabled = false }: SubplotPickerProps) {
+  const { t } = useTranslation()
+  const selected = subplots.find((subplot) => subplot.id === value) ?? null
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-2">
+        <span
+          className="h-3 w-3 shrink-0 rounded-full border"
+          style={{ background: selected ? subplotLayerColor(selected) : 'transparent', borderColor: selected ? subplotLayerColor(selected) : 'var(--color-paper-lines)' }}
+          aria-hidden
+        />
+        <UnderlineSelect
+          id="event-subplot"
+          label={t('structureApp.subplotField')}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || null)}
+          disabled={disabled}
+          className="w-full min-w-[260px]"
+        >
+          <option value="">{t('structureApp.noSubplot')}</option>
+          {subplots.map((subplot) => (
+            <option key={subplot.id} value={subplot.id}>{subplot.title}</option>
+          ))}
+        </UnderlineSelect>
+      </div>
+      <p className="text-xs" style={{ color: 'var(--color-ink-faint)' }}>{t('structureApp.subplotLayerHint')}</p>
+    </div>
+  )
 }
 
 export function CharacterPicker({

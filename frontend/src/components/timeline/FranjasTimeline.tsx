@@ -2,14 +2,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pencil, Trash2, ZoomIn, ZoomOut, ListTree } from 'lucide-react'
 import type { TimelineConfig, TimelineEra, TimelineEvent } from '@/types/timeline'
+import type { Subplot } from '@/types/structure'
 import { buildTicks, DAY, initialWindow, pannedWindow, parseDateValue, posPercent, type TimeWindow, zoomedWindow } from '@/lib/timeline-scale'
 import { eraContaining, eraRange, formatYearLabel } from '@/lib/timeline-date'
+import { groupEventsByLane } from '@/lib/timeline-groups'
+import { SUBPLOT_LAYER_COLOR } from '@/lib/subplot-visibility'
 import { EventGroupLane, type PositionedEvent } from './EventGroupLane'
 import { EventDetailCard } from './EventDetailCard'
 
 interface FranjasTimelineProps {
   events: TimelineEvent[]
   eras: TimelineEra[]
+  subplots?: Subplot[]
   timelineConfig: TimelineConfig
   characters: { id: string; name: string }[]
   documents: { id: string; name: string }[]
@@ -50,8 +54,15 @@ function groupEraRows(bands: EraBand[]): EraBand[][] {
   return rows
 }
 
-export function FranjasTimeline({ events, eras, timelineConfig, characters, documents, selectedId, onSelect, onEdit, onDelete, onEditEra, onDeleteEra }: FranjasTimelineProps) {
+const NO_SUBPLOTS: Subplot[] = []
+
+export function FranjasTimeline({ events, eras, subplots = NO_SUBPLOTS, timelineConfig, characters, documents, selectedId, onSelect, onEdit, onDelete, onEditEra, onDeleteEra }: FranjasTimelineProps) {
   const { t } = useTranslation()
+  const subplotById = useMemo(() => new Map(subplots.map((subplot) => [subplot.id, subplot])), [subplots])
+  const subplotOf = useCallback(
+    (event: TimelineEvent) => (event.subplotId ? subplotById.get(event.subplotId) ?? null : null),
+    [subplotById],
+  )
   const yearFallbacks = {
     before: t('timelineApp.eraBefore'),
     after: t('timelineApp.eraAfter'),
@@ -157,15 +168,18 @@ export function FranjasTimeline({ events, eras, timelineConfig, characters, docu
   )
 
   const groups = useMemo(() => {
-    const map = new Map<string, PositionedEvent[]>()
-    for (const event of events) {
-      const key = event.groupName ?? ''
+    const items: PositionedEvent[] = events.map((event) => {
       const end = parseDateValue(event.endDate)
-      const item: PositionedEvent = { event, x: pos(values.get(event.id)!), xEnd: end !== null ? pos(end) : null }
-      map.set(key, [...(map.get(key) ?? []), item])
-    }
-    return [...map.entries()].sort(([a], [b]) => (a === '' ? 1 : b === '' ? -1 : a.localeCompare(b)))
-  }, [events, values, pos])
+      return { event, x: pos(values.get(event.id)!), xEnd: end !== null ? pos(end) : null, subplot: subplotOf(event) }
+    })
+    return groupEventsByLane(
+      items,
+      (item) => item.event,
+      subplots,
+      { general: t('timelineApp.laneGeneral'), unknownSubplot: t('structureApp.subplotField') },
+      SUBPLOT_LAYER_COLOR,
+    )
+  }, [events, values, pos, subplotOf, subplots, t])
 
   const ordered = useMemo(() => [...events].sort((a, b) => values.get(a.id)! - values.get(b.id)!), [events, values])
   const selectedIndex = ordered.findIndex((e) => e.id === selectedId)
@@ -254,8 +268,16 @@ export function FranjasTimeline({ events, eras, timelineConfig, characters, docu
               </div>
             ))}
 
-            {groups.map(([name, items]) => (
-              <EventGroupLane key={name || '__general__'} name={name || t('timelineApp.laneGeneral')} items={items} selectedId={selectedId} onSelect={selectEvent} />
+            {groups.map((lane) => (
+              <EventGroupLane
+                key={lane.key}
+                name={lane.name}
+                items={lane.items}
+                kind={lane.kind}
+                accentColor={lane.color}
+                selectedId={selectedId}
+                onSelect={selectEvent}
+              />
             ))}
           </div>
         </div>
@@ -265,6 +287,7 @@ export function FranjasTimeline({ events, eras, timelineConfig, characters, docu
         <EventDetailCard
           event={selected}
           era={selectedEra}
+          subplot={subplotOf(selected)}
           value={selectedValue}
           anchorX={pos(selectedValue)}
           timelineConfig={timelineConfig}

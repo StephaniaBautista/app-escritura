@@ -54,11 +54,11 @@ function record(value: unknown): Record<string, unknown> {
   return value as Record<string, unknown>
 }
 
-function text(value: unknown, max: number): string {
-  if (typeof value !== 'string') return invalid('expected_string')
-  if (!value.trim()) return invalid('empty_string')
-  if (value.length > max) return invalid('text_too_long')
-  return value.trim()
+function clipText(value: unknown, max: number): string | undefined {
+  if (typeof value !== 'string') return undefined
+  const trimmed = value.trim()
+  if (!trimmed) return undefined
+  return trimmed.length > max ? trimmed.slice(0, max) : trimmed
 }
 
 function stringList(value: unknown): string[] {
@@ -67,9 +67,11 @@ function stringList(value: unknown): string[] {
     : typeof value === 'string'
       ? value.split(/[,;/|]/)
       : invalid('expected_array')
-  const items = raw.filter((item): item is string => typeof item === 'string' && Boolean(item.trim()))
-  if (items.length > 8) return invalid('array_too_long')
-  return items.map((item) => text(item, 80))
+  const items = raw
+    .filter((item): item is string => typeof item === 'string' && Boolean(item.trim()))
+    .map((item) => item.trim().slice(0, 80))
+    .filter(Boolean)
+  return items.slice(0, 8)
 }
 
 function objectRecord(value: unknown): Record<string, unknown> {
@@ -106,14 +108,18 @@ export function parseTagSuggestions(content: string): string[] {
   return stringList(output.tags)
 }
 
-function parseCharacter(value: unknown): WizardCharacterFill {
+function parseCharacter(value: unknown): WizardCharacterFill | null {
   const row = record(value)
   if (Object.keys(row).some((key) => !['name', 'isOC', 'initialState', 'initialPhysicalState'].includes(key))) {
-    return invalid('unexpected_fields')
+    return null
   }
-  const character: WizardCharacterFill = { name: text(row.name, 80), isOC: row.isOC === true }
-  if (row.initialState !== undefined) character.initialState = text(row.initialState, 500)
-  if (row.initialPhysicalState !== undefined) character.initialPhysicalState = text(row.initialPhysicalState, 500)
+  const name = clipText(row.name, 80)
+  if (!name) return null
+  const character: WizardCharacterFill = { name, isOC: row.isOC === true }
+  const initialState = clipText(row.initialState, 500)
+  if (initialState) character.initialState = initialState
+  const initialPhysicalState = clipText(row.initialPhysicalState, 500)
+  if (initialPhysicalState) character.initialPhysicalState = initialPhysicalState
   return character
 }
 
@@ -123,31 +129,37 @@ function parseAnswers(value: unknown): Record<string, string> {
   for (const key of Object.keys(row)) {
     if (key === '__proto__' || key === 'constructor' || key === 'prototype') return invalid('unexpected_fields')
     if (!isWizardStructurePromptId(key)) continue
-    answers[key] = text(row[key], 1600)
+    const answer = clipText(row[key], 1600)
+    if (answer) answers[key] = answer
   }
   return answers
 }
 
 function parseScenes(value: unknown): WizardSceneFill[] {
-  if (!Array.isArray(value)) return invalid('expected_array')
-  if (value.length > 6) return invalid('array_too_long')
-  return value.map((item) => {
+  if (!Array.isArray(value)) return []
+  return value.slice(0, 6).flatMap((item) => {
     const row = record(item)
-    if (Object.keys(row).some((key) => !['title', 'form'].includes(key))) return invalid('unexpected_fields')
-    const form = text(row.form, 20)
-    if (form !== 'chapter' && form !== 'note') return invalid('unsupported_field')
-    return { title: text(row.title, 80), form }
+    if (Object.keys(row).some((key) => !['title', 'form'].includes(key))) return []
+    const form = clipText(row.form, 20)
+    if (form !== 'chapter' && form !== 'note') return []
+    const title = clipText(row.title, 80)
+    if (!title) return []
+    return [{ title, form }]
   })
 }
 
-function parseSection(value: unknown): WizardSectionFill {
+function parseSection(value: unknown): WizardSectionFill | null {
   const row = record(value)
   if (Object.keys(row).some((key) => !['id', 'title', 'content', 'answers', 'scenes'].includes(key))) {
-    return invalid('unexpected_fields')
+    return null
   }
-  const section: WizardSectionFill = { id: text(row.id, 80) }
-  if (row.title !== undefined) section.title = text(row.title, 80)
-  if (row.content !== undefined) section.content = text(row.content, 1600)
+  const id = clipText(row.id, 80)
+  if (!id) return null
+  const section: WizardSectionFill = { id }
+  const title = clipText(row.title, 80)
+  if (title) section.title = title
+  const content = clipText(row.content, 1600)
+  if (content) section.content = content
   if (row.answers !== undefined) {
     const answers = parseAnswers(row.answers)
     if (Object.keys(answers).length > 0) section.answers = answers
@@ -168,31 +180,34 @@ export function parseWizardFill(content: string, gaps: WizardGap[]): WizardFill 
   for (const key of Object.keys(output)) {
     if (!allowed.has(key)) continue
     const item = output[key]
-    if (key === 'description') fill.description = text(item, 2000)
-    else if (key === 'rating') {
-      const rating = text(item, 20)
-      if (!RATINGS.has(rating)) return invalid('unsupported_field')
-      fill.rating = rating as WizardFill['rating']
+    if (key === 'description') {
+      const description = clipText(item, 2000)
+      if (description) fill.description = description
+    } else if (key === 'rating') {
+      const rating = clipText(item, 20)
+      if (rating && RATINGS.has(rating)) fill.rating = rating as WizardFill['rating']
     } else if (key === 'isFanfic') {
-      if (typeof item !== 'boolean') return invalid('shape')
-      fill.isFanfic = item
+      if (typeof item === 'boolean') fill.isFanfic = item
     } else if (key === 'type' || key === 'fandoms' || key === 'categories' || key === 'ships' || key === 'tags') {
-      fill[key] = stringList(item)
+      const list = stringList(item)
+      if (list.length > 0) fill[key] = list
     } else if (key === 'characters') {
-      if (!Array.isArray(item)) return invalid('expected_array')
-      if (item.length > 12) return invalid('array_too_long')
-      fill.characters = item.map(parseCharacter)
+      if (!Array.isArray(item)) continue
+      const characters = item.slice(0, 12).map(parseCharacter).filter((character): character is WizardCharacterFill => character !== null)
+      if (characters.length > 0) fill.characters = characters
     } else if (key === 'structure') {
-      const structure = record(item)
-      if (Object.keys(structure).some((field) => field !== 'sections')) return invalid('unexpected_fields')
-      if (!Array.isArray(structure.sections)) return invalid('expected_array')
-      if (structure.sections.length > 8) return invalid('array_too_long')
-      fill.structure = { sections: structure.sections.map(parseSection) }
+      if (!item || typeof item !== 'object' || Array.isArray(item)) continue
+      const structure = item as Record<string, unknown>
+      if (Object.keys(structure).some((field) => field !== 'sections')) continue
+      if (!Array.isArray(structure.sections)) continue
+      const sections = structure.sections.slice(0, 8).map(parseSection).filter((section): section is WizardSectionFill => section !== null)
+      if (sections.length > 0) fill.structure = { sections }
     } else if (
       key === 'narrator' || key === 'ending' || key === 'worldContext' || key === 'initialSituation'
       || key === 'centralTheme' || key === 'problems' || key === 'protagonistLife' || key === 'protagonistEvolution'
     ) {
-      fill[key] = text(item, 1600)
+      const field = clipText(item, 1600)
+      if (field) fill[key] = field
     }
   }
   return fill
@@ -218,22 +233,26 @@ export interface WizardStageParsed {
 
 function parseStageSuggestions(value: unknown, fields: WizardGap[]): WizardStageSuggestion[] {
   if (value === undefined || value === null) return []
-  const items = Array.isArray(value) ? value : [value]
-  if (items.length > 8) return invalid('array_too_long')
+  const items = (Array.isArray(value) ? value : [value]).slice(0, 8)
   const allowed = new Set<string>(fields)
   const suggestions: WizardStageSuggestion[] = []
   for (const item of items) {
     const row = objectRecord(item)
     if (!row.field) continue
-    const field = text(row.field, 40)
-    if (!allowed.has(field) || field === '__proto__' || field === 'constructor' || field === 'prototype') continue
-    const parsed = parseWizardFill(JSON.stringify({ [field]: row.value }), [field as WizardGap])
-    const extracted = field === 'description' ? parsed.description : wizardMetaPatch(parsed)[field]
+    const field = clipText(row.field, 40)
+    if (!field || !allowed.has(field) || field === '__proto__' || field === 'constructor' || field === 'prototype') continue
+    let extracted: unknown
+    try {
+      const parsed = parseWizardFill(JSON.stringify({ [field]: row.value }), [field as WizardGap])
+      extracted = field === 'description' ? parsed.description : wizardMetaPatch(parsed)[field]
+    } catch {
+      continue
+    }
     if (extracted === undefined) continue
     suggestions.push({
       field: field as WizardGap,
-      title: typeof row.title === 'string' && row.title.trim() ? text(row.title, 120) : field,
-      description: typeof row.description === 'string' && row.description.trim() ? text(row.description, 500) : field,
+      title: clipText(row.title, 120) || field,
+      description: clipText(row.description, 500) || field,
       value: extracted,
     })
   }

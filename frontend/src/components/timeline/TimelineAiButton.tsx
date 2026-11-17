@@ -6,6 +6,7 @@ import { aiApi, aiErrorKey, AiRequestError } from '@/services/ai'
 import { useDocumentStore } from '@/stores/document-store'
 import { useToastStore } from '@/stores/toast-store'
 import { useAiCapabilities } from '@/components/ai/useAiCapabilities'
+import { useAiToolProvider } from '@/hooks/useAiToolProvider'
 import { hasLocalWrittenDocuments } from '@/components/story-setup/wizard-ai'
 import type { AiTimelineFillResult } from '@/types/ai'
 
@@ -20,6 +21,7 @@ export function TimelineAiButton({ projectId, empty, onFilled }: TimelineAiButto
   const toast = useToastStore()
   const { documentTree, currentDocument } = useDocumentStore()
   const { capabilities } = useAiCapabilities(projectId)
+  const provider = useAiToolProvider('timeline')
   const [loading, setLoading] = useState(false)
   if (!projectId || !capabilities?.permissions.suggestions) return null
 
@@ -32,7 +34,7 @@ export function TimelineAiButton({ projectId, empty, onFilled }: TimelineAiButto
     setLoading(true)
     try {
       const locale = i18n.language.toLowerCase().startsWith('en') ? 'en' : 'es'
-      const result = await aiApi.fillTimeline(projectId, { locale })
+      const result = await aiApi.fillTimeline(projectId, { locale, ...(provider ? { provider } : {}) })
       onFilled(result)
       toast.success(t(empty ? 'timelineApp.aiReady' : 'timelineApp.aiApplied'))
     } catch (error) {

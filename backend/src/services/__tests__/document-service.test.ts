@@ -18,19 +18,25 @@ const { prismaMock } = vi.hoisted(() => ({
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      aggregate: vi.fn(async () => ({ _max: { order: null } })),
     },
     branch: {
       findFirst: vi.fn(),
       create: vi.fn(),
       createMany: vi.fn(),
     },
+    $transaction: vi.fn(async (ops: Promise<unknown>[]) => Promise.all(ops)),
   },
 }))
 
 vi.mock('../../lib/prisma.js', () => ({ prisma: prismaMock }))
 vi.mock('@generated/client', () => ({ Prisma: { JsonNull: 'JSON_NULL' } }))
+vi.mock('../../lib/rag-index-service.js', () => ({
+  ragIndexService: { schedule: vi.fn(async () => undefined), indexDocument: vi.fn(), ensureProject: vi.fn() },
+}))
 
 import { projectService, documentService } from '../document-service.js'
+import { ragIndexService } from '../../lib/rag-index-service.js'
 
 const projectRow = {
   id: 'folder-1',
@@ -204,6 +210,7 @@ describe('projectService.timelineConfig', () => {
 describe('documentService.create — ownership (anti-IDOR)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    prismaMock.document.aggregate.mockResolvedValue({ _max: { order: null } })
   })
 
   it('crea el documento cuando el proyecto pertenece al usuario', async () => {
@@ -219,6 +226,7 @@ describe('documentService.create — ownership (anti-IDOR)', () => {
     })
     expect(prismaMock.document.create).toHaveBeenCalled()
     expect(doc).toEqual({ id: 'doc-1', title: 'Capítulo 1' })
+    expect(ragIndexService.schedule).toHaveBeenCalledWith('doc-1', 'user-1')
   })
 
   it('inicializa el conteo de contenido importado sin registrar actividad', async () => {
@@ -269,6 +277,91 @@ describe('documentService.create — ownership (anti-IDOR)', () => {
 
     expect(doc).toBeNull()
     expect(prismaMock.document.create).not.toHaveBeenCalled()
+  })
+})
+
+describe('documentService.create — order por creación', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('asigna order 0 al primer hermano', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'proj-1' })
+    prismaMock.document.findFirst.mockResolvedValue({ id: 'root-1' })
+    prismaMock.document.aggregate.mockResolvedValue({ _max: { order: null } })
+    prismaMock.document.create.mockResolvedValue({ id: 'doc-1' })
+
+    await documentService.create('user-1', { title: 'Pestaña 1', projectId: 'proj-1', parentId: 'root-1' })
+
+    expect(prismaMock.document.aggregate).toHaveBeenCalledWith({
+      where: { projectId: 'proj-1', parentId: 'root-1' },
+      _max: { order: true },
+    })
+    expect(prismaMock.document.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ order: 0 }),
+    })
+  })
+
+  it('asigna max(order)+1 a las siguientes pestañas del mismo padre', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'proj-1' })
+    prismaMock.document.findFirst.mockResolvedValue({ id: 'root-1' })
+    prismaMock.document.aggregate.mockResolvedValue({ _max: { order: 2 } })
+    prismaMock.document.create.mockResolvedValue({ id: 'doc-4' })
+
+    await documentService.create('user-1', { title: 'Pestaña 4', projectId: 'proj-1', parentId: 'root-1' })
+
+    expect(prismaMock.document.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ order: 3 }),
+    })
+  })
+
+  it('respeta un order explícito del cliente', async () => {
+    prismaMock.project.findFirst.mockResolvedValue({ id: 'proj-1' })
+    prismaMock.document.create.mockResolvedValue({ id: 'doc-1' })
+
+    await documentService.create('user-1', { title: 'X', projectId: 'proj-1', order: 7 })
+
+    expect(prismaMock.document.aggregate).not.toHaveBeenCalled()
+    expect(prismaMock.document.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ order: 7 }),
+    })
+  })
+})
+
+describe('documentService.reorderSiblings', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('reordena solo hermanos del padre y reindexa order por posición', async () => {
+    prismaMock.document.findMany
+      .mockResolvedValueOnce([{ id: 'doc-1' }, { id: 'doc-2' }, { id: 'doc-3' }])
+      .mockResolvedValueOnce([])
+    prismaMock.document.update.mockResolvedValue({})
+
+    await documentService.reorderSiblings('proj-1', 'user-1', 'root-1', ['doc-3', 'doc-1', 'doc-2'])
+
+    expect(prismaMock.document.findMany).toHaveBeenCalledWith({
+      where: { projectId: 'proj-1', userId: 'user-1', parentId: 'root-1' },
+      select: { id: true },
+    })
+    expect(prismaMock.document.update).toHaveBeenNthCalledWith(1, { where: { id: 'doc-3' }, data: { order: 0 } })
+    expect(prismaMock.document.update).toHaveBeenNthCalledWith(2, { where: { id: 'doc-1' }, data: { order: 1 } })
+    expect(prismaMock.document.update).toHaveBeenNthCalledWith(3, { where: { id: 'doc-2' }, data: { order: 2 } })
+    expect(prismaMock.$transaction).toHaveBeenCalled()
+  })
+
+  it('ignora ids ajenos al padre', async () => {
+    prismaMock.document.findMany
+      .mockResolvedValueOnce([{ id: 'doc-1' }, { id: 'doc-2' }])
+      .mockResolvedValueOnce([])
+    prismaMock.document.update.mockResolvedValue({})
+
+    await documentService.reorderSiblings('proj-1', 'user-1', null, ['doc-ajeno', 'doc-2', 'doc-1'])
+
+    expect(prismaMock.document.update).toHaveBeenCalledTimes(2)
+    expect(prismaMock.document.update).toHaveBeenNthCalledWith(1, { where: { id: 'doc-2' }, data: { order: 0 } })
+    expect(prismaMock.document.update).toHaveBeenNthCalledWith(2, { where: { id: 'doc-1' }, data: { order: 1 } })
   })
 })
 

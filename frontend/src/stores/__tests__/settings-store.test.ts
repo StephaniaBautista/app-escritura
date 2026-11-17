@@ -102,7 +102,10 @@ describe('useSettingsStore', () => {
 
   it('getUiPrefs: retorna defaults si no hay settings', () => {
     useSettingsStore.setState({ settings: null })
-    expect(useSettingsStore.getState().getUiPrefs()).toEqual({})
+    expect(useSettingsStore.getState().getUiPrefs()).toEqual({
+      reviewEnabledByDefault: false,
+      aiToolPresets: {},
+    })
   })
 
   it('dismissAiStructureWarning: persiste la preferencia via API', async () => {
@@ -115,5 +118,17 @@ describe('useSettingsStore', () => {
 
     expect(settingsApiMock.update).toHaveBeenCalledWith({ uiPrefs: { dismissAiStructureWarning: true } })
     expect(useSettingsStore.getState().getUiPrefs().dismissAiStructureWarning).toBe(true)
+  })
+
+  it('dismissAiTrainingMode: guarda el modo en la cuenta', async () => {
+    useSettingsStore.setState({ settings: defaultSettings })
+    settingsApiMock.update.mockResolvedValue({
+      ...defaultSettings,
+      uiPrefs: { dismissedAiTrainingModes: ['saver'] },
+    })
+
+    await useSettingsStore.getState().dismissAiTrainingMode('saver')
+
+    expect(settingsApiMock.update).toHaveBeenCalledWith({ uiPrefs: { dismissedAiTrainingModes: ['saver'] } })
   })
 })

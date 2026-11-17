@@ -1,5 +1,6 @@
 {
   "title": "Configuración",
+  "intro": "Cómo te ayuda la máquina y cuándo se guarda un corte. El asesor, en el chat, sigue eligiendo modo por su cuenta.",
   "saving": "Guardando...",
   "saved": "Configuración guardada",
   "saveError": "Error al guardar configuración",
@@ -25,5 +26,22 @@
     "weeks": "semanas",
     "months": "meses",
     "enabled": "Activo"
+  },
+  "ai": {
+    "title": "Inteligencia artificial",
+    "description": "Elige el modo de cada herramienta. El chat del asesor sigue teniendo su propio selector.",
+    "reviewDefault": "Revisión al abrir un documento",
+    "reviewDefaultDesc": "Si está apagada, el texto no se analiza hasta que la actives en el editor.",
+    "mode": "Modo",
+    "tools": {
+      "review": "Revisión",
+      "reviewDesc": "Notas de coherencia sobre el documento abierto.",
+      "wizard": "Asistente de historia",
+      "wizardDesc": "Completar el wizard y sugerir etiquetas.",
+      "timeline": "Línea de tiempo",
+      "timelineDesc": "Generar o completar épocas y eventos.",
+      "characters": "Personajes",
+      "charactersDesc": "Crear o completar fichas a partir del manuscrito."
+    }
   }
 }

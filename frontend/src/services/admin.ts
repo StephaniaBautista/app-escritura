@@ -13,6 +13,37 @@ export interface Role {
 
 export type UserStatus = 'active' | 'suspended' | 'banned'
 
+export interface AiUsageModelRow {
+  vendor: string
+  model: string
+  preset: string
+  requests: number
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  estimatedUsd: number
+}
+
+export interface AiUsageDayRow extends Omit<AiUsageModelRow, 'vendor' | 'model' | 'preset'> {
+  date: string
+}
+
+export interface AiUsageReport {
+  from: string
+  to: string
+  totals: Omit<AiUsageModelRow, 'vendor' | 'model' | 'preset'>
+  models: AiUsageModelRow[]
+  days: AiUsageDayRow[]
+}
+
+export interface AiWebSearchStatus {
+  engine: 'brave' | 'duckduckgo'
+  keyConfigured: boolean
+  ok: boolean
+  status: number | null
+  hits: number
+}
+
 export interface AdminUser {
   id: string
   email: string
@@ -110,4 +141,8 @@ export const adminApi = {
 
   deleteUser: (userId: string) =>
     fetchJson<{ ok: boolean }>(`${API}/admin/users/${userId}`, { method: 'DELETE' }),
+
+  aiUsage: (from: string, to: string) =>
+    fetchJson<AiUsageReport>(`${API}/admin/ai-usage?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`),
+  aiWebSearch: () => fetchJson<AiWebSearchStatus>(`${API}/admin/ai-web-search`),
 }

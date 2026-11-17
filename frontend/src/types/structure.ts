@@ -10,6 +10,7 @@ export interface StructureCard {
   cardType: CardType
   referenceId: string | null
   color: string | null
+  subplotId: string | null
   order: number
   createdAt: string
   updatedAt: string
@@ -53,6 +54,7 @@ export interface CardInput {
   cardType?: CardType
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
 }
 

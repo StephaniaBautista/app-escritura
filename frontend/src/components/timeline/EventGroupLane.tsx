@@ -1,13 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import type { TimelineEvent } from '@/types/timeline'
+import type { Subplot } from '@/types/structure'
 import { labelWidthPercent, stackRows } from '@/lib/timeline-layout'
+import { subplotLayerColor } from '@/lib/subplot-visibility'
 import { EventIcon } from './EventIcon'
+import type { TimelineLaneKind } from '@/lib/timeline-groups'
+import '@/components/structure/subplot-layer.css'
 
 export interface PositionedEvent {
   event: TimelineEvent
   x: number
   xEnd: number | null
+  subplot?: Subplot | null
 }
 
 interface EventGroupLaneProps {
@@ -15,28 +21,45 @@ interface EventGroupLaneProps {
   items: PositionedEvent[]
   selectedId: string | null
   onSelect: (id: string) => void
+  kind?: TimelineLaneKind
+  accentColor?: string | null
 }
 
 const ROW_HEIGHT = 34
 
-export function EventGroupLane({ name, items, selectedId, onSelect }: EventGroupLaneProps) {
+function eventColor(it: PositionedEvent, kind: TimelineLaneKind, accent: string | null): string {
+  if (kind === 'subplot') return it.event.color ?? accent ?? subplotLayerColor(it.subplot)
+  return it.event.color ?? 'var(--color-accent-teal)'
+}
+
+export function EventGroupLane({ name, items, selectedId, onSelect, kind = 'group', accentColor = null }: EventGroupLaneProps) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(true)
+  const isSubplotLane = kind === 'subplot'
+  const accent = accentColor ?? (isSubplotLane ? subplotLayerColor(items[0]?.subplot) : null)
 
   const rows = useMemo(
     () => stackRows(items.map((it) => ({ x: it.x, w: Math.max(labelWidthPercent(it.event.title), (it.xEnd ?? it.x) - it.x + 2) }))),
     [items],
   )
   const rowCount = rows.length > 0 ? Math.max(...rows) + 1 : 0
+  const laneStyle: CSSProperties = isSubplotLane ? { '--subplot-color': accent ?? 'var(--color-accent-violet)' } as CSSProperties : {}
 
   return (
-    <div className="relative">
+    <div
+      className={`relative ${isSubplotLane ? 'subplot-layer-lane' : ''}`}
+      style={laneStyle}
+      data-testid={isSubplotLane ? `timeline-subplot-lane-${name}` : `timeline-group-lane-${name}`}
+      data-subplot-lane={isSubplotLane ? 'true' : undefined}
+    >
       <button
         type="button"
         data-no-pan
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="relative z-[1] mt-2 inline-flex items-center gap-1.5 rounded-r-md py-1 pl-2 pr-3 text-[15px] font-bold shadow-sm"
-        style={{ background: 'var(--color-ink-faint)', color: 'var(--color-paper)' }}
+        aria-label={isSubplotLane ? t('structureApp.subplotLane', { name }) : undefined}
+        className={`relative z-[1] mt-2 inline-flex items-center gap-1.5 rounded-r-md py-1 pl-2 pr-3 text-[15px] font-bold shadow-sm ${isSubplotLane ? 'subplot-layer-lane__head' : ''}`}
+        style={isSubplotLane ? undefined : { background: 'var(--color-ink-faint)', color: 'var(--color-paper)' }}
       >
         {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         {name}
@@ -49,17 +72,30 @@ export function EventGroupLane({ name, items, selectedId, onSelect }: EventGroup
               <span
                 key={`bar-${it.event.id}`}
                 className="absolute h-1.5 rounded-full"
-                style={{ left: `${it.x}%`, width: `${it.xEnd - it.x}%`, top: 6 + rows[i] * ROW_HEIGHT + 24, background: it.event.color ?? 'var(--color-accent-teal)', opacity: 0.6 }}
+                style={{
+                  left: `${it.x}%`,
+                  width: `${it.xEnd - it.x}%`,
+                  top: 6 + rows[i] * ROW_HEIGHT + 24,
+                  background: eventColor(it, kind, accent),
+                  opacity: 0.7,
+                }}
                 aria-hidden
               />
             ) : null,
           )}
           {items.map((it, i) => {
             const isSelected = selectedId === it.event.id
-            const color = it.event.color ?? 'var(--color-accent-teal)'
+            const color = eventColor(it, kind, accent)
             const top = 6 + rows[i] * ROW_HEIGHT
             return (
-              <div key={it.event.id} data-testid={`timeline-event-${it.event.id}`} className="absolute" style={{ left: `${it.x}%`, top }}>
+              <div
+                key={it.event.id}
+                data-testid={`timeline-event-${it.event.id}`}
+                data-subplot-layer={isSubplotLane ? 'true' : undefined}
+                data-selected={isSelected ? 'true' : undefined}
+                className={`absolute ${isSubplotLane ? 'subplot-layer-event' : ''}`}
+                style={{ left: `${it.x}%`, top }}
+              >
                 <button
                   type="button"
                   onClick={(e) => {

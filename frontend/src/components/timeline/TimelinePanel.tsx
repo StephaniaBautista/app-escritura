@@ -5,11 +5,14 @@ import type { TimelineEra, TimelineEraInput, TimelineEvent, TimelineEventInput }
 import { useTimelineStore } from '@/stores/timeline-store'
 import { useCharactersStore } from '@/stores/characters-store'
 import { useDocumentStore } from '@/stores/document-store'
+import { useStructureStore } from '@/stores/structure-store'
 import { characterOptionLabel } from '@/lib/character-labels'
 import { flattenRelatedDocuments } from '@/lib/timeline-related-points'
+import { filterVisibleSubplotItems } from '@/lib/subplot-visibility'
 import { useToastStore } from '@/stores/toast-store'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { LoadingState } from '@/components/ui/LoadingState'
+import { SubplotsLayerButton } from '@/components/structure/SubplotsLayerButton'
 import { FranjasTimeline } from './FranjasTimeline'
 import { ConfiguracionSection } from './ConfiguracionSection'
 import { EraDialog } from './EraDialog'
@@ -41,7 +44,10 @@ export function TimelinePanel({ projectId }: TimelinePanelProps) {
   const { events, eras, timelineConfig, isLoading, load, loadConfig, loadEras, createEra, updateEra, removeEra, create, update, uploadImage, remove } = useTimelineStore()
   const { characters, load: loadCharacters } = useCharactersStore()
   const { documentTree, loadDocumentTree } = useDocumentStore()
+  const subplots = useStructureStore((state) => state.subplots)
+  const hiddenSubplotIds = useStructureStore((state) => state.hiddenSubplotIds)
   const documentOptions = useMemo(() => flattenRelatedDocuments(documentTree), [documentTree])
+  const visibleEvents = useMemo(() => filterVisibleSubplotItems(events, hiddenSubplotIds), [events, hiddenSubplotIds])
   const [eventDialog, setEventDialog] = useState<EventDialogState>({ open: false })
   const [eraDialog, setEraDialog] = useState<EraDialogState>({ open: false })
   const [deleteTarget, setDeleteTarget] = useState<TimelineEvent | null>(null)
@@ -57,7 +63,7 @@ export function TimelinePanel({ projectId }: TimelinePanelProps) {
     void loadDocumentTree(projectId)
   }, [projectId, load, loadConfig, loadEras, loadCharacters, loadDocumentTree])
 
-  const effectiveSelectedId = selectedId && events.some((e) => e.id === selectedId) ? selectedId : null
+  const effectiveSelectedId = selectedId && visibleEvents.some((e) => e.id === selectedId) ? selectedId : null
 
   const handleSaveEvent = async (data: TimelineEventInput, image: EventImageChange) => {
     if (!eventDialog.open) return
@@ -165,6 +171,7 @@ export function TimelinePanel({ projectId }: TimelinePanelProps) {
             empty={eras.length === 0 && events.length === 0}
             onFilled={setProposals}
           />
+          <SubplotsLayerButton projectId={projectId} align="end" />
           <button
             type="button"
             onClick={() => setEraDialog({ open: true, era: null })}
@@ -190,8 +197,9 @@ export function TimelinePanel({ projectId }: TimelinePanelProps) {
         <LoadingState label={t('common.loading')} className="notebook-paper" />
       ) : (
         <FranjasTimeline
-          events={events}
+          events={visibleEvents}
           eras={eras}
+          subplots={subplots}
           timelineConfig={timelineConfig}
           characters={characters.map((c) => ({ id: c.id, name: characterOptionLabel(c, characters, t) }))}
           documents={documentOptions}
@@ -221,6 +229,7 @@ export function TimelinePanel({ projectId }: TimelinePanelProps) {
         event={eventDialog.open ? eventDialog.event : null}
         events={events}
         eras={eras}
+        subplots={subplots}
         timelineConfig={timelineConfig}
         onSubmit={handleSaveEvent}
         onCancel={() => setEventDialog({ open: false })}

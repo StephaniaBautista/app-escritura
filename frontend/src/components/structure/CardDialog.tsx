@@ -7,6 +7,7 @@ import { useToastStore } from '@/stores/toast-store'
 import { ColorDot } from '@/components/ui/ColorDot'
 import { SectionModal } from '@/components/worlds/SectionModal'
 import { PALETTE } from '@/components/timeline/timeline-constants'
+import { subplotLayerColor } from '@/lib/subplot-visibility'
 
 const CARD_TYPES: CardType[] = ['scene', 'chapter', 'character', 'document', 'note']
 
@@ -26,10 +27,13 @@ export function CardDialog({ columnId, card, onClose }: CardDialogProps) {
   const { t } = useTranslation()
   const toast = useToastStore()
   const { createCard, updateCard, removeCard } = useStructureStore()
+  const subplots = useStructureStore((state) => state.subplots)
   const [title, setTitle] = useState(card?.title ?? '')
   const [description, setDescription] = useState(card?.description ?? '')
   const [cardType, setCardType] = useState<CardType>(card?.cardType ?? 'scene')
   const [color, setColor] = useState<string | null>(card?.color ?? null)
+  const [subplotId, setSubplotId] = useState<string | null>(card?.subplotId ?? null)
+  const selectedSubplot = subplots.find((subplot) => subplot.id === subplotId) ?? null
   const [isSaving, setIsSaving] = useState(false)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
@@ -45,6 +49,7 @@ export function CardDialog({ columnId, card, onClose }: CardDialogProps) {
         description: description.trim() || null,
         cardType,
         color,
+        subplotId,
       }
       const result = card ? await updateCard(card.id, data) : await createCard(columnId, data)
       if (result) {
@@ -118,6 +123,32 @@ export function CardDialog({ columnId, card, onClose }: CardDialogProps) {
             <option key={type} value={type}>{t(`structureApp.cardType.${type}`)}</option>
           ))}
         </select>
+      </div>
+      <div>
+        <label htmlFor="card-subplot" className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-ink)' }}>
+          {t('structureApp.subplotField')}
+        </label>
+        <div className="flex items-center gap-2">
+          <span
+            className="h-3 w-3 shrink-0 rounded-full border"
+            style={{ background: selectedSubplot ? subplotLayerColor(selectedSubplot) : 'transparent', borderColor: selectedSubplot ? subplotLayerColor(selectedSubplot) : 'var(--color-paper-lines)' }}
+            aria-hidden
+          />
+          <select
+            id="card-subplot"
+            value={subplotId ?? ''}
+            onChange={(e) => setSubplotId(e.target.value || null)}
+            disabled={isSaving}
+            className="w-full rounded-lg border px-3 py-2 text-sm"
+            style={inputStyle}
+          >
+            <option value="">{t('structureApp.noSubplot')}</option>
+            {subplots.map((subplot) => (
+              <option key={subplot.id} value={subplot.id}>{subplot.title}</option>
+            ))}
+          </select>
+        </div>
+        <p className="mt-1 text-xs" style={{ color: 'var(--color-ink-faint)' }}>{t('structureApp.subplotLayerHint')}</p>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>

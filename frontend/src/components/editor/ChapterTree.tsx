@@ -1,9 +1,22 @@
 import { useState } from 'react'
-import { ChevronRight, ChevronDown, FileText, Plus, Edit2, Copy, Trash2 } from 'lucide-react'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { useTranslation } from 'react-i18next'
-import { cn } from '@/lib/utils'
-import { KebabMenu, type KebabMenuItem } from '@/components/ui/KebabMenu'
 import type { DocumentNode } from '@/types/document'
+import { SortableTabRow, buildTabMenuItems } from './SortableTabRow'
 
 interface ChapterTreeProps {
   documents: DocumentNode[]
@@ -13,6 +26,12 @@ interface ChapterTreeProps {
   onRename?: (id: string, currentTitle: string) => void
   onDuplicate?: (id: string) => void
   onDelete: (id: string) => void
+  onReorder?: (parentId: string | null, documentIds: string[]) => void
+}
+
+function siblingParentId(node: DocumentNode, docIds: Set<string>): string | null {
+  if (!node.parentId || !docIds.has(node.parentId)) return node.parentId ?? null
+  return node.parentId
 }
 
 export function ChapterTree({
@@ -23,20 +42,27 @@ export function ChapterTree({
   onRename,
   onDuplicate,
   onDelete,
+  onReorder,
 }: ChapterTreeProps) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const { t } = useTranslation()
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
 
   const docIds = new Set(documents.map((d) => d.id))
-  const rootDocs = documents.filter((d) => !d.parentId || !docIds.has(d.parentId))
+  const sortedDocs = [...documents].sort((a, b) => a.order - b.order)
+  const rootDocs = sortedDocs.filter((d) => !d.parentId || !docIds.has(d.parentId))
   const childrenMap = new Map<string, DocumentNode[]>()
-  documents.forEach((d) => {
-    if (d.parentId) {
+  sortedDocs.forEach((d) => {
+    if (d.parentId && docIds.has(d.parentId)) {
       const children = childrenMap.get(d.parentId) || []
       children.push(d)
       childrenMap.set(d.parentId, children)
     }
   })
+  const byId = new Map(sortedDocs.map((d) => [d.id, d]))
 
   const toggle = (id: string) => {
     setExpanded((prev) => {
@@ -47,113 +73,79 @@ export function ChapterTree({
     })
   }
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    if (!onReorder) return
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const activeNode = byId.get(String(active.id))
+    const overNode = byId.get(String(over.id))
+    if (!activeNode || !overNode) return
+    const activeParent = siblingParentId(activeNode, docIds)
+    const overParent = siblingParentId(overNode, docIds)
+    if (activeParent !== overParent) return
+    const siblings = activeParent === null ? rootDocs : childrenMap.get(activeParent) ?? []
+    const oldIndex = siblings.findIndex((d) => d.id === active.id)
+    const newIndex = siblings.findIndex((d) => d.id === over.id)
+    if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return
+    const nextIds = arrayMove(siblings.map((d) => d.id), oldIndex, newIndex)
+    onReorder(activeParent, nextIds)
+  }
+
   const renderNode = (node: DocumentNode, depth: number = 0) => {
     const children = childrenMap.get(node.id) || []
     const hasChildren = children.length > 0
     const isExpanded = expanded.has(node.id)
     const isActive = activeDocId === node.id
-
-    const menuItems: KebabMenuItem[] = [
-      {
-        label: t('editorApp.addSubtab'),
-        icon: Plus,
-        onClick: () => onCreateSubpage(node.id),
-      },
-    ]
-
-    if (onRename) {
-      menuItems.push({
-        label: t('editorApp.rename'),
-        icon: Edit2,
-        onClick: () => onRename(node.id, node.title),
-      })
-    }
-
-    if (onDuplicate) {
-      menuItems.push({
-        label: t('editorApp.duplicate'),
-        icon: Copy,
-        onClick: () => onDuplicate(node.id),
-      })
-    }
-
-    const isRoot = !node.parentId || !docIds.has(node.parentId)
-    const canDelete = isRoot ? rootDocs.length > 1 : true
-    if (canDelete) {
-      menuItems.push({
-        label: t('editorApp.delete'),
-        icon: Trash2,
-        onClick: () => onDelete(node.id),
-        danger: true,
-      })
-    }
+    const menuItems = buildTabMenuItems({
+      node,
+      docIds,
+      rootDocsLength: rootDocs.length,
+      t,
+      onCreateSubpage,
+      onRename,
+      onDuplicate,
+      onDelete,
+    })
 
     return (
       <div key={node.id} className="w-full">
-        <div
-          className={cn(
-            'flex items-center gap-1.5 px-2.5 py-2 rounded-xl cursor-pointer group text-sm transition-all relative select-none',
-            isActive ? 'font-semibold shadow-xs' : 'hover:bg-black/5 dark:hover:bg-white/5'
-          )}
-          style={{
-            paddingLeft: `${depth * 16 + 10}px`,
-            color: isActive ? 'var(--color-accent)' : 'var(--color-ink)',
-            background: isActive ? 'var(--color-accent-light)' : 'transparent',
-          }}
-          onClick={() => onSelect(node.id)}
-        >
-          {hasChildren ? (
-            <button
-              type="button"
-              aria-label={isExpanded ? 'collapse tab' : 'expand tab'}
-              onClick={(e) => {
-                e.stopPropagation()
-                toggle(node.id)
-              }}
-              className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors flex-shrink-0"
-              style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-ink-faint)' }}
-            >
-              {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-            </button>
-          ) : (
+        <SortableTabRow
+          node={node}
+          depth={depth}
+          isActive={isActive}
+          hasChildren={hasChildren}
+          isExpanded={isExpanded}
+          menuItems={menuItems}
+          onSelect={onSelect}
+          onToggleExpand={toggle}
+          onRename={onRename}
+        />
+        {isExpanded && (
+          <SortableContext items={children.map((child) => child.id)} strategy={verticalListSortingStrategy}>
+            {children.map((child) => renderNode(child, depth + 1))}
+          </SortableContext>
+        )}
+      </div>
+    )
+  }
 
-            <span className="w-4 flex-shrink-0" />
-          )}
-
-          <FileText
-            className="w-4 h-4 flex-shrink-0 transition-colors"
-            style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-ink-faint)' }}
-          />
-
-          <span className="flex-1 truncate text-xs sm:text-sm">
-            {node.title}
-          </span>
-
-          <div
-            className={cn(
-              'flex items-center transition-opacity ml-auto',
-              isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-            )}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <KebabMenu items={menuItems} />
-          </div>
+  if (rootDocs.length === 0) {
+    return (
+      <div className="space-y-1 py-1">
+        <div className="px-4 py-6 text-center text-sm" style={{ color: 'var(--color-ink-faint)' }}>
+          {t('editorApp.noTabs')}
         </div>
-
-        {isExpanded && children.map((child) => renderNode(child, depth + 1))}
       </div>
     )
   }
 
   return (
-    <div className="space-y-1 py-1">
-      {rootDocs.length === 0 ? (
-        <div className="px-4 py-6 text-center text-sm" style={{ color: 'var(--color-ink-faint)' }}>
-          {t('editorApp.noTabs')}
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={rootDocs.map((doc) => doc.id)} strategy={verticalListSortingStrategy}>
+        <div className="space-y-1 py-1">
+          {rootDocs.map((doc) => renderNode(doc))}
         </div>
-      ) : (
-        rootDocs.map((doc) => renderNode(doc))
-      )}
-    </div>
+      </SortableContext>
+    </DndContext>
   )
 }

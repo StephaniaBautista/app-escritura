@@ -2,12 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated"
+  provider        = "prisma-client"
+  output          = "../generated"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 // User model for authentication
@@ -38,9 +40,14 @@ model User {
   activities    Activity[]
   aiConversations AiConversation[]
   aiUsage       AiUsage?
+  aiUsageEvents AiUsageEvent[]
   writingStats  WritingStats[]
   writingSessions WritingSession[]
   writingActivityClock WritingActivityClock?
+  aiDocumentChunks AiDocumentChunk[]
+  sharedLinks SharedLink[] @relation("SharedLinkAuthor")
+  sharedComments SharedComment[]
+  sharedViews SharedView[]
   @@map("users")
 }
 
@@ -125,6 +132,8 @@ model Project {
   structureBoards  StructureBoard[]
   subplots         Subplot[]
   aiConversations  AiConversation[]
+  aiDocumentChunks AiDocumentChunk[]
+  tags             Tag[]
 
   @@map("projects")
 }
@@ -175,12 +184,37 @@ model Document {
   branches  Branch[]
   aiConversations AiConversation[]
   writingSessions WritingSession[]
+  aiDocumentChunks AiDocumentChunk[]
+  sharedLinks SharedLink[]
 
   @@index([projectId])
   @@index([parentId])
   @@index([userId])
   @@index([userId, wordCount])
   @@map("documents")
+}
+
+model AiDocumentChunk {
+  id              String   @id @default(cuid())
+  projectId       String
+  userId          String
+  documentId      String
+  chunkIndex      Int
+  content         String
+  contentHash     String
+  sourceUpdatedAt DateTime
+  embedding       Unsupported("vector")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, chunkIndex])
+  @@index([projectId, userId])
+  @@index([documentId, contentHash])
+  @@map("ai_document_chunks")
 }
 
 // Note model for sticky-note style notes (per document or per project/story)
@@ -535,13 +569,16 @@ model TimelineEvent {
   imageUrl            String?
   relatedEventIds     String[] @default([])
   relatedDocumentIds  String[] @default([])
+  subplotId    String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   // Relations
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  subplot Subplot? @relation(fields: [subplotId], references: [id], onDelete: SetNull)
 
   @@index([projectId])
+  @@index([subplotId])
   @@map("timeline_events")
 }
 
@@ -716,13 +753,16 @@ model StructureCard {
   cardType    String   @default("scene")
   referenceId String?
   color       String?
+  subplotId   String?
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  column StructureColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  column  StructureColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  subplot Subplot?        @relation(fields: [subplotId], references: [id], onDelete: SetNull)
 
   @@index([columnId])
+  @@index([subplotId])
   @@map("structure_cards")
 }
 
@@ -739,7 +779,9 @@ model Subplot {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cards   StructureCard[]
+  events  TimelineEvent[]
 
   @@index([projectId])
   @@map("subplots")
@@ -802,6 +844,25 @@ model AiUsage {
   @@map("ai_usage")
 }
 
+model AiUsageEvent {
+  id               String   @id @default(cuid())
+  userId           String
+  preset           String
+  vendor           String
+  model            String
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  costMicros       Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([model, createdAt])
+  @@index([userId, createdAt])
+  @@map("ai_usage_events")
+}
+
 model WritingStats {
   id                 String   @id @default(cuid())
   userId             String
@@ -849,4 +910,72 @@ model WritingActivityClock {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("writing_activity_clocks")
+}
+
+// Fase 12 — Etiquetas AO3 por obra (proyecto). Fuente canónica tras la siembra desde storyMeta.
+model Tag {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  kind      String   @default("freeform") // rating | warning | category | fandom | relationship | character | freeform
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, name])
+  @@index([projectId, kind])
+  @@map("tags")
+}
+
+// Fase 12 — Link público de beta reader por documento. Token aleatorio, sin enumeración.
+model SharedLink {
+  id             String    @id @default(cuid())
+  token          String    @unique
+  documentId     String
+  createdById    String
+  includeChildren Boolean  @default(false)
+  allowComments  Boolean   @default(true)
+  revokedAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  document  Document       @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdBy User           @relation("SharedLinkAuthor", fields: [createdById], references: [id], onDelete: Cascade)
+  comments  SharedComment[]
+  views     SharedView[]
+
+  @@index([documentId])
+  @@map("shared_links")
+}
+
+// Fase 12 — Comentarios inline por párrafo sobre el documento compartido.
+model SharedComment {
+  id           String    @id @default(cuid())
+  sharedLinkId String
+  blockIndex   Int
+  quote        String    @default("")
+  body         String
+  authorName   String    @default("Anónimo")
+  userId       String?
+  resolvedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  sharedLink SharedLink @relation(fields: [sharedLinkId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([sharedLinkId, blockIndex])
+  @@map("shared_comments")
+}
+
+// Fase 12 — Visitas con sesión a un link compartido («Compartidos conmigo»).
+model SharedView {
+  sharedLinkId  String
+  userId        String
+  firstViewedAt DateTime @default(now())
+  lastViewedAt  DateTime @default(now())
+
+  sharedLink SharedLink @relation(fields: [sharedLinkId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sharedLinkId, userId])
+  @@map("shared_views")
 }

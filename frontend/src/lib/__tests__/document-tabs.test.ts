@@ -63,6 +63,17 @@ describe('getDocumentTabs', () => {
     expect(result.map((d) => d.id)).toEqual(['X.1', 'X.1.1'])
   })
 
+  it('ordena hermanos por order, no por el orden del array ni por nombre', () => {
+    const unordered: DocumentNode[] = [
+      makeDoc('A', null, 0),
+      { ...makeDoc('A.2', 'A', 1), title: 'Zeta' },
+      { ...makeDoc('A.1', 'A', 0), title: 'Alfa' },
+      { ...makeDoc('A.3', 'A', 2), title: 'Medio' },
+    ]
+    const result = getDocumentTabs(unordered, 'A')
+    expect(result.map((d) => d.id)).toEqual(['A.1', 'A.2', 'A.3'])
+  })
+
   it('no se cuelga con ciclos corruptos en parentId', () => {
     const cyclic: DocumentNode[] = [
       { ...makeDoc('P', null, 0), parentId: 'Q' },

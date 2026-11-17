@@ -64,6 +64,9 @@
     "worldApp",
     "structureApp",
     "aiApp",
-    "statsApp"
+    "statsApp",
+    "exportApp",
+    "tagsApp",
+    "sharingApp"
   ]
 }

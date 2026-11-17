@@ -42,6 +42,7 @@ export type StructureCardMinAggregateOutputType = {
   cardType: string | null
   referenceId: string | null
   color: string | null
+  subplotId: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +56,7 @@ export type StructureCardMaxAggregateOutputType = {
   cardType: string | null
   referenceId: string | null
   color: string | null
+  subplotId: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -68,6 +70,7 @@ export type StructureCardCountAggregateOutputType = {
   cardType: number
   referenceId: number
   color: number
+  subplotId: number
   order: number
   createdAt: number
   updatedAt: number
@@ -91,6 +94,7 @@ export type StructureCardMinAggregateInputType = {
   cardType?: true
   referenceId?: true
   color?: true
+  subplotId?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -104,6 +108,7 @@ export type StructureCardMaxAggregateInputType = {
   cardType?: true
   referenceId?: true
   color?: true
+  subplotId?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -117,6 +122,7 @@ export type StructureCardCountAggregateInputType = {
   cardType?: true
   referenceId?: true
   color?: true
+  subplotId?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -217,6 +223,7 @@ export type StructureCardGroupByOutputType = {
   cardType: string
   referenceId: string | null
   color: string | null
+  subplotId: string | null
   order: number
   createdAt: Date
   updatedAt: Date
@@ -253,10 +260,12 @@ export type StructureCardWhereInput = {
   cardType?: Prisma.StringFilter<"StructureCard"> | string
   referenceId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   color?: Prisma.StringNullableFilter<"StructureCard"> | string | null
+  subplotId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   order?: Prisma.IntFilter<"StructureCard"> | number
   createdAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
   column?: Prisma.XOR<Prisma.StructureColumnScalarRelationFilter, Prisma.StructureColumnWhereInput>
+  subplot?: Prisma.XOR<Prisma.SubplotNullableScalarRelationFilter, Prisma.SubplotWhereInput> | null
 }
 
 export type StructureCardOrderByWithRelationInput = {
@@ -267,10 +276,12 @@ export type StructureCardOrderByWithRelationInput = {
   cardType?: Prisma.SortOrder
   referenceId?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
+  subplotId?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   column?: Prisma.StructureColumnOrderByWithRelationInput
+  subplot?: Prisma.SubplotOrderByWithRelationInput
 }
 
 export type StructureCardWhereUniqueInput = Prisma.AtLeast<{
@@ -284,10 +295,12 @@ export type StructureCardWhereUniqueInput = Prisma.AtLeast<{
   cardType?: Prisma.StringFilter<"StructureCard"> | string
   referenceId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   color?: Prisma.StringNullableFilter<"StructureCard"> | string | null
+  subplotId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   order?: Prisma.IntFilter<"StructureCard"> | number
   createdAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
   column?: Prisma.XOR<Prisma.StructureColumnScalarRelationFilter, Prisma.StructureColumnWhereInput>
+  subplot?: Prisma.XOR<Prisma.SubplotNullableScalarRelationFilter, Prisma.SubplotWhereInput> | null
 }, "id">
 
 export type StructureCardOrderByWithAggregationInput = {
@@ -298,6 +311,7 @@ export type StructureCardOrderByWithAggregationInput = {
   cardType?: Prisma.SortOrder
   referenceId?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
+  subplotId?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -319,6 +333,7 @@ export type StructureCardScalarWhereWithAggregatesInput = {
   cardType?: Prisma.StringWithAggregatesFilter<"StructureCard"> | string
   referenceId?: Prisma.StringNullableWithAggregatesFilter<"StructureCard"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"StructureCard"> | string | null
+  subplotId?: Prisma.StringNullableWithAggregatesFilter<"StructureCard"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"StructureCard"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StructureCard"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StructureCard"> | Date | string
@@ -335,6 +350,7 @@ export type StructureCardCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   column: Prisma.StructureColumnCreateNestedOneWithoutCardsInput
+  subplot?: Prisma.SubplotCreateNestedOneWithoutCardsInput
 }
 
 export type StructureCardUncheckedCreateInput = {
@@ -345,6 +361,7 @@ export type StructureCardUncheckedCreateInput = {
   cardType?: string
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -361,6 +378,7 @@ export type StructureCardUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   column?: Prisma.StructureColumnUpdateOneRequiredWithoutCardsNestedInput
+  subplot?: Prisma.SubplotUpdateOneWithoutCardsNestedInput
 }
 
 export type StructureCardUncheckedUpdateInput = {
@@ -371,6 +389,7 @@ export type StructureCardUncheckedUpdateInput = {
   cardType?: Prisma.StringFieldUpdateOperationsInput | string
   referenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +403,7 @@ export type StructureCardCreateManyInput = {
   cardType?: string
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -409,6 +429,7 @@ export type StructureCardUncheckedUpdateManyInput = {
   cardType?: Prisma.StringFieldUpdateOperationsInput | string
   referenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -432,6 +453,7 @@ export type StructureCardCountOrderByAggregateInput = {
   cardType?: Prisma.SortOrder
   referenceId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -449,6 +471,7 @@ export type StructureCardMaxOrderByAggregateInput = {
   cardType?: Prisma.SortOrder
   referenceId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -462,6 +485,7 @@ export type StructureCardMinOrderByAggregateInput = {
   cardType?: Prisma.SortOrder
   referenceId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  subplotId?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -513,6 +537,48 @@ export type StructureCardUncheckedUpdateManyWithoutColumnNestedInput = {
   deleteMany?: Prisma.StructureCardScalarWhereInput | Prisma.StructureCardScalarWhereInput[]
 }
 
+export type StructureCardCreateNestedManyWithoutSubplotInput = {
+  create?: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput> | Prisma.StructureCardCreateWithoutSubplotInput[] | Prisma.StructureCardUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.StructureCardCreateOrConnectWithoutSubplotInput | Prisma.StructureCardCreateOrConnectWithoutSubplotInput[]
+  createMany?: Prisma.StructureCardCreateManySubplotInputEnvelope
+  connect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+}
+
+export type StructureCardUncheckedCreateNestedManyWithoutSubplotInput = {
+  create?: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput> | Prisma.StructureCardCreateWithoutSubplotInput[] | Prisma.StructureCardUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.StructureCardCreateOrConnectWithoutSubplotInput | Prisma.StructureCardCreateOrConnectWithoutSubplotInput[]
+  createMany?: Prisma.StructureCardCreateManySubplotInputEnvelope
+  connect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+}
+
+export type StructureCardUpdateManyWithoutSubplotNestedInput = {
+  create?: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput> | Prisma.StructureCardCreateWithoutSubplotInput[] | Prisma.StructureCardUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.StructureCardCreateOrConnectWithoutSubplotInput | Prisma.StructureCardCreateOrConnectWithoutSubplotInput[]
+  upsert?: Prisma.StructureCardUpsertWithWhereUniqueWithoutSubplotInput | Prisma.StructureCardUpsertWithWhereUniqueWithoutSubplotInput[]
+  createMany?: Prisma.StructureCardCreateManySubplotInputEnvelope
+  set?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  disconnect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  delete?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  connect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  update?: Prisma.StructureCardUpdateWithWhereUniqueWithoutSubplotInput | Prisma.StructureCardUpdateWithWhereUniqueWithoutSubplotInput[]
+  updateMany?: Prisma.StructureCardUpdateManyWithWhereWithoutSubplotInput | Prisma.StructureCardUpdateManyWithWhereWithoutSubplotInput[]
+  deleteMany?: Prisma.StructureCardScalarWhereInput | Prisma.StructureCardScalarWhereInput[]
+}
+
+export type StructureCardUncheckedUpdateManyWithoutSubplotNestedInput = {
+  create?: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput> | Prisma.StructureCardCreateWithoutSubplotInput[] | Prisma.StructureCardUncheckedCreateWithoutSubplotInput[]
+  connectOrCreate?: Prisma.StructureCardCreateOrConnectWithoutSubplotInput | Prisma.StructureCardCreateOrConnectWithoutSubplotInput[]
+  upsert?: Prisma.StructureCardUpsertWithWhereUniqueWithoutSubplotInput | Prisma.StructureCardUpsertWithWhereUniqueWithoutSubplotInput[]
+  createMany?: Prisma.StructureCardCreateManySubplotInputEnvelope
+  set?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  disconnect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  delete?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  connect?: Prisma.StructureCardWhereUniqueInput | Prisma.StructureCardWhereUniqueInput[]
+  update?: Prisma.StructureCardUpdateWithWhereUniqueWithoutSubplotInput | Prisma.StructureCardUpdateWithWhereUniqueWithoutSubplotInput[]
+  updateMany?: Prisma.StructureCardUpdateManyWithWhereWithoutSubplotInput | Prisma.StructureCardUpdateManyWithWhereWithoutSubplotInput[]
+  deleteMany?: Prisma.StructureCardScalarWhereInput | Prisma.StructureCardScalarWhereInput[]
+}
+
 export type StructureCardCreateWithoutColumnInput = {
   id?: string
   title: string
@@ -523,6 +589,7 @@ export type StructureCardCreateWithoutColumnInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  subplot?: Prisma.SubplotCreateNestedOneWithoutCardsInput
 }
 
 export type StructureCardUncheckedCreateWithoutColumnInput = {
@@ -532,6 +599,7 @@ export type StructureCardUncheckedCreateWithoutColumnInput = {
   cardType?: string
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -574,9 +642,62 @@ export type StructureCardScalarWhereInput = {
   cardType?: Prisma.StringFilter<"StructureCard"> | string
   referenceId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   color?: Prisma.StringNullableFilter<"StructureCard"> | string | null
+  subplotId?: Prisma.StringNullableFilter<"StructureCard"> | string | null
   order?: Prisma.IntFilter<"StructureCard"> | number
   createdAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StructureCard"> | Date | string
+}
+
+export type StructureCardCreateWithoutSubplotInput = {
+  id?: string
+  title: string
+  description?: string | null
+  cardType?: string
+  referenceId?: string | null
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  column: Prisma.StructureColumnCreateNestedOneWithoutCardsInput
+}
+
+export type StructureCardUncheckedCreateWithoutSubplotInput = {
+  id?: string
+  columnId: string
+  title: string
+  description?: string | null
+  cardType?: string
+  referenceId?: string | null
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StructureCardCreateOrConnectWithoutSubplotInput = {
+  where: Prisma.StructureCardWhereUniqueInput
+  create: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput>
+}
+
+export type StructureCardCreateManySubplotInputEnvelope = {
+  data: Prisma.StructureCardCreateManySubplotInput | Prisma.StructureCardCreateManySubplotInput[]
+  skipDuplicates?: boolean
+}
+
+export type StructureCardUpsertWithWhereUniqueWithoutSubplotInput = {
+  where: Prisma.StructureCardWhereUniqueInput
+  update: Prisma.XOR<Prisma.StructureCardUpdateWithoutSubplotInput, Prisma.StructureCardUncheckedUpdateWithoutSubplotInput>
+  create: Prisma.XOR<Prisma.StructureCardCreateWithoutSubplotInput, Prisma.StructureCardUncheckedCreateWithoutSubplotInput>
+}
+
+export type StructureCardUpdateWithWhereUniqueWithoutSubplotInput = {
+  where: Prisma.StructureCardWhereUniqueInput
+  data: Prisma.XOR<Prisma.StructureCardUpdateWithoutSubplotInput, Prisma.StructureCardUncheckedUpdateWithoutSubplotInput>
+}
+
+export type StructureCardUpdateManyWithWhereWithoutSubplotInput = {
+  where: Prisma.StructureCardScalarWhereInput
+  data: Prisma.XOR<Prisma.StructureCardUpdateManyMutationInput, Prisma.StructureCardUncheckedUpdateManyWithoutSubplotInput>
 }
 
 export type StructureCardCreateManyColumnInput = {
@@ -586,6 +707,7 @@ export type StructureCardCreateManyColumnInput = {
   cardType?: string
   referenceId?: string | null
   color?: string | null
+  subplotId?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -601,10 +723,64 @@ export type StructureCardUpdateWithoutColumnInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subplot?: Prisma.SubplotUpdateOneWithoutCardsNestedInput
 }
 
 export type StructureCardUncheckedUpdateWithoutColumnInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardType?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StructureCardUncheckedUpdateManyWithoutColumnInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardType?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subplotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StructureCardCreateManySubplotInput = {
+  id?: string
+  columnId: string
+  title: string
+  description?: string | null
+  cardType?: string
+  referenceId?: string | null
+  color?: string | null
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StructureCardUpdateWithoutSubplotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardType?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  column?: Prisma.StructureColumnUpdateOneRequiredWithoutCardsNestedInput
+}
+
+export type StructureCardUncheckedUpdateWithoutSubplotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  columnId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -615,8 +791,9 @@ export type StructureCardUncheckedUpdateWithoutColumnInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type StructureCardUncheckedUpdateManyWithoutColumnInput = {
+export type StructureCardUncheckedUpdateManyWithoutSubplotInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  columnId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -637,10 +814,12 @@ export type StructureCardSelect<ExtArgs extends runtime.Types.Extensions.Interna
   cardType?: boolean
   referenceId?: boolean
   color?: boolean
+  subplotId?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["structureCard"]>
 
 export type StructureCardSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -651,10 +830,12 @@ export type StructureCardSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   cardType?: boolean
   referenceId?: boolean
   color?: boolean
+  subplotId?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["structureCard"]>
 
 export type StructureCardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -665,10 +846,12 @@ export type StructureCardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   cardType?: boolean
   referenceId?: boolean
   color?: boolean
+  subplotId?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }, ExtArgs["result"]["structureCard"]>
 
 export type StructureCardSelectScalar = {
@@ -679,26 +862,31 @@ export type StructureCardSelectScalar = {
   cardType?: boolean
   referenceId?: boolean
   color?: boolean
+  subplotId?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StructureCardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "columnId" | "title" | "description" | "cardType" | "referenceId" | "color" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["structureCard"]>
+export type StructureCardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "columnId" | "title" | "description" | "cardType" | "referenceId" | "color" | "subplotId" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["structureCard"]>
 export type StructureCardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }
 export type StructureCardIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }
 export type StructureCardIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   column?: boolean | Prisma.StructureColumnDefaultArgs<ExtArgs>
+  subplot?: boolean | Prisma.StructureCard$subplotArgs<ExtArgs>
 }
 
 export type $StructureCardPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StructureCard"
   objects: {
     column: Prisma.$StructureColumnPayload<ExtArgs>
+    subplot: Prisma.$SubplotPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -708,6 +896,7 @@ export type $StructureCardPayload<ExtArgs extends runtime.Types.Extensions.Inter
     cardType: string
     referenceId: string | null
     color: string | null
+    subplotId: string | null
     order: number
     createdAt: Date
     updatedAt: Date
@@ -1106,6 +1295,7 @@ readonly fields: StructureCardFieldRefs;
 export interface Prisma__StructureCardClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   column<T extends Prisma.StructureColumnDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StructureColumnDefaultArgs<ExtArgs>>): Prisma.Prisma__StructureColumnClient<runtime.Types.Result.GetResult<Prisma.$StructureColumnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  subplot<T extends Prisma.StructureCard$subplotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StructureCard$subplotArgs<ExtArgs>>): Prisma.Prisma__SubplotClient<runtime.Types.Result.GetResult<Prisma.$SubplotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1142,6 +1332,7 @@ export interface StructureCardFieldRefs {
   readonly cardType: Prisma.FieldRef<"StructureCard", 'String'>
   readonly referenceId: Prisma.FieldRef<"StructureCard", 'String'>
   readonly color: Prisma.FieldRef<"StructureCard", 'String'>
+  readonly subplotId: Prisma.FieldRef<"StructureCard", 'String'>
   readonly order: Prisma.FieldRef<"StructureCard", 'Int'>
   readonly createdAt: Prisma.FieldRef<"StructureCard", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StructureCard", 'DateTime'>
@@ -1543,6 +1734,25 @@ export type StructureCardDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many StructureCards to delete.
    */
   limit?: number
+}
+
+/**
+ * StructureCard.subplot
+ */
+export type StructureCard$subplotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subplot
+   */
+  select?: Prisma.SubplotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subplot
+   */
+  omit?: Prisma.SubplotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubplotInclude<ExtArgs> | null
+  where?: Prisma.SubplotWhereInput
 }
 
 /**

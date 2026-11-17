@@ -24,16 +24,27 @@ export interface ContextDocument {
 
 export const MAX_CONTEXT_CHARS = 28_000
 export const MAX_PAGE_CONTEXT_CHARS = 56_000
+export const ADVISER_RETRIEVAL_CHARS = 30_000
 export const MAX_DOCUMENT_TEXT_CHARS = 24_000
 export const FOCUSED_PAGE_CHARS = 56_000
+export const LONG_DOCUMENT_CHARS = 2_000_000
+export const LONG_MANUSCRIPT_WORDS = 8_000
 const CHUNK_CHARS = 1800
+const MAX_NODE_VISITS = 250_000
+const SPREAD_DOCUMENTS = 12
+const CHUNKS_PER_SOURCE = 8
+
+export function manuscriptSpread(words: number): { pageMode: boolean; spread: boolean } {
+  const long = words >= LONG_MANUSCRIPT_WORDS
+  return { pageMode: !long, spread: long }
+}
 
 export function plainDocumentText(value: unknown, limit = MAX_DOCUMENT_TEXT_CHARS): string {
   const stack: { value: unknown; depth: number }[] = [{ value, depth: 0 }]
   const parts: string[] = []
   let length = 0
   let visited = 0
-  while (stack.length && length < limit && visited++ < 20_000) {
+  while (stack.length && length < limit && visited++ < MAX_NODE_VISITS) {
     const item = stack.pop()!
     if (item.depth > 48) continue
     if (!item.value || typeof item.value !== 'object' || Array.isArray(item.value)) continue
@@ -76,8 +87,10 @@ export function source(type: AiSourceType, id: string, title: string, data: unkn
   return { id: `${type}:${id}`, type, title: title.slice(0, 180), excerpt: narrativeFields(data) }
 }
 
-export function documentsThroughChapter(documents: ContextDocument[], chapterId: string): ContextDocument[] | null {
-  const selected = documents.find((document) => document.id === chapterId && document.type === 'chapter')
+const KNOWLEDGE_SCOPE_TYPES = new Set(['chapter', 'subpage'])
+
+export function documentsThroughScope(documents: ContextDocument[], scopeId: string): ContextDocument[] | null {
+  const selected = documents.find((document) => document.id === scopeId && KNOWLEDGE_SCOPE_TYPES.has(document.type))
   if (!selected) return null
   const byId = new Map(documents.map((document) => [document.id, document]))
   const parents = new Set<string>()
@@ -127,37 +140,91 @@ export function focusedPageText(value: unknown): string {
 
 export function documentContextText(value: unknown, query: string, complete = false): string {
   if (complete) return focusedPageText(value)
-  const text = plainDocumentText(value, 240_000)
+  const text = plainDocumentText(value, LONG_DOCUMENT_CHARS)
   if (text.length <= MAX_DOCUMENT_TEXT_CHARS) return text
-  const terms = queryTerms(query)
-  const chunks: { text: string; offset: number; score: number }[] = []
-  for (let offset = 0; offset < text.length; offset += CHUNK_CHARS) {
-    const excerpt = text.slice(offset, offset + CHUNK_CHARS)
-    const searchable = normalized(excerpt)
-    chunks.push({ text: excerpt, offset, score: terms.filter((term) => searchable.includes(term)).length })
-  }
-  const selected = chunks.sort((a, b) => b.score - a.score || a.offset - b.offset).slice(0, 13)
-  return selected.sort((a, b) => a.offset - b.offset).map((chunk) => chunk.text).join('\n[...]\n').slice(0, MAX_DOCUMENT_TEXT_CHARS)
+  return sampleDocumentText(text, query, MAX_DOCUMENT_TEXT_CHARS)
 }
 
 export interface AssembleOptions {
   pageMode?: boolean
+  spread?: boolean
+  budget?: number
+}
+
+function sampleDocumentText(text: string, query: string, limit: number): string {
+  const terms = queryTerms(query)
+  const scanned = scanOffsets(text.length).map((offset) => {
+    const excerpt = text.slice(offset, offset + CHUNK_CHARS)
+    const searchable = normalized(excerpt)
+    return { text: excerpt, offset, score: terms.filter((term) => searchable.includes(term)).length }
+  })
+  const selected = pickScoredChunks(scanned, 13)
+  return selected.sort((a, b) => a.offset - b.offset).map((chunk) => chunk.text).join('\n[...]\n').slice(0, limit)
+}
+
+function scanOffsets(length: number): number[] {
+  if (length <= CHUNK_CHARS) return [0]
+  const step = Math.max(CHUNK_CHARS - 180, Math.ceil((length - CHUNK_CHARS) / (CHUNKS_PER_SOURCE - 1)))
+  const offsets: number[] = []
+  for (let offset = 0; offset < length; offset += step) {
+    offsets.push(offset)
+    if (offsets.length >= CHUNKS_PER_SOURCE - 1) break
+  }
+  const tail = Math.max(0, length - CHUNK_CHARS)
+  if (!offsets.includes(tail)) offsets.push(tail)
+  return [...new Set(offsets)]
+}
+
+function pickScoredChunks<T extends { offset: number; score: number }>(chunks: T[], take: number): T[] {
+  if (chunks.length <= take) return chunks
+  const byOffset = [...chunks].sort((a, b) => a.offset - b.offset)
+  const anchors = [byOffset[0], byOffset[byOffset.length - 1]]
+  const ranked = [...chunks].sort((a, b) => b.score - a.score || a.offset - b.offset)
+  const chosen = new Map<number, T>()
+  for (const chunk of [...anchors, ...ranked]) {
+    if (!chunk || chosen.has(chunk.offset)) continue
+    chosen.set(chunk.offset, chunk)
+    if (chosen.size >= take) break
+  }
+  return [...chosen.values()]
+}
+
+function evenlySpaced<T>(items: T[], take: number): T[] {
+  if (items.length <= take) return items
+  const picked: T[] = []
+  for (let index = 0; index < take; index++) {
+    picked.push(items[Math.round((index * (items.length - 1)) / (take - 1))]!)
+  }
+  return [...new Set(picked)]
+}
+
+function sourceChunks(item: AiSource, index: number, terms: string[], focusedId: string) {
+  const offsets = scanOffsets(item.excerpt.length)
+  return offsets.map((offset) => {
+    const excerpt = item.excerpt.slice(offset, offset + CHUNK_CHARS)
+    const searchable = normalized(excerpt)
+    const title = normalized(item.title)
+    const last = offset === offsets[offsets.length - 1]
+    const relevance = terms.reduce((score, term) => score + (searchable.includes(term) ? 2 : 0) + (title.includes(term) ? 3 : 0), 0)
+    const position = offset === 0 || last ? 2 : 0
+    return { item: { ...item, excerpt }, score: relevance + position + (item.id === focusedId ? 5 : 0), index, offset }
+  })
 }
 
 function encodeContext(prefix: object, sources: AiSource[]): string {
   return JSON.stringify({ ...prefix, sources })
 }
 
-function fitSource(prefix: object, source: AiSource, budget: number): AiSource | null {
-  const encoded = encodeContext(prefix, [source])
-  if (encoded.length <= budget) return source
+function fitSource(prefix: object, source: AiSource, budget: number, selected: AiSource[] = []): AiSource | null {
+  const withSource = (excerpt: string) => encodeContext(prefix, [...selected, { ...source, excerpt }])
+  if (withSource(source.excerpt).length <= budget) return source
   let low = 0
   let high = source.excerpt.length
   let excerpt = ''
   while (low <= high) {
     const mid = Math.floor((low + high) / 2)
     const candidate = source.excerpt.slice(0, mid)
-    if (encodeContext(prefix, [{ ...source, excerpt: candidate }]).length <= budget) {
+    if (withSource(candidate).length <= budget) {
       excerpt = candidate
       low = mid + 1
     } else {
@@ -171,7 +238,8 @@ export function assembleContext(
   candidates: AiSource[], query: string, directed: boolean, characterName?: string, documentId?: string, options?: AssembleOptions,
 ): RagContext {
   const pageMode = options?.pageMode === true
-  const budget = documentId || pageMode ? MAX_PAGE_CONTEXT_CHARS : MAX_CONTEXT_CHARS
+  const spread = options?.spread === true
+  const budget = options?.budget ?? (documentId || pageMode || spread ? MAX_PAGE_CONTEXT_CHARS : MAX_CONTEXT_CHARS)
   const prefix = { kind: 'untrusted_project_context', knowledge: characterName ? 'selected_chapter_only' : 'retrieved_current_project', characterName }
   const selected: AiSource[] = []
   let text = encodeContext(prefix, selected)
@@ -188,7 +256,7 @@ export function assembleContext(
       }
     }
   }
-  if (pageMode) {
+  if (pageMode && !spread) {
     for (const item of candidates) {
       if (item.type !== 'document' || intact.has(item.id) || selected.length >= 40) continue
       const next = [...selected, item]
@@ -200,19 +268,16 @@ export function assembleContext(
     }
   }
   const terms = queryTerms(query)
+  const priority = spread
+    ? new Set(evenlySpaced(candidates.filter((item) => item.type === 'document'), SPREAD_DOCUMENTS).map((item) => item.id))
+    : null
   const chunks = candidates.flatMap((item, index) => {
     if (intact.has(item.id)) return []
-    const result: { item: AiSource; score: number; index: number; offset: number }[] = []
-    for (let offset = 0; offset < item.excerpt.length; offset += CHUNK_CHARS - 180) {
-      const excerpt = item.excerpt.slice(offset, offset + CHUNK_CHARS)
-      const searchable = normalized(excerpt)
-      const title = normalized(item.title)
-      const relevance = terms.reduce((score, term) => score + (searchable.includes(term) ? 2 : 0) + (title.includes(term) ? 3 : 0), 0)
-      result.push({ item: { ...item, excerpt }, score: relevance + (item.id === focusedId ? 5 : 0), index, offset })
-      if (result.length >= 16) break
-    }
-    return result
-  }).sort((a, b) => b.score - a.score || a.offset - b.offset || a.index - b.index)
+    return sourceChunks(item, index, terms, focusedId).map((chunk) => ({
+      ...chunk,
+      score: chunk.score + (priority?.has(item.id) ? 4 : 0),
+    }))
+  }).sort((a, b) => b.score - a.score || a.index - b.index || a.offset - b.offset)
   for (const chunk of chunks) {
     const previous = selected.find((item) => item.id === chunk.item.id)
     const next = previous
@@ -224,4 +289,35 @@ export function assembleContext(
     text = encoded
   }
   return { text, sources: selected, characterName, directed }
+}
+
+export function assembleIntactSources(
+  candidates: AiSource[],
+  directed: boolean,
+  options?: { budget?: number; knowledge?: string; characterName?: string },
+): RagContext {
+  const budget = options?.budget ?? ADVISER_RETRIEVAL_CHARS
+  const prefix = {
+    kind: 'untrusted_project_context',
+    knowledge: options?.knowledge ?? 'retrieved_indexed_subset',
+    characterName: options?.characterName,
+  }
+  const selected: AiSource[] = []
+  let text = encodeContext(prefix, selected)
+  for (const item of candidates) {
+    if (selected.length >= 40) break
+    const encoded = encodeContext(prefix, [...selected, item])
+    if (encoded.length <= budget) {
+      selected.push(item)
+      text = encoded
+      continue
+    }
+    const fitted = fitSource(prefix, item, budget, selected)
+    if (fitted) {
+      selected.push(fitted)
+      text = encodeContext(prefix, selected)
+    }
+    break
+  }
+  return { text, sources: selected, characterName: options?.characterName, directed }
 }

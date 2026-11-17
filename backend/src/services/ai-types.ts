@@ -17,6 +17,7 @@ export interface CreateAiConversation {
 export interface AiMessageInput {
   message: string
   direction?: string
+  webSearch?: boolean
   requestId: string
   provider?: AiProvider
   locale?: AiLocale

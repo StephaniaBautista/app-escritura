@@ -4,6 +4,7 @@ const { db, authorize, quota, complete, build } = vi.hoisted(() => ({
   db: {
     project: { findFirst: vi.fn() },
     document: { aggregate: vi.fn(), findMany: vi.fn() },
+    userSettings: { findUnique: vi.fn() },
   },
   authorize: vi.fn(),
   quota: vi.fn(),
@@ -15,12 +16,13 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
 vi.mock('../ai-access.js', () => ({ authorizeAi: authorize, withAiQuota: quota }))
 vi.mock('../../lib/ai-client.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../lib/ai-client.js')>()),
-  aiClient: { complete, status: () => ({ providers: [{ id: 'deepseek', available: true }], fallbackEnabled: false }) },
+  aiClient: { complete, status: () => ({ providers: [{ id: 'balanced', available: true }], fallbackEnabled: false }) },
 }))
 vi.mock('../../lib/rag-service.js', () => ({ ragService: { build } }))
 
 import { completeWizard } from '../ai-wizard.js'
 import { TAG_STYLE_MARKER } from '../ai-tag-style.js'
+import { AI_MAX_INPUT_CHARS } from '../../lib/ai-client.js'
 
 const project = { id: 'p1', description: null, storyMeta: {} }
 const sources = [{ id: 'document:d1', type: 'document', title: 'Capítulo', excerpt: 'Ada tiene treinta años y vive en Madrid.' }]
@@ -34,10 +36,11 @@ describe('wizard completion generation gates', () => {
     db.project.findFirst.mockResolvedValue(project)
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 0 } })
     db.document.findMany.mockResolvedValue([])
+    db.userSettings.findUnique.mockResolvedValue({ uiPrefs: { aiToolPresets: { wizard: 'balanced' } } })
     build.mockResolvedValue({ text: 'Ada tiene treinta años.', sources, directed: false })
     complete.mockResolvedValue({
       content: JSON.stringify({ description: 'Ada vive en Madrid.' }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
   })
@@ -68,7 +71,7 @@ describe('wizard completion generation gates', () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
     complete.mockResolvedValue({
       content: JSON.stringify({ type: ['Romance'], rating: 'teen', isFanfic: false }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await completeWizard('p1', 'u1', { stage: 'basics', locale: 'es' })
@@ -87,14 +90,14 @@ describe('wizard completion generation gates', () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
     complete.mockResolvedValue({
       content: JSON.stringify({ ships: ['Ada/Bea'], categories: ['F/F'] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await completeWizard('p1', 'u1', { stage: 'couples', locale: 'es' })
     expect(result.meta).toEqual({ ships: ['Ada/Bea'], categories: ['F/F'] })
     const system = complete.mock.calls[0][0].messages[0].content as string
     expect(system).toContain('ships')
-    expect(system).toContain('among categories,ships')
+    expect(system).toContain('categories,ships')
   })
 
   it('returns suggestions instead of overwriting a solid stage', async () => {
@@ -111,7 +114,7 @@ describe('wizard completion generation gates', () => {
           field: 'type', title: 'Añade misterio', description: 'Hay una investigación.', value: ['Drama', 'Romance', 'Mystery'],
         }],
       }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await completeWizard('p1', 'u1', { stage: 'basics', locale: 'es' })
@@ -130,7 +133,7 @@ describe('wizard completion generation gates', () => {
     })
     complete.mockResolvedValue({
       content: JSON.stringify({ type: ['Romance'] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const second = await completeWizard('p1', 'u1', { locale: 'es', stage: 'basics' })
@@ -142,23 +145,44 @@ describe('wizard completion generation gates', () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
     complete.mockResolvedValue({
       content: JSON.stringify({ structure: { sections: [{ id: 'inicio', answers: { 'wizard:inicio:status': 'Madrid' } }] } }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     await completeWizard('p1', 'u1', { locale: 'es', stage: 'structure' })
     expect(complete.mock.calls[0][0].messages[0].content).toContain('wizard:desarrollo:inciting')
     complete.mockResolvedValue({
       content: JSON.stringify({ tags: ['Angst'] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     await completeWizard('p1', 'u1', { locale: 'es', stage: 'tags' })
     expect(complete.mock.calls[1][0].messages[0].content).toContain(TAG_STYLE_MARKER)
   })
 
-  it('treats an empty model fill as insufficient after generation', async () => {
+  it('fits oversized manuscript evidence into the model input budget', async () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
-    complete.mockResolvedValue({ content: '{}', provider: 'deepseek', model: 'test-model' })
-    await expect(completeWizard('p1', 'u1', { stage: 'description' })).rejects.toMatchObject({ code: 'AI_WIZARD_INSUFFICIENT' })
+    build.mockResolvedValue({
+      text: 'Ada',
+      sources: [{ id: 'document:d1', type: 'document', title: 'Capítulo', excerpt: 'Ada vive. '.repeat(8_000) }],
+      directed: false,
+    })
+    const result = await completeWizard('p1', 'u1', { stage: 'description' })
+    const messages = complete.mock.calls[0][0].messages as { content: string }[]
+    expect(messages.reduce((sum, message) => sum + message.content.length, 0)).toBeLessThanOrEqual(AI_MAX_INPUT_CHARS)
+    expect(result.sources[0]?.excerpt.length).toBeLessThan(8_000 * 10)
+  })
+
+  it('spreads retrieval across a book-length manuscript instead of page mode', async () => {
+    db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 300_000 } })
+    await completeWizard('p1', 'u1', { stage: 'description', locale: 'es' })
+    expect(build).toHaveBeenCalledWith(expect.objectContaining({
+      pageMode: false, spread: true, query: expect.stringContaining('premisa'),
+    }))
+  })
+
+  it('treats an empty model fill as an invalid provider response after generation', async () => {
+    db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
+    complete.mockResolvedValue({ content: '{}', provider: 'balanced', model: 'test-model' })
+    await expect(completeWizard('p1', 'u1', { stage: 'description' })).rejects.toMatchObject({ code: 'AI_INVALID_RESPONSE' })
   })
 })

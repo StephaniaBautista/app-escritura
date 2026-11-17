@@ -19,6 +19,7 @@ export function AppSidebar({ collapsed, onToggle, onMobileClose }: AppSidebarPro
   const mainNav = [
     { path: '/app', label: t('sidebar.home'), icon: Home },
     { path: '/app/documents', label: t('sidebar.myProjects'), icon: FileText },
+    { path: '/app/ai-characters', label: t('sidebar.aiCharacters'), icon: Sparkles },
     { path: '/app/stats', label: t('sidebar.statistics'), icon: ChartNoAxesCombined },
   ]
 

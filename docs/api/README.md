@@ -4,17 +4,21 @@ Documentacion de la API de Archivum.
 
 ## Endpoints
 
+### Exportación (Fase 11)
+
+Descarga del documento (o documento + capítulos) a PDF, Markdown, HTML con CSS o HTML listo para pegar en AO3: [contrato](./export.md). `POST /api/documents/:id/export`; tag Swagger `Export`.
+
 ### Mapas (M70)
 
 Varios lienzos por proyecto, JSON de objetos (iconos, trazos, formas, texto) e imagen de fondo: [contrato](./maps.md). Tag Swagger `Worldbuilding`.
 
 ### Estadísticas de escritura (Fase 10)
 
-Palabras actuales y añadidas, tiempo activo, rachas y calendario por cuenta, proyecto o escrito: [contrato y metodología](./stats.md). `GET /api/stats` y `POST /api/stats/activity`; el guardado de documentos admite `timeZone`.
+Palabras actuales y añadidas, tiempo activo, rachas, rango de fechas y calendario por cuenta, carpeta o escrito: [contrato y metodología](./stats.md). `GET /api/stats` y `POST /api/stats/activity`; el guardado de documentos admite `timeZone`.
 
 ### Asistencia de IA (Fase 9)
 
-Chat contextual, conversación con personajes, análisis de coherencia, autocompletado de fichas, creación de personajes desde el manuscrito, autocompletado de la línea de tiempo, sugerencias de subtramas, orden de capítulos, autocompletado del wizard de historia y sugerencias de etiquetas: [contrato, permisos y configuración](./ai.md). Rutas bajo `/api/projects/:projectId/ai`, tag Swagger `AI`.
+Chat contextual, conversación con personajes, análisis de coherencia, autocompletado de fichas, creación de personajes desde el manuscrito, autocompletado de la línea de tiempo, sugerencias de subtramas, orden de capítulos, autocompletado del wizard de historia y sugerencias de etiquetas: [contrato, permisos y configuración](./ai.md). Rutas bajo `/api/projects/:projectId/ai`, tag Swagger `AI`. Informe de uso para administración: [admin-ai-usage](./admin-ai-usage.md).
 
 ### Estructura / tablero de capítulos (Fase 8)
 
@@ -142,6 +146,9 @@ Reglas:
 - El límite de versiones (FIFO) se aplica por rama según tier.
 - Si no se envía `branchId`, la versión se crea en la rama `main` (fallback).
 
+### Settings
+- `GET /api/settings` y `PATCH /api/settings` — tema, idioma, versionado automático y `uiPrefs`. Las preferencias de IA (`aiToolPresets`, `reviewEnabledByDefault`) viven en `uiPrefs`; `GET` añade `aiModes` (sin claves). Detalle en [ai.md](./ai.md).
+
 ### Auto-Version (2026-08-01, M22 — actualizado 2026-08-04, M24)
 - `POST /api/auto-version/check/:documentId` - Comprobar y crear snapshot automático según trigger. Body: `{ trigger, lastActivityAt?, branchId? }` (triggers: `inactivity | exit | hourly | daily | weekly | monthly`)
 - `PATCH /api/documents/:documentId/activity` - Actualizar `lastActivityAt` (heartbeat del editor)
@@ -249,6 +256,7 @@ Reglas:
 - `GET /api/projects/:projectId/timeline` - Listar eventos (ordenados por `order` asc)
 - `POST /api/projects/:projectId/timeline` - Crear evento `{ title, date?, description?, order?, eraId?, characterIds?, icon?, color?, groupName?, precision?, endDate?, label?, labelColor?, relatedEventIds?, relatedDocumentIds? }` (M46: `precision`: year|month|day|minute; `color`/`labelColor` hex `#rrggbb`; `date`/`endDate` texto — los formularios guardan el formato canónico `Y`, `Y-M`, `Y-M-D` o `Y-M-D hh:mm`, y se sigue aceptando texto libre legado; `characterIds`, `relatedEventIds` (sin el propio evento), `relatedDocumentIds` (docs y subpáginas del proyecto) y `eraId` saneados al proyecto — `eraId` ajeno se guarda como `null`; las **evoluciones** de personaje se descartan si el original no aparece en un evento **anterior**; sin `order` usa el contador)
 - `PUT /api/timeline/:id` - Actualizar evento (mismos campos, todos opcionales; `imageUrl` solo acepta `null` para quitar la imagen, que se borra del storage). Si cambian `date` o `characterIds`, se vuelve a aplicar la regla de evoluciones (el original debe aparecer en un evento anterior).
+- `subplotId?: string | null` (M71) en crear/actualizar: enlaza el evento a una subtrama del mismo proyecto (capa fantasma); una subtrama ajena responde `400 SUBPLOT_NOT_IN_PROJECT`; `null` desasocia; al borrar la subtrama el campo pasa a `null`. Ver [structure.md](./structure.md#subtramas-capa-fantasma).
 - `PUT /api/timeline/:id/image` - Subir imagen del evento `{ dataUrl }` (base64 `data:image/{jpeg,png,webp,gif}`, máx 3 MB) a Supabase Storage (`timeline/<eventId>/<uuid>`); reemplaza y borra la anterior. Errores: `400 INVALID_IMAGE|IMAGE_TOO_LARGE`, `503 STORAGE_UNAVAILABLE`
 - `DELETE /api/timeline/:id` - Borrar evento (204); borra también su imagen del storage
 

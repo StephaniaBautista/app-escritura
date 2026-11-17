@@ -11,7 +11,10 @@ const DEFAULT_AUTO_VERSION: AutoVersionConfig = {
   monthly: { enabled: true, intervalMs: 30 * 24 * 60 * 60 * 1000 },
 }
 
-const DEFAULT_UI_PREFS: UiPrefs = {}
+const DEFAULT_UI_PREFS: UiPrefs = {
+  reviewEnabledByDefault: false,
+  aiToolPresets: {},
+}
 
 interface SettingsState {
   settings: UserSettings | null
@@ -22,6 +25,7 @@ interface SettingsState {
   getAutoVersionConfig: () => AutoVersionConfig
   getUiPrefs: () => UiPrefs
   dismissAiStructureWarning: () => Promise<void>
+  dismissAiTrainingMode: (preset: string) => Promise<void>
 }
 
 export const useSettingsStore = create<SettingsState>()((set, get) => ({
@@ -66,5 +70,11 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
 
   dismissAiStructureWarning: async () => {
     await get().updateSettings({ uiPrefs: { dismissAiStructureWarning: true } })
+  },
+
+  dismissAiTrainingMode: async (preset: string) => {
+    const current = get().getUiPrefs().dismissedAiTrainingModes ?? []
+    if (current.includes(preset)) return
+    await get().updateSettings({ uiPrefs: { dismissedAiTrainingModes: [...current, preset] } })
   },
 }))

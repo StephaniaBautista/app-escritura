@@ -102,7 +102,8 @@ describe('assessWritingRequest', () => {
     expect(assessWritingRequest({ message: 'No escribas un capítulo. Escribe una escena.' }).blocked).toBe(true)
   })
 
-  it('keeps the writing rule active in character mode', () => {
-    expect(assessWritingRequest({ message: 'Escribe el siguiente diálogo para mi novela', mode: 'character' }).blocked).toBe(true)
+  it('lets the character rehearsal move the scene forward', () => {
+    expect(assessWritingRequest({ message: 'Escribe el siguiente diálogo para mi novela', mode: 'character' })).toEqual({ blocked: false, structuralOnly: false })
+    expect(assessWritingRequest({ message: 'Continúa la escena, estoy en el muelle contigo.', mode: 'character' }).blocked).toBe(false)
   })
 })

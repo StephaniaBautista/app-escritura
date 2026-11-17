@@ -2,35 +2,34 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '@/stores/settings-store'
 import { VersioningSection } from './sections/VersioningSection'
-import { Settings } from 'lucide-react'
+import { AiSettingsSection } from './sections/AiSettingsSection'
+import { LoadingState } from '@/components/ui/LoadingState'
+import './settings.css'
 
 export function SettingsPage() {
   const { t } = useTranslation()
-  const { loadSettings, loading, error } = useSettingsStore()
+  const { loadSettings, settings, loading, error } = useSettingsStore()
 
   useEffect(() => {
-    loadSettings()
+    void loadSettings()
   }, [loadSettings])
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="flex items-center gap-3 mb-8">
-        <Settings size={24} className="text-[var(--color-accent)]" />
-        <h1 className="text-2xl font-bold text-[var(--color-ink)]">{t('settings.title')}</h1>
-      </div>
+    <div className="settings-page">
+      <header className="settings-masthead">
+        <h1>{t('settings.title')}</h1>
+        <p>{t('settings.intro')}</p>
+      </header>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-          {error}
-        </div>
+        <p className="settings-alert" role="alert">{error}</p>
       )}
 
-      {loading && !error ? (
-        <div className="flex items-center justify-center py-12 text-[var(--color-muted)]">
-          {t('common.loading')}
-        </div>
+      {!settings && loading ? (
+        <LoadingState />
       ) : (
-        <div className="space-y-8">
+        <div className="settings-folio">
+          <AiSettingsSection />
           <VersioningSection />
         </div>
       )}

@@ -1,7 +1,6 @@
 {
   "structureTab": "Estructura",
   "boardTab": "Tablero",
-  "subplotsTab": "Subtramas",
   "boardTitle": "Estructura de la historia",
   "boardSubtitle": "Ordena tus capítulos entre inicio, desarrollo y final. Arrastra tarjetas o deja que la IA sugiera el orden.",
   "syncChapters_one": "Importar {{count}} capítulo",
@@ -71,7 +70,16 @@
   },
   "subplotColor": "Color",
   "subplotsEmpty": "Sin subtramas todavía. Crea la primera para seguir historias paralelas.",
-  "dragSubplot": "Arrastrar subtrama",
   "deleteSubplotTitle": "Eliminar subtrama",
-  "confirmDeleteSubplot": "¿Eliminar la subtrama «{{name}}»?"
+  "confirmDeleteSubplot": "¿Eliminar la subtrama «{{name}}»?",
+  "subplotsLayer": "Subtramas",
+  "subplotsVisibleCount": "{{visible}} de {{total}} subtramas visibles",
+  "showSubplot": "Mostrar la subtrama «{{name}}»",
+  "hideSubplot": "Ocultar la subtrama «{{name}}»",
+  "showAllSubplots": "Mostrar todas",
+  "hideAllSubplots": "Ocultar todas",
+  "subplotField": "Subtrama",
+  "noSubplot": "Ninguna (trama principal)",
+  "subplotLayerHint": "En el tablero, cada subtrama tiñe sus tarjetas con su color. En la línea de tiempo, cada subtrama visible es un grupo aparte. Puedes apagar cada subtrama.",
+  "subplotLane": "Subtrama: {{name}}"
 }

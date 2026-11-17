@@ -16,7 +16,7 @@ vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
 vi.mock('../ai-access.js', () => ({ authorizeAi: authorize, withAiQuota: quota }))
 vi.mock('../../lib/ai-client.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../lib/ai-client.js')>()),
-  aiClient: { complete, status: () => ({ providers: [{ id: 'deepseek', available: true }], fallbackEnabled: false }) },
+  aiClient: { complete, status: () => ({ providers: [{ id: 'balanced', available: true }], fallbackEnabled: false }) },
 }))
 vi.mock('../../lib/rag-service.js', () => ({ ragService: { build } }))
 vi.mock('../character-option-service.js', () => ({
@@ -44,7 +44,7 @@ describe('character fill generation gates', () => {
     build.mockResolvedValue({ text: 'Ada tiene treinta años.', sources, directed: false })
     complete.mockResolvedValue({
       content: JSON.stringify({ characters: [{ name: 'Ada', description: 'Vive en Madrid.', age: 'treinta años' }] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
   })
@@ -84,7 +84,7 @@ describe('character fill generation gates', () => {
     }])
     complete.mockResolvedValue({
       content: JSON.stringify({ characters: [{ name: 'Ada', description: 'No debe aplicar', age: 'treinta años' }] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await fillCharacters('p1', 'u1', { characterId: 'c1', locale: 'es' })
@@ -97,7 +97,7 @@ describe('character fill generation gates', () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
     complete.mockResolvedValue({
       content: JSON.stringify({ characters: [{ name: 'Ada', orientation: 'lesbiana' }] }),
-      provider: 'deepseek',
+      provider: 'balanced',
       model: 'test-model',
     })
     const result = await fillCharacters('p1', 'u1', { locale: 'es' })

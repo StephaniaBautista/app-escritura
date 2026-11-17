@@ -286,6 +286,8 @@ export type DocumentWhereInput = {
   branches?: Prisma.BranchListRelationFilter
   aiConversations?: Prisma.AiConversationListRelationFilter
   writingSessions?: Prisma.WritingSessionListRelationFilter
+  aiDocumentChunks?: Prisma.AiDocumentChunkListRelationFilter
+  sharedLinks?: Prisma.SharedLinkListRelationFilter
 }
 
 export type DocumentOrderByWithRelationInput = {
@@ -312,6 +314,8 @@ export type DocumentOrderByWithRelationInput = {
   branches?: Prisma.BranchOrderByRelationAggregateInput
   aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
   writingSessions?: Prisma.WritingSessionOrderByRelationAggregateInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkOrderByRelationAggregateInput
+  sharedLinks?: Prisma.SharedLinkOrderByRelationAggregateInput
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -341,6 +345,8 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   branches?: Prisma.BranchListRelationFilter
   aiConversations?: Prisma.AiConversationListRelationFilter
   writingSessions?: Prisma.WritingSessionListRelationFilter
+  aiDocumentChunks?: Prisma.AiDocumentChunkListRelationFilter
+  sharedLinks?: Prisma.SharedLinkListRelationFilter
 }, "id">
 
 export type DocumentOrderByWithAggregationInput = {
@@ -403,6 +409,8 @@ export type DocumentCreateInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateInput = {
@@ -425,6 +433,8 @@ export type DocumentUncheckedCreateInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUpdateInput = {
@@ -447,6 +457,8 @@ export type DocumentUpdateInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateInput = {
@@ -469,6 +481,8 @@ export type DocumentUncheckedUpdateInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateManyInput = {
@@ -789,6 +803,14 @@ export type DocumentUncheckedUpdateManyWithoutParentNestedInput = {
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
+export type DocumentUpdateOneRequiredWithoutAiDocumentChunksNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutAiDocumentChunksInput, Prisma.DocumentUncheckedCreateWithoutAiDocumentChunksInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutAiDocumentChunksInput
+  upsert?: Prisma.DocumentUpsertWithoutAiDocumentChunksInput
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutAiDocumentChunksInput, Prisma.DocumentUpdateWithoutAiDocumentChunksInput>, Prisma.DocumentUncheckedUpdateWithoutAiDocumentChunksInput>
+}
+
 export type DocumentCreateNestedOneWithoutNotesInput = {
   create?: Prisma.XOR<Prisma.DocumentCreateWithoutNotesInput, Prisma.DocumentUncheckedCreateWithoutNotesInput>
   connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutNotesInput
@@ -863,6 +885,20 @@ export type DocumentUpdateOneRequiredWithoutWritingSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutWritingSessionsInput, Prisma.DocumentUpdateWithoutWritingSessionsInput>, Prisma.DocumentUncheckedUpdateWithoutWritingSessionsInput>
 }
 
+export type DocumentCreateNestedOneWithoutSharedLinksInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutSharedLinksInput, Prisma.DocumentUncheckedCreateWithoutSharedLinksInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutSharedLinksInput
+  connect?: Prisma.DocumentWhereUniqueInput
+}
+
+export type DocumentUpdateOneRequiredWithoutSharedLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutSharedLinksInput, Prisma.DocumentUncheckedCreateWithoutSharedLinksInput>
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutSharedLinksInput
+  upsert?: Prisma.DocumentUpsertWithoutSharedLinksInput
+  connect?: Prisma.DocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutSharedLinksInput, Prisma.DocumentUpdateWithoutSharedLinksInput>, Prisma.DocumentUncheckedUpdateWithoutSharedLinksInput>
+}
+
 export type DocumentCreateWithoutUserInput = {
   id?: string
   title: string
@@ -882,6 +918,8 @@ export type DocumentCreateWithoutUserInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutUserInput = {
@@ -903,6 +941,8 @@ export type DocumentUncheckedCreateWithoutUserInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutUserInput = {
@@ -969,6 +1009,8 @@ export type DocumentCreateWithoutProjectInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutProjectInput = {
@@ -990,6 +1032,8 @@ export type DocumentUncheckedCreateWithoutProjectInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutProjectInput = {
@@ -1037,6 +1081,8 @@ export type DocumentCreateWithoutFolderInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutFolderInput = {
@@ -1058,6 +1104,8 @@ export type DocumentUncheckedCreateWithoutFolderInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutFolderInput = {
@@ -1105,6 +1153,8 @@ export type DocumentCreateWithoutChildrenInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutChildrenInput = {
@@ -1126,6 +1176,8 @@ export type DocumentUncheckedCreateWithoutChildrenInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutChildrenInput = {
@@ -1152,6 +1204,8 @@ export type DocumentCreateWithoutParentInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutParentInput = {
@@ -1173,6 +1227,8 @@ export type DocumentUncheckedCreateWithoutParentInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutParentInput = {
@@ -1215,6 +1271,8 @@ export type DocumentUpdateWithoutChildrenInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutChildrenInput = {
@@ -1236,6 +1294,8 @@ export type DocumentUncheckedUpdateWithoutChildrenInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUpsertWithWhereUniqueWithoutParentInput = {
@@ -1252,6 +1312,114 @@ export type DocumentUpdateWithWhereUniqueWithoutParentInput = {
 export type DocumentUpdateManyWithWhereWithoutParentInput = {
   where: Prisma.DocumentScalarWhereInput
   data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutParentInput>
+}
+
+export type DocumentCreateWithoutAiDocumentChunksInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutAiDocumentChunksInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutAiDocumentChunksInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutAiDocumentChunksInput, Prisma.DocumentUncheckedCreateWithoutAiDocumentChunksInput>
+}
+
+export type DocumentUpsertWithoutAiDocumentChunksInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutAiDocumentChunksInput, Prisma.DocumentUncheckedUpdateWithoutAiDocumentChunksInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutAiDocumentChunksInput, Prisma.DocumentUncheckedCreateWithoutAiDocumentChunksInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutAiDocumentChunksInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutAiDocumentChunksInput, Prisma.DocumentUncheckedUpdateWithoutAiDocumentChunksInput>
+}
+
+export type DocumentUpdateWithoutAiDocumentChunksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutAiDocumentChunksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutNotesInput = {
@@ -1273,6 +1441,8 @@ export type DocumentCreateWithoutNotesInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutNotesInput = {
@@ -1294,6 +1464,8 @@ export type DocumentUncheckedCreateWithoutNotesInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutNotesInput = {
@@ -1331,6 +1503,8 @@ export type DocumentUpdateWithoutNotesInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutNotesInput = {
@@ -1352,6 +1526,8 @@ export type DocumentUncheckedUpdateWithoutNotesInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutVersionsInput = {
@@ -1373,6 +1549,8 @@ export type DocumentCreateWithoutVersionsInput = {
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutVersionsInput = {
@@ -1394,6 +1572,8 @@ export type DocumentUncheckedCreateWithoutVersionsInput = {
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutVersionsInput = {
@@ -1431,6 +1611,8 @@ export type DocumentUpdateWithoutVersionsInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutVersionsInput = {
@@ -1452,6 +1634,8 @@ export type DocumentUncheckedUpdateWithoutVersionsInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutBranchesInput = {
@@ -1473,6 +1657,8 @@ export type DocumentCreateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutBranchesInput = {
@@ -1494,6 +1680,8 @@ export type DocumentUncheckedCreateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutBranchesInput = {
@@ -1531,6 +1719,8 @@ export type DocumentUpdateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutBranchesInput = {
@@ -1552,6 +1742,8 @@ export type DocumentUncheckedUpdateWithoutBranchesInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutAiConversationsInput = {
@@ -1573,6 +1765,8 @@ export type DocumentCreateWithoutAiConversationsInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutAiConversationsInput = {
@@ -1594,6 +1788,8 @@ export type DocumentUncheckedCreateWithoutAiConversationsInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutAiConversationsInput = {
@@ -1631,6 +1827,8 @@ export type DocumentUpdateWithoutAiConversationsInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutAiConversationsInput = {
@@ -1652,6 +1850,8 @@ export type DocumentUncheckedUpdateWithoutAiConversationsInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateWithoutWritingSessionsInput = {
@@ -1673,6 +1873,8 @@ export type DocumentCreateWithoutWritingSessionsInput = {
   versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentUncheckedCreateWithoutWritingSessionsInput = {
@@ -1694,6 +1896,8 @@ export type DocumentUncheckedCreateWithoutWritingSessionsInput = {
   versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
   branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
   aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+  sharedLinks?: Prisma.SharedLinkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type DocumentCreateOrConnectWithoutWritingSessionsInput = {
@@ -1731,6 +1935,8 @@ export type DocumentUpdateWithoutWritingSessionsInput = {
   versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutWritingSessionsInput = {
@@ -1752,6 +1958,116 @@ export type DocumentUncheckedUpdateWithoutWritingSessionsInput = {
   versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentCreateWithoutSharedLinksInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  user: Prisma.UserCreateNestedOneWithoutDocumentsInput
+  project: Prisma.ProjectCreateNestedOneWithoutDocumentsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutDocumentsInput
+  parent?: Prisma.DocumentCreateNestedOneWithoutChildrenInput
+  children?: Prisma.DocumentCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentUncheckedCreateWithoutSharedLinksInput = {
+  id?: string
+  title: string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: string
+  order?: number
+  userId: string
+  projectId: string
+  folderId?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: number | null
+  children?: Prisma.DocumentUncheckedCreateNestedManyWithoutParentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutDocumentInput
+  versions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutDocumentInput
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutDocumentInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutChapterInput
+  writingSessions?: Prisma.WritingSessionUncheckedCreateNestedManyWithoutDocumentInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type DocumentCreateOrConnectWithoutSharedLinksInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutSharedLinksInput, Prisma.DocumentUncheckedCreateWithoutSharedLinksInput>
+}
+
+export type DocumentUpsertWithoutSharedLinksInput = {
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutSharedLinksInput, Prisma.DocumentUncheckedUpdateWithoutSharedLinksInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutSharedLinksInput, Prisma.DocumentUncheckedCreateWithoutSharedLinksInput>
+  where?: Prisma.DocumentWhereInput
+}
+
+export type DocumentUpdateToOneWithWhereWithoutSharedLinksInput = {
+  where?: Prisma.DocumentWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutSharedLinksInput, Prisma.DocumentUncheckedUpdateWithoutSharedLinksInput>
+}
+
+export type DocumentUpdateWithoutSharedLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutDocumentsNestedInput
+  parent?: Prisma.DocumentUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.DocumentUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutSharedLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoVersionState?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  wordCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  children?: Prisma.DocumentUncheckedUpdateManyWithoutParentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutDocumentNestedInput
+  versions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutDocumentNestedInput
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
+  writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentCreateManyUserInput = {
@@ -1788,6 +2104,8 @@ export type DocumentUpdateWithoutUserInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutUserInput = {
@@ -1809,6 +2127,8 @@ export type DocumentUncheckedUpdateWithoutUserInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutUserInput = {
@@ -1860,6 +2180,8 @@ export type DocumentUpdateWithoutProjectInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutProjectInput = {
@@ -1881,6 +2203,8 @@ export type DocumentUncheckedUpdateWithoutProjectInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutProjectInput = {
@@ -1932,6 +2256,8 @@ export type DocumentUpdateWithoutFolderInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutFolderInput = {
@@ -1953,6 +2279,8 @@ export type DocumentUncheckedUpdateWithoutFolderInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutFolderInput = {
@@ -2004,6 +2332,8 @@ export type DocumentUpdateWithoutParentInput = {
   branches?: Prisma.BranchUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutParentInput = {
@@ -2025,6 +2355,8 @@ export type DocumentUncheckedUpdateWithoutParentInput = {
   branches?: Prisma.BranchUncheckedUpdateManyWithoutDocumentNestedInput
   aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutChapterNestedInput
   writingSessions?: Prisma.WritingSessionUncheckedUpdateManyWithoutDocumentNestedInput
+  aiDocumentChunks?: Prisma.AiDocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput
+  sharedLinks?: Prisma.SharedLinkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type DocumentUncheckedUpdateManyWithoutParentInput = {
@@ -2054,6 +2386,8 @@ export type DocumentCountOutputType = {
   branches: number
   aiConversations: number
   writingSessions: number
+  aiDocumentChunks: number
+  sharedLinks: number
 }
 
 export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2063,6 +2397,8 @@ export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   branches?: boolean | DocumentCountOutputTypeCountBranchesArgs
   aiConversations?: boolean | DocumentCountOutputTypeCountAiConversationsArgs
   writingSessions?: boolean | DocumentCountOutputTypeCountWritingSessionsArgs
+  aiDocumentChunks?: boolean | DocumentCountOutputTypeCountAiDocumentChunksArgs
+  sharedLinks?: boolean | DocumentCountOutputTypeCountSharedLinksArgs
 }
 
 /**
@@ -2117,6 +2453,20 @@ export type DocumentCountOutputTypeCountWritingSessionsArgs<ExtArgs extends runt
   where?: Prisma.WritingSessionWhereInput
 }
 
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountAiDocumentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiDocumentChunkWhereInput
+}
+
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountSharedLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SharedLinkWhereInput
+}
+
 
 export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2142,6 +2492,8 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   branches?: boolean | Prisma.Document$branchesArgs<ExtArgs>
   aiConversations?: boolean | Prisma.Document$aiConversationsArgs<ExtArgs>
   writingSessions?: boolean | Prisma.Document$writingSessionsArgs<ExtArgs>
+  aiDocumentChunks?: boolean | Prisma.Document$aiDocumentChunksArgs<ExtArgs>
+  sharedLinks?: boolean | Prisma.Document$sharedLinksArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -2213,6 +2565,8 @@ export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   branches?: boolean | Prisma.Document$branchesArgs<ExtArgs>
   aiConversations?: boolean | Prisma.Document$aiConversationsArgs<ExtArgs>
   writingSessions?: boolean | Prisma.Document$writingSessionsArgs<ExtArgs>
+  aiDocumentChunks?: boolean | Prisma.Document$aiDocumentChunksArgs<ExtArgs>
+  sharedLinks?: boolean | Prisma.Document$sharedLinksArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2241,6 +2595,8 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     branches: Prisma.$BranchPayload<ExtArgs>[]
     aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
     writingSessions: Prisma.$WritingSessionPayload<ExtArgs>[]
+    aiDocumentChunks: Prisma.$AiDocumentChunkPayload<ExtArgs>[]
+    sharedLinks: Prisma.$SharedLinkPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2660,6 +3016,8 @@ export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime
   branches<T extends Prisma.Document$branchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiConversations<T extends Prisma.Document$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   writingSessions<T extends Prisma.Document$writingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$writingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WritingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiDocumentChunks<T extends Prisma.Document$aiDocumentChunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$aiDocumentChunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDocumentChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sharedLinks<T extends Prisma.Document$sharedLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$sharedLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharedLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3282,6 +3640,54 @@ export type Document$writingSessionsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.WritingSessionScalarFieldEnum | Prisma.WritingSessionScalarFieldEnum[]
+}
+
+/**
+ * Document.aiDocumentChunks
+ */
+export type Document$aiDocumentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiDocumentChunk
+   */
+  select?: Prisma.AiDocumentChunkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiDocumentChunk
+   */
+  omit?: Prisma.AiDocumentChunkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiDocumentChunkInclude<ExtArgs> | null
+  where?: Prisma.AiDocumentChunkWhereInput
+  orderBy?: Prisma.AiDocumentChunkOrderByWithRelationInput | Prisma.AiDocumentChunkOrderByWithRelationInput[]
+  cursor?: Prisma.AiDocumentChunkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiDocumentChunkScalarFieldEnum | Prisma.AiDocumentChunkScalarFieldEnum[]
+}
+
+/**
+ * Document.sharedLinks
+ */
+export type Document$sharedLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SharedLink
+   */
+  select?: Prisma.SharedLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SharedLink
+   */
+  omit?: Prisma.SharedLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SharedLinkInclude<ExtArgs> | null
+  where?: Prisma.SharedLinkWhereInput
+  orderBy?: Prisma.SharedLinkOrderByWithRelationInput | Prisma.SharedLinkOrderByWithRelationInput[]
+  cursor?: Prisma.SharedLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SharedLinkScalarFieldEnum | Prisma.SharedLinkScalarFieldEnum[]
 }
 
 /**

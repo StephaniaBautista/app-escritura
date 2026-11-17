@@ -40,6 +40,7 @@ describe('ChapterTree (Document Tabs)', () => {
   const onRename = vi.fn()
   const onDuplicate = vi.fn()
   const onDelete = vi.fn()
+  const onReorder = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -77,6 +78,41 @@ describe('ChapterTree (Document Tabs)', () => {
 
     fireEvent.click(screen.getByText('Ingles 20'))
     expect(onSelect).toHaveBeenCalledWith('tab-3')
+  })
+
+  it('calls onRename when double-clicking a tab', () => {
+    render(
+      <ChapterTree
+        documents={mockDocs}
+        activeDocId="tab-1"
+        onSelect={onSelect}
+        onCreateSubpage={onCreateSubpage}
+        onRename={onRename}
+        onDuplicate={onDuplicate}
+        onDelete={onDelete}
+      />
+    )
+
+    fireEvent.doubleClick(screen.getByText('Ingles 20'))
+    expect(onRename).toHaveBeenCalledWith('tab-3', 'Ingles 20')
+  })
+
+  it('calls onRename when double-clicking a subtab', () => {
+    render(
+      <ChapterTree
+        documents={mockDocs}
+        activeDocId="tab-1"
+        onSelect={onSelect}
+        onCreateSubpage={onCreateSubpage}
+        onRename={onRename}
+        onDuplicate={onDuplicate}
+        onDelete={onDelete}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'expand tab' }))
+    fireEvent.doubleClick(screen.getByText('Pestaña 3'))
+    expect(onRename).toHaveBeenCalledWith('tab-2', 'Pestaña 3')
   })
 
   it('expands subtabs when clicking collapse chevron button', () => {
@@ -243,5 +279,22 @@ describe('ChapterTree (Document Tabs)', () => {
     )
 
     expect(screen.getByText('editorApp.noTabs')).toBeDefined()
+  })
+
+  it('exposes a reorder handle for each tab', () => {
+    render(
+      <ChapterTree
+        documents={mockDocs}
+        activeDocId="tab-1"
+        onSelect={onSelect}
+        onCreateSubpage={onCreateSubpage}
+        onRename={onRename}
+        onDuplicate={onDuplicate}
+        onDelete={onDelete}
+        onReorder={onReorder}
+      />
+    )
+
+    expect(screen.getAllByRole('button', { name: 'editorApp.reorderTab' }).length).toBeGreaterThan(0)
   })
 })

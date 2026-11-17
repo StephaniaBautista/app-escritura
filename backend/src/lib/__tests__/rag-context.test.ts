@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { assembleContext, documentContextText, documentsThroughChapter, MAX_CONTEXT_CHARS, narrativeFields, plainDocumentText, type AiSource, type ContextDocument } from '../rag-context.js'
+import { assembleContext, assembleIntactSources, documentContextText, documentsThroughScope, MAX_CONTEXT_CHARS, narrativeFields, plainDocumentText, type AiSource, type ContextDocument } from '../rag-context.js'
 
 const doc = (id: string, type: string, parentId: string | null, order: number): ContextDocument => ({ id, title: id, type, parentId, order })
 
@@ -26,6 +26,14 @@ describe('plainDocumentText', () => {
     expect(result.length).toBeLessThanOrEqual(24_000)
   })
 
+  it('keeps opening and ending of a book-length document when the query does not match', () => {
+    const body = `OPENING_MARK ${'noche larga. '.repeat(40_000)} CLOSING_MARK`
+    const result = documentContextText({ type: 'doc', content: [{ type: 'text', text: body }] }, 'zzzz')
+    expect(result).toContain('OPENING_MARK')
+    expect(result).toContain('CLOSING_MARK')
+    expect(result.length).toBeLessThanOrEqual(24_000)
+  })
+
   it('keeps the full focused page instead of dropping prose with omission markers', () => {
     const body = `${'Ada espera en el muelle. '.repeat(1200)}El faro se apaga al final.`
     const content = { type: 'doc', content: [{ type: 'text', text: body }] }
@@ -37,26 +45,62 @@ describe('plainDocumentText', () => {
   })
 })
 
-describe('documentsThroughChapter', () => {
+describe('documentsThroughScope', () => {
   const documents = [doc('root', 'document', null, 0), doc('chapter-1', 'chapter', 'root', 1), doc('chapter-2', 'chapter', 'root', 2), doc('chapter-3', 'chapter', 'root', 3), doc('page-1', 'subpage', 'chapter-1', 30), doc('page-2', 'subpage', 'chapter-2', 40), doc('other-root', 'document', null, 1), doc('other-chapter', 'chapter', 'other-root', 0)]
 
   it('uses sibling hierarchy instead of flat order and includes selected chapter subpages', () => {
-    expect(documentsThroughChapter(documents, 'chapter-2')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1', 'chapter-2', 'page-2'])
+    expect(documentsThroughScope(documents, 'chapter-2')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1', 'chapter-2', 'page-2'])
   })
 
   it('does not include later chapters or unrelated manuscript roots', () => {
-    expect(documentsThroughChapter(documents, 'chapter-1')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1'])
+    expect(documentsThroughScope(documents, 'chapter-1')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1'])
   })
 
-  it('rejects nonchapter, foreign, cyclic and orphan chapter boundaries', () => {
-    expect(documentsThroughChapter(documents, 'root')).toBeNull()
-    expect(documentsThroughChapter(documents, 'foreign')).toBeNull()
-    expect(documentsThroughChapter([doc('c', 'chapter', 'missing', 0)], 'c')).toBeNull()
-    expect(documentsThroughChapter([doc('c', 'chapter', 'd', 0), doc('d', 'document', 'c', 0)], 'c')).toBeNull()
+  it('stops at a selected subpage without leaking later siblings or chapters', () => {
+    const nested = [
+      doc('root', 'document', null, 0),
+      doc('chapter-1', 'chapter', 'root', 1),
+      doc('page-1', 'subpage', 'chapter-1', 10),
+      doc('page-2', 'subpage', 'chapter-1', 20),
+      doc('chapter-2', 'chapter', 'root', 2),
+    ]
+    expect(documentsThroughScope(nested, 'page-1')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1'])
+    expect(documentsThroughScope(nested, 'page-2')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1', 'page-2'])
+  })
+
+  it('includes nested subpages below the selected subpage', () => {
+    const nested = [
+      doc('root', 'document', null, 0),
+      doc('chapter-1', 'chapter', 'root', 1),
+      doc('page-1', 'subpage', 'chapter-1', 10),
+      doc('deep', 'subpage', 'page-1', 11),
+      doc('chapter-2', 'chapter', 'root', 2),
+    ]
+    expect(documentsThroughScope(nested, 'page-1')?.map((item) => item.id)).toEqual(['chapter-1', 'page-1', 'deep'])
+  })
+
+  it('rejects manuscript roots, foreign, cyclic and orphan boundaries', () => {
+    expect(documentsThroughScope(documents, 'root')).toBeNull()
+    expect(documentsThroughScope(documents, 'foreign')).toBeNull()
+    expect(documentsThroughScope([doc('c', 'chapter', 'missing', 0)], 'c')).toBeNull()
+    expect(documentsThroughScope([doc('c', 'chapter', 'd', 0), doc('d', 'document', 'c', 0)], 'c')).toBeNull()
   })
 })
 
 describe('assembleContext', () => {
+  it('spreads long-manuscript evidence across opening and closing documents', () => {
+    const filler = (id: string) => ({ id: `document:${id}`, type: 'document' as const, title: id, excerpt: 'ordinary background '.repeat(400) })
+    const candidates: AiSource[] = [
+      { id: 'document:start', type: 'document', title: 'Inicio', excerpt: `OPENING_MARK ${'ada '.repeat(2000)}` },
+      ...Array.from({ length: 20 }, (_, index) => filler(`mid-${index}`)),
+      { id: 'document:end', type: 'document', title: 'Final', excerpt: `${'bruno '.repeat(2000)} CLOSING_MARK` },
+    ]
+    const context = assembleContext(candidates, 'zzzz', false, undefined, undefined, { spread: true })
+    expect(context.text).toContain('OPENING_MARK')
+    expect(context.text).toContain('CLOSING_MARK')
+    expect(context.text.length).toBeLessThanOrEqual(56_000)
+  })
+
   it('prioritizes relevant evidence within a strict serialized context budget', () => {
     const candidates: AiSource[] = Array.from({ length: 150 }, (_, index) => ({ id: `document:${index}`, type: 'document', title: `Documento ${index}`, excerpt: 'ordinary background '.repeat(500) }))
     candidates.push({ id: 'document:needle', type: 'document', title: 'Dragones', excerpt: 'El dragón azul tiene una sola ala.' })
@@ -95,5 +139,18 @@ describe('assembleContext', () => {
     expect(result).toContain('Fictional kingdom')
     expect(result).toContain('A succession dispute')
     expect(result).not.toContain('private')
+  })
+})
+
+describe('assembleIntactSources', () => {
+  it('keeps retrieved chunks intact and does not stitch keyword windows', () => {
+    const context = assembleIntactSources([
+      { id: 'project:1', type: 'project', title: 'Historia', excerpt: 'Sinopsis breve.' },
+      { id: 'document:late:0', type: 'document', title: 'Final', excerpt: 'The sapphire dragon has only one wing.' },
+    ], true)
+    expect(JSON.parse(context.text).knowledge).toBe('retrieved_indexed_subset')
+    expect(context.text).toContain('sapphire dragon has only one wing')
+    expect(context.text).not.toContain('[...]')
+    expect(context.directed).toBe(true)
   })
 })

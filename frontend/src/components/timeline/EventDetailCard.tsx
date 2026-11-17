@@ -1,13 +1,18 @@
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import type { TimelineConfig, TimelineEra, TimelineEvent } from '@/types/timeline'
+import type { Subplot } from '@/types/structure'
 import { eraRelativeYear, formatDateText } from '@/lib/timeline-date'
+import { subplotLayerColor } from '@/lib/subplot-visibility'
 import { MONTH_KEYS } from './timeline-constants'
+import '@/components/structure/subplot-layer.css'
 
 interface EventDetailCardProps {
   event: TimelineEvent
   era: TimelineEra | null
+  subplot?: Subplot | null
   value: number
   anchorX: number
   timelineConfig: TimelineConfig
@@ -21,8 +26,13 @@ interface EventDetailCardProps {
   onDelete: (event: TimelineEvent) => void
 }
 
-export function EventDetailCard({ event, era, value, anchorX, timelineConfig, hasPrev, hasNext, characterName, documentName, onPrev, onNext, onEdit, onDelete }: EventDetailCardProps) {
+export function EventDetailCard({ event, era, subplot = null, value, anchorX, timelineConfig, hasPrev, hasNext, characterName, documentName, onPrev, onNext, onEdit, onDelete }: EventDetailCardProps) {
   const { t } = useTranslation()
+  const isLayer = Boolean(event.subplotId)
+  const color = subplotLayerColor(subplot)
+  const cardStyle: CSSProperties = isLayer
+    ? { '--subplot-color': color } as CSSProperties
+    : { background: 'var(--color-paper)', borderColor: 'var(--color-ink-light)' }
   const fmt = {
     monthNames: MONTH_KEYS.map((k) => t(`timelineApp.month.${k}`)),
     yearUnit: t('timelineApp.unitYears'),
@@ -60,9 +70,17 @@ export function EventDetailCard({ event, era, value, anchorX, timelineConfig, ha
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      <div className="pointer-events-auto relative w-full max-w-[560px] rounded-2xl border p-4 shadow-lg" style={{ background: 'var(--color-paper)', borderColor: 'var(--color-ink-light)' }}>
+      <div
+        className={`pointer-events-auto relative w-full max-w-[560px] rounded-2xl border p-4 shadow-lg ${isLayer ? 'subplot-layer-card' : ''}`}
+        style={cardStyle}
+        data-subplot-layer={isLayer ? 'true' : undefined}
+        data-testid="timeline-event-detail"
+      >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
+            {isLayer && (
+              <span className="subplot-layer-card__pill mb-1.5">{subplot?.title ?? t('structureApp.subplotField')}</span>
+            )}
             <h4 className="break-words text-lg font-bold underline decoration-2 underline-offset-4 sm:text-xl" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-body)' }}>
               {event.title}
             </h4>

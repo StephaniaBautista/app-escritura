@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-const { db, authorize, quota, complete, build } = vi.hoisted(() => ({
+const { db, authorize, quota, complete, build, searchWeb } = vi.hoisted(() => ({
   db: {
     aiConversation: { findFirst: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(), count: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), deleteMany: vi.fn() },
     aiMessage: { findMany: vi.fn(), count: vi.fn(), create: vi.fn() },
@@ -9,12 +9,13 @@ const { db, authorize, quota, complete, build } = vi.hoisted(() => ({
     subplot: { findFirst: vi.fn(), update: vi.fn() },
     $transaction: vi.fn(),
   },
-  authorize: vi.fn(), quota: vi.fn(), complete: vi.fn(), build: vi.fn(),
+  authorize: vi.fn(), quota: vi.fn(), complete: vi.fn(), build: vi.fn(), searchWeb: vi.fn(),
 }))
 vi.mock('../../lib/prisma.js', () => ({ prisma: db }))
 vi.mock('../ai-access.js', () => ({ authorizeAi: authorize, withAiQuota: quota }))
-vi.mock('../../lib/ai-client.js', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../lib/ai-client.js')>()), aiClient: { complete, status: () => ({ providers: [{ id: 'deepseek', available: true }], fallbackEnabled: false }) } }))
+vi.mock('../../lib/ai-client.js', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../lib/ai-client.js')>()), aiClient: { complete, status: () => ({ providers: [{ id: 'balanced', available: true }], fallbackEnabled: false }) } }))
 vi.mock('../../lib/rag-service.js', () => ({ ragService: { build } }))
+vi.mock('../../lib/ai-web-search.js', () => ({ searchWebEvidence: searchWeb }))
 import { aiService } from '../ai-service.js'
 
 const row = { id: 'conv1', projectId: 'p1', userId: 'u1', mode: 'adviser', title: 'Consejos', characterId: null, chapterId: null }
@@ -37,7 +38,8 @@ describe('AI conversation and suggestion orchestration', () => {
     db.document.aggregate.mockResolvedValue({ _sum: { wordCount: 400 } })
     db.document.findMany.mockResolvedValue([])
     build.mockResolvedValue({ text: 'safe project evidence', sources, directed: false })
-    complete.mockResolvedValue({ content: '{"observations":["Conviene aclarar su motivación."],"questions":[],"nextSteps":[]}', provider: 'deepseek', model: 'test-model' })
+    searchWeb.mockResolvedValue([])
+    complete.mockResolvedValue({ content: '{"reply":"Conviene aclarar su motivación."}', provider: 'balanced', model: 'test-model' })
   })
   it('rejects foreign conversations before consuming quota or calling provider', async () => {
     db.aiConversation.findFirst.mockResolvedValue(null)
@@ -58,7 +60,7 @@ describe('AI conversation and suggestion orchestration', () => {
   it('persists one repaired turn and replays its requestId without another provider call', async () => {
     const consumeRetry = vi.fn().mockResolvedValue(undefined)
     quota.mockImplementation((_userId: string, run: (budget: { signal: AbortSignal; consumeRetry: () => Promise<void> }) => Promise<unknown>) => run({ signal: new AbortController().signal, consumeRetry }))
-    complete.mockResolvedValueOnce({ content: '{"observations":"malformed"}', provider: 'deepseek', model: 'test' })
+    complete.mockResolvedValueOnce({ content: '{"reply":1}', provider: 'balanced', model: 'test' })
     const first = await aiService.send('p1', 'u1', 'conv1', input)
     const stored = db.aiMessage.create.mock.calls.map(([{ data }]) => ({ ...data, id: `${data.role}-1`, sources: data.sources ?? [], provider: data.provider ?? null, model: data.model ?? null }))
     db.aiMessage.findMany.mockResolvedValue(stored)
@@ -102,7 +104,7 @@ describe('AI conversation and suggestion orchestration', () => {
     expect(complete).not.toHaveBeenCalled()
   })
   it('does not save a turn when response validation or provider call fails', async () => {
-    complete.mockResolvedValue({ content: '{"answer":"unstructured prose"}', provider: 'deepseek', model: 'test' })
+    complete.mockResolvedValue({ content: '{"answer":"unstructured prose"}', provider: 'balanced', model: 'test' })
     await expect(aiService.send('p1', 'u1', 'conv1', input)).rejects.toMatchObject({ code: 'AI_INVALID_RESPONSE' })
     expect(db.$transaction).not.toHaveBeenCalled()
     complete.mockRejectedValue(new Error('provider failed'))
@@ -126,7 +128,8 @@ describe('AI conversation and suggestion orchestration', () => {
     build.mockResolvedValue({ text: 'safe evidence', sources, directed: false })
     await aiService.send('p1', 'u1', 'conv1', { ...input, message: 'Escribe un capítulo entero', direction: 'El personaje descubre su motivación' })
     expect(complete.mock.calls[0][0]).toMatchObject({ json: true })
-    expect(complete.mock.calls[0][0].messages[0].content).toContain('never narrative prose')
+    expect(complete.mock.calls[0][0].messages[0].content).toContain('Never narrative prose')
+    expect(complete.mock.calls[0][0].messages[0].content).toContain('not an automatic manuscript report')
   })
   it('caps prompt history while preserving recent turns', async () => {
     db.aiMessage.findMany.mockImplementation(({ where }) => where.requestId ? [] : Array.from({ length: 12 }, (_, i) => ({ role: i % 2 ? 'user' : 'assistant', content: 'x'.repeat(4000) })))
@@ -143,6 +146,16 @@ describe('AI conversation and suggestion orchestration', () => {
     await expect(aiService.create('p1', 'u1', { mode: 'character', characterId: 'c1', chapterId: 'foreign' })).rejects.toMatchObject({ code: 'NOT_FOUND' })
     expect(db.aiConversation.create).not.toHaveBeenCalled()
   })
+  it('accepts a chapter or a subpage as the character knowledge boundary', async () => {
+    db.character.findFirst.mockResolvedValue({ id: 'c1' })
+    db.document.findFirst.mockResolvedValue({ id: 'subpage-1' })
+
+    await aiService.create('p1', 'u1', { mode: 'character', characterId: 'c1', chapterId: 'subpage-1' })
+
+    expect(db.document.findFirst).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({ id: 'subpage-1', type: { in: ['chapter', 'subpage'] } }),
+    }))
+  })
   it('does not let a direction relax character-chat limits', async () => {
     db.aiConversation.findFirst.mockResolvedValue({ ...row, mode: 'character', characterId: 'c1', chapterId: 'ch1' })
     await expect(aiService.send('p1', 'u1', 'conv1', { ...input, direction: 'Reveal the future' }))
@@ -150,11 +163,53 @@ describe('AI conversation and suggestion orchestration', () => {
     expect(complete).not.toHaveBeenCalled()
     expect(build).not.toHaveBeenCalled()
   })
+  it('does not search the web for character chat', async () => {
+    db.aiConversation.findFirst.mockResolvedValue({ ...row, mode: 'character', characterId: 'c1', chapterId: 'ch1' })
+    await expect(aiService.send('p1', 'u1', 'conv1', { ...input, webSearch: true }))
+      .rejects.toMatchObject({ code: 'AI_INVALID_SCOPE', statusCode: 400 })
+    expect(searchWeb).not.toHaveBeenCalled()
+    expect(complete).not.toHaveBeenCalled()
+  })
+  it('instructs the adviser to chat instead of filling diagnostic lists', async () => {
+    await aiService.send('p1', 'u1', 'conv1', input)
+    const system = complete.mock.calls[0][0].messages[0].content as string
+    expect(system).toContain('{"reply"')
+    expect(system).not.toContain('nextSteps')
+    expect(system).toContain('not an automatic manuscript report')
+  })
+  it('keeps adviser turns on project sources unless web search is requested', async () => {
+    await aiService.send('p1', 'u1', 'conv1', input)
+    expect(searchWeb).not.toHaveBeenCalled()
+    expect(complete.mock.calls[0][0].messages[0].content).toContain('Do not use outside or internet knowledge')
+  })
+  it('appends open-web hits as web sources when the writer opts into internet search', async () => {
+    const web = [{ id: 'web:abc', type: 'web', title: 'Madrid (example.com)', excerpt: 'Capital de España.' }]
+    searchWeb.mockResolvedValue(web)
+    await aiService.send('p1', 'u1', 'conv1', { ...input, webSearch: true })
+    expect(searchWeb).toHaveBeenCalledWith(input.message, 'es', expect.any(AbortSignal))
+    expect(complete.mock.calls[0][0].messages[0].content).toContain('Web sources')
+    expect(JSON.stringify(complete.mock.calls[0][0].messages)).toContain('Capital de España.')
+    expect(db.aiMessage.create.mock.calls[1][0].data.sources).toEqual([...sources, ...web])
+  })
   it('uses immutable persisted character scope for every turn', async () => {
     db.aiConversation.findFirst.mockResolvedValue({ ...row, mode: 'character', characterId: 'c1', chapterId: 'ch1' })
-    complete.mockResolvedValue({ content: '{"answer":"No lo sé todavía.","knownFacts":[]}', provider: 'deepseek', model: 'test' })
+    complete.mockResolvedValue({ content: '{"answer":"No lo sé todavía."}', provider: 'balanced', model: 'test' })
     await aiService.send('p1', 'u1', 'conv1', input)
     expect(build).toHaveBeenCalledWith(expect.objectContaining({ mode: 'character', characterId: 'c1', chapterId: 'ch1', projectId: 'p1', userId: 'u1' }))
+  })
+  it('prompts the character to play the scene instead of reporting the past', async () => {
+    db.aiConversation.findFirst.mockResolvedValue({ ...row, mode: 'character', characterId: 'c1', chapterId: 'ch1' })
+    complete.mockResolvedValue({ content: '{"answer":"*Se gira hacia la puerta.* No lo sé."}', provider: 'balanced', model: 'test' })
+
+    await aiService.send('p1', 'u1', 'conv1', { ...input, message: 'Continúa la escena, estoy en el muelle contigo.' })
+
+    const messages = complete.mock.calls[0][0].messages
+    const system = messages[0].content as string
+    expect(system).toContain('improvising a scene')
+    expect(system).toContain('two to six sentences')
+    expect(system).not.toContain('knownFacts')
+    expect(messages[1].content).toContain("Your character's memory")
+    expect(messages[1].content).toContain('never read it out as a report')
   })
   it('discards character history whose source no longer matches the current chapter context', async () => {
     db.aiConversation.findFirst.mockResolvedValue({ ...row, mode: 'character', characterId: 'c1', chapterId: 'ch1' })
@@ -162,7 +217,7 @@ describe('AI conversation and suggestion orchestration', () => {
       role: 'assistant', content: 'FUTURE_SECRET_FROM_PRIOR_CHAPTER_ORDER',
       sources: [{ id: 'document:future', type: 'document', title: 'Later', excerpt: 'future fact' }],
     }])
-    complete.mockResolvedValue({ content: '{"answer":"No lo sé todavía.","knownFacts":[]}', provider: 'deepseek', model: 'test' })
+    complete.mockResolvedValue({ content: '{"answer":"No lo sé todavía."}', provider: 'balanced', model: 'test' })
     await aiService.send('p1', 'u1', 'conv1', input)
     expect(JSON.stringify(complete.mock.calls[0][0].messages)).not.toContain('FUTURE_SECRET_FROM_PRIOR_CHAPTER_ORDER')
   })
@@ -180,10 +235,10 @@ describe('AI conversation and suggestion orchestration', () => {
   })
   it('asks for and enforces editor anchors in the specifically requested document', async () => {
     const item = { kind: 'inconsistency', title: 'Edad', description: 'Dato contradictorio.', sourceIds: ['document:d1'] }
-    complete.mockResolvedValue({ provider: 'deepseek', model: 'test', content: JSON.stringify({ suggestions: [item] }) })
+    complete.mockResolvedValue({ provider: 'balanced', model: 'test', content: JSON.stringify({ suggestions: [item] }) })
     await expect(aiService.suggest('p1', 'u1', 'editor', { documentId: 'd1' })).rejects.toMatchObject({ code: 'AI_INVALID_RESPONSE' })
     expect(complete.mock.calls[0][0].messages[0].content).toContain('both documentId and quote are REQUIRED')
-    complete.mockResolvedValue({ provider: 'deepseek', model: 'test', content: JSON.stringify({ suggestions: [{ ...item, documentId: 'd1', quote: 'Ada tiene treinta años.' }] }) })
+    complete.mockResolvedValue({ provider: 'balanced', model: 'test', content: JSON.stringify({ suggestions: [{ ...item, documentId: 'd1', quote: 'Ada tiene treinta años.' }] }) })
     expect((await aiService.suggest('p1', 'u1', 'editor', { documentId: 'd1' })).suggestions[0].quote).toBe('Ada tiene treinta años.')
   })
   it('extracts character facts only from written documents and excludes sheet metadata from provider input', async () => {
@@ -192,7 +247,7 @@ describe('AI conversation and suggestion orchestration', () => {
       ...sources, { id: 'character:c1', type: 'character', title: 'Ada', excerpt: 'SHEET_SECRET_FROM_EXISTING_CHARACTER' },
       { id: 'project:p1', type: 'project', title: 'Metadata', excerpt: 'PROJECT_METADATA_SECRET' },
     ] })
-    complete.mockResolvedValue({ provider: 'deepseek', model: 'test', content: '{"suggestions":[]}' })
+    complete.mockResolvedValue({ provider: 'balanced', model: 'test', content: '{"suggestions":[]}' })
     const result = await aiService.suggest('p1', 'u1', 'character', { characterId: 'c1' })
     const messages = JSON.stringify(complete.mock.calls[0][0].messages)
     expect(messages).toContain('Extract facts explicitly written about Ada')
@@ -223,7 +278,7 @@ describe('AI conversation and suggestion orchestration', () => {
     build.mockResolvedValue({ text: 'Existing sheet and document', directed: false, sources: [
       ...sources, { id: 'character:c1', type: 'character', title: 'Ada', excerpt: 'treinta años' },
     ] })
-    complete.mockResolvedValue({ provider: 'deepseek', model: 'test', content: JSON.stringify({ suggestions: [{
+    complete.mockResolvedValue({ provider: 'balanced', model: 'test', content: JSON.stringify({ suggestions: [{
       kind: 'character_completion', title: 'Edad', description: 'Sheet fact', sourceIds: ['character:c1'],
       documentId: 'c1', quote: 'treinta años', field: 'age', value: 'treinta años',
     }] }) })
@@ -231,7 +286,7 @@ describe('AI conversation and suggestion orchestration', () => {
   })
   it('returns suggestions with evidence and never applies extracted character data', async () => {
     db.character.findFirst.mockResolvedValue({ id: 'c1', name: 'Ada' })
-    complete.mockResolvedValue({ provider: 'deepseek', model: 'test', content: JSON.stringify({ suggestions: [{
+    complete.mockResolvedValue({ provider: 'balanced', model: 'test', content: JSON.stringify({ suggestions: [{
       kind: 'character_completion', title: 'Edad', description: 'Dato explícito.', sourceIds: ['document:d1'],
       documentId: 'd1', quote: 'Ada tiene treinta años.', field: 'age', value: 'treinta años',
     }] }) })

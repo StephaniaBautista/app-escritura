@@ -79,21 +79,23 @@ describe('AI output boundaries', () => {
     expect(parseSuggestions(output(item), ['chapter_order'], chapterSources)[0]).toMatchObject({ chapterId: 'ch-1', columnPhase: 'development' })
     expect(() => parseSuggestions(output({ ...item, columnPhase: 'middle' }), ['chapter_order'], chapterSources)).toThrow('AI_INVALID_RESPONSE')
   })
-  it('converts validated advice into bounded plain text', () => {
-    expect(parseChatResponse('{"observations":["Hay un conflicto."],"questions":["¿Qué desea?"],"nextSteps":[]}', 'adviser'))
-      .toBe('• Hay un conflicto.\n\n• ¿Qué desea?')
+  it('stores a conversational adviser reply instead of a diagnostic bullet list', () => {
+    expect(parseChatResponse('{"reply":"Hola. ¿En qué parte de la historia quieres que miremos?"}', 'adviser'))
+      .toBe('Hola. ¿En qué parte de la historia quieres que miremos?')
   })
   it.each([
     '{"answer":"A chapter of prose"}',
-    '{"observations":[],"questions":[],"nextSteps":[]}',
-    '{"observations":["ok"],"questions":[],"nextSteps":[],"tool_calls":["write"]}',
-    JSON.stringify({ observations: ['x'.repeat(351)], questions: [], nextSteps: [] }),
+    '{"observations":["Hay un conflicto."],"questions":[],"nextSteps":[]}',
+    '{"reply":""}',
+    '{"reply":"ok","tool_calls":["write"]}',
+    JSON.stringify({ reply: 'x'.repeat(4001) }),
     '<script>window.location="elsewhere"</script>',
   ])('rejects unstructured or excessive model output', (content) => {
     expect(() => parseChatResponse(content, 'adviser')).toThrow('AI_INVALID_RESPONSE')
   })
-  it('accepts a short character reply and rejects chapter-length replies', () => {
-    expect(parseChatResponse('{"answer":"No lo sé.","knownFacts":[]}', 'character')).toBe('No lo sé.')
-    expect(() => parseChatResponse(JSON.stringify({ answer: 'x'.repeat(1001), knownFacts: [] }), 'character')).toThrow()
+  it('accepts a short character turn and rejects chapter-length replies', () => {
+    expect(parseChatResponse('{"answer":"*Se gira hacia la puerta.* No lo sé."}', 'character')).toBe('*Se gira hacia la puerta.* No lo sé.')
+    expect(() => parseChatResponse(JSON.stringify({ answer: 'x'.repeat(1001) }), 'character')).toThrow()
+    expect(() => parseChatResponse('{"answer":"No lo sé.","knownFacts":[]}', 'character')).toThrow()
   })
 })

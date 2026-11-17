@@ -1,4 +1,4 @@
-import type { StatsQuery, WritingActivity, WritingStats } from '@/types/stats'
+import type { StatsRequestQuery, WritingActivity, WritingStats } from '@/types/stats'
 
 export function browserTimeZone(): string {
   try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC' } catch { return 'UTC' }
@@ -12,8 +12,13 @@ export class StatsRequestError extends Error {
 }
 
 export const statsApi = {
-  async get(query: StatsQuery, signal?: AbortSignal): Promise<WritingStats> {
-    const params = new URLSearchParams({ days: String(query.days), timeZone: query.timeZone })
+  async get(query: StatsRequestQuery, signal?: AbortSignal): Promise<WritingStats> {
+    const params = new URLSearchParams({ timeZone: query.timeZone })
+    if (query.allTime) params.set('allTime', 'true')
+    else if (query.from && query.to) {
+      params.set('from', query.from)
+      params.set('to', query.to)
+    } else if (query.days) params.set('days', String(query.days))
     if (query.projectId) params.set('projectId', query.projectId)
     if (query.documentId) params.set('documentId', query.documentId)
     const response = await fetch(`/api/stats?${params}`, { credentials: 'include', signal })

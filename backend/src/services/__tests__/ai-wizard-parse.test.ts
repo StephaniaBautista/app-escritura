@@ -94,8 +94,31 @@ describe('parseTagSuggestions', () => {
     ])
   })
 
-  it('rejects more than eight tags or overlong labels', () => {
-    expect(() => parseTagSuggestions(JSON.stringify({ tags: Array.from({ length: 9 }, (_, i) => `t${i}`) }))).toThrow('AI_INVALID_RESPONSE')
-    expect(() => parseTagSuggestions(JSON.stringify({ tags: ['x'.repeat(81)] }))).toThrow('AI_INVALID_RESPONSE')
+  it('clips overlong tags and keeps the first eight instead of rejecting the payload', () => {
+    expect(parseTagSuggestions(JSON.stringify({ tags: Array.from({ length: 12 }, (_, i) => `t${i}`) }))).toEqual(
+      Array.from({ length: 8 }, (_, i) => `t${i}`),
+    )
+    expect(parseTagSuggestions(JSON.stringify({ tags: ['x'.repeat(81)] }))).toEqual(['x'.repeat(80)])
+  })
+
+  it('clips overlong description suggestions instead of failing the whole stage', () => {
+    const parsed = parseWizardStage(JSON.stringify({
+      complete: {},
+      suggestions: [
+        { field: 'description', title: 'Larga', description: 'Demasiado larga', value: 'y'.repeat(2500) },
+        { field: 'description', title: 'Buena', description: 'Válida', value: 'Ada vive en Madrid.' },
+      ],
+    }), ['description'])
+    expect(parsed.suggestions).toHaveLength(2)
+    expect(parsed.suggestions[0]?.value).toHaveLength(2000)
+    expect(parsed.suggestions[1]).toEqual({ field: 'description', title: 'Buena', description: 'Válida', value: 'Ada vive en Madrid.' })
+  })
+
+  it('clips overlong complete strings instead of rejecting the fill', () => {
+    const parsed = parseWizardStage(JSON.stringify({
+      complete: { description: 'z'.repeat(3000), tags: ['Angst', 'x'.repeat(90)] },
+    }), ['description', 'tags'])
+    expect(parsed.fill.description).toHaveLength(2000)
+    expect(parsed.fill.tags).toEqual(['Angst', 'x'.repeat(80)])
   })
 })

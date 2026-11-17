@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma.js'
 import { parseEventDateValue } from '../lib/timeline-event-date.js'
 import { allowTimelineCharacterIds } from '../lib/timeline-evolution-gate.js'
+import { resolveSubplotId } from '../lib/subplot-link.js'
 import { storageService } from './storage-service.js'
 
 export interface TimelineEventInput {
@@ -20,6 +21,7 @@ export interface TimelineEventInput {
   imageUrl?: string | null
   relatedEventIds?: string[]
   relatedDocumentIds?: string[]
+  subplotId?: string | null
 }
 
 export interface TimelineEraInput {
@@ -173,6 +175,7 @@ export const timelineService = {
     const relatedEventIds = await sanitizeRelatedEventIds(projectId, data.relatedEventIds)
     const relatedDocumentIds = await sanitizeRelatedDocumentIds(projectId, data.relatedDocumentIds)
     const eraId = await sanitizeEraId(projectId, data.eraId)
+    const subplotId = await resolveSubplotId(projectId, data.subplotId)
     const order = data.order ?? (await prisma.timelineEvent.count({ where: { projectId } }))
     return prisma.timelineEvent.create({
       data: {
@@ -182,6 +185,7 @@ export const timelineService = {
         description: data.description ?? null,
         order,
         eraId: eraId ?? null,
+        subplotId: subplotId ?? null,
         characterIds,
         icon: data.icon ?? null,
         color: data.color ?? null,
@@ -215,6 +219,7 @@ export const timelineService = {
       ? await sanitizeRelatedDocumentIds(event.projectId, data.relatedDocumentIds)
       : undefined
     const eraId = await sanitizeEraId(event.projectId, data.eraId)
+    const subplotId = await resolveSubplotId(event.projectId, data.subplotId)
     const updated = await prisma.timelineEvent.update({
       where: { id },
       data: {
@@ -223,6 +228,7 @@ export const timelineService = {
         description: data.description,
         order: data.order,
         eraId,
+        subplotId,
         characterIds,
         icon: data.icon,
         color: data.color,

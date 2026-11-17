@@ -1,7 +1,7 @@
 import type { Prisma } from '@generated/client'
 import { prisma } from '../lib/prisma.js'
 import { countDocumentWords } from '../lib/document-words.js'
-import { calculateWritingStats, descendantDocumentIds } from '../lib/stats-calculations.js'
+import { calculateWritingStats, descendantDocumentIds, fillStatsDays, parseStatsRange, resolveStatsRange, statsCalendarRange } from '../lib/stats-calculations.js'
 import { localDay, normalizeTimeZone } from '../lib/stats-time.js'
 import { requireActiveWriter } from './stats-access.js'
 import { StatsError, type StatsQuery } from './stats-types.js'
@@ -25,6 +25,8 @@ export const statsService = {
   async get(userId: string, query: StatsQuery) {
     await requireActiveWriter(prisma, userId)
     const timeZone = normalizeTimeZone(query.timeZone)
+    const today = localDay(new Date(), timeZone)
+    if (!query.allTime && !parseStatsRange(today, query)) throw new StatsError('STATS_INVALID_INPUT', 400)
     const projects = await prisma.project.findMany({ where: { userId }, select: { id: true, name: true }, orderBy: { name: 'asc' } })
     const documents = await prisma.document.findMany({
       where: { userId, project: { userId } }, select: { id: true, title: true, projectId: true, parentId: true }, orderBy: { title: 'asc' },
@@ -39,6 +41,16 @@ export const statsService = {
     })
     const totalWords = await currentWords({ userId, project: { userId }, ...(query.projectId ? { projectId: query.projectId } : {}), ...(documentIds ? { id: { in: documentIds } } : {}) })
     const history = rows.map((row) => ({ day: row.day, wordsAdded: row._sum.wordsAdded ?? 0, activeMilliseconds: row._sum.activeMilliseconds ?? 0 }))
-    return { timeZone, ...calculateWritingStats(history, localDay(new Date(), timeZone), query.days ?? 365, totalWords), projects, documents }
+    const earliest = history.filter((row) => row.wordsAdded > 0 || row.activeMilliseconds > 0).map((row) => row.day).sort()[0] ?? null
+    const range = resolveStatsRange(today, query, earliest)
+    if (!range) throw new StatsError('STATS_INVALID_INPUT', 400)
+    const calendarRange = statsCalendarRange(today)
+    return {
+      timeZone,
+      ...calculateWritingStats(history, today, range, totalWords),
+      calendar: { from: calendarRange.from, to: calendarRange.to, days: fillStatsDays(history, calendarRange) },
+      projects,
+      documents,
+    }
   },
 }

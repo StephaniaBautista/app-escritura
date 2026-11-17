@@ -58,13 +58,22 @@ describe('AI conversation state', () => {
     vi.mocked(aiApi.send).mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce({ conversationId: conversation.id, messages: [message] })
     expect(await useAiStore.getState().send('Explora el conflicto', 'es', 'Ana quiere volver a casa.')).toBe(false)
     const first = vi.mocked(aiApi.send).mock.calls[0][2]
-    useAiStore.getState().setProvider('mimo')
+    useAiStore.getState().setProvider('private')
     expect(await useAiStore.getState().retry()).toBe(true)
     expect(vi.mocked(aiApi.send).mock.calls[1][2]).toEqual(first)
     expect(first.direction).toBe('Ana quiere volver a casa.')
     expect(first.requestId.length).toBeGreaterThanOrEqual(8)
     expect(useAiStore.getState().pending).toEqual({})
     expect(useAiStore.getState().messages).toEqual([message])
+  })
+
+  it('includes webSearch on a new turn and keeps it on retry', async () => {
+    vi.mocked(aiApi.send).mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce({ conversationId: conversation.id, messages: [message] })
+    expect(await useAiStore.getState().send('Consulta pública', 'es', undefined, true)).toBe(false)
+    const first = vi.mocked(aiApi.send).mock.calls[0][2]
+    expect(first.webSearch).toBe(true)
+    expect(await useAiStore.getState().retry()).toBe(true)
+    expect(vi.mocked(aiApi.send).mock.calls[1][2]).toEqual(first)
   })
 
   it('does not duplicate a message when a retried response is already in history', async () => {
@@ -86,9 +95,30 @@ describe('AI conversation state', () => {
     expect(useAiStore.getState().pending).toEqual({})
   })
 
-  it('renders an explicit writing limitation for provider policy rejection', async () => {
-    vi.mocked(aiApi.send).mockRejectedValue(new AiRequestError(422, 'AI_WRITING_BLOCKED'))
-    await useAiStore.getState().send('Escribe la escena', 'es')
-    expect(useAiStore.getState().error).toBe('aiApp.errors.writing')
+  it('creates a conversation while the history list is still loading', async () => {
+    const pending = deferred<typeof conversation[]>()
+    vi.mocked(aiApi.conversations).mockReturnValueOnce(pending.promise)
+    vi.mocked(aiApi.createConversation).mockResolvedValue({ ...conversation, id: 'conversation-2', title: 'Nueva' })
+    const listing = useAiStore.getState().loadConversations('project-1')
+    expect(useAiStore.getState().loading).toBe(true)
+    const id = await useAiStore.getState().createConversation({ mode: 'adviser', title: 'Nueva' })
+    expect(id).toBe('conversation-2')
+    expect(useAiStore.getState().activeId).toBe('conversation-2')
+    pending.resolve([])
+    await listing
+    expect(useAiStore.getState().conversations.some((item) => item.id === 'conversation-2')).toBe(true)
+    expect(useAiStore.getState().loading).toBe(false)
+  })
+
+  it('clears loading if the writer switches chats while a conversation is being created', async () => {
+    const pending = deferred<typeof conversation>()
+    vi.mocked(aiApi.createConversation).mockReturnValueOnce(pending.promise)
+    vi.mocked(aiApi.conversation).mockResolvedValue({ ...conversation, messages: [] })
+    const creating = useAiStore.getState().createConversation({ mode: 'adviser', title: 'Nueva' })
+    await useAiStore.getState().open(conversation.id)
+    pending.resolve({ ...conversation, id: 'conversation-2', title: 'Nueva' })
+    await creating
+    expect(useAiStore.getState().loading).toBe(false)
+    expect(useAiStore.getState().activeId).toBe(conversation.id)
   })
 })

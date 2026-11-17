@@ -84,7 +84,7 @@ describe('WizardAiButton', () => {
       meta: { type: ['Romance'] },
       suggestions: [],
       stage: 'basics',
-      sources: [], provider: 'deepseek', model: 'test',
+      sources: [], provider: 'balanced', model: 'test',
     })
     renderButton({ stage: 'basics', onApplied, onSuggestions })
     fireEvent.click(screen.getByRole('button', { name: 'storySetup.generateWithAi' }))
@@ -100,7 +100,7 @@ describe('WizardAiButton', () => {
     const onSuggestions = vi.fn()
     const suggestions = [{ field: 'type', title: 'Añade misterio', description: 'Hay una investigación.', value: ['Drama', 'Mystery'] }]
     completeWizard.mockResolvedValue({
-      description: null, meta: {}, suggestions, stage: 'basics', sources: [], provider: 'deepseek', model: 'test',
+      description: null, meta: {}, suggestions, stage: 'basics', sources: [], provider: 'balanced', model: 'test',
     })
     renderButton({ stage: 'basics', description: 'Ada llega.', meta: { type: ['Drama', 'Romance'] }, onSuggestions })
     fireEvent.click(screen.getByRole('button', { name: 'storySetup.generateWithAi' }))
@@ -112,7 +112,7 @@ describe('WizardAiButton', () => {
     store.documentTree = [{ id: 'd1' }]
     completeWizard.mockResolvedValue({
       description: 'Ada vive en Madrid.', meta: {}, suggestions: [], stage: 'description',
-      sources: [], provider: 'deepseek', model: 'test',
+      sources: [], provider: 'balanced', model: 'test',
     })
     renderButton()
     fireEvent.click(screen.getByRole('button', { name: 'storySetup.generateWithAi' }))

@@ -16,8 +16,8 @@ describe('statistics response isolation', () => {
   it('discards a slower response for an earlier filter', async () => {
     let finish!: (value: WritingStats) => void
     vi.mocked(statsApi.get).mockReturnValueOnce(new Promise((resolve) => { finish = resolve })).mockResolvedValueOnce({ ...writingStats, summary: { ...writingStats.summary, totalWords: 8 } })
-    const first = useStatsStore.getState().load({ days: 365, timeZone: 'UTC' })
-    await useStatsStore.getState().load({ days: 30, timeZone: 'UTC', projectId: 'project-2' })
+    const first = useStatsStore.getState().load({ from: '2025-09-13', to: '2026-09-12', timeZone: 'UTC' })
+    await useStatsStore.getState().load({ from: '2026-08-14', to: '2026-09-12', timeZone: 'UTC', projectId: 'project-2' })
     finish(writingStats)
     await first
     expect(useStatsStore.getState().report?.summary.totalWords).toBe(8)
@@ -27,7 +27,7 @@ describe('statistics response isolation', () => {
     let finish!: (value: WritingStats) => void
     useStatsStore.setState({ report: writingStats })
     vi.mocked(statsApi.get).mockReturnValueOnce(new Promise((resolve) => { finish = resolve }))
-    const loading = useStatsStore.getState().load({ days: 365, timeZone: 'UTC' })
+    const loading = useStatsStore.getState().load({ from: '2025-09-13', to: '2026-09-12', timeZone: 'UTC' })
     useAuthStore.setState({ user: { id: 'user-2', email: 'other@example.test' } })
     expect(useStatsStore.getState().report).toBeNull()
     finish(writingStats)
@@ -36,7 +36,7 @@ describe('statistics response isolation', () => {
   })
   it('supports retry after a request fails without retaining an error on success', async () => {
     vi.mocked(statsApi.get).mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(writingStats)
-    const query = { days: 30 as const, timeZone: 'UTC' }
+    const query = { from: '2026-08-14', to: '2026-09-12', timeZone: 'UTC' }
     await useStatsStore.getState().load(query)
     expect(useStatsStore.getState().error).toBe('statsApp.loadError')
     await useStatsStore.getState().load(query)
